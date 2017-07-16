@@ -1,6 +1,6 @@
-import * as VueRouter from 'vue-router';
 import {loginRoutes} from './login/login_route';
 import {adminRoutes} from './admin/admin_routes';
+import * as VueRouter from 'vue-router';
 
 let router = new VueRouter({});
 

@@ -7,7 +7,7 @@ export const loginRoutes: RouteConfig[] = [
         //language=HTML
         component: {
             template: `
-                <p>login screen</p>
+                <p>login screenj12</p>
             `
         }
     }

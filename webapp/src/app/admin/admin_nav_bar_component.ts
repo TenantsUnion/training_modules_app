@@ -14,7 +14,6 @@ export const AdminNavBar = Vue.extend({
     props: _.values(vm),
     created: function (this: IAdminNavBarVM & Vue) {
         this.username;
-        console.log('admin nav bar created' + this.username);
     },
     //language=HTML
     template: `

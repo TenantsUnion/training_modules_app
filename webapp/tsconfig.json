@@ -1,12 +1,9 @@
 {
   "includes": [
-    "app/**/*.ts"
   ],
   "compilerOptions": {
     "module": "es6",
-    "noImplicitAny": true,
     "target": "es5",
-    "moduleResolution": "node",
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "lib": [
