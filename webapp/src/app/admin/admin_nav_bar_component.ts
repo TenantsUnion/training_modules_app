@@ -1,5 +1,5 @@
-import * as Vue from 'vue';
 import * as _ from 'underscore';
+import Vue from 'vue';
 
 export interface IAdminNavBarVM {
     username: string;

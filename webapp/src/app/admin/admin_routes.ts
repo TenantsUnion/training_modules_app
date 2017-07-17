@@ -1,5 +1,5 @@
-import {RouteConfig} from 'vue-router/types/router';
 import {AdminNavBar, AdminNavBarProps} from './admin_nav_bar_component';
+import {RouteConfig} from 'vue-router';
 
 let vm = AdminNavBarProps;
 let routes: RouteConfig[] = [

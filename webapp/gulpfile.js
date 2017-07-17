@@ -14,23 +14,19 @@ const rollup_stream = require('rollup-stream');
 const rollup_ts = require('rollup-plugin-typescript2');
 const rollup_replace = require('rollup-plugin-replace');
 const browserSync = require('browser-sync');
-const nodemon = require('gulp-nodemon');
 
 const ts = require('gulp-typescript');
 
 const isProductionBuild = 'production' === process.env.NODE_ENV;
 
-
-/************ Front End Web App ************/
-
-
 gulp.task('watch', ['lib:js', 'build'], function () {
     browserSync.init({
         proxy: 'localhost:3000',
-        open: 'external'
+        open: 'external',
+        port: 8000
     });
     gulp.watch('views/index.hbs', browserSync.reload);
-    gulp.watch('app/**/*.ts', ['build']);
+    gulp.watch('src/app/**/*.ts', ['build']);
     gulp.watch('dist/app.min.js').on('change', function (event) {
         if (event.type !== 'deleted') {
             browserSync.reload();
@@ -48,7 +44,7 @@ gulp.task('clean', [], function () {
 var cache;
 gulp.task('build', ['clean'], function () {
     return rollup_stream({
-        entry: 'app/app.ts',
+        entry: 'src/app/app.ts',
         sourceMap: !isProductionBuild,
         cache: cache,
         format: 'iife',
@@ -62,7 +58,7 @@ gulp.task('build', ['clean'], function () {
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
             }),
             rollup_ts({//loads tsconfig.json by default
-                include: 'app/**/*.ts',
+                include: 'src/app/**/*.ts',
                 check: true,
                 cacheRoot: ".rollupts2_cache",
                 clean: false
@@ -91,10 +87,10 @@ gulp.task('lib:clean', [], function () {
 
 gulp.task('lib:js', ['lib:clean'], function () {
     return gulp.src([
-        './node_modules/underscore/underscore.js',
-        './node_modules/vue/dist/vue.js',
-        './node_modules/vue-router/dist/vue-router.js',
-        './node_modules/axios/dist/axios.js'
+        '../node_modules/underscore/underscore.js',
+        '../node_modules/vue/dist/vue.js',
+        '../node_modules/vue-router/dist/vue-router.js',
+        '../node_modules/axios/dist/axios.js'
     ])
         .pipe(gulp.dest('lib/js', {cwd: 'build'}))
         .pipe(gulpif(!isProductionBuild, sourcemaps.init()))

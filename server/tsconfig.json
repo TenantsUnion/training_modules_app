@@ -1,11 +1,19 @@
 {
   "includes": [
+    "src/**/*.ts"
   ],
   "compilerOptions": {
     "module": "commonjs",
     "target": "es6",
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "*",
+        "../shared/*"
+      ]
+    }
   }
 }

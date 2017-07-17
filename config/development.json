@@ -1,0 +1,9 @@
+{
+  "server": {
+    "VIEWS_DIR": "../../webapp/views",
+    "WEBAPP_DIR": "../../webapp/dist/"
+  },
+  "webapp": {
+    "WEBPACK_CONTEXT": "webapp/"
+  }
+}

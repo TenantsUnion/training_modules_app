@@ -1,14 +1,18 @@
-import {RouteConfig} from 'vue-router/types/router';
+import {RouteConfig} from 'vue-router';
+import LoginComponent from './login_component';
 
 export const loginRoutes: RouteConfig[] = [
     {
         path: '/login',
         name: 'login',
-        //language=HTML
         component: {
+            components: {
+                'login-component': LoginComponent
+            },
+            //language=HTML
             template: `
-                <p>login screenj12</p>
+                <login-component></login-component>
             `
-        }
+        },
     }
 ];
