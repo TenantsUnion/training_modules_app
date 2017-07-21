@@ -6,7 +6,7 @@
   "scripts": {
     "start": "set NODE_CONFIG_DIR=./config && ./bin/start",
     "build": "npm run build-server && npm run build-webapp",
-    "build-webpack":"webpack --config webapp/webpack.config.js",
+    "build-webpack": "webpack --config webapp/webpack.config.js",
     "build-server": "tsc --project server/tsconfig.json --outDir server/dist",
     "build-webapp": "gulp build --gulpfile webapp/gulpfile.js",
     "watch-webapp": "gulp watch --gulpfile webapp/gulpfile.js",
@@ -27,6 +27,7 @@
     "body-parser": "~1.17.1",
     "config": "^1.26.1",
     "cookie-parser": "~1.4.3",
+    "db-migrate": "^0.10.0-beta.21",
     "debug": "~2.6.3",
     "express": "~4.15.2",
     "express-engine": "^1.0.1",
@@ -36,6 +37,7 @@
     "serve-favicon": "~2.4.2",
     "underscore": "^1.8.3",
     "vue": "^2.3.4",
+    "vue-quill-editor": "^2.2.4",
     "vue-router": "^2.7.0",
     "winston": "^2.3.1"
   },
@@ -46,6 +48,8 @@
     "browser-sync": "^2.18.12",
     "concurrently": "^3.5.0",
     "css-loader": "^0.28.4",
+    "db-migrate": "^0.10.0-beta.21",
+    "db-migrate-pg": "^0.2.4",
     "gulp-if": "^2.0.2",
     "gulp-nodemon": "^2.2.1",
     "gulp-rename": "^1.2.2",
