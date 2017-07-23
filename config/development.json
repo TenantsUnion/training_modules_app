@@ -1,9 +1,6 @@
 {
-  "server": {
-    "VIEWS_DIR": "../../webapp/views",
-    "WEBAPP_DIR": "../../webapp/dist/"
-  },
-  "webapp": {
-    "WEBPACK_CONTEXT": "webapp/"
+  "database": {
+    "db_user": "tu_dev_db_user",
+    "db_password": "development_only"
   }
 }
