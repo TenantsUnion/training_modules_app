@@ -5,18 +5,17 @@
 </head>
 <body>
 <div id="app">
-    <div>
-        <p>Hello from app {{message}}!</p>
-        <button>
-            <router-link :to="{ name: 'login'}">Login</router-link>
-        </button>
-        <button>
-            <router-link :to="{ name: 'admin', params: {username: 'imadmin'}}">Admin</router-link>
-        </button>
-    </div>
-    <div>
+    <!--<div>-->
+        <!--<button>-->
+            <!--<router-link :to="{ name: 'login'}">Login</router-link>-->
+        <!--</button>-->
+        <!--<button>-->
+            <!--<router-link :to="{ name: 'admin', params: {username: 'imadmin'}}">Admin</router-link>-->
+        <!--</button>-->
+    <!--</div>-->
+    <!--<div>-->
         <router-view></router-view>
-    </div>
+    <!--</div>-->
 </div>
 <script src="build.js"></script>
 </body>

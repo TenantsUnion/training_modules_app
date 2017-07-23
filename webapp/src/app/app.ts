@@ -4,9 +4,6 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 let app = new Vue({
-    data: {
-        message: 'Welcome  message!'
-    },
     components: {},
     router: appRouter,
 }).$mount('#app');
