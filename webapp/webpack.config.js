@@ -6,6 +6,9 @@ var path = require('path');
 var webpack = require('webpack');
 var config = require('config');
 
+// Extract style sheets into dedicated file in production
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
+
 module.exports = {
     entry: [
         'webpack-dev-server/client?http://localhost:8080',
@@ -16,6 +19,11 @@ module.exports = {
         path: path.resolve(__dirname, './dist'),
         filename: 'build.js'
     },
+    plugins: [
+        new ExtractTextPlugin('style.css', {
+            allChunks: true
+        })
+    ],
     module: {
         rules: [
             {// match ts and tsx files from vue output
@@ -36,11 +44,34 @@ module.exports = {
                 options: {
                     name: '[name].[ext]?[hash]'
                 }
-            }
-        ]
+            },
+            {
+                test: /\.scss$/,
+                loader: ExtractTextPlugin.extract({
+                    use: [
+                    //     {
+                    //     loader: "postcss-loader", options: {
+                    //         config: {
+                    //             ctx: {
+                    //                 autoprefixer: {browsers: ['last 2 versions', 'ie >= 9', 'and_chr >= 2.3']}
+                    //             }
+                    //         }
+                    //     }
+                    // },
+                        {
+                        loader: "css-loader", options: {
+                            sourceMap: true
+                        }
+                    }, {
+                        loader: "sass-loader", options: {
+                            sourceMap: true
+                        }
+                    }]
+                })
+            }]
     },
     resolve: {
-        extensions: ['.ts', '.js', '.html', '.json'],
+        extensions: ['.ts', '.js', '.html', '.json', '.scss'],
         alias: {
             'vue$': 'vue/dist/vue.esm.js'
         }
@@ -59,7 +90,7 @@ module.exports = {
             "**": {
                 target: "http://localhost:3000/",
                 changeOrigin: true,
-                filter: function(pathname, req){
+                filter: function (pathname, req) {
                     console.log(pathname);
                     !console.log(pathname.match("build.js"));
                     return !pathname.match(/build\.js/);
