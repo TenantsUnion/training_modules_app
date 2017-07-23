@@ -1,7 +1,9 @@
 import {loginHttpService} from './login_http_service';
+import {appRouter} from '../router';
 import {IErrorResponse} from 'http_responses';
 import Vue from 'vue';
 import Component from "vue-class-component";
+import {IUserInfo, USER_ROLE} from "../../../../shared/user";
 
 @Component({
     data: () => {
@@ -46,7 +48,10 @@ export default class LoginComponent extends Vue {
         loginHttpService.login({
             username: this.username,
             password: this.password
-        }).then(() => {
+        }).then((userInfo:IUserInfo) => {
+            if(userInfo.role === USER_ROLE.admin) {
+                appRouter.push({path: 'admin/user'})
+            }
             this.loading = false;
         }).catch((response: IErrorResponse) => {
             this.loading = false;

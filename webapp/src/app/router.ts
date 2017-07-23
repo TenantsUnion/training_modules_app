@@ -8,5 +8,7 @@ let router = new VueRouter({});
 router.addRoutes(loginRoutes);
 router.addRoutes(adminRoutes);
 
+//todo  when going to '/' check if user is logged in and if so go to user page, if not go to login
+
 
 export const appRouter = router;

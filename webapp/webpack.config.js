@@ -7,11 +7,13 @@ var webpack = require('webpack');
 var config = require('config');
 
 module.exports = {
-    entry: './src/app/app.ts',
+    entry: [
+        'webpack-dev-server/client?http://localhost:8080',
+        './src/app/app.ts'
+    ],
     context: path.resolve(__dirname),
     output: {
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/dist/',
         filename: 'build.js'
     },
     module: {
@@ -43,14 +45,28 @@ module.exports = {
             'vue$': 'vue/dist/vue.esm.js'
         }
     },
-    devServer: {
-        historyApiFallback: true,
-        noInfo: true
-    },
     performance: {
         hints: false
     },
-    devtool: '#eval-source-map'
+    devtool: '#eval-source-map',
+    devServer: {
+        historyApiFallback: true,
+        quiet: false,
+        stats: {
+            colors: true
+        },
+        proxy: {
+            "**": {
+                target: "http://localhost:3000/",
+                changeOrigin: true,
+                filter: function(pathname, req){
+                    console.log(pathname);
+                    !console.log(pathname.match("build.js"));
+                    return !pathname.match(/build\.js/);
+                }
+            }
+        }
+    }
 };
 
 if (process.env.NODE_ENV === 'production') {
