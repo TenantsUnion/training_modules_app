@@ -6,7 +6,7 @@ declare namespace  user {
 
     const enum USER_ROLE {
         admin,
-        trainee
+        student
     }
 }
 

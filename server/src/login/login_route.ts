@@ -12,7 +12,7 @@ class LoginController {
 
         //todo login against database
 
-        let role: USER_ROLE = username === 'admin' ? USER_ROLE.admin : USER_ROLE.trainee;
+        let role: USER_ROLE = username === 'admin' ? USER_ROLE.admin : USER_ROLE.student;
 
         let responseBody: LoginResponseBody = {
             loginSuccessful: true,
