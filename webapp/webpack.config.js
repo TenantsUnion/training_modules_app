@@ -17,11 +17,13 @@ module.exports = {
     context: path.resolve(__dirname),
     output: {
         path: path.resolve(__dirname, './dist'),
-        filename: 'build.js'
+        filename: 'build.js',
+        sourceMapFilename: '[file].map'
     },
     plugins: [
         new ExtractTextPlugin('style.css', {
-            allChunks: true
+            allChunks: true,
+            sourceMap: true
         })
     ],
     module: {
@@ -46,7 +48,7 @@ module.exports = {
                 }
             },
             {
-                test: /\.scss$/,
+                test: /\.(scss|css)$/,
                 loader: ExtractTextPlugin.extract({
                     use: [
                     //     {
@@ -79,7 +81,7 @@ module.exports = {
     performance: {
         hints: false
     },
-    devtool: '#eval-source-map',
+    devtool: 'eval-source-map',
     devServer: {
         historyApiFallback: true,
         quiet: false,

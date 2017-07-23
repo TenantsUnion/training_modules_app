@@ -1,22 +1,13 @@
-import * as _ from 'underscore';
 import Vue from 'vue';
+import Component from "vue-class-component";
 
-export interface IAdminNavBarVM {
-    username: string;
+@Component({
+    props: {
+        username: String
+    },
+    // language=HTML
+    template: `<p>Hello {{ username }}</p>`
+})
+export class AdminNavBar extends Vue {
 }
 
-export const AdminNavBarProps: IAdminNavBarVM = {
-    username: 'username'
-};
-
-let vm = AdminNavBarProps;
-export const AdminNavBar = Vue.extend({
-    props: _.values(vm),
-    created: function (this: IAdminNavBarVM & Vue) {
-        this.username;
-    },
-    //language=HTML
-    template: `
-        <p>Hello {{ ${vm.username} }} from Admin nav bar</p>
-    `
-});

@@ -1,6 +1,6 @@
 import axios from "axios";
-import {LoginCredentials} from 'login';
-import {IUserInfo} from '../../../../shared/user';
+import {LoginCredentials, LoginResponse} from 'login';
+import {IUserInfo} from "user";
 
 class LoginHttpService {
 

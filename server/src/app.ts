@@ -10,7 +10,7 @@ import {users} from './routes/users';
 import {Express} from 'express';
 import {IErrorResponse} from '../../shared/http_responses';
 import {LoginRoute} from './login/login_route';
-
+import {AdminModulesRoute} from './admin/modules/modules_route';
 /**
  * Configured to listen on port and started in /bin scripts
  */
@@ -48,9 +48,8 @@ app.get('/', express.Router().get('/', function (req, res, next) {
 }));
 
 app.use('/', LoginRoute);
-
-// module routes
 app.use('/users', users);
+app.use('/admin', AdminModulesRoute);
 
 // has to go last so other routes can match, catch 404 and forward to error handler
 app.use(function (req, res, next) {
