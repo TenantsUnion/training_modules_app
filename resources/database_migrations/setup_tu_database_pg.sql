@@ -1,3 +1,0 @@
-CREATE USER tenants_union 
-CREATE SCHEMA IF NOT EXISTS tu AUTHORIZATION appTenantsUnion;
-

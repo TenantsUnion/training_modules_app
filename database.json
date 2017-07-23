@@ -1,0 +1,19 @@
+{
+  "sql-file": true,
+  "database": "tu_training",
+  "schema": "tu",
+  "prod": {
+    "driver": "pg",
+    "database": "tu_training",
+    "user": {"ENV": "db_user"},
+    "password": {"ENV": "db_password"}
+  },
+  "dev": {
+    "host": "localhost",
+    "driver": "pg",
+    "database": "tu_training",
+    "schema": "tu",
+    "user": "tu_dev_db_user",
+    "password": "development_only"
+  }
+}
