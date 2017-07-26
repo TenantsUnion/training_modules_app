@@ -1,5 +1,10 @@
 import {IUserInfo} from './user';
-declare namespace login {
+declare namespace account {
+    interface WebappSignupData {
+        username: string;
+        password: string;
+    }
+
     interface LoginCredentials {
         username: string;
         password: string;
@@ -10,5 +15,5 @@ declare namespace login {
     }
 }
 
-export = login;
+export = account;
 

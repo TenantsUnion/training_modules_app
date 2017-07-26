@@ -1,5 +1,5 @@
 import axios from "axios";
-import {LoginCredentials, LoginResponse} from 'login';
+import {LoginCredentials, LoginResponse} from 'account.d.ts';
 import {IUserInfo} from "user";
 
 class LoginHttpService {

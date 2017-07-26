@@ -7,5 +7,4 @@ require('./module_layout_component.scss');
     template: require('./module_layout_component.tpl.html')
 })
 export class ModuleLayoutComponent extends Vue {
-
 }
