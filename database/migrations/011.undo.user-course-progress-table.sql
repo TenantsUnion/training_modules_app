@@ -1,0 +1,1 @@
+drop table tu.user_course_progress;
