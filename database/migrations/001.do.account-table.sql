@@ -3,6 +3,7 @@ CREATE TABLE tu.account (
   username       VARCHAR(30) UNIQUE,
   password       VARCHAR(20),
   password_salt  TEXT,
-  created_at     TIMESTAMP,
-  last_active_at TIMESTAMP
+  created_at     TIMESTAMP NOT NULL DEFAULT current_date,
+  last_active_at TIMESTAMP NOT NULL DEFAULT  current_date,
+  email          VARCHAR(64)
 );
