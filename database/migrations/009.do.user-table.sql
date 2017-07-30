@@ -1,6 +1,6 @@
 CREATE TABLE tu.user (
   id                     BIGSERIAL PRIMARY KEY,
-  account_id             BIGINT REFERENCES tu.account (id),
+  username               BIGINT REFERENCES tu.account (username),
   first_name             VARCHAR(200),
   last_name              VARCHAR(200),
   admin_of_course_ids    BIGINT [],

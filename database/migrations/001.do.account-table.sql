@@ -7,3 +7,5 @@ CREATE TABLE tu.account (
   last_active_at TIMESTAMP NOT NULL DEFAULT  current_date,
   email          VARCHAR(64)
 );
+
+CREATE INDEX username_idx ON tu.account(username);
