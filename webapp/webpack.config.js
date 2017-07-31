@@ -84,7 +84,7 @@ module.exports = {
     devtool: 'eval-source-map',
     devServer: {
         historyApiFallback: true,
-        quiet: false,
+        noInfo: true,
         stats: {
             colors: true
         },
