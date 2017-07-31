@@ -1,4 +1,4 @@
-import {IAdminModuleInfo} from "modules";
+import {IAdminModuleDetails, IAdminModuleInfo} from "modules";
 
 export const MODULES_LIST: IAdminModuleInfo[] = [
     {
@@ -20,7 +20,7 @@ export class ModulesService {
     }
 
     getAdminModuleDetails(): IAdminModuleDetails {
-        return
+        return null;
     }
 }
 

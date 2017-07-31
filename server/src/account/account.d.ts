@@ -4,13 +4,7 @@ declare namespace account {
         password?: string;
         firstName?: string;
         lastName?: string;
-        salt?: string;
-    }
-
-    interface AccountInfo {
-
     }
 }
-
 
 export = account;

@@ -2,11 +2,11 @@ const config = require('config');
 const {Pool} = require('pg');
 
 const pool = new Pool({
-    user: config("database.db_user"),
-    password: config("database.db_password"),
-    host: config("database.db_host"),
-    port: config("database.db_port"),
-    database: config("database.db")
+    user: config.get("database.db_user"),
+    password: config.get("database.db_password"),
+    host: config.get("database.db_host"),
+    port: config.get("database.db_port"),
+    database: config.get("database.db")
 });
 
 pool.on('error', (err, client) => {
@@ -22,13 +22,13 @@ pool.on('error', (err, client) => {
  *      values: ['brianc', 'brian.m.carlson@gmail.com'],
  *  }
  */
-interface IQueryConfig {
+export interface IQueryConfig {
     text: string,
-    values: string[]
+    values: (string | number)[]
 }
 
 declare type ParameterizedSql = string | IQueryConfig;
-declare type SqlParameters = string | number[]
+declare type SqlParameters = string | string[]
 
 export class Datasource {
     private transactionClient: any = null;

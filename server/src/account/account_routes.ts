@@ -1,37 +1,69 @@
 import * as express from 'express';
 import {Router, Response, Request} from 'express';
-import {LoginCredentials, LoginResponse} from 'account.d.ts';
-import {IUserInfo, USER_ROLE} from 'user';
+import {LoginCredentials} from 'account';
+import {accountHandler, IAccountHandler} from './account_handler';
+import {SignupData} from "./account";
+import {IUserInfo} from "user";
+import {IUserId} from "src/user/user_handler";
 
-class AccountController {
+export class AccountController {
+    constructor(private accountHandler: IAccountHandler) {
+    }
 
     signup(request: Request, response: Response) {
+        console.log('handling signup');
+        let signupData: SignupData = request.body;
+        (async () => {
+            let userId: IUserId | string;
+            try {
+                userId = await this.accountHandler.signup(signupData);
+            } catch (e) {
+                console.log(e.stack);
+                response.status(500) //server error
+                    .send(e.stack.join('\n'));
+            }
 
+            //if userId is a string, the client request data was
+            //was not valid and an error message is returned
+            let httpStatus = typeof userId === 'string' ? 400 : 200;
+            response.status(httpStatus)
+                .send(userId);
+        })();
     }
 
     login(request: Request, response: Response) {
+        console.log('handling login');
         let loginCredentials: LoginCredentials = request.body;
-        let username = loginCredentials.username;
-        let password = loginCredentials.password;
+        (async () => {
+            let userId: IUserId | string;
+            try {
 
-        //todo account against database
+                userId = await this.accountHandler.login(loginCredentials);
 
-        let role: USER_ROLE = username.match('admin') ? USER_ROLE.admin : USER_ROLE.student;
+            } catch (e) {
+                console.log(e.stack);
+                response.status(500)
+                    .send(e.stack('\n'));
+            }
 
-        let responseBody: IUserInfo = {
-            username: username,
-            role: role
-        };
-
-        response.status(200);
-        response.send(responseBody);
+            //if userId is a string, the client request data was
+            //was not valid and an error message is returned
+            let httpStatus = typeof userId === 'string' ? 400 : 200;
+            response.status(httpStatus)
+                .send(userId);
+        })();
     }
 }
 
-
-let loginController = new AccountController();
+let accountController = new AccountController(accountHandler);
 
 let router: Router = express.Router();
-router.post('/account', loginController.login);
+router.post('/login', (request, response) => {
+    accountController.login(request, response);
+});
 
-export const LoginRoute = router;
+router.post('/signup', (request, response) => {
+    accountController.signup(request, response);
+});
+
+export const AccountRoutes = router;
