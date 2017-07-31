@@ -3,7 +3,7 @@ import Component from "vue-class-component";
 import {ModuleList} from '../modules_list_component/module_list_component';
 import {ModuleDetails} from '../module_details_component/module_details_component';
 
-import {$} from '../../globals';
+import {$} from '../../../globals';
 
 require('./_module_skeleton_component.scss');
 

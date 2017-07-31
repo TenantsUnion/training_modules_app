@@ -1,6 +1,6 @@
 import {RouteConfig} from "vue-router";
 import {LandingPageComponent} from "./landing_page_component";
-import {CreateCourseComponent} from "../course/create_course_component";
+import {CreateCourseComponent} from "../course/create/create_course_component";
 import {ContentComponent} from "./content_component";
 import {AppHeader} from "./header/header_component";
 

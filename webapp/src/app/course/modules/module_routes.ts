@@ -23,7 +23,6 @@ let routes: RouteConfig[] = [
             //language=HTML
             template: `
                 <div>
-                    <app-header :username="username"></app-header>
                     <module-list></module-list>
                     <module-details>
                         <router-view></router-view>
