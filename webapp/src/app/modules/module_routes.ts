@@ -1,7 +1,7 @@
-import {AdminNavigation} from './admin_navigation_component';
+import {ModuleList} from './modules_list_component/module_list_component';
 import {RouteConfig} from 'vue-router';
-import {AdminModulesList} from "./admin_modules_list_component";
-import {ModuleSkeleton} from '../modules/module_skeleton_component/module_skeleton_component';
+import {ModuleDetails} from './module_details_component/module_details_component';
+import {ModuleSkeleton} from './module_skeleton_component/module_skeleton_component';
 
 let routes: RouteConfig[] = [
     {
@@ -16,17 +16,18 @@ let routes: RouteConfig[] = [
             }
         ],
         component: {
-            props: ['username'],
             components: {
-                'admin-navigation': AdminNavigation
+                'module-list': ModuleList,
+                'module-details': ModuleDetails
             },
             //language=HTML
             template: `
                 <div>
                     <app-header :username="username"></app-header>
-                    <admin-navigation>
+                    <module-list></module-list>
+                    <module-details>
                         <router-view></router-view>
-                    </admin-navigation>
+                    </module-details>
                 </div>
             `
         }
@@ -34,4 +35,4 @@ let routes: RouteConfig[] = [
 ];
 
 
-export const adminRoutes = routes;
+// export const moduleRoutes = routes;
