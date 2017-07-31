@@ -12,8 +12,8 @@
     "webpack-build": "webpack --config webapp/webpack.config.js",
     "webpack-dev": "webpack-dev-server --config webapp/webpack.config.js --open",
     "server-build": "tsc --project server/tsconfig.json --outDir server/dist",
-    "watch": "concurrently -k -p \"[{name}]\" -n \"Server-Build,Server,Webpack\" -c \"cyan.bold,green.bold,yellow.bold\"  \"npm run watch-ts\" \"npm run nodemon-start\" \"npm run webpack-dev\"",
-    "watch-ts": "tsc --watch --project server/tsconfig.json --outDir server/dist",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"Server-Build,Server,Webpack\" -c \"cyan.bold,green.bold,yellow.bold\"  \"npm run watch-server\" \"npm run nodemon-start\" \"npm run webpack-dev\"",
+    "watch-server": "tsc --watch --project server/tsconfig.json --outDir server/dist",
     "nodemon-start": "set NODE_CONFIG_DIR=./config && nodemon --watch server/dist/ ./bin/start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
