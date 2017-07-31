@@ -15,15 +15,6 @@ import {appRouter} from "../router";
     // language=HTML
     template: `
         <div id="page-content-wrapper">
-            <div class="grid-x">
-                <div class="small-9 cell">
-                    <h1>Welcome</h1>
-                </div>
-                <div class="small-3 cell">
-                    <span>Welcome, {{ username }}!</span>
-                    <button>Log Out</button>
-                </div>
-            </div>
             <div class="main">
                 <div class="grid-x">
                     <div class="small-12 cell">
