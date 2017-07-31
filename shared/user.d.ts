@@ -1,13 +1,18 @@
-declare namespace  user {
+declare namespace user {
     interface IUserInfo {
+        id: string,
         username: string,
-        role: USER_ROLE
+        firstName?: string,
+        lastName?: string,
+        adminOfCourseIds: number[],
+        enrolledInCourseIds: number[],
+        completedCourseIds: number[]
     }
 
-    const enum USER_ROLE {
-        admin,
-        student
+    interface IUserId {
+        id: string
     }
 }
+
 
 export = user;
