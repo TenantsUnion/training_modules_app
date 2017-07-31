@@ -2,7 +2,7 @@ CREATE TABLE tu.content (
   id               BIGSERIAL PRIMARY KEY,
   content_data_id  BIGINT REFERENCES tu.quill_data (id) UNIQUE NOT NULL,
   title            VARCHAR(100),
-  tags             VARCHAR(30) [],
+  tags             VARCHAR(30) [] NOT NULL DEFAULT array[]::VARCHAR[],
   last_modified_at TIMESTAMP,
   created_at       TIMESTAMP DEFAULT now()
 );

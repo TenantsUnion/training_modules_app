@@ -3,8 +3,8 @@ CREATE TABLE tu.section (
   header_data_id       BIGINT REFERENCES tu.quill_data (id),
   title                VARCHAR(100),
   description          VARCHAR(300),
-  ordered_content_ids  BIGINT [],
-  ordered_question_ids BIGINT []
+  ordered_content_ids  BIGINT [] NOT NULL DEFAULT array[]::BIGINT[],
+  ordered_question_ids BIGINT [] NOT NULL DEFAULT array[]::BIGINT[]
 );
 
 CREATE INDEX section_title_gin_idx
