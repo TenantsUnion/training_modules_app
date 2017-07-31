@@ -1,4 +1,11 @@
 {
+  "lib": [
+    "dom",
+    "es5",
+    "ES2015",
+    "ES2015.promise",
+    "ES2016"
+  ],
   "includes": [
     "src/**/*.ts"
   ],
