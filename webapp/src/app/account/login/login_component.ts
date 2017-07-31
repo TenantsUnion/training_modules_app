@@ -1,9 +1,9 @@
-import {loginHttpService} from './login_http_service';
-import {appRouter} from '../router';
+import {accountHttpService} from '../account_http_service';
+import {appRouter} from '../../router';
 import {IErrorResponse} from 'http_responses';
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {IUserInfo, USER_ROLE} from "user";
+import {IUserId, IUserInfo} from "user";
 
 @Component({
     data: () => {
@@ -24,17 +24,16 @@ export default class LoginComponent extends Vue {
 
     login() {
         this.loading = true;
-        loginHttpService.login({
+        accountHttpService.login({
             username: this.username,
             password: this.password
-        }).then((userInfo:IUserInfo) => {
-            let routePath = userInfo.role === USER_ROLE.admin ?
-                `admin/${userInfo.username}` : `${userInfo.username}/modules`;
-                appRouter.push({path: routePath});
-
+        }).then((userId: IUserId) => {
+            appRouter.push({path: `user/${this.username}`, params: {userId: userId.id}});
             this.loading = false;
-        }).catch((response: IErrorResponse) => {
+        }).catch((errorMsg: string) => {
             this.loading = false;
+            this.errorMsg = errorMsg;
+            console.log(errorMsg);
         });
     }
 }

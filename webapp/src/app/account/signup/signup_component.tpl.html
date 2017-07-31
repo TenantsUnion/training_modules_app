@@ -1,0 +1,28 @@
+<div class="grid-y medium-grid-frame" style="justify-content: center;">
+    <div class="grid-x grid-padding-x align-center">
+        <div class="cell small-6">
+            <div class="callout float-center">
+                <h1>Signup</h1>
+                <p v-if="loading">Logging in...</p>
+                <p v-if="errorMsg">{{ errorMsg }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="grid-x grid-padding-x align-center">
+        <div class="cell small-6">
+            <div class="callout float-center">
+                <label for="username-signup">Username
+                    <input v-model="username" type="text"
+                           placeholder="username" id="username-signup"/>
+                </label>
+                <!--<label for="password">Password-->
+                <!--<input v-model="password" type="password" id="password"/>-->
+                <!--</label>-->
+                <div>
+                    <button @click="signup" class="button">Sign Up</button>
+                    <!--<button class="button secondary">Forgot Password</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
