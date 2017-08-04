@@ -1,4 +1,7 @@
 {
+  "express": {
+    "secret": "1212lkasf23sksdf"
+  },
   "database": {
     "db_user": "tu_dev_db_user",
     "db_password": "development_only",

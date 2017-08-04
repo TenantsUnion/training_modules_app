@@ -10,7 +10,7 @@ postgrator.setConfig({
     database: 'tu_training',
     username: config.get('database.db_user'),
     password: config.get('database.db_password'),
-    schemaTable: 'tu.schemaversion'
+    schemaTable: 'tu_schema_version'
 });
 
 postgrator.migrate('max', function (err, migrations) {

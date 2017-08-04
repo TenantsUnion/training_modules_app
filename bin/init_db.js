@@ -1,8 +1,8 @@
 const fs = require('fs');
 const config = require('config');
 const path = require('path');
-const Client = require('pg').Client;
 const sqlFs = require('./sql_file_executor');
+// const logger = require('./script_logger')('database initializer');
 
 const sqlDirectory = '/resources/init_postgres_db/';
 
@@ -15,11 +15,12 @@ const sqlDirectory = '/resources/init_postgres_db/';
         let tuDbExecutor = await sqlFs.getSqlFileAsyncExecutor(sqlFs.tuLocalDevClient, sqlDirectory);
         await tuDbExecutor('04__create_schema.pg.sql', true);
     } catch (e) {
+        logger.log(e);
         throw e;
     }
 })().then(() => {
     //todo replace with logger
-    console.log('database initialized successfully');
+    logger.log('info', 'database initialized successfully');
     process.exit(0);
 }).catch((e) => {
     console.log('failed to initialize database');

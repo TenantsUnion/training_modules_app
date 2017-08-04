@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const pg = require('pg');
 const config = require('config');
+const logger = require('./script_logger')('SQL File Executor');
 const Client = pg.Client;
 module.exports = {};
 
@@ -28,18 +29,15 @@ module.exports.getSqlFileAsyncExecutor = async (client, directory) => {
     return async (filename, split) => {
         const sqlFileContents = fs.readFileSync(path.resolve(__dirname + directory, filename), 'utf-8');
 
-        console.log('Executing sql file: ' + filename);
+        logger.log('info', 'Executing sql file: %s', filename);
         return new Promise(async (resolve, reject) => {
             if (split) {
                 let statements = sqlFileContents.split(/;\s*$/m);
                 for (let statement of statements) {
                     try {
-                        console.log('executing: ' + statement);
                         let response = await client.query(statement);
-                        console.log(response);
-                        console.log('successfully executed');
                     } catch (e) {
-                        console.log('Error');
+                        logger.log('error', e);
                         reject(e);
                     }
                 }
@@ -47,7 +45,7 @@ module.exports.getSqlFileAsyncExecutor = async (client, directory) => {
                 try {
                     await client.query(sqlFileContents);
                 } catch (e) {
-                    console.log('Error');
+                    logger.log('error', e);
                     reject(e);
                 }
             }
