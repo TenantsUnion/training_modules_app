@@ -1,6 +1,6 @@
 import {CreateUserContentCommand} from "content";
 
-class UserContentHandler {
+export class UserContentHandler {
     constructor(){}
 
     handleCreateUserContentCommand(createUserContentCommand: CreateUserContentCommand) {

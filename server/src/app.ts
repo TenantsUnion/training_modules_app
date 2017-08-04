@@ -58,7 +58,6 @@ app.get('/', express.Router().get('/', function (req, res, next) {
 }));
 
 app.use('/account', AccountRoutes);
-app.use('/user', users);
 app.use('/courses', CoursesRoutes);
 app.use('/admin', AdminModulesRoute);
 
