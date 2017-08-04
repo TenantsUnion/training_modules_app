@@ -1,1 +1,1 @@
-drop table tu.user_course_progress;
+DROP TABLE tu.user_course_progress;
