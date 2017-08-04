@@ -67,7 +67,7 @@ import {appRouter} from "../router";
         </div>
     `
 })
-export class LandingPageComponent extends Vue {
+export class UserCoursesComponent extends Vue {
     enrolledInCourses: ICourseInfo[];
     adminOfCourses: ICourseInfo[];
 
@@ -76,11 +76,11 @@ export class LandingPageComponent extends Vue {
     }
 
     createCourse() {
-        appRouter.push({name: 'course.create'});
+        appRouter.push('course/create');
     }
 
     goToCourse(courseId: string) {
-
+        appRouter.push(`course/courseId`);
     }
 
 

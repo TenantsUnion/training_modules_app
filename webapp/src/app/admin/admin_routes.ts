@@ -1,7 +1,7 @@
 import {AdminNavigation} from './admin_navigation_component';
 import {RouteConfig} from 'vue-router';
 import {AdminModulesList} from "./admin_modules_list_component";
-import {ModuleSkeleton} from '../course/modules/module_skeleton_component/module_skeleton_component';
+import {ModuleSkeleton} from '../courses/modules/module_skeleton_component/module_skeleton_component';
 
 let routes: RouteConfig[] = [
     {

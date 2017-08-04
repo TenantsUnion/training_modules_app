@@ -1,8 +1,8 @@
 import {RouteConfig} from "vue-router";
-import {LandingPageComponent} from "./landing_page_component";
-import {CreateCourseComponent} from "../course/create/create_course_component";
-import {ContentComponent} from "./content_component";
-import {AppHeader} from "./header/header_component";
+import {UserCoursesComponent} from "./user_courses_component";
+import {CreateCourseComponent} from "../courses/create/create_course_component";
+import {ContentComponent} from "./create_content/create_content_component";
+import {AppHeader} from "./header/user_header_component";
 
 export const userRoutes: RouteConfig[] = [
         {
@@ -10,17 +10,17 @@ export const userRoutes: RouteConfig[] = [
             name: 'user',
             props: true,
             children: [{
-                path: '/',
-                name: 'user.landing',
+                path: 'courses',
+                name: 'courses',
                 props: true,
-                component: LandingPageComponent,
+                component: UserCoursesComponent,
             }, {
-                path: '/course/create',
-                name: 'course.create',
+                path: 'course/create',
+                name: 'create',
                 props: true,
                 component: CreateCourseComponent
             }, {
-                path: '/content',
+                path: 'content',
                 name: 'content',
                 props: true,
                 component: ContentComponent
@@ -38,7 +38,6 @@ export const userRoutes: RouteConfig[] = [
                     </div>
                 `
             }
-
         }
     ]
 ;

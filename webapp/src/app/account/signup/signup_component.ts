@@ -28,7 +28,7 @@ export default class SignupComponent extends Vue {
             password: this.password
         }).then((userId: IUserId) => {
             this.loading = false;
-            appRouter.push({path: `user/${this.username}`, params: {userId: userId.id}});
+            appRouter.push({path: `user/${this.username}/courses`, params: {userId: userId.id}});
         }).catch((errorMsg: string) => {
             this.loading = false;
             this.errorMsg = errorMsg;

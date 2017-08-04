@@ -11,15 +11,14 @@ import {appRouter} from "../../router";
         <div class="grid-x">
             <div class="small-9 cell">
                 <div>
-                    <span>Hello {{ username }}</span>
-                    <button class="button button-secondary" @click="signout">
-                        Sign Out
-                    </button>
+                    <router-link :to="{name:'courses'}">Courses</router-link>
+                    <router-link :to="{name:'content'}">Content</router-link>
                 </div>
             </div>
             <div class="small-3 cell">
                 <span>Welcome, {{ username }}!</span>
-                <button class="button secondary" @click>Log Out</button>
+                <button class="button secondary" @click="signout">Sign Out
+                </button>
             </div>
         </div>`
 

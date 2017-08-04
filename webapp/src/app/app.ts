@@ -1,7 +1,7 @@
 import {appRouter} from './router';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import {AppHeader} from "./user/header/header_component";
+import {AppHeader} from "./user/header/user_header_component";
 
 //global styling
 require('foundation-sites');

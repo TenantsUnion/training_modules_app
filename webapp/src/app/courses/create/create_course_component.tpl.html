@@ -18,16 +18,20 @@
                     </label>
                 </div>
                 <div>
+                    <label for="time-estimate">Time Estimate
+                        <input v-model="timeEstimate" type="text"
+                               placeholder="Time estimate"
+                               id="time-estimate">
+                    </label>
+                </div>
+                <div>
                     <label for="course-description">Description</label>
                     <textarea v-model="description" type="text"
-                              placeholder="Course description" id="course-description"></textarea>
+                              placeholder="Course description"
+                              id="course-description"></textarea>
                 </div>
 
-                <!--<label for="password">Password-->
-                <!--<input v-model="password" type="password" id="password"/>-->
-                <!--</label>-->
                 <button @click="create" class="button">Create</button>
-                <!--<button class="button secondary">Forgot Password</button>-->
             </div>
         </div>
     </div>

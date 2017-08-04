@@ -28,7 +28,7 @@ export default class LoginComponent extends Vue {
             username: this.username,
             password: this.password
         }).then((userId: IUserId) => {
-            appRouter.push({path: `user/${this.username}`, params: {userId: userId.id}});
+            appRouter.push({path: `user/${this.username}/courses`, params: {userId: userId.id}});
             this.loading = false;
         }).catch((errorMsg: string) => {
             this.loading = false;
