@@ -1,5 +1,5 @@
 CREATE TABLE tu.module (
-  id                  SERIAL PRIMARY KEY,
+  id                  BIGINT PRIMARY KEY,
   header_content      BIGINT REFERENCES tu.quill_data (id),
   title               VARCHAR(100),
   description         VARCHAR(300),

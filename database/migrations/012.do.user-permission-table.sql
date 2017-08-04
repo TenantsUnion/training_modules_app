@@ -1,5 +1,5 @@
 CREATE TABLE tu.user_permissions (
-  id          BIGSERIAL PRIMARY KEY,
+  id          BIGINT PRIMARY KEY,
   user_id     BIGINT REFERENCES tu.user (id),
   permissions BIGINT ARRAY NOT NULL DEFAULT ARRAY [] :: BIGINT []
 );

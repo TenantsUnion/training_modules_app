@@ -1,5 +1,5 @@
 CREATE TABLE tu.section (
-  id                   BIGSERIAL PRIMARY KEY,
+  id                   BIGINT PRIMARY KEY,
   header_data_id       BIGINT REFERENCES tu.quill_data (id),
   title                VARCHAR(100),
   description          VARCHAR(300),

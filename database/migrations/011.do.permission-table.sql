@@ -1,5 +1,5 @@
-CREATE TABLE tu.permission_table (
-  id BIGSERIAL PRIMARY KEY,
+CREATE TABLE tu.permission (
+  id BIGINT PRIMARY KEY,
   action text
 );
 

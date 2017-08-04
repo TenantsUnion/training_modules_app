@@ -1,5 +1,5 @@
 CREATE TABLE tu.question_option (
-  id                  SERIAL PRIMARY KEY,
+  id                  BIGINT PRIMARY KEY,
   question_id         BIGINT REFERENCES tu.question (id)      NOT NULL,
   answer              BOOLEAN DEFAULT FALSE,
   option_data_id      BIGINT REFERENCES tu.quill_data (id) NOT NULL,

@@ -1,5 +1,5 @@
 CREATE TABLE tu.quill_data (
-  id          BIGSERIAL PRIMARY KEY,
+  id          BIGINT PRIMARY KEY,
   editor_json JSONB
 );
 

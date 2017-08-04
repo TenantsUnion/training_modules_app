@@ -1,5 +1,5 @@
 CREATE TABLE tu.course (
-  id                 SERIAL PRIMARY KEY,
+  id                 BIGINT PRIMARY KEY,
   title              VARCHAR(100) UNIQUE NOT NULL,
   description        VARCHAR(300),
   time_estimate      VARCHAR(300),
