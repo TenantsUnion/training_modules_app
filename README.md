@@ -9,9 +9,9 @@ Tenants Union training module application.
 # Setup #
 
 * Install latest version of node 8.x to build the application and run the server.
-..* node version must be compatible
+    * node version must be compatible
 * Install latest version of Postgres 9.6.x
-..* Database setup uses Postgres' jsonb(requires v >= 9.5) support for saving
+    * Database setup uses Postgres' jsonb(requires v >= 9.5) support for saving
         and querying json structured data
 * Get local copy of project`git clone https://github.com/TenantsUnion/training_modules_app.git`
 * Run `npm install` in the project to install package.json dependencies
