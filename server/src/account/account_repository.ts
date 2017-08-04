@@ -74,7 +74,17 @@ class AccountRepository implements IAccountRepository {
                             values: [username]
                         }
                     );
-                    resolve(results.rows[0]);
+
+                    let userRow = results.rows[0];
+                    resolve({
+                        id: userRow.id,
+                        username: userRow.username,
+                        firstName: userRow.firstName,
+                        lastName: userRow.lastName,
+                        adminOfCourseIds: [],
+                        enrolledInCourseIds: [],
+                        completedCourseIds: []
+                    });
                 } catch (e) {
                     console.log("Database findAccountByUsername error");
                     console.log(e);

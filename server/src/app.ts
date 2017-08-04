@@ -6,11 +6,13 @@ import * as logger from "morgan";
 import * as cookieParser from "cookie-parser";
 import * as bodyParser from "body-parser";
 import * as config from "config";
-import {users} from './routes/users';
+import * as session from "express-session";
 import {Express} from 'express';
 import {IErrorResponse} from '../../shared/http_responses';
 import {AccountRoutes} from './account/account_routes';
-import {AdminModulesRoute} from './admin/modules/modules_route';
+import {AdminModulesRoute} from './modules/modules_route';
+import {CoursesRoutes} from "./courses/courses_routes_controller";
+
 /**
  * Configured to listen on port and started in /bin scripts
  */
@@ -26,6 +28,14 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
+app.use(session({
+    secret: config.get('express.secret'),
+    saveUninitialized: false,
+    resave: true,
+    cookie: {
+        expires: false
+    }
+}));
 
 
 // error handler
@@ -49,6 +59,7 @@ app.get('/', express.Router().get('/', function (req, res, next) {
 
 app.use('/account', AccountRoutes);
 app.use('/user', users);
+app.use('/courses', CoursesRoutes);
 app.use('/admin', AdminModulesRoute);
 
 // has to go last so other routes can match, catch 404 and forward to error handler

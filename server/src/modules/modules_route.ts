@@ -1,6 +1,6 @@
 import {Request, Response, Router} from 'express';
 import * as express from 'express';
-import {modulesService} from "../../modules/modules_service";
+import {modulesService} from "./modules_service";
 
 export class ModulesController {
     getModules(request: Request, response: Response) {

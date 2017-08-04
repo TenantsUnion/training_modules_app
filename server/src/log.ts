@@ -1,7 +1,8 @@
-var winston = require('winston');
-var _ = require('underscore');
+const winston = require('winston');
+const _ = require('underscore');
+const config = require('config');
 
-var logLevel = 'info';
+const logLevel = 'info';
 
 var customColors = {
     trace: 'white',
@@ -12,57 +13,39 @@ var customColors = {
     fatal: 'red'
 };
 
-var basicTransportOptions = {
-    colorize: true,
+const basicTransportOptions = {
     timestamp: true,
     prettyPrint: true,
     showLevel: true
 };
 
-var rolloverFileOptions = _.extend(basicTransportOptions, {
-
-    //todo  filename?
-    maxsize: 1024 * 1024 * 1024,
-    maxFiles: 5,
-    zippedArchive: true,
-    rotationFormat: 'gz'
-});
-
-var env = process.env.ENV;
-
-//extend transport options
-// var jsonTransportOptions = process.env.ENV ? {
-//
-//
-// };
-
-var loggers = {};
-
-logger.getTransport = function(name){
-   var namedLogger = new winston.Logger({
-       colors:customColors,
-       level: logLevel,
-       levels: {
-           fatal: 0,
-           crit: 1,
-           warn: 2,
-           info: 3,
-           debug: 4,
-           trace: 5
-       },
-       transports: [
-           process.env.Env
-       ]
-   });
+const loggerNameToFile = (loggerName) => {
+    return 'server.log';
 };
 
-var logger = new winston.Logger({
-    transports: [
+
+const fileConfig = config.has("log.directory");
+export const getLogger = (loggerName, level) => {
+    let transport = fileConfig ? new winston.transports.File({
+            label: loggerName,
+            level: level,
+            filename: fileConfig + '/' + loggerNameToFile(loggerName),
+            maxsize: 1024 * 1024 * 1024,
+            maxFiles: 5,
+            zippedArchive: true,
+            rotationFormat: 'gz'
+        }) :
         new winston.transports.Console({
+            label: loggerName,
             colorize: true,
-            timestamp: true
-        })
+            level: level
+        });
 
-    ]
+    return new winston.logger({
+        transports: [
+            transport
+        ]
+    });
+};
 
-});
+

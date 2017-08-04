@@ -27,6 +27,10 @@ export interface IQueryConfig {
     values: (string | number)[]
 }
 
+export interface IQueryResult {
+    rows: any;
+}
+
 declare type ParameterizedSql = string | IQueryConfig;
 declare type SqlParameters = string | string[]
 
@@ -85,7 +89,7 @@ export class Datasource {
         return !!this.transactionClient;
     }
 
-    query(sql: ParameterizedSql, parameters?: SqlParameters): any {
+    query(sql: ParameterizedSql, parameters?: SqlParameters): IQueryResult {
         return this.isTransactionInProgress() ?
             this.transactionQuery(sql, parameters) :
             this.pool.query(sql, parameters);

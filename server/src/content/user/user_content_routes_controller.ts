@@ -1,17 +1,16 @@
 import * as express from 'express';
 import {Router, Response, Request} from 'express';
 import {LoginCredentials} from 'account';
-import {accountHandler, IAccountHandler} from './account_handler';
-import {SignupData} from "./account";
 import {IUserId} from "src/user/user_handler";
+import {CreateUserContentCommand} from "../../../../shared/content";
 
-export class AccountController {
-    constructor (private accountHandler: IAccountHandler) {
+export class UserContentController {
+    constructor (private accountHandler: IContentHandler) {
     }
 
-    signup (request: Request, response: Response) {
+    create (request: Request, response: Response) {
         console.log('handling signup');
-        let signupData: SignupData = request.body;
+        let createContent: CreateUserContentCommand = request.body;
         (async () => {
             let userId: IUserId | string;
             try {
@@ -60,15 +59,19 @@ export class AccountController {
     }
 }
 
-let accountController = new AccountController(accountHandler);
+let userContentController = new UserContentController(accountHandler);
 
 let router: Router = express.Router();
-router.post('/login', (request, response) => {
-    accountController.login(request, response);
+router.post('/update', (request, response) => {
+    userContentController.login(request, response);
 });
 
-router.post('/signup', (request, response) => {
-    accountController.signup(request, response);
+router.post('/create', (request, response) => {
+    userContentController.signup(request, response);
 });
 
-export const AccountRoutes = router;
+router.post('/delete', (request, response) => {
+
+});
+
+export const ContentRoutes = router;

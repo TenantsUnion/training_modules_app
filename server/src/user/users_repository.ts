@@ -14,10 +14,11 @@ export interface IUserRepository {
     getIdFromUsername(username: string): Promise<IUserId>;
 
     findUserByUsername(username: string): Promise<IUserInfo>;
+
+    addToAdminOfCourseIds(userId: string, courseId: string): Promise<void>;
 }
 
 export class UserRepository implements IUserRepository {
-
     constructor(private datasource: Datasource) {
     }
 
@@ -58,6 +59,24 @@ export class UserRepository implements IUserRepository {
                     });
                 } catch (e) {
                     console.log(e.stack);
+                    reject(e);
+                }
+            })();
+        });
+    }
+
+    addToAdminOfCourseIds(userId: string, courseId: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            (async () => {
+                try {
+                    await this.datasource.query({
+                        text: `UPDATE tu.user SET admin_of_course_ids =
+                            admin_of_course_ids || $1::BIGINT WHERE id = $2`,
+                        values: [courseId, userId]
+                    });
+                    resolve();
+                } catch (e) {
+                    console.log(e);
                     reject(e);
                 }
             })();

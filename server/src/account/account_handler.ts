@@ -46,12 +46,12 @@ export class AccountHandler implements IAccountHandler {
             }
 
             (async () => {
+                let exists = await this.accountRepository.accountExists(loginCredentials.username);
+                if(!exists){
+                    return resolve(`No account found that matches username ${loginCredentials.username}`);
+                }
                 let accountInfo = await this.accountRepository.findAccountByUsername(loginCredentials.username);
                 //todo compare passwords
-                if(!accountInfo){
-                    resolve(`No account found that matches username ${loginCredentials.username}`);
-                    return;
-                }
                 let userId = await this.userHandler.getIdFromUsername(accountInfo.username);
                 resolve(userId);
             })();
