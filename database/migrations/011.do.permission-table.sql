@@ -3,5 +3,5 @@ CREATE TABLE tu.permission (
   action text
 );
 
-CREATE INDEX tu_permission_idx on tu.permission_table(action);
+CREATE INDEX tu_permission_idx on tu.permission(action);
 

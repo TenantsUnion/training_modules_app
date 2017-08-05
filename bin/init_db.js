@@ -2,7 +2,7 @@ const fs = require('fs');
 const config = require('config');
 const path = require('path');
 const sqlFs = require('./sql_file_executor');
-// const logger = require('./script_logger')('database initializer');
+const logger = require('./script_logger')('database initializer');
 
 const sqlDirectory = '/resources/init_postgres_db/';
 
