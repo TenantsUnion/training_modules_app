@@ -41,7 +41,7 @@ export const getLogger = (loggerName, level) => {
             level: level
         });
 
-    return new winston.logger({
+    return new winston.Logger({
         transports: [
             transport
         ]

@@ -21,7 +21,7 @@ export class CoursesHandler implements ICoursesHandler {
         return new Promise<null | string>((resolve, reject) => {
             if (!courseInfo.title) {
                 return resolve('Title required for course');
-            }
+            } //todo other validation
 
             (async () => {
                 try {

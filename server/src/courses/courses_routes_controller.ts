@@ -14,6 +14,7 @@ export class CoursesController {
         let result;
         (async () => {
             try {
+                //todo check permissions
                 result = await this.coursesHandler.createCourse(courseInfo);
             } catch (e) {
                 console.log(e.stack);
@@ -57,7 +58,7 @@ router.post('/create', (request, response) => {
     coursesController.createCourse(request, response);
 });
 
-router.post('/user/:userId', (request, response) => {
+router.get('/user/:userId', (request, response) => {
     coursesController.getUserCourses(request, response);
 });
 

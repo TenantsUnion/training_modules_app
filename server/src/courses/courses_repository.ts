@@ -1,6 +1,8 @@
 import {Datasource, datasource} from "../datasource";
 import {ICourseInfo} from "courses";
 import {CourseEntity, UserCoursesEntity} from "./courses";
+import {AbstractRepository} from "../repository";
+import {getLogger} from "../log";
 
 export interface ICoursesRepository {
     loadCourse(courseId: string): Promise<CourseEntity>;
@@ -12,7 +14,9 @@ export interface ICoursesRepository {
     loadUserCourses(userId: string): Promise<UserCoursesEntity>;
 }
 
-class CoursesRepository implements ICoursesRepository {
+class CoursesRepository extends AbstractRepository implements ICoursesRepository {
+    logger = getLogger('CourseRepository', 'info');
+
     loadCourseUsersSql = `
       SELECT c.id, c.title, c.open_enrollment, c.active,
         ARRAY(SELECT row_to_json(id, username)
@@ -27,6 +31,7 @@ class CoursesRepository implements ICoursesRepository {
     `;
 
     constructor (private datasource: Datasource) {
+        super('course_id_seqj', datasource);
     }
 
     async loadUserCourses (userId: string): Promise<UserCoursesEntity> {
@@ -98,19 +103,16 @@ class CoursesRepository implements ICoursesRepository {
 
             (async () => {
                 try {
+
+                    let courseId = await this.getNextId();
                     await this.datasource.query({
-                        text: `INSERT INTO tu.course (title, description, time_estimate) VALUES ($1, $2, $3)`,
-                        values: [courseInfo.title, courseInfo.description, courseInfo.timeEstimate]
+                        text: `INSERT INTO tu.course (id, title, description, time_estimate) VALUES ($1, $2, $3, $4)`,
+                        values: [courseId, courseInfo.title, courseInfo.description, courseInfo.timeEstimate]
                     });
-                    let courseId = await this.datasource.query({
-                        text: `SELECT id FROM tu.course c WHERE c.title = $1`,
-                        values: [courseInfo.title]
-                    });
-                    resolve(courseId.rows[0].id);
+                    resolve(courseId);
                 } catch (e) {
-                    console.log("Database error");
-                    console.log(e);
-                    console.log(e.stack);
+                    this.logger.log(`Error creating course: ${courseInfo.title}`, 'error');
+                    this.logger.log(e, 'error');
                     reject(e);
                 }
             })();

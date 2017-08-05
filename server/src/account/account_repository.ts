@@ -1,18 +1,20 @@
 import {Datasource, datasource, IQueryConfig} from "../datasource";
 import {LoginCredentials, WebappSignupData} from "account";
 import {IUserInfo} from "user";
+import {AbstractRepository} from "../repository";
 
 export interface IAccountRepository {
     accountExists(username: string): Promise<boolean>;
 
-    createAccount(signupInfo: WebappSignupData): Promise<void>;
+    createAccount(signupInfo: WebappSignupData): Promise<string>;
 
     findAccountByUsername(loginCredentials): Promise<IUserInfo>;
 }
 
-class AccountRepository implements IAccountRepository {
+class AccountRepository extends AbstractRepository implements IAccountRepository {
 
     constructor(private datasource: Datasource) {
+        super('account_id_seq', datasource);
     }
 
     async accountExists(username: string): Promise<boolean> {
@@ -38,19 +40,20 @@ class AccountRepository implements IAccountRepository {
         });
     }
 
-    async createAccount(signupInfo: WebappSignupData): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
+    async createAccount(signupInfo: WebappSignupData): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
             if (!signupInfo.username) {
                 return resolve(null);
             }
 
             (async () => {
                 try {
+                    let accountId = await this.getNextId();
                     await this.datasource.query({
-                        text: `INSERT INTO tu.account (username) VALUES ($1)`,
-                        values: [signupInfo.username]
+                        text: `INSERT INTO tu.account (id, username) VALUES ($1, $2)`,
+                        values: [accountId, signupInfo.username]
                     });
-                    resolve();
+                    resolve(accountId);
                 } catch (e) {
                     console.log("Database error");
                     console.log(e);

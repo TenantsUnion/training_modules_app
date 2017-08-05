@@ -31,7 +31,7 @@ class QuillRepository {
         });
     }
 
-    insertEditorJson (id: string, editorJson: string): Promise<string> {
+    insertEditorJson (editorJson: string): Promise<string> {
         return new Promise<string>((reject, resolve) => {
             this.sqlTemplate.query({
                 // language=PostgreSQL

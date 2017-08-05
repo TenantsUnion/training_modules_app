@@ -1,78 +1,122 @@
 import * as express from 'express';
-import {Router, Response, Request} from 'express';
-import {LoginCredentials} from 'account';
-import {IUserId} from "src/user/user_handler";
-import {CreateUserContentCommand} from "../../../../shared/content";
-import {UserContentHandler} from "./user_content_handler";
+import {Router, Request, Response} from 'express';
+import {CreateUserContentCommand} from "content";
+import {UserContentHandler, userContentHandler} from "./user_content_handler";
+import {getLogger} from '../../log';
+import {contentRepository} from "../content_repository";
+
+let logger = getLogger('userContentController', 'info');
+
+export interface UpdateUserContentCommand {
+    userId: string;
+    contentDataId: string,
+    title: string,
+    tags: string[]
+    content: { [index: string]: any }
+}
 
 export class UserContentController {
-    constructor (private userContentHandler: UserContentHandler) {}
+    constructor(private userContentHandler: UserContentHandler) {
+    }
 
-    create (request: Request, response: Response) {
-        console.log('handling signup');
+    create(request: Request, response: Response) {
         let createContent: CreateUserContentCommand = request.body;
         (async () => {
-            let userId: IUserId | string;
             try {
-                //validate
+                //todo validate
                 await this.userContentHandler.handleCreateUserContentCommand(createContent);
-            } catch (e) {
-                console.log(e.stack);
-                response.status(500) //server error
-                    .send(e.stack.join('\n'));
-            }
-
-            if (typeof userId !== 'string') {
-                request.session.user_id = userId.id;
                 response.status(200)
-                    .send(userId);
-            } else {
-                response.status(400)
-                    .send(userId); //if userId is string it is an error message
+                    .send();
+            } catch (e) {
+                logger.error('Error handling create user content command');
+                logger.error(e);
+                response.status(500) //server error
+                    .send(e);
             }
         })();
     }
 
-    login (request: Request, response: Response) {
-        console.log('handling login');
-        let loginCredentials: LoginCredentials = request.body;
+    update(request: Request, response: Response) {
+        let updateUserContentCommand: UpdateUserContentCommand = request.body;
         (async () => {
-            let userId: IUserId | string;
             try {
-
-                // userId = await this.userContentHandler.login(loginCredentials);
-
-            } catch (e) {
-                console.log(e.stack);
-                response.status(500)
-                    .send(e.stack('\n'));
-            }
-
-            if (typeof userId !== 'string') {
-                request.session.user_id = userId.id;
+                //todo validate
+                await this.userContentHandler.handleUpdateUserContentCommand(updateUserContentCommand);
                 response.status(200)
-                    .send(userId);
-            } else {
-                response.status(400)
-                    .send(userId); //if userId is string it is an error message
+                    .send();
+            } catch (e) {
+                logger.error('Error handling update user content command');
+                logger.error(e);
+                response.status(500)
+                    .send(e);
+            }
+        })();
+    }
+
+    list(request: Request, response: Response) {
+        let username = request.params.username;
+        if (!username) {
+            response.status(400)
+                .send('Can\'t get content. No username specified.');
+        }
+
+        (async () => {
+            try {
+                let userContentEntity = contentRepository.getUserContent(username);
+            } catch (e) {
+                logger.error('Error getting content for user %s', username);
+                logger.error(e);
+                response.status(500)
+                    .send(e);
+            }
+        })();
+    }
+
+    load(request: Request, response: Response) {
+        let username = request.params.username;
+        let contentId = request.params.contentId;
+        if (!username) {
+            response.status(400)
+                .send('Can\'t get content. No username specified.');
+        }
+
+        if (!contentId) {
+            response.status(400)
+                .send('Can\'t get content. No content id specified.');
+        }
+
+        (async () => {
+            try {
+                let userContentEntity
+                    = contentRepository.loadUserContent(username, contentId);
+                response.status(200).send(userContentEntity);
+            } catch (e) {
+                logger.error('Error load content for user %s, content id %s', username, contentId);
+                logger.error(e);
+                response.status(500)
+                    .send(e);
             }
         })();
     }
 }
 
-// let userContentController = new UserContentController(accountHandler);
+let userContentController = new UserContentController(userContentHandler);
 
 let router: Router = express.Router();
-router.post('/update', (request, response) => {
-    // userContentController.login(request, response);
+router.post('/user/:username/content/update', (request, response) => {
+    userContentController.update(request, response);
 });
 
-router.post('/create', (request, response) => {
-    // userContentController.signup(request, response);
+router.post('/user/:username/content/create', (request, response) => {
+    userContentController.create(request, response);
 });
 
-router.post('/delete', (request, response) => {
+router.get('/user/:username/content', (request, response) => {
+    userContentController.list(request, response);
+});
 
+router.get('/user/:username/content/:contentId', (request, response) => {
+    userContentController.load(request, response);
 });
 
 export const ContentRoutes = router;

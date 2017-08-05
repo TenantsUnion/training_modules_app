@@ -1,6 +1,7 @@
 import {Datasource, datasource} from "../datasource";
-import {IUserInfo} from "../../../shared/user";
+import {IUserInfo} from "user";
 import {IUserId} from "./user_handler";
+import {AbstractRepository} from "../repository";
 
 export interface ICreateUser {
     username: string,
@@ -18,8 +19,9 @@ export interface IUserRepository {
     addToAdminOfCourseIds(userId: string, courseId: string): Promise<void>;
 }
 
-export class UserRepository implements IUserRepository {
+export class UserRepository extends AbstractRepository implements IUserRepository {
     constructor(private datasource: Datasource) {
+        super('user_id_seq', datasource);
     }
 
     async createUser(createUserInfo: ICreateUser): Promise<IUserId> {
@@ -27,16 +29,13 @@ export class UserRepository implements IUserRepository {
         return new Promise<IUserId>((resolve, reject) => {
             (async () => {
                 try {
+                    let userId = await this.getNextId();
                     await this.datasource.query({
-                        text: `INSERT INTO tu.user (username, first_name, last_name) VALUES ($1, $2, $3)`,
-                        values: [username, firstName, lastName]
-                    });
-                    let result = await this.datasource.query({
-                        text: `SELECT id FROM tu.user WHERE username = $1`,
-                        values: [username]
+                        text: `INSERT INTO tu.user (id, username, first_name, last_name) VALUES ($1, $2, $3, $4)`,
+                        values: [userId, username, firstName, lastName]
                     });
                     resolve({
-                        id: result.rows[0].id
+                        id: userId
                     });
                 } catch (e) {
                     console.log(e.stack);
