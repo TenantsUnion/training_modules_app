@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {QuillComponent} from "../../quill/quill_component";
+import {QuillComponent} from "../../../quill/quill_component";
 import {createContentHttpService} from "./create_content_http_service";
 
 @Component({

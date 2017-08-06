@@ -3,7 +3,7 @@ import {CreateUserContentCommand} from "content";
 import {
     UserQueryService,
     userQueryService
-} from "../../account/user_query_service";
+} from "../../../account/user_query_service";
 
 class CreateContentHttpService {
     constructor (private userQueryService: UserQueryService){}
