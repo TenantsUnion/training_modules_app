@@ -16,7 +16,7 @@ import {createContentHttpService} from "./create_content_http_service";
         'quill-editor': QuillComponent
     }
 })
-export class ContentComponent extends Vue {
+export class CreateContentComponent extends Vue {
     loading: boolean;
     errorMsg: string;
     title: string;
