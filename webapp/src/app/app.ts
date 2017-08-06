@@ -5,7 +5,7 @@ import {AppHeader} from "./user/header/user_header_component";
 
 //global styling
 require('foundation-sites');
-require('./style.scss');
+require('./_style.scss');
 
 //global components
 Vue.component('app-header', AppHeader);

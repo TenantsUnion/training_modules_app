@@ -1,0 +1,34 @@
+@import 'mixins';
+
+.user-header-wrapper {
+  background-color: black;
+  color: white;
+
+  nav {
+    height: 60px;
+    padding: 1em;
+
+    .menu-section {
+      display: flex;
+
+      li {
+        a {
+          color: #fff;
+
+          &:hover,
+          &:focus {
+            color: #1cc7ff;
+          }
+        }
+      }
+
+      &.user-actions {
+        justify-content: space-between;
+
+        .button {
+          margin: 0;
+        }
+      }
+    }
+  }
+}

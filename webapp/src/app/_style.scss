@@ -1,8 +1,8 @@
 @import "~foundation-sites/scss/foundation";
+@import "../scss/global-styles";
 
 $flex: true;
 @include foundation-everything;
-
 
 //@mixin foundation-everything(
 //  $flex: true,

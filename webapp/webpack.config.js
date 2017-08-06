@@ -51,24 +51,27 @@ module.exports = {
                 test: /\.(scss|css)$/,
                 loader: ExtractTextPlugin.extract({
                     use: [
-                    //     {
-                    //     loader: "postcss-loader", options: {
-                    //         config: {
-                    //             ctx: {
-                    //                 autoprefixer: {browsers: ['last 2 versions', 'ie >= 9', 'and_chr >= 2.3']}
-                    //             }
-                    //         }
-                    //     }
-                    // },
+                        //     {
+                        //     loader: "postcss-loader", options: {
+                        //         config: {
+                        //             ctx: {
+                        //                 autoprefixer: {browsers: ['last 2 versions', 'ie >= 9', 'and_chr >= 2.3']}
+                        //             }
+                        //         }
+                        //     }
+                        // },
                         {
-                        loader: "css-loader", options: {
-                            sourceMap: true
-                        }
-                    }, {
-                        loader: "sass-loader", options: {
-                            sourceMap: true
-                        }
-                    }]
+                            loader: "css-loader",
+                            options: {
+                                sourceMap: true
+                            }
+                        }, {
+                            loader: "sass-loader",
+                            options: {
+                                sourceMap: true,
+                                includePaths: [ 'node_modules/foundation-sites/scss/util' ]
+                            }
+                        }]
                 })
             }]
     },
@@ -85,7 +88,7 @@ module.exports = {
     devServer: {
         host: 'localhost', //replace with comp ip to have server be available on local network
         historyApiFallback: true,
-        noInfo: true,
+        // noInfo: true,
         stats: {
             colors: true
         },
