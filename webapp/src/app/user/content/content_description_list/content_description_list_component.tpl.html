@@ -1,0 +1,24 @@
+<div id="page-content-wrapper">
+    <div class="main">
+        <div class="grid-x">
+            <div class="small-12 cell">
+                <h4>Your Content
+                    <button class="button primary"
+                            @click="createNewContent">
+                        New
+                    </button>
+                </h4>
+                <ul v-if="content.length"
+                    class="content-list">
+                    <li v-for="course in enrolledInCourses"
+                        class="content-item">
+                        <span>{{ course.name }}</span>
+                        <button class="button primary"
+                                @click="go(course.id)">Go
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

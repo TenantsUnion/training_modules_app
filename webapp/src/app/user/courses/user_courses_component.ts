@@ -12,7 +12,7 @@ import {appRouter} from "../../router";
     props: {
         username: String
     },
-    template: require('./users_courses_component.tpl.html')
+    template: require('./user_courses_component.tpl.html')
 })
 export class UserCoursesComponent extends Vue {
     enrolledInCourses: ICourseInfo[];

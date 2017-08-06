@@ -1,8 +1,9 @@
 import {RouteConfig} from "vue-router";
-import {UserCoursesComponent} from "./user_courses_component";
+import {UserCoursesComponent} from "./courses/user_courses_component";
 import {CreateCourseComponent} from "../courses/create/create_course_component";
-import {ContentComponent} from "./create_content/create_content_component";
+import {CreateContentComponent} from "./content/create_content/create_content_component";
 import {AppHeader} from "./header/user_header_component";
+import {ContentDescriptionListComponent} from "./content/content_description_list/content_description_list_component";
 
 export const userRoutes: RouteConfig[] = [
         {
@@ -23,7 +24,12 @@ export const userRoutes: RouteConfig[] = [
                 path: 'content',
                 name: 'content',
                 props: true,
-                component: ContentComponent
+                component: ContentDescriptionListComponent
+            }, {
+                path: 'content/create',
+                name: 'content',
+                props: true,
+                component: CreateContentComponent
             }],
             component: {
                 props: ['username'],
