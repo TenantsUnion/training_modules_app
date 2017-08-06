@@ -28,7 +28,6 @@ export class UserContentController {
         let createContent: CreateUserContentCommand = request.body;
         (async () => {
             try {
-                //todo validate
                 let error = await this.userContentValidator.create(createContent);
                 if(error){
                     return response.status(400).send(error);
@@ -71,12 +70,13 @@ export class UserContentController {
 
         (async () => {
             try {
-                let userContentEntity = contentRepository.getUserContent(username);
+                let contentDescriptionList = await contentRepository.getUserContent(username);
+                response.status(200)
+                    .send(contentDescriptionList);
             } catch (e) {
                 logger.error('Error getting content for user %s', username);
                 logger.error(e);
-                response.status(500)
-                    .send(e);
+                response.status(500).send(e);
             }
         })();
     }

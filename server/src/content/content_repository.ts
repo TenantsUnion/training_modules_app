@@ -3,8 +3,17 @@ import {AbstractRepository} from "../repository";
 
 export interface ContentEntity {
     id: string,
-    quillDataId: string,
+    quillData: Quill.DeltaStatic,
     title: string,
+    tags?: string[],
+    lastModifiedAt?: string,
+    createdAt?: string
+}
+
+export interface ContentDescriptionEntity {
+    id: string;
+    quillDataId: string;
+    title: string;
     tags?: string[],
     lastModifiedAt?: string,
     createdAt?: string
@@ -15,30 +24,52 @@ class ContentRepository extends AbstractRepository {
         super('content_id_seq', sqlTemplate);
     }
 
-    getUserContentDescriptionList (username: string) {
-        this.sqlTemplate.query({
-            text: `
-                
-            `,
-            values: []
-        })
-
-    }
-
     loadUserContentEntity (username: string, userId) {
 
     }
 
+    async getUserContent (username: string): Promise<ContentDescriptionEntity[]> {
+        return new Promise<ContentDescriptionEntity[]>((resolve, reject) => {
+            (async () => {
+                let userContentResult;
 
-    getUserContent (username: string) {
+                try {
+                    userContentResult = await this.sqlTemplate.query({
+                        text: `
+                          SELECT u.id AS user_id, c.*
+                          FROM (SELECT id,
+                                  unnest(u.created_content_ids) AS content_id
+                                FROM tu.user u
+                                WHERE u.username = $1) u
+                            JOIN tu.content c ON c.id = u.content_id;
+                        `,
+                        values: [username]
+                    });
+                } catch (e) {
+                    return reject(e);
+                }
 
+                let contentDescriptionList: ContentDescriptionEntity[] = userContentResult.rows.map((row) => {
+                    return {
+                        id: row.id,
+                        quillDataId: row.content_data_id,
+                        title: row.title,
+                        tags: row.tags,
+                        lastModifiedAt: row.last_modified_at,
+                        createdAt: row.created_at
+                    };
+                });
+
+                resolve(contentDescriptionList);
+            })();
+        });
     }
 
     loadUserContent (username: string, contentId: string) {
 
     }
 
-    async createContent (content: ContentEntity): Promise<void> {
+    async createContent (content: ContentDescriptionEntity): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {
