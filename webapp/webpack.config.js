@@ -81,8 +81,9 @@ module.exports = {
     performance: {
         hints: false
     },
-    devtool: 'eval-source-map',
+    devtool: 'source-map',
     devServer: {
+        host: 'localhost', //replace with comp ip to have server be available on local network
         historyApiFallback: true,
         noInfo: true,
         stats: {
@@ -93,8 +94,6 @@ module.exports = {
                 target: "http://localhost:3000/",
                 changeOrigin: true,
                 filter: function (pathname, req) {
-                    console.log(pathname);
-                    !console.log(pathname.match("build.js"));
                     return !pathname.match(/build\.js/);
                 }
             }

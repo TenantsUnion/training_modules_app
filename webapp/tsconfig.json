@@ -9,7 +9,6 @@
       "es2015",
       "es2015.promise"
     ],
-    "strict": true,
     "noImplicitAny": false,
     "module": "es6",
     "moduleResolution": "node",
@@ -18,6 +17,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
+    "sourceMap": true,
     "paths": {
       "*": [
         "*",
