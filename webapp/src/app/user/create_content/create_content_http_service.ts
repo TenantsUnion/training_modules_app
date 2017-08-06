@@ -9,12 +9,14 @@ class CreateContentHttpService {
     constructor (private userQueryService: UserQueryService){}
 
     createContent (title: string, quillContent: any): Promise<void> {
+        let username = this.userQueryService.getUsername();
+
         let createUserContentCommand: CreateUserContentCommand = {
             userId: this.userQueryService.getUserId(),
             title: title,
             quillContent: quillContent
         };
-        return axios.post('user/content/create', createUserContentCommand)
+        return axios.post(`user/${username}/content/create`, createUserContentCommand)
             .then((value => {
             })).catch((response => {
                 throw response.response.data;

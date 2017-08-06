@@ -11,6 +11,10 @@ export class UserQueryService {
         return this.currentUser.id;
     }
 
+    getUsername(): string {
+        return this.currentUser.username;
+    }
+
     resetCurrentUser (): void {
         this.currentUser = null;
     }

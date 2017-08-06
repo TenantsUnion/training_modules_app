@@ -28,6 +28,10 @@ export class ContentComponent extends Vue {
 
     create () {
         let quillData:Quill.DeltaStatic = this.quillEditor.getQuillEditorContents();
-        createContentHttpService.createContent(this.title, quillData);
+        createContentHttpService.createContent(this.title, quillData).then(()=> {
+            //successfully created content
+        }).catch((errorMsg) => {
+            this.errorMsg = errorMsg;
+        });
     }
 }
