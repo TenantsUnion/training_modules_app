@@ -1,24 +1,42 @@
 import {CreateUserContentCommand} from "content";
 import {UpdateUserContentCommand} from './user_content_routes_controller';
 import {quillRepository} from "../../quill/quill_repository";
+import {contentRepository} from "../content_repository";
+import {userRepository} from "../../user/users_repository";
 
 export class UserContentHandler {
-    constructor() {
+    constructor (private quillRepository) {
     }
 
-    handleCreateUserContentCommand(createUserContentCommand: CreateUserContentCommand) {
+    async handleCreateUserContentCommand (createUserContentCommand: CreateUserContentCommand): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            (async () => {
+                try {
+                    let quillId = await this.quillRepository.getNextId();
+                    await quillRepository.insertEditorJson(quillId, createUserContentCommand.quillContent);
 
-        quillRepository.insertEditorJson(createUserContentCommand.quillContent);
-        //add quill data to quill table
-        //add content data with quill id to content table
-        //add content id to user table
+                    let contentId = await contentRepository.getNextId();
+                    await contentRepository.createContent({
+                        id: contentId,
+                        quillDataId: quillId,
+                        title: createUserContentCommand.title,
+                    });
+
+                    await userRepository.addContentId(createUserContentCommand.userId,
+                        contentId);
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            })();
+        });
     }
 
-    handleUpdateUserContentCommand(updateUserContentCommand: UpdateUserContentCommand) {
+    handleUpdateUserContentCommand (updateUserContentCommand: UpdateUserContentCommand) {
         //update quill data in quill table
     }
 
 
 }
 
-export const userContentHandler = new UserContentHandler();
+export const userContentHandler = new UserContentHandler(quillRepository);

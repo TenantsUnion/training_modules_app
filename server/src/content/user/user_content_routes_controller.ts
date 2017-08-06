@@ -4,6 +4,10 @@ import {CreateUserContentCommand} from "content";
 import {UserContentHandler, userContentHandler} from "./user_content_handler";
 import {getLogger} from '../../log';
 import {contentRepository} from "../content_repository";
+import {
+    UserContentValidator,
+    userContentValidator
+} from "./user_content_validator";
 
 let logger = getLogger('userContentController', 'info');
 
@@ -16,14 +20,19 @@ export interface UpdateUserContentCommand {
 }
 
 export class UserContentController {
-    constructor(private userContentHandler: UserContentHandler) {
+    constructor (private userContentHandler: UserContentHandler,
+                 private userContentValidator: UserContentValidator) {
     }
 
-    create(request: Request, response: Response) {
+    create (request: Request, response: Response) {
         let createContent: CreateUserContentCommand = request.body;
         (async () => {
             try {
                 //todo validate
+                let error = await this.userContentValidator.create(createContent);
+                if(error){
+                    return response.status(400).send(error);
+                }
                 await this.userContentHandler.handleCreateUserContentCommand(createContent);
                 response.status(200)
                     .send();
@@ -36,7 +45,7 @@ export class UserContentController {
         })();
     }
 
-    update(request: Request, response: Response) {
+    update (request: Request, response: Response) {
         let updateUserContentCommand: UpdateUserContentCommand = request.body;
         (async () => {
             try {
@@ -53,7 +62,7 @@ export class UserContentController {
         })();
     }
 
-    list(request: Request, response: Response) {
+    list (request: Request, response: Response) {
         let username = request.params.username;
         if (!username) {
             response.status(400)
@@ -72,9 +81,9 @@ export class UserContentController {
         })();
     }
 
-    load(request: Request, response: Response) {
+    load (request: Request, response: Response) {
         let username = request.params.username;
-        let contentId = request.params.contentId;
+        let contentId = request.params.quillDataId;
         if (!username) {
             response.status(400)
                 .send('Can\'t get content. No username specified.');
@@ -100,7 +109,8 @@ export class UserContentController {
     }
 }
 
-let userContentController = new UserContentController(userContentHandler);
+let userContentController =
+    new UserContentController(userContentHandler, userContentValidator);
 
 let router: Router = express.Router();
 router.post('/user/:username/content/update', (request, response) => {
@@ -115,7 +125,7 @@ router.get('/user/:username/content', (request, response) => {
     userContentController.list(request, response);
 });
 
-router.get('/user/:username/content/:contentId', (request, response) => {
+router.get('/user/:username/content/:quillDataId', (request, response) => {
     userContentController.load(request, response);
 });
 
