@@ -6,7 +6,7 @@ CREATE TABLE tu.user (
   admin_of_course_ids    BIGINT [] NOT NULL DEFAULT array[]::BIGINT[],
   enrolled_in_course_ids BIGINT [] NOT NULL DEFAULT array[]::BIGINT[],
   completed_course_ids   BIGINT [] NOT NULL DEFAULT array[]::BIGINT[],
-  created_content        BIGINT [] NOT NULL DEFAULT array[]::BIGINT[]
+  created_content_ids        BIGINT [] NOT NULL DEFAULT array[]::BIGINT[]
 );
 
 CREATE INDEX user_username_idx
