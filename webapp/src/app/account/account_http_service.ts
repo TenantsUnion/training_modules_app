@@ -1,6 +1,7 @@
 import axios from "axios";
 import {LoginCredentials, LoginResponse, WebappSignupData} from 'account.d.ts';
 import {IUserInfo} from "user";
+import {userQueryService} from "./user_query_service";
 
 class AccountHttpService {
 
@@ -8,6 +9,8 @@ class AccountHttpService {
         return axios.post('account/login', loginCredentials)
             .then((value => {
                 //todo attach cookie, maintain authentication for future requests
+                let userInfo:IUserInfo = <IUserInfo> value.data;
+                userQueryService.setCurrentUser(userInfo);
                 return <IUserInfo> value.data;
             })).catch((response => {
                 throw response.response.data;
@@ -16,11 +19,21 @@ class AccountHttpService {
 
     signup(signupData: WebappSignupData): Promise<IUserInfo> {
         return axios.post('account/signup', signupData).then((value => {
-            return <IUserInfo> value.data;
+            let userInfo = <IUserInfo> value.data;
+            userQueryService.setCurrentUser(userInfo);
+            return userInfo;
         }))
             .catch((response => {
                 throw response.response.data;
             }));
+    }
+
+    logout(): Promise<void> {
+        return axios.post('account/logout').then((value => {
+            userQueryService.resetCurrentUser();
+        })).catch((response => {
+            throw response.response.data;
+        }));
     }
 }
 

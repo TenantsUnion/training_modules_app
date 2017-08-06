@@ -22,7 +22,7 @@ export const QUILL_CONFIG: QuillOptionsStatic = {
         },
         toolbar: true
     },
-    debug: 'info',
+    // debug: 'info',
     theme: 'snow'
 };
 
@@ -30,6 +30,7 @@ export const QUILL_CONFIG: QuillOptionsStatic = {
 let counter = 0;
 
 require('./quill_component.scss');
+
 @Component({
     data: () => {
         return {
@@ -55,5 +56,9 @@ export class QuillComponent extends Vue {
 
     mounted () {
         this.quill = new Quill('.' + this.editorId, QUILL_CONFIG)
+    }
+
+    getQuillEditorContents(): Quill.DeltaStatic {
+        return this.quill.getContents();
     }
 }

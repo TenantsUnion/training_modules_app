@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import {QuillComponent} from "../../quill/quill_component";
+import {createContentHttpService} from "./create_content_http_service";
 
 @Component({
     data: () => {
@@ -16,8 +17,17 @@ import {QuillComponent} from "../../quill/quill_component";
     }
 })
 export class ContentComponent extends Vue {
+    loading: boolean;
+    errorMsg: string;
+    title: string;
+    quillEditor: QuillComponent;
+
+    mounted(){
+        this.quillEditor = <QuillComponent> this.$refs.editor;
+    }
 
     create () {
-
+        let quillData:Quill.DeltaStatic = this.quillEditor.getQuillEditorContents();
+        createContentHttpService.createContent(this.title, quillData);
     }
 }
