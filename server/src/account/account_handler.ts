@@ -1,10 +1,11 @@
 import {LoginCredentials, WebappSignupData} from "account";
 import {accountRepository, IAccountRepository} from "./account_repository";
 import {IUserHandler, AccountInfo, userHandler} from "../user/user_handler";
+import {IUserInfo} from "../../../shared/user";
 
 export interface IAccountHandler {
-    signup(signupInfo: WebappSignupData): Promise<AccountInfo>;
-    login(loginCredentials: LoginCredentials): Promise<AccountInfo>;
+    signup(signupInfo: WebappSignupData): Promise<IUserInfo>;
+    login(loginCredentials: LoginCredentials): Promise<IUserInfo>;
 }
 
 export class AccountHandler implements IAccountHandler {
@@ -12,8 +13,8 @@ export class AccountHandler implements IAccountHandler {
                  private userHandler: IUserHandler) {
     }
 
-    async signup (signupInfo: WebappSignupData): Promise<AccountInfo> {
-        return new Promise<AccountInfo>((resolve, reject) => {
+    async signup (signupInfo: WebappSignupData): Promise<IUserInfo> {
+        return new Promise<IUserInfo>((resolve, reject) => {
             (async () => {
                 try {
                     let accountId = await this.accountRepository.createAccount(signupInfo);
@@ -31,19 +32,22 @@ export class AccountHandler implements IAccountHandler {
         });
     }
 
-    async login (loginCredentials: LoginCredentials): Promise<AccountInfo> {
-        return new Promise<AccountInfo>((resolve, reject) => {
+    async login (loginCredentials: LoginCredentials): Promise<IUserInfo> {
+        return new Promise<IUserInfo>((resolve, reject) => {
             (async () => {
                 try {
                     let accountInfo = await this.accountRepository.findAccountByUsername(loginCredentials.username);
                     //todo compare passwords
-                    resolve(accountInfo);
+
+                    let userInfo = await this.userHandler.loadUser(accountInfo.id);
+                    resolve(userInfo);
                 } catch (e) {
                     reject(e);
                 }
             })();
         });
     }
+
 }
 
 export const accountHandler = new AccountHandler(accountRepository, userHandler);

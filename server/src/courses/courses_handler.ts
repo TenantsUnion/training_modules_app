@@ -1,4 +1,4 @@
-import {IUserHandler, IUserId, userHandler} from "../user/user_handler";
+import {IUserHandler, userHandler} from "../user/user_handler";
 import {coursesRepository, ICoursesRepository} from "./courses_repository";
 import {ICourseInfo} from "courses";
 import {CourseEntity, CourseUsersEntity, UserCoursesEntity} from "./courses";

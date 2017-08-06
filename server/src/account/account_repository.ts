@@ -2,13 +2,14 @@ import {Datasource, datasource, IQueryConfig} from "../datasource";
 import {LoginCredentials, WebappSignupData} from "account";
 import {IUserInfo} from "user";
 import {AbstractRepository} from "../repository";
+import {AccountInfo} from "../user/user_handler";
 
 export interface IAccountRepository {
     accountExists(username: string): Promise<boolean>;
 
     createAccount(signupInfo: WebappSignupData): Promise<string>;
 
-    findAccountByUsername(loginCredentials): Promise<IUserInfo>;
+    findAccountByUsername(loginCredentials): Promise<AccountInfo>;
 }
 
 class AccountRepository extends AbstractRepository implements IAccountRepository {
@@ -64,10 +65,10 @@ class AccountRepository extends AbstractRepository implements IAccountRepository
         });
     }
 
-    async findAccountByUsername(username: string): Promise<IUserInfo> {
-        return new Promise<IUserInfo>((resolve, reject) => {
+    async findAccountByUsername(username: string): Promise<AccountInfo> {
+        return new Promise<AccountInfo>((resolve, reject) => {
             if (!username) {
-                return resolve(null);
+                return reject(null);
             }
 
             (async () => {
@@ -81,12 +82,6 @@ class AccountRepository extends AbstractRepository implements IAccountRepository
                     let userRow = results.rows[0];
                     resolve({
                         id: userRow.id,
-                        username: userRow.username,
-                        firstName: userRow.firstName,
-                        lastName: userRow.lastName,
-                        adminOfCourseIds: [],
-                        enrolledInCourseIds: [],
-                        completedCourseIds: []
                     });
                 } catch (e) {
                     console.log("Database findAccountByUsername error");

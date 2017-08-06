@@ -18,6 +18,8 @@ export interface IUserRepository {
     findUserByUsername(username: string): Promise<IUserInfo>;
 
     addToAdminOfCourseIds(userId: string, courseId: string): Promise<void>;
+
+    loadUser(id: string): Promise<IUserInfo>;
 }
 
 export class UserRepository extends AbstractRepository implements IUserRepository {
@@ -35,8 +37,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
                         values: [id, username, firstName, lastName]
                     });
                     resolve({
-                        id: id,
-                        username: username
+                        id: id
                     });
                 } catch (e) {
                     console.log(e.stack);
@@ -65,6 +66,37 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         });
     }
 
+    async loadUser (id: string): Promise<IUserInfo> {
+            return new Promise<IUserInfo>((resolve, reject) => {
+                (async () => {
+                    try {
+                        let results = await datasource.query({
+                                text: `SELECT * FROM tu.user u WHERE u.id = $1`,
+                                values: [id]
+                            }
+                        );
+
+                        let userRow = results.rows[0];
+                        resolve({
+                            id: userRow.id,
+                            username: userRow.username,
+                            firstName: userRow.first_name,
+                            lastName: userRow.last_name,
+                            adminOfCourseIds: userRow.admin_of_course_ids,
+                            enrolledInCourseIds: userRow.enrolled_in_course_ids,
+                            completedCourseIds: userRow.completed_course_ids
+                        });
+                    } catch (e) {
+                        console.log("Database findAccountByUsername error");
+                        console.log(e);
+                        console.log(e.stack);
+                        reject(e);
+                    }
+                })();
+            });
+    }
+    
+    
     addToAdminOfCourseIds(userId: string, courseId: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {

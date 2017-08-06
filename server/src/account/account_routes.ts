@@ -35,7 +35,6 @@ export class AccountController {
     }
 
     login (request: Request, response: Response) {
-        console.log('handling login');
         let loginCredentials: LoginCredentials = request.body;
         (async () => {
             try {

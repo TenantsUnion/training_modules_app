@@ -1,47 +1,31 @@
-import {IUserRepository, userRepository} from "./users_repository";
-import {IUserInfo} from "user";
+import {
+    CreateUserInfo, IUserRepository,
+    userRepository
+} from "./users_repository";
 import {CourseEntity} from "../courses/courses";
-
-export interface ICreateUserData {
-    username: string;
-}
+import {IUserInfo} from "../../../shared/user";
 
 export interface AccountInfo {
     id: string;
 }
 
 export interface IUserHandler {
-    createUser(createUserData: any): Promise<AccountInfo>;
-
-    getIdFromUsername(username: string): Promise<AccountInfo>
-
+    createUser(createUserData: any): Promise<IUserInfo>;
     userCreatedCourse(userId:string, courseEntity: CourseEntity): Promise<void>;
+    loadUser(id: string): Promise<IUserInfo>;
 }
 
 export class UserHandler implements IUserHandler {
     constructor(private userRepository: IUserRepository) {
     }
 
-    async createUser(createUserData: ICreateUserData): Promise<AccountInfo> {
-        return new Promise<AccountInfo>((resolve, reject) => {
+    async createUser(createUserData: CreateUserInfo): Promise<IUserInfo> {
+        return new Promise<IUserInfo>((resolve, reject) => {
             (async () => {
                 try {
-                    let userId: AccountInfo = await this.userRepository.createUser(createUserData);
-                    resolve(userId);
-                } catch (e) {
-                    console.log(e.stack);
-                    reject(e);
-                }
-            })();
-        });
-    }
-
-    async getIdFromUsername(username: string): Promise<AccountInfo> {
-        return new Promise<AccountInfo>((resolve, reject) => {
-            (async () => {
-                try {
-                    let userId: AccountInfo = await this.userRepository.getIdFromUsername(username);
-                    resolve(userId);
+                    let accountInfo: AccountInfo = await this.userRepository.createUser(createUserData);
+                    let userInfo: IUserInfo = await this.userRepository.loadUser(accountInfo.id);
+                    resolve(userInfo);
                 } catch (e) {
                     console.log(e.stack);
                     reject(e);
@@ -62,6 +46,10 @@ export class UserHandler implements IUserHandler {
                 }
             })();
         });
+    }
+
+    async loadUser (id: string): Promise<IUserInfo> {
+        return this.userRepository.loadUser(id);
     }
 }
 
