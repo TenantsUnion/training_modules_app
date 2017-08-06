@@ -12,6 +12,7 @@ import {IErrorResponse} from '../../shared/http_responses';
 import {AccountRoutes} from './account/account_routes';
 import {AdminModulesRoute} from './modules/modules_route';
 import {CoursesRoutes} from "./courses/courses_routes_controller";
+import {ContentRoutes} from "./content/user/user_content_routes_controller";
 
 /**
  * Configured to listen on port and started in /bin scripts
@@ -60,6 +61,7 @@ app.get('/', express.Router().get('/', function (req, res, next) {
 app.use('/account', AccountRoutes);
 app.use('/courses', CoursesRoutes);
 app.use('/admin', AdminModulesRoute);
+app.use(ContentRoutes);
 
 // has to go last so other routes can match, catch 404 and forward to error handler
 app.use(function (req, res, next) {

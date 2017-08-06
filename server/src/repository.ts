@@ -2,7 +2,7 @@ import {Datasource} from "./datasource";
 
 export abstract class AbstractRepository {
     constructor (private sequenceName: string,
-                 private sqlTemplate: Datasource) {
+                 protected sqlTemplate: Datasource) {
         this.sequenceName = sequenceName;
     }
 

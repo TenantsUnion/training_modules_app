@@ -15,19 +15,17 @@ export interface IUserRepository {
 
     getIdFromUsername(username: string): Promise<AccountInfo>;
 
-    findUserByUsername(username: string): Promise<IUserInfo>;
-
     addToAdminOfCourseIds(userId: string, courseId: string): Promise<void>;
 
     loadUser(id: string): Promise<IUserInfo>;
 }
 
 export class UserRepository extends AbstractRepository implements IUserRepository {
-    constructor(private datasource: Datasource) {
+    constructor (private datasource: Datasource) {
         super('user_id_seq', datasource);
     }
 
-    async createUser(createUserInfo: CreateUserInfo): Promise<AccountInfo> {
+    async createUser (createUserInfo: CreateUserInfo): Promise<AccountInfo> {
         let {id, username, firstName, lastName} = createUserInfo;
         return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
@@ -47,7 +45,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         });
     }
 
-    async getIdFromUsername(username: string): Promise<AccountInfo> {
+    async getIdFromUsername (username: string): Promise<AccountInfo> {
         return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
                 try {
@@ -67,37 +65,37 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
     }
 
     async loadUser (id: string): Promise<IUserInfo> {
-            return new Promise<IUserInfo>((resolve, reject) => {
-                (async () => {
-                    try {
-                        let results = await datasource.query({
-                                text: `SELECT * FROM tu.user u WHERE u.id = $1`,
-                                values: [id]
-                            }
-                        );
+        return new Promise<IUserInfo>((resolve, reject) => {
+            (async () => {
+                try {
+                    let results = await datasource.query({
+                            text: `SELECT * FROM tu.user u WHERE u.id = $1`,
+                            values: [id]
+                        }
+                    );
 
-                        let userRow = results.rows[0];
-                        resolve({
-                            id: userRow.id,
-                            username: userRow.username,
-                            firstName: userRow.first_name,
-                            lastName: userRow.last_name,
-                            adminOfCourseIds: userRow.admin_of_course_ids,
-                            enrolledInCourseIds: userRow.enrolled_in_course_ids,
-                            completedCourseIds: userRow.completed_course_ids
-                        });
-                    } catch (e) {
-                        console.log("Database findAccountByUsername error");
-                        console.log(e);
-                        console.log(e.stack);
-                        reject(e);
-                    }
-                })();
-            });
+                    let userRow = results.rows[0];
+                    resolve({
+                        id: userRow.id,
+                        username: userRow.username,
+                        firstName: userRow.first_name,
+                        lastName: userRow.last_name,
+                        adminOfCourseIds: userRow.admin_of_course_ids,
+                        enrolledInCourseIds: userRow.enrolled_in_course_ids,
+                        completedCourseIds: userRow.completed_course_ids
+                    });
+                } catch (e) {
+                    console.log("Database findAccountByUsername error");
+                    console.log(e);
+                    console.log(e.stack);
+                    reject(e);
+                }
+            })();
+        });
     }
-    
-    
-    addToAdminOfCourseIds(userId: string, courseId: string): Promise<void> {
+
+
+    addToAdminOfCourseIds (userId: string, courseId: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {
@@ -115,8 +113,22 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         });
     }
 
-    findUserByUsername(username: string): Promise<IUserInfo> {
-        throw new Error("Method not implemented.");
+    async addContentId (userId: string, contentId: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            (async () => {
+                try {
+                    await this.datasource.query({
+                        text: `UPDATE tu.user SET created_content_ids =
+                            created_content_ids || $1 :: BIGINT WHERE id = $2`,
+                        values: [contentId, userId]
+                    });
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            })();
+        });
+
     }
 }
 

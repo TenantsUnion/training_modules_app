@@ -1,14 +1,17 @@
 import {Datasource, datasource} from '../datasource';
 import {getLogger} from "../log";
+import {AbstractRepository} from "../repository";
 
 export interface QuillEditorData {
     id: string;
     editor_json: string;
 }
 
-class QuillRepository {
-    logger:any;
-    constructor (private sqlTemplate: Datasource) {
+class QuillRepository extends AbstractRepository {
+    logger: any;
+
+    constructor (sqlTemplate: Datasource) {
+        super('quill_data_id_seq', sqlTemplate);
         this.logger = getLogger('dbLog', 'error');
     }
 
@@ -16,7 +19,6 @@ class QuillRepository {
         return new Promise<QuillEditorData>((resolve, reject) => {
             (async () => {
                 try {
-
                     let result = this.sqlTemplate.query({
                         text: `SELECT id, editor_json FROM tu.quill_data WHERE
                           id = $1`,
@@ -31,13 +33,22 @@ class QuillRepository {
         });
     }
 
-    insertEditorJson (editorJson: string): Promise<string> {
-        return new Promise<string>((reject, resolve) => {
-            this.sqlTemplate.query({
-                // language=PostgreSQL
-                text: `INSERT INTO tu.quill_data (editor_json) VALUES ($1)`,
-                values: [editorJson]
-            });
+    async insertEditorJson (quillId: string, editorJson: string): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            (async () => {
+                try {
+                    this.sqlTemplate.query({
+                        // language=PostgreSQL
+                        text: `INSERT INTO tu.quill_data (id, editor_json)
+                        VALUES ($1, $2)`,
+                        values: [quillId, editorJson]
+                    });
+
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            })();
         });
     }
 
