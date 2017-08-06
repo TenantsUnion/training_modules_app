@@ -1,18 +1,19 @@
 import {Datasource, datasource} from "../datasource";
 import {IUserInfo} from "user";
-import {IUserId} from "./user_handler";
+import {AccountInfo} from "./user_handler";
 import {AbstractRepository} from "../repository";
 
-export interface ICreateUser {
+export interface CreateUserInfo {
+    id: string,
     username: string,
     firstName?: string,
     lastName?: string
 }
 
 export interface IUserRepository {
-    createUser(createUserInfo: ICreateUser): Promise<IUserId>;
+    createUser(createUserInfo: CreateUserInfo): Promise<AccountInfo>;
 
-    getIdFromUsername(username: string): Promise<IUserId>;
+    getIdFromUsername(username: string): Promise<AccountInfo>;
 
     findUserByUsername(username: string): Promise<IUserInfo>;
 
@@ -24,18 +25,18 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         super('user_id_seq', datasource);
     }
 
-    async createUser(createUserInfo: ICreateUser): Promise<IUserId> {
-        let {username, firstName, lastName} = createUserInfo;
-        return new Promise<IUserId>((resolve, reject) => {
+    async createUser(createUserInfo: CreateUserInfo): Promise<AccountInfo> {
+        let {id, username, firstName, lastName} = createUserInfo;
+        return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
                 try {
-                    let userId = await this.getNextId();
                     await this.datasource.query({
                         text: `INSERT INTO tu.user (id, username, first_name, last_name) VALUES ($1, $2, $3, $4)`,
-                        values: [userId, username, firstName, lastName]
+                        values: [id, username, firstName, lastName]
                     });
                     resolve({
-                        id: userId
+                        id: id,
+                        username: username
                     });
                 } catch (e) {
                     console.log(e.stack);
@@ -45,8 +46,8 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         });
     }
 
-    async getIdFromUsername(username: string): Promise<IUserId> {
-        return new Promise<IUserId>((resolve, reject) => {
+    async getIdFromUsername(username: string): Promise<AccountInfo> {
+        return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
                 try {
                     let result = await datasource.query({

@@ -6,14 +6,14 @@ export interface ICreateUserData {
     username: string;
 }
 
-export interface IUserId {
+export interface AccountInfo {
     id: string;
 }
 
 export interface IUserHandler {
-    createUser(createUserData: any): Promise<IUserId>;
+    createUser(createUserData: any): Promise<AccountInfo>;
 
-    getIdFromUsername(username: string): Promise<IUserId>
+    getIdFromUsername(username: string): Promise<AccountInfo>
 
     userCreatedCourse(userId:string, courseEntity: CourseEntity): Promise<void>;
 }
@@ -22,11 +22,11 @@ export class UserHandler implements IUserHandler {
     constructor(private userRepository: IUserRepository) {
     }
 
-    async createUser(createUserData: ICreateUserData): Promise<IUserId> {
-        return new Promise<IUserId>((resolve, reject) => {
+    async createUser(createUserData: ICreateUserData): Promise<AccountInfo> {
+        return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
                 try {
-                    let userId: IUserId = await this.userRepository.createUser(createUserData);
+                    let userId: AccountInfo = await this.userRepository.createUser(createUserData);
                     resolve(userId);
                 } catch (e) {
                     console.log(e.stack);
@@ -36,11 +36,11 @@ export class UserHandler implements IUserHandler {
         });
     }
 
-    async getIdFromUsername(username: string): Promise<IUserId> {
-        return new Promise<IUserId>((resolve, reject) => {
+    async getIdFromUsername(username: string): Promise<AccountInfo> {
+        return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
                 try {
-                    let userId: IUserId = await this.userRepository.getIdFromUsername(username);
+                    let userId: AccountInfo = await this.userRepository.getIdFromUsername(username);
                     resolve(userId);
                 } catch (e) {
                     console.log(e.stack);

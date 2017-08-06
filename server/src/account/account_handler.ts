@@ -1,32 +1,24 @@
 import {LoginCredentials, WebappSignupData} from "account";
 import {accountRepository, IAccountRepository} from "./account_repository";
-import {IUserInfo} from "user";
-import {IUserHandler, IUserId, userHandler} from "../user/user_handler";
+import {IUserHandler, AccountInfo, userHandler} from "../user/user_handler";
 
 export interface IAccountHandler {
-    signup(signupInfo: WebappSignupData): Promise<IUserId | string>;
-    login(loginCredentials: LoginCredentials): Promise<IUserId | string>;
+    signup(signupInfo: WebappSignupData): Promise<AccountInfo>;
+    login(loginCredentials: LoginCredentials): Promise<AccountInfo>;
 }
 
 export class AccountHandler implements IAccountHandler {
-    constructor(private accountRepository: IAccountRepository,
-                private userHandler: IUserHandler) {
+    constructor (private accountRepository: IAccountRepository,
+                 private userHandler: IUserHandler) {
     }
 
-    async signup(signupInfo: WebappSignupData): Promise<IUserId | string> {
-        return new Promise<IUserId | string>((resolve, reject) => {
-            if (!signupInfo.username) {
-                return resolve('Need username in order to createAccount');
-            }
-
+    async signup (signupInfo: WebappSignupData): Promise<AccountInfo> {
+        return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
                 try {
-                    let accountExists = await this.accountRepository.accountExists(signupInfo.username);
-                    if (accountExists) {
-                        return resolve(`Account with username: ${signupInfo.username} already exists`);
-                    }
-                    await this.accountRepository.createAccount(signupInfo);
+                    let accountId = await this.accountRepository.createAccount(signupInfo);
                     let userId = await this.userHandler.createUser({
+                        id: accountId,
                         username: signupInfo.username
                     });
 
@@ -39,21 +31,16 @@ export class AccountHandler implements IAccountHandler {
         });
     }
 
-    async login(loginCredentials: LoginCredentials): Promise<IUserId | string> {
-        return new Promise<IUserId | string>((resolve, reject) => {
-            if (!loginCredentials.username){
-                resolve(`Username required for login`);
-            }
-
+    async login (loginCredentials: LoginCredentials): Promise<AccountInfo> {
+        return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
-                let exists = await this.accountRepository.accountExists(loginCredentials.username);
-                if(!exists){
-                    return resolve(`No account found that matches username ${loginCredentials.username}`);
+                try {
+                    let accountInfo = await this.accountRepository.findAccountByUsername(loginCredentials.username);
+                    //todo compare passwords
+                    resolve(accountInfo);
+                } catch (e) {
+                    reject(e);
                 }
-                let accountInfo = await this.accountRepository.findAccountByUsername(loginCredentials.username);
-                //todo compare passwords
-                let userId = await this.userHandler.getIdFromUsername(accountInfo.username);
-                resolve(userId);
             })();
         });
     }
