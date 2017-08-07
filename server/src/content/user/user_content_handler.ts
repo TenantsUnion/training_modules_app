@@ -1,11 +1,19 @@
 import {CreateUserContentCommand} from "content";
 import {UpdateUserContentCommand} from './user_content_routes_controller';
-import {quillRepository} from "../../quill/quill_repository";
-import {contentRepository} from "../content_repository";
-import {userRepository} from "../../user/users_repository";
+import {quillRepository, QuillRepository} from "../../quill/quill_repository";
+import {
+    ContentEntity, contentRepository,
+    ContentRepository
+} from "../content_repository";
+import {
+    IUserRepository, userRepository,
+    UserRepository
+} from "../../user/users_repository";
 
 export class UserContentHandler {
-    constructor (private quillRepository) {
+    constructor (private contentRepository: ContentRepository,
+                 private quillRepository: QuillRepository,
+                 private userRepository: UserRepository) {
     }
 
     async handleCreateUserContentCommand (createUserContentCommand: CreateUserContentCommand): Promise<void> {
@@ -13,16 +21,16 @@ export class UserContentHandler {
             (async () => {
                 try {
                     let quillId = await this.quillRepository.getNextId();
-                    await quillRepository.insertEditorJson(quillId, createUserContentCommand.quillContent);
+                    await this.quillRepository.insertEditorJson(quillId, createUserContentCommand.quillContent);
 
-                    let contentId = await contentRepository.getNextId();
-                    await contentRepository.createContent({
+                    let contentId = await this.contentRepository.getNextId();
+                    await this.contentRepository.createContent({
                         id: contentId,
                         quillDataId: quillId,
                         title: createUserContentCommand.title,
                     });
 
-                    await userRepository.addContentId(createUserContentCommand.userId,
+                    await this.userRepository.addContentId(createUserContentCommand.userId,
                         contentId);
                     resolve();
                 } catch (e) {
@@ -32,11 +40,23 @@ export class UserContentHandler {
         });
     }
 
-    handleUpdateUserContentCommand (updateUserContentCommand: UpdateUserContentCommand) {
+    async handleUpdateUserContentCommand (updateUserContentCommand: ContentEntity): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            (async () => {
+                try {
+                    await this.contentRepository.saveContent(updateUserContentCommand);
+                    await this.quillRepository.updateEditorJson(updateUserContentCommand.quillDataId,
+                        updateUserContentCommand.quillData);
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            })();
+        });
         //update quill data in quill table
     }
 
 
 }
 
-export const userContentHandler = new UserContentHandler(quillRepository);
+export const userContentHandler = new UserContentHandler(contentRepository, quillRepository, userRepository);

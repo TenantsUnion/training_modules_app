@@ -3,7 +3,7 @@ import {Router, Request, Response} from 'express';
 import {CreateUserContentCommand} from "content";
 import {UserContentHandler, userContentHandler} from "./user_content_handler";
 import {getLogger} from '../../log';
-import {contentRepository} from "../content_repository";
+import {ContentEntity, contentRepository} from "../content_repository";
 import {
     UserContentValidator,
     userContentValidator
@@ -45,7 +45,7 @@ export class UserContentController {
     }
 
     update (request: Request, response: Response) {
-        let updateUserContentCommand: UpdateUserContentCommand = request.body;
+        let updateUserContentCommand: ContentEntity = request.body;
         (async () => {
             try {
                 //todo validate
@@ -97,7 +97,7 @@ export class UserContentController {
         (async () => {
             try {
                 let userContentEntity
-                    = contentRepository.loadUserContent(username, contentId);
+                    = await contentRepository.loadUserContent(username, contentId);
                 response.status(200).send(userContentEntity);
             } catch (e) {
                 logger.error('Error load content for user %s, content id %s', username, contentId);
@@ -113,7 +113,7 @@ let userContentController =
     new UserContentController(userContentHandler, userContentValidator);
 
 let router: Router = express.Router();
-router.post('/user/:username/content/update', (request, response) => {
+router.post('/user/:username/contentId/:contentId/save', (request, response) => {
     userContentController.update(request, response);
 });
 
@@ -125,7 +125,7 @@ router.get('/user/:username/content', (request, response) => {
     userContentController.list(request, response);
 });
 
-router.get('/user/:username/content/:quillDataId', (request, response) => {
+router.get('/user/:username/contentId/:quillDataId', (request, response) => {
     userContentController.load(request, response);
 });
 

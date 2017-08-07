@@ -1,6 +1,6 @@
 import {LoginCredentials, WebappSignupData} from "account";
 import {accountRepository, IAccountRepository} from "./account_repository";
-import {IUserHandler, AccountInfo, userHandler} from "../user/user_handler";
+import {IUserHandler, userHandler} from "../user/user_handler";
 import {IUserInfo} from "../../../shared/user";
 
 export interface IAccountHandler {

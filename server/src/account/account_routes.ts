@@ -7,9 +7,11 @@ import {
     AccountRequestValidator,
     accountRequestValidator
 } from "./account_request_validation_service";
+import {IUserHandler, userHandler} from "../user/user_handler";
 
 export class AccountController {
     constructor (private accountHandler: IAccountHandler,
+                 private userHandler: IUserHandler,
                  private accountRequestValidator: AccountRequestValidator) {
     }
 
@@ -39,7 +41,7 @@ export class AccountController {
         (async () => {
             try {
                 let errorMsg = await this.accountRequestValidator.login(loginCredentials);
-                if(errorMsg){
+                if (errorMsg) {
                     return response.status(400).send(errorMsg);
                 }
                 let accountInfo = await this.accountHandler.login(loginCredentials);
@@ -51,9 +53,25 @@ export class AccountController {
             }
         })();
     }
+
+    getLoggedInUserInfo (request: Request, response: Response) {
+        if (request.session && request.session.user_id) {
+            (async () => {
+                try {
+                    let userAccountInfo = await this.userHandler.loadUser(request.session.user_id);
+                    response.status(200).send(userAccountInfo);
+                } catch (e) {
+                    response.status(500)
+                        .send(e);
+                }
+
+            })();
+        }
+    }
 }
 
-let accountController = new AccountController(accountHandler, accountRequestValidator);
+let accountController = new AccountController(accountHandler, userHandler,
+    accountRequestValidator);
 
 let router: Router = express.Router();
 router.post('/login', (request, response) => {
@@ -64,4 +82,7 @@ router.post('/signup', (request, response) => {
     accountController.signup(request, response);
 });
 
+router.get('/userInfo', (request, response) => {
+    accountController.getLoggedInUserInfo(request, response);
+});
 export const AccountRoutes = router;

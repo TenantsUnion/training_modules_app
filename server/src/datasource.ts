@@ -24,7 +24,7 @@ pool.on('error', (err, client) => {
  */
 export interface IQueryConfig {
     text: string,
-    values: (string | number | string[] | number[])[]
+    values: (string | number | string[] | number[] | Quill.DeltaStatic)[]
 }
 
 export interface IQueryResult {

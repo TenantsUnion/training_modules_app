@@ -7,7 +7,7 @@ export interface QuillEditorData {
     editor_json: string;
 }
 
-class QuillRepository extends AbstractRepository {
+export class QuillRepository extends AbstractRepository {
     logger: any;
 
     constructor (sqlTemplate: Datasource) {
@@ -52,17 +52,23 @@ class QuillRepository extends AbstractRepository {
         });
     }
 
-    updateEditorJson (id: string, editorJson: string): Promise<void> {
-        return new Promise<void>((reject, resolve) => {
-            this.sqlTemplate.query({
-                // language=PostgreSQL
-                text: `UPDATE tu.quill_data SET editor_json = $1 WHERE
-                  id = $2`,
-                values: [editorJson, id]
-            });
+    async updateEditorJson (id: string, editorJson: Quill.DeltaStatic): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            (async () => {
+                try {
+                    this.sqlTemplate.query({
+                        text: `UPDATE tu.quill_data SET
+                          editor_json = $1 WHERE
+                          id = $2`,
+                        values: [editorJson, id]
+                    });
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            })();
         });
     }
 }
 
-export const
-    quillRepository = new QuillRepository(datasource);
+export const quillRepository = new QuillRepository(datasource);

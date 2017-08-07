@@ -4,6 +4,15 @@ declare namespace content {
         title: string;
         quillContent: string;
     }
+
+    export interface ContentDescriptionEntity {
+        id: string;
+        quillDataId: string;
+        title: string;
+        tags?: string[],
+        lastModifiedAt?: string,
+        createdAt?: string
+    }
 }
 
 export = content;
