@@ -22,16 +22,18 @@ export class CreateContentComponent extends Vue {
     title: string;
     quillEditor: QuillComponent;
 
-    mounted(){
+    mounted () {
         this.quillEditor = <QuillComponent> this.$refs.editor;
     }
 
     create () {
-        let quillData:Quill.DeltaStatic = this.quillEditor.getQuillEditorContents();
-        contentHttpService.createContent(this.title, quillData).then(()=> {
-            //successfully created content
-        }).catch((errorMsg) => {
-            this.errorMsg = errorMsg;
-        });
+        let quillData: Quill.DeltaStatic = this.quillEditor.getQuillEditorContents();
+        contentHttpService.createContent(this.title, quillData)
+            .then(() => {
+                //successfully created content
+            })
+            .catch((errorMsg) => {
+                this.errorMsg = errorMsg;
+            });
     }
 }
