@@ -8,13 +8,12 @@
                         New
                     </button>
                 </h4>
-                <ul v-if="content.length"
-                    class="content-list">
-                    <li v-for="course in enrolledInCourses"
+                <ul class="">
+                    <li v-for="content in contentDescriptionList"
                         class="content-item">
-                        <span>{{ course.name }}</span>
+                        <span>{{ content.title }}</span>
                         <button class="button primary"
-                                @click="go(course.id)">Go
+                                @click="edit(content)">Edit
                         </button>
                     </li>
                 </ul>

@@ -5,11 +5,11 @@ import {userQueryService} from "./user_query_service";
 
 class AccountHttpService {
 
-    login(loginCredentials: LoginCredentials): Promise<IUserInfo> {
+    login (loginCredentials: LoginCredentials): Promise<IUserInfo> {
         return axios.post('account/login', loginCredentials)
             .then((value => {
                 //todo attach cookie, maintain authentication for future requests
-                let userInfo:IUserInfo = <IUserInfo> value.data;
+                let userInfo: IUserInfo = <IUserInfo> value.data;
                 userQueryService.setCurrentUser(userInfo);
                 return <IUserInfo> value.data;
             })).catch((response => {
@@ -17,7 +17,7 @@ class AccountHttpService {
             }))
     }
 
-    signup(signupData: WebappSignupData): Promise<IUserInfo> {
+    signup (signupData: WebappSignupData): Promise<IUserInfo> {
         return axios.post('account/signup', signupData).then((value => {
             let userInfo = <IUserInfo> value.data;
             userQueryService.setCurrentUser(userInfo);
@@ -28,7 +28,18 @@ class AccountHttpService {
             }));
     }
 
-    logout(): Promise<void> {
+    getLoggedInUserInfo (): Promise<IUserInfo> {
+        return axios.get('account/userInfo')
+            .then((value => {
+                let userInfo = <IUserInfo> value.data;
+                return userInfo;
+            }))
+            .catch((response) => {
+                throw response.response.data;
+            });
+    }
+
+    logout (): Promise<void> {
         return axios.post('account/logout').then((value => {
             userQueryService.resetCurrentUser();
         })).catch((response => {

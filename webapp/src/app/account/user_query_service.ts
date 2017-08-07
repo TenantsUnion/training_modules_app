@@ -11,12 +11,16 @@ export class UserQueryService {
         return this.currentUser.id;
     }
 
-    getUsername(): string {
+    getUsername (): string {
         return this.currentUser.username;
     }
 
     resetCurrentUser (): void {
         this.currentUser = null;
+    }
+
+    isUserLoggedIn (): boolean {
+        return !!this.currentUser;
     }
 
 }

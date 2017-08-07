@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import {QuillComponent} from "../../../quill/quill_component";
-import {createContentHttpService} from "./create_content_http_service";
+import {contentHttpService} from "../content_http_service";
 
 @Component({
     data: () => {
@@ -28,7 +28,7 @@ export class CreateContentComponent extends Vue {
 
     create () {
         let quillData:Quill.DeltaStatic = this.quillEditor.getQuillEditorContents();
-        createContentHttpService.createContent(this.title, quillData).then(()=> {
+        contentHttpService.createContent(this.title, quillData).then(()=> {
             //successfully created content
         }).catch((errorMsg) => {
             this.errorMsg = errorMsg;

@@ -58,7 +58,11 @@ export class QuillComponent extends Vue {
         this.quill = new Quill('.' + this.editorId, QUILL_CONFIG)
     }
 
-    getQuillEditorContents(): Quill.DeltaStatic {
+    getQuillEditorContents (): Quill.DeltaStatic {
         return this.quill.getContents();
+    }
+
+    setQuillEditorContents (quillContents: Quill.DeltaStatic) {
+        this.quill.setContents(quillContents);
     }
 }
