@@ -3,5 +3,6 @@ node_modules/
 .rollupts2_cache/
 **/dist/**/*
 **/build/**/*
+webapp/src/app/**/*.js
 *~
 npm-debug.log
