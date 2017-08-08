@@ -5,25 +5,39 @@
                 <h1>Login</h1>
                 <p>Please enter your username</p>
                 <p v-if="loading">Logging in...</p>
-                <p v-if="errorMsg">{{ errorMsg }}</p>
             </div>
         </div>
     </div>
     <div class="grid-x grid-padding-x align-center">
         <div class="cell small-6">
             <div class="callout float-center">
-                <label for="username-login">Username
-                    <input v-model="username" type="text"
-                           placeholder="name@myemail.com"
-                           id="username-login"/>
-                </label>
-                <!--<label for="password">Password-->
-                <!--<input v-model="password" type="password" id="password"/>-->
-                <!--</label>-->
-                <button @click="login" type="submit" class="button">
-                    Login
-                </button>
-                <!--<button class="button secondary">Forgot Password</button>-->
+                <vue-form :state="formstate">
+                    <validate :custom="usernameValidator">
+                        <field-messages name="username"
+                                        show="$submitted || $dirty">
+                            <small class="error" slot="required">A username is required to
+                                login
+                            </small>
+                        </field-messages>
+                        <small class="error" v-if="errorMessages.username">
+                            {{errorMessages.username}}
+                        </small>
+                        <label for="username-login">Username</label>
+                        <input v-model="model.username"
+                               type="text"
+                               name="username"
+                               required
+                               placeholder="username"
+                               id="username-login"/>
+                        <!--<label for="password">Password-->
+                        <!--<input v-model="password" type="password" id="password"/>-->
+                        <!--</label>-->
+                    </validate>
+                    <button @click="login" type="button" class="button">
+                        Login
+                    </button>
+                    <!--<button class="button secondary">Forgot Password</button>-->
+                </vue-form>
             </div>
         </div>
     </div>

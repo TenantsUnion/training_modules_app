@@ -1,6 +1,7 @@
 import {appRouter} from './router';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VueForm from 'vue-form';
 import {AppHeader} from "./user/header/user_header_component";
 
 //global styling
@@ -11,6 +12,7 @@ require('./_style.scss');
 Vue.component('app-header', AppHeader);
 
 Vue.use(VueRouter);
+Vue.use(VueForm);
 let app = new Vue({
     components: {},
     router: appRouter,

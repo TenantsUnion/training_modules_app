@@ -12,7 +12,11 @@ import {ContentEntity} from "../../../../../../server/src/content/content_reposi
         return {
             title: '',
             loading: false,
-            errorMsg: ''
+            errorMsg: '',
+            formstate: {},
+            model: {
+                title: '',
+            }
         };
     },
     components: {
@@ -27,35 +31,63 @@ export class EditUserContentComponent extends Vue {
     quillDataId: string;
     title: string;
     quillEditor: QuillComponent;
-    retrievingContent: Promise<ContentEntity>;
+    retrievedContent: Promise<ContentEntity>;
 
-    created() {
+    created () {
         this.fetchContentData();
     }
 
-    fetchContentData () {
+    watch () {
+        return {
+            '$route': () => {
+                this.fetchContentData();
+                this.renderContents();
+            }
+        };
+    }
+
+    fetchContentData (): void {
         this.loading = true;
-        this.retrievingContent = contentHttpService.loadContent(this.contentId);
+        this.retrievedContent = contentHttpService.loadContent(this.contentId)
+            .then((content) => {
+                this.loading = false;
+                return content;
+            })
+            .catch((errorMsg) => {
+                this.errorMsg = errorMsg;
+                throw errorMsg;
+            });
+    }
+
+    renderContents (): void {
+        this.retrievedContent
+            .then((content) => {
+                this.title = content.title;
+                this.quillDataId = content.quillDataId;
+                this.quillEditor.setQuillEditorContents(content.quillData);
+            });
     }
 
     save () {
+        this.loading = true;
         contentHttpService.saveContent({
             id: this.contentId,
             title: this.title,
             quillData: this.quillEditor.getQuillEditorContents(),
             quillDataId: this.quillDataId
         }).then(() => {
-
+            this.loading = false;
+        }).catch((errorMsg) => {
+            this.errorMsg = errorMsg;
         });
     }
 
     mounted () {
         this.quillEditor = <QuillComponent> this.$refs.editor;
-        this.retrievingContent.then((content) => {
-            this.loading = false;
-            this.title = content.title;
-            this.quillDataId = content.quillDataId;
-            this.quillEditor.setQuillEditorContents(content.quillData);
-        });
+        this.renderContents();
+    }
+
+    done() {
+
     }
 }

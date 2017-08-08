@@ -1,7 +1,6 @@
 import * as express from "express";
 import * as path from "path";
 // var path = require('path');
-import * as favicon from "serve-favicon";
 import * as logger from "morgan";
 import * as cookieParser from "cookie-parser";
 import * as bodyParser from "body-parser";

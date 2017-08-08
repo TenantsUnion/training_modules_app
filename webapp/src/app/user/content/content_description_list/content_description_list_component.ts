@@ -36,7 +36,7 @@ export class ContentDescriptionListComponent extends Vue {
     watch () {
         return {
             '$route': this.fetchContentDescriptionList()
-        }
+        };
     }
 
     fetchContentDescriptionList () {
@@ -53,7 +53,7 @@ export class ContentDescriptionListComponent extends Vue {
     }
 
     createNewContent () {
-        this.$router.push('content/create')
+        this.$router.push('content/create');
     }
 
 }
