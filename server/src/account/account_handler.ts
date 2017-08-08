@@ -1,10 +1,10 @@
-import {LoginCredentials, WebappSignupData} from "account";
+import {LoginCredentials, AccountSignupRequest} from "account";
 import {accountRepository, IAccountRepository} from "./account_repository";
 import {IUserHandler, userHandler} from "../user/user_handler";
 import {IUserInfo} from "../../../shared/user";
 
 export interface IAccountHandler {
-    signup(signupInfo: WebappSignupData): Promise<IUserInfo>;
+    signup(signupInfo: AccountSignupRequest): Promise<IUserInfo>;
     login(loginCredentials: LoginCredentials): Promise<IUserInfo>;
 }
 
@@ -13,7 +13,7 @@ export class AccountHandler implements IAccountHandler {
                  private userHandler: IUserHandler) {
     }
 
-    async signup (signupInfo: WebappSignupData): Promise<IUserInfo> {
+    async signup (signupInfo: AccountSignupRequest): Promise<IUserInfo> {
         return new Promise<IUserInfo>((resolve, reject) => {
             (async () => {
                 try {

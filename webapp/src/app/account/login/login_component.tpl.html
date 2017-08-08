@@ -12,14 +12,14 @@
         <div class="cell small-6">
             <div class="callout float-center">
                 <vue-form :state="formstate">
-                    <validate :custom="usernameValidator">
+                    <validate>
                         <field-messages name="username"
                                         show="$submitted || $dirty">
                             <small class="error" slot="required">A username is required to
                                 login
                             </small>
                         </field-messages>
-                        <small class="error" v-if="errorMessages.username">
+                        <small class="error" v-if="errorMessages && errorMessages.username">
                             {{errorMessages.username}}
                         </small>
                         <label for="username-login">Username</label>

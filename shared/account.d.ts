@@ -1,8 +1,18 @@
 import {IUserInfo} from './user';
 
 declare namespace account {
-    interface WebappSignupData {
+    interface AccountSignupRequest {
         username: string;
+        password?: string;
+    }
+
+    interface AccountSignupFieldErrors {
+        username?: string;
+        password?: string;
+    }
+
+    interface AccountLoginFieldErrors {
+        username?: string;
         password?: string;
     }
 

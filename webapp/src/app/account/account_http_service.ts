@@ -1,5 +1,5 @@
 import axios from "axios";
-import {LoginCredentials, LoginResponse, WebappSignupData} from 'account.d.ts';
+import {LoginCredentials, LoginResponse, AccountSignupRequest} from 'account.d.ts';
 import {IUserInfo} from "user";
 import {userQueryService} from "./user_query_service";
 
@@ -17,7 +17,7 @@ class AccountHttpService {
             }))
     }
 
-    signup (signupData: WebappSignupData): Promise<IUserInfo> {
+    signup (signupData: AccountSignupRequest): Promise<IUserInfo> {
         return axios.post('account/signup', signupData).then((value => {
             let userInfo = <IUserInfo> value.data;
             userQueryService.setCurrentUser(userInfo);

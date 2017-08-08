@@ -1,5 +1,5 @@
 import {Datasource, datasource, IQueryConfig} from "../datasource";
-import {LoginCredentials, WebappSignupData} from "account";
+import {LoginCredentials, AccountSignupRequest} from "account";
 import {IUserInfo} from "user";
 import {AbstractRepository} from "../repository";
 import {AccountInfo} from "../user/user_handler";
@@ -7,7 +7,7 @@ import {AccountInfo} from "../user/user_handler";
 export interface IAccountRepository {
     accountExists(username: string): Promise<boolean>;
 
-    createAccount(signupInfo: WebappSignupData): Promise<string>;
+    createAccount(signupInfo: AccountSignupRequest): Promise<string>;
 
     findAccountByUsername(loginCredentials): Promise<AccountInfo>;
 }
@@ -41,7 +41,7 @@ class AccountRepository extends AbstractRepository implements IAccountRepository
         });
     }
 
-    async createAccount(signupInfo: WebappSignupData): Promise<string> {
+    async createAccount(signupInfo: AccountSignupRequest): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             if (!signupInfo.username) {
                 return resolve(null);
