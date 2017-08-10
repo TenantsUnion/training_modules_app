@@ -41,11 +41,15 @@ module.exports = {
                 loader: 'raw-loader'
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
-                loader: 'file-loader',
-                options: {
-                    name: '[name].[ext]?[hash]'
-                }
+                test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+                use: [{
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]?[hash]',
+                        outputPath: 'fonts/',    // where the fonts will go
+                        publicPath: '../'       // override the default path
+                    }
+                }]
             },
             {
                 test: /\.(scss|css)$/,
@@ -69,40 +73,57 @@ module.exports = {
                             loader: "sass-loader",
                             options: {
                                 sourceMap: true,
-                                includePaths: [ 'node_modules/foundation-sites/scss/util' ]
+                                includePaths: [
+                                    'node_modules/foundation-sites/scss/util',
+                                    'node_modules/font-awesome-sass/assets/stylesheets/font-awesome'
+                                ]
                             }
                         }]
                 })
             }]
     },
-    resolve: {
-        extensions: ['.ts', '.js', '.html', '.json', '.scss'],
-        alias: {
-            'vue$': 'vue/dist/vue.esm.js'
+    resolve:
+        {
+            extensions: ['.ts', '.js', '.html', '.json', '.scss'],
+            alias:
+                {
+                    'vue$':
+                        'vue/dist/vue.esm.js'
+                }
         }
-    },
+    ,
     performance: {
         hints: false
-    },
+    }
+    ,
     devtool: 'source-map',
-    devServer: {
-        host: 'localhost', //replace with comp ip to have server be available on local network
-        historyApiFallback: true,
-        // noInfo: true,
-        stats: {
-            colors: true
-        },
-        proxy: {
-            "**": {
-                target: "http://localhost:3000/",
-                changeOrigin: true,
-                filter: function (pathname, req) {
-                    return !pathname.match(/build\.js/);
+    devServer:
+        {
+            host: 'localhost', //replace with comp ip to have server be available on local network
+            historyApiFallback:
+                true,
+            // noInfo: true,
+            stats:
+                {
+                    colors: true
                 }
+            ,
+            proxy: {
+                "**":
+                    {
+                        target: "http://localhost:3000/",
+                        changeOrigin:
+                            true,
+                        filter:
+
+                            function (pathname, req) {
+                                return !pathname.match(/build\.js/);
+                            }
+                    }
             }
         }
-    }
-};
+}
+;
 
 if (process.env.NODE_ENV === 'production') {
     module.exports.devtool = '#source-map';
