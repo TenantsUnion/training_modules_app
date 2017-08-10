@@ -9,20 +9,20 @@ import {FormField} from "../../vue-form";
 import {Watch} from "vue-property-decorator";
 import {AccountLoginFieldErrors} from "../../../../../shared/account";
 
-interface LoginFormState extends VueForm.FormState {
+export interface AccountFormState extends VueForm.FormState {
     username: FormField;
 }
 
 @Component({
     data: () => {
         return {
-            formstate: {},
+            loading: false,
+            errorMessages: {},
             model: {
                 username: '',
                 password: ''
             },
-            errorMessages: {},
-            loading: false,
+            formstate: {},
         };
     },
     template: require('./login_component.tpl.html')
@@ -34,15 +34,15 @@ export default class LoginComponent extends Vue {
         username: '',
         password: ''
     };
-    formstate: LoginFormState;
+    formstate: AccountFormState;
 
     @Watch('model.username')
-    resetUsername () {
+    resetUsername() {
         this.errorMessages && delete this.errorMessages.username;
     }
 
-    login () {
-        this.formstate.$submitted = true;
+    login() {
+        this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
         }
@@ -57,7 +57,7 @@ export default class LoginComponent extends Vue {
                 params: {userId: userId.id}
             });
             this.loading = false;
-        }).catch((errorMessages:AccountLoginFieldErrors) => {
+        }).catch((errorMessages: AccountLoginFieldErrors) => {
             this.loading = false;
             this.errorMessages = errorMessages;
         });
