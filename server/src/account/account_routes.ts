@@ -20,9 +20,9 @@ export class AccountController {
         let signupData: SignupData = request.body;
         (async () => {
             try {
-                let errorMsg = await this.accountRequestValidator.signup(signupData);
-                if (errorMsg) {
-                    return response.status(400).send(errorMsg);
+                let errorMessages = await this.accountRequestValidator.signup(signupData);
+                if (errorMessages) {
+                    return response.status(400).send(errorMessages);
                 }
 
                 let accountInfo = await this.accountHandler.signup(signupData);
@@ -40,9 +40,9 @@ export class AccountController {
         let loginCredentials: LoginCredentials = request.body;
         (async () => {
             try {
-                let errorMsg = await this.accountRequestValidator.login(loginCredentials);
-                if (errorMsg) {
-                    return response.status(400).send(errorMsg);
+                let errorMessages = await this.accountRequestValidator.login(loginCredentials);
+                if (errorMessages) {
+                    return response.status(400).send(errorMessages);
                 }
                 let accountInfo = await this.accountHandler.login(loginCredentials);
                 request.session.user_id = accountInfo.id;

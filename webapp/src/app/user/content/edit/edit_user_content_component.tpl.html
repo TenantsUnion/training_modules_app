@@ -5,42 +5,53 @@
                 <div>
                     <h2>Edit Content</h2>
                     <p v-if="loading">Loading...</p>
-                    <p v-if="errorMsg">{{ errorMsg }}</p>
+                    <p v-if="errorMessages">{{ errorMessages }}</p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="cell small-2">
-        <div class="grid-x grid-padding-x align-center">
-            <div class="small-8 cell">
-                <label for="content-title">Title
-                    <input v-model="title" type="text"
-                           placeholder="Content Title"
-                           id="content-title"/>
-                </label>
+    <vue-form :state="formstate">
+        <div class="cell small-2">
+            <div class="grid-x grid-padding-x align-center">
+                <div class="small-8 cell">
+                    <validate>
+                        <label for="content-title">Title*</label>
+                        <field-messages name="title"
+                                        show="$submitted || $dirty">
+                            <small class="error" slot="required">
+                                Content must have a title
+                            </small>
+                        </field-messages>
+                        <input v-model="title" type="text"
+                               required
+                               name="title"
+                               placeholder="Content Title"
+                               id="content-title"/>
+                    </validate>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="cell small-6">
-        <div class="grid-x grid-padding-x align-center">
-            <div class="small-8 cell">
-                <label>Content</label>
-                <quill-editor id="edit-content" ref="editor"></quill-editor>
+        <div class="cell small-6">
+            <div class="grid-x grid-padding-x align-center">
+                <div class="small-8 cell">
+                    <label>Content*</label>
+                    <quill-editor id="edit-content" ref="editor"></quill-editor>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="cell small-2">
+        <div class="cell small-2">
 
-        <div class="grid-x grid-padding-x align-center">
-            <div class="small-8 cell">
-                <button @click="save" class="button primary">
-                    Save Changes
-                </button>
-                <button @click="done" class="button secondary">
-                    Done
-                </button>
+            <div class="grid-x grid-padding-x align-center">
+                <div class="small-8 cell">
+                    <button @click="save" class="button primary">
+                        Save Changes
+                    </button>
+                    <button @click="done" class="button secondary">
+                        Done
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
+    </vue-form>
 </div>

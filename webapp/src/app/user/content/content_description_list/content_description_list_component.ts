@@ -8,16 +8,16 @@ import {ContentDescriptionEntity} from "content";
     data: () => {
         return {
             loading: false,
-            errorMsg: '',
+            errorMessages: {},
             contentDescriptionList: []
         }
     },
     template: require('./content_description_list_component.tpl.html')
 })
 export class ContentDescriptionListComponent extends Vue {
+    errorMessages: object;
     $router: VueRouter;
     loading: boolean;
-    errorMsg: string;
     contentDescriptionList: ContentDescriptionEntity[];
 
     created () {
@@ -46,8 +46,8 @@ export class ContentDescriptionListComponent extends Vue {
                 this.contentDescriptionList = content;
                 this.loading = false;
             })
-            .catch((errorMsg) => {
-                this.errorMsg = errorMsg;
+            .catch((errorMessages) => {
+                this.errorMessages = errorMessages;
                 this.loading = false;
             });
     }

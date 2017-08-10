@@ -19,8 +19,8 @@ router.beforeEach((to: Route, from, next) => {
                 userQueryService.setCurrentUser(userInfo);
                 next();
             })
-            .catch((errorMsg) => {
-                next(new Error(errorMsg));
+            .catch((errorMessages) => {
+                next(new Error(errorMessages));
             });
     } else {
         next();

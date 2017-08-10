@@ -10,7 +10,7 @@ import {appRouter} from "../../router";
     data: () => {
         return {
             loading: false,
-            errorMsg: '',
+            errorMessages: '',
             title: '',
             description: '',
             timeEstimate: '',
@@ -19,8 +19,8 @@ import {appRouter} from "../../router";
     template: require('./create_course_component.tpl.html')
 })
 export class CreateCourseComponent extends Vue {
+    errorMessages: {};
     loading: boolean;
-    errorMsg: string;
     title: string;
     description: string;
     timeEstimate: string;
@@ -35,7 +35,7 @@ export class CreateCourseComponent extends Vue {
         }).then(()=>{
             appRouter.push({name: `course/${this.title}`})
         }).catch((msg)=>{
-            this.errorMsg = msg;
+            this.errorMessages = msg;
         })
     }
 

@@ -3,6 +3,8 @@ import Component from "vue-class-component";
 import {QuillComponent} from "../../../quill/quill_component";
 import {contentHttpService} from "../content_http_service";
 import {ContentEntity} from "../../../../../../server/src/content/content_repository";
+import * as VueForm from "../../../vue-form";
+import {Watch} from "vue-property-decorator";
 
 @Component({
     props: {
@@ -12,7 +14,7 @@ import {ContentEntity} from "../../../../../../server/src/content/content_reposi
         return {
             title: '',
             loading: false,
-            errorMsg: '',
+            errorMessages: '',
             formstate: {},
             model: {
                 title: '',
@@ -25,11 +27,12 @@ import {ContentEntity} from "../../../../../../server/src/content/content_reposi
     template: require('./edit_user_content_component.tpl.html')
 })
 export class EditUserContentComponent extends Vue {
+    errorMessages: object;
     loading: boolean;
-    errorMsg: string;
     contentId: string;
     quillDataId: string;
     title: string;
+    formstate: VueForm.FormState;
     quillEditor: QuillComponent;
     retrievedContent: Promise<ContentEntity>;
 
@@ -37,13 +40,10 @@ export class EditUserContentComponent extends Vue {
         this.fetchContentData();
     }
 
-    watch () {
-        return {
-            '$route': () => {
-                this.fetchContentData();
-                this.renderContents();
-            }
-        };
+    @Watch('$route')
+    refresh () {
+        this.fetchContentData();
+        this.renderContents();
     }
 
     fetchContentData (): void {
@@ -53,12 +53,10 @@ export class EditUserContentComponent extends Vue {
                 this.loading = false;
                 return content;
             })
-            .catch((errorMsg) => {
-                this.errorMsg = errorMsg;
-                throw errorMsg;
+            .catch((errorMessages) => {
+                return this.errorMessages = errorMessages;
             });
     }
-
     renderContents (): void {
         this.retrievedContent
             .then((content) => {
@@ -69,6 +67,10 @@ export class EditUserContentComponent extends Vue {
     }
 
     save () {
+        this.formstate._submit();
+        if (this.formstate.$invalid) {
+            return;
+        }
         this.loading = true;
         contentHttpService.saveContent({
             id: this.contentId,
@@ -77,8 +79,8 @@ export class EditUserContentComponent extends Vue {
             quillDataId: this.quillDataId
         }).then(() => {
             this.loading = false;
-        }).catch((errorMsg) => {
-            this.errorMsg = errorMsg;
+        }).catch((errorMessages) => {
+            this.errorMessages = errorMessages;
         });
     }
 
@@ -87,7 +89,7 @@ export class EditUserContentComponent extends Vue {
         this.renderContents();
     }
 
-    done() {
+    done () {
 
     }
 }

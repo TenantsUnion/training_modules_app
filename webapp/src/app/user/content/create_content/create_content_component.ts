@@ -7,7 +7,7 @@ import {contentHttpService} from "../content_http_service";
     data: () => {
         return {
             loading: false,
-            errorMsg: '',
+            errorMessages: {},
             title: ''
         };
     },
@@ -17,8 +17,8 @@ import {contentHttpService} from "../content_http_service";
     }
 })
 export class CreateContentComponent extends Vue {
+    errorMessages: object;
     loading: boolean;
-    errorMsg: string;
     title: string;
     quillEditor: QuillComponent;
 
@@ -32,8 +32,8 @@ export class CreateContentComponent extends Vue {
             .then(() => {
                 //successfully created content
             })
-            .catch((errorMsg) => {
-                this.errorMsg = errorMsg;
+            .catch((errorMessages) => {
+                this.errorMessages = errorMessages;
             });
     }
 }
