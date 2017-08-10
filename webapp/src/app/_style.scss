@@ -1,6 +1,9 @@
 @import "~foundation-sites/scss/foundation";
 @import "../scss/global-styles";
 
+$fa-font-path: "~font-awesome-sass/assets/fonts/font-awesome/";
+@import "~font-awesome-sass/assets/stylesheets/font-awesome";
+
 $flex: true;
 @include foundation-everything;
 
