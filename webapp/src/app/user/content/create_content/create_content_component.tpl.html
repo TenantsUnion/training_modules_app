@@ -5,39 +5,48 @@
                 <div>
                     <h2>Create Content</h2>
                     <p v-if="loading">Loading...</p>
-                    <p v-if="errorMessages">{{ errorMessages }}</p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="cell small-2">
-        <div class="grid-x grid-padding-x align-center">
-            <div class="small-8 cell">
-                <label for="content-title">Title
-                    <input v-model="title" type="text"
-                           placeholder="Content Title"
-                           id="content-title"/>
-                </label>
-            </div>
-        </div>
-    </div>
-    <div class="cell small-6">
-        <div class="grid-x grid-padding-x align-center">
-            <div class="small-8 cell">
-                <label>Content</label>
-                <quill-editor id="create-content" ref="editor"></quill-editor>
-            </div>
-        </div>
-    </div>
+    <vue-form :state="formstate">
+        <validate>
+            <div class="cell small-2">
+                <div class="grid-x grid-padding-x align-center">
+                    <field-messages name="title"
+                                    show="$submitted || $dirty">
+                        <small class="error" slot="required">
+                            A title is needed to create content
+                        </small>
+                    </field-messages>
 
-    <div class="cell small-2">
+                    <div class="small-8 cell">
+                        <label for="content-title">Title
+                            <input v-model="title" type="text"
+                                   required
+                                   placeholder="Content Title"
+                                   id="content-title"/>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-6">
+                <div class="grid-x grid-padding-x align-center">
+                    <div class="small-8 cell">
+                        <label>Content</label>
+                        <quill-editor id="create-content" ref="editor"></quill-editor>
+                    </div>
+                </div>
+            </div>
 
-        <div class="grid-x grid-padding-x align-center">
-            <div class="small-8 cell">
-                <button @click="create" class="button primary">Create
-                </button>
+        </validate>
+        <div class="cell small-2">
+            <div class="grid-x grid-padding-x align-center">
+                <div class="small-8 cell">
+                    <button @click="create" class="button primary">Create</button>
+                </div>
             </div>
         </div>
-    </div>
+    </vue-form>
 </div>
 

@@ -11,7 +11,7 @@ import {AccountSignupFieldErrors} from '../../../../../shared/account';
     data: () => {
         return {
             loading: false,
-            errorMessages: {},
+            errorMessages: null,
             model: {
                 username: '',
                 password: ''

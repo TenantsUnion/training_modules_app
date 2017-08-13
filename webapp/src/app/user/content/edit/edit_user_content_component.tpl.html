@@ -3,14 +3,15 @@
         <div class="grid-x grid-padding-x align-center">
             <div class="small-8 cell">
                 <div>
-                    <h2>Edit Content</h2>
-                    <p v-if="loading">Loading...</p>
+                    <h2>Edit Content
+                        <loading v-if="loading"></loading>
+                    </h2>
                     <p v-if="errorMessages">{{ errorMessages }}</p>
                 </div>
             </div>
         </div>
     </div>
-    <vue-form :state="formstate">
+    <vue-form :state="formstate" @submit.prevent="onSubmit">
         <div class="cell small-2">
             <div class="grid-x grid-padding-x align-center">
                 <div class="small-8 cell">
@@ -41,14 +42,19 @@
         </div>
 
         <div class="cell small-2">
-
             <div class="grid-x grid-padding-x align-center">
                 <div class="small-8 cell">
-                    <button @click="save" class="button primary">
-                        Save Changes
+                    <button @click="save" type="button"
+                            class="button primary" :disabled="loading">
+                        Save
                     </button>
-                    <button @click="done" class="button secondary">
+                    <button @click="save" type="button"
+                            class="button primary" :disabled="loading">
                         Done
+                    </button>
+                    <button @click="cancel" type="button"
+                            class="button secondary" :disabled="loading">
+                        Cancel
                     </button>
                 </div>
             </div>

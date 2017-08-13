@@ -8,7 +8,8 @@ import {contentHttpService} from "../content_http_service";
         return {
             loading: false,
             errorMessages: {},
-            title: ''
+            title: '',
+            formstate: {}
         };
     },
     template: require('./create_content_component.tpl.html'),
