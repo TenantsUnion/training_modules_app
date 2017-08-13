@@ -36,6 +36,7 @@
     "font-awesome-sass": "^4.7.0",
     "foundation-sites": "^6.4.1",
     "hbs": "~4.0.1",
+    "lz-string": "^1.4.4",
     "morgan": "~1.8.1",
     "pg": "^7.0.2",
     "q": "^1.5.0",

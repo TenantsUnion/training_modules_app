@@ -1,7 +1,24 @@
+//.editor-container {
+//  height: 50vh;
+//}
+
+//.ql-toolbar.ql-snow + .ql-container.ql-snow {
+//  height: 80%;
+//}
+/* Tell Quill not to scroll */
 .editor-container {
-  height: 50vh;
+  height: auto;
+  min-height: 100%;
+  padding: 50px;
+}
+.editor-container .ql-editor {
+  font-size: 18px;
+  overflow-y: visible;
 }
 
-.ql-toolbar.ql-snow + .ql-container.ql-snow {
-  height: 80%;
+/* Specify our own scrolling container */
+.scrolling-container {
+  height: 100%;
+  min-height: 100%;
+  overflow-y: auto;
 }

@@ -1,6 +1,10 @@
-import {Quill, QuillOptionsStatic} from "quill";
+import {Quill, QuillOptionsStatic, DeltaStatic} from "quill";
 import Vue from "vue";
 import Component from "vue-class-component";
+//compression library for images
+import LZString from "lz-string";
+import * as _ from "underscore";
+
 
 //default quill theme
 require('quill/dist/quill.core.css');
@@ -13,6 +17,8 @@ Quill.register(BackgroundClass);
 Quill.register(ColorClass);
 Quill.register(SizeClass);
 
+let Delta = Quill.import('delta');
+
 export const QUILL_CONFIG: QuillOptionsStatic = {
     modules: {
         history: {
@@ -20,9 +26,13 @@ export const QUILL_CONFIG: QuillOptionsStatic = {
             maxStack: 100,
             userOnly: true
         },
-        toolbar: true
+        toolbar: [
+            [{header: [1, 2, false]}],
+            ['bold', 'italic', 'underline'],
+            ['image', 'background', 'color']
+        ]
     },
-    // debug: 'info',
+    debug: 'info',
     theme: 'snow'
 };
 
@@ -34,19 +44,24 @@ require('./quill_component.scss');
 @Component({
     data: () => {
         return {
-            editorId: ''
+            editorId: '',
+            scrollingContainerId: ''
         };
     },
     // language=HTML
     template: `
         <div class="editor-container">
-            <div v-bind:class="editorId"></div>
+            <div v-bind:class="scrollingContainerId"
+                 class="scrolling-container">
+                <div v-bind:class="editorId" class="editor-container"></div>
+            </div>
         </div>
     `
 })
 export class QuillComponent extends Vue {
 
     editorId: string;
+    scrollingContainerId: string;
     quill: Quill;
 
     created () {
@@ -59,10 +74,28 @@ export class QuillComponent extends Vue {
     }
 
     getQuillEditorContents (): Quill.DeltaStatic {
+
+        let compressedImages = this.compressImages(new Delta(this.quill.getContents().ops));
+
         return this.quill.getContents();
+
     }
 
     setQuillEditorContents (quillContents: Quill.DeltaStatic) {
+        //decompress images
         this.quill.setContents(quillContents);
+    }
+
+
+    compressImages (quillData: Quill.DeltaStatic) {
+        quillData.ops = quillData.ops.map((op: Quill.DeltaOperation) => {
+            let imageBase64String = op.insert && op.insert.image;
+            if (imageBase64String) {
+                op = _.clone(op);
+                op.insert.image = LZString.compressToUTF16(imageBase64String);
+            }
+            return op;
+        });
+        return quillData;
     }
 }

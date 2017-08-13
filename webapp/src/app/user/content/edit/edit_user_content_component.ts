@@ -5,6 +5,7 @@ import {contentHttpService} from "../content_http_service";
 import {ContentEntity} from "../../../../../../server/src/content/content_repository";
 import * as VueForm from "../../../vue-form";
 import {Watch} from "vue-property-decorator";
+import {appRouter} from "../../../router";
 
 @Component({
     props: {
@@ -57,6 +58,7 @@ export class EditUserContentComponent extends Vue {
                 return this.errorMessages = errorMessages;
             });
     }
+
     renderContents (): void {
         this.retrievedContent
             .then((content) => {
@@ -72,7 +74,7 @@ export class EditUserContentComponent extends Vue {
             return;
         }
         this.loading = true;
-        contentHttpService.saveContent({
+        return contentHttpService.saveContent({
             id: this.contentId,
             title: this.title,
             quillData: this.quillEditor.getQuillEditorContents(),
@@ -90,6 +92,13 @@ export class EditUserContentComponent extends Vue {
     }
 
     done () {
+        this.save()
+            .then(() => {
+                appRouter.push({})
+            })
+    }
+
+    cancel () {
 
     }
 }
