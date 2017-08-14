@@ -1,12 +1,12 @@
 CREATE TABLE tu.user (
-  id                     BIGINT PRIMARY KEY REFERENCES tu.account(id),
+  id                     BIGINT PRIMARY KEY REFERENCES tu.account (id),
   username               VARCHAR(30) REFERENCES tu.account (username),
   first_name             VARCHAR(200),
   last_name              VARCHAR(200),
-  admin_of_course_ids    BIGINT [] NOT NULL DEFAULT array[]::BIGINT[],
-  enrolled_in_course_ids BIGINT [] NOT NULL DEFAULT array[]::BIGINT[],
-  completed_course_ids   BIGINT [] NOT NULL DEFAULT array[]::BIGINT[],
-  created_content_ids        BIGINT [] NOT NULL DEFAULT array[]::BIGINT[]
+  admin_of_course_ids    BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  enrolled_in_course_ids BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  completed_course_ids   BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  created_content_ids    BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT []
 );
 
 CREATE INDEX user_username_idx
