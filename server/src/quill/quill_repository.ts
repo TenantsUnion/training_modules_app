@@ -37,7 +37,7 @@ export class QuillRepository extends AbstractRepository {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {
-                    this.sqlTemplate.query({
+                    await this.sqlTemplate.query({
                         // language=PostgreSQL
                         text: `INSERT INTO tu.quill_data (id, editor_json)
                         VALUES ($1, $2)`,
