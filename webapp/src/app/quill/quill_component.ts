@@ -32,7 +32,7 @@ export const QUILL_CONFIG: QuillOptionsStatic = {
             ['image', 'background', 'color']
         ]
     },
-    debug: 'info',
+    debug:  process.env.NODE_ENV === 'debug' ? 'info' : undefined,
     theme: 'snow'
 };
 
@@ -74,28 +74,11 @@ export class QuillComponent extends Vue {
     }
 
     getQuillEditorContents (): Quill.DeltaStatic {
-
-        let compressedImages = this.compressImages(new Delta(this.quill.getContents().ops));
-
         return this.quill.getContents();
 
     }
 
     setQuillEditorContents (quillContents: Quill.DeltaStatic) {
-        //decompress images
         this.quill.setContents(quillContents);
-    }
-
-
-    compressImages (quillData: Quill.DeltaStatic) {
-        quillData.ops = quillData.ops.map((op: Quill.DeltaOperation) => {
-            let imageBase64String = op.insert && op.insert.image;
-            if (imageBase64String) {
-                op = _.clone(op);
-                op.insert.image = LZString.compressToUTF16(imageBase64String);
-            }
-            return op;
-        });
-        return quillData;
     }
 }
