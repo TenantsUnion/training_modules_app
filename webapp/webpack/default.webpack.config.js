@@ -11,12 +11,12 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: [
-        'webpack-dev-server/client?http://localhost:8080',
-        './src/app/app.ts'
+        // 'webpack-dev-server/client?http://localhost:8080',
+        '../src/app/app.ts'
     ],
     context: path.resolve(__dirname),
     output: {
-        path: path.resolve(__dirname, './dist'),
+        path: path.resolve(__dirname, '../dist'),
         filename: 'build.js',
         sourceMapFilename: '[file].map'
     },
@@ -24,7 +24,10 @@ module.exports = {
         new ExtractTextPlugin('style.css', {
             allChunks: true,
             sourceMap: true
-        })
+        }),
+        new webpack.NodeEnvironmentPlugin([
+            'NODE_ENV'
+        ])
     ],
     module: {
         rules: [
@@ -67,7 +70,8 @@ module.exports = {
                         {
                             loader: "css-loader",
                             options: {
-                                sourceMap: true
+                                sourceMap: true,
+                                minimize: true
                             }
                         }, {
                             loader: "sass-loader",
@@ -97,51 +101,28 @@ module.exports = {
     }
     ,
     devtool: 'source-map',
-    devServer:
-        {
-            host: 'localhost', //replace with comp ip to have server be available on local network
-            historyApiFallback:
-                true,
-            // noInfo: true,
-            stats:
-                {
-                    colors: true
-                }
-            ,
-            proxy: {
-                "**":
-                    {
-                        target: "http://localhost:3000/",
-                        changeOrigin:
-                            true,
-                        filter:
-
-                            function (pathname, req) {
-                                return !pathname.match(/build\.js/);
-                            }
-                    }
-            }
-        }
-}
-;
-
-if (process.env.NODE_ENV === 'production') {
-    module.exports.devtool = '#source-map';
-    // http://vue-loader.vuejs.org/en/workflow/production.html
-    module.exports.plugins = (module.exports.plugins || []).concat([
-        new webpack.DefinePlugin({
-            'process.env': {
-                NODE_ENV: '"production"'
-            }
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                warnings: false
-            }
-        }),
-        new webpack.LoaderOptionsPlugin({
-            minimize: true
-        })
-    ])
+    // devServer: {
+    //     host: 'localhost', //replace with comp ip to have server be available on local network
+    //     historyApiFallback:
+    //         true,
+    //     // noInfo: true,
+    //     stats:
+    //         {
+    //             colors: true
+    //         }
+    //     ,
+    //     proxy: {
+    //         "**":
+    //             {
+    //                 target: "http://localhost:3000/",
+    //                 changeOrigin:
+    //                     true,
+    //                 filter:
+    //
+    //                     function (pathname, req) {
+    //                         return !pathname.match(/build\.js/);
+    //                     }
+    //             }
+    //     }
+    // }
 }

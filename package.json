@@ -9,8 +9,8 @@
     "drop_db": "set NODE_CONFIG_DIR=./config && node ./bin/drop_db",
     "migrate_db": "set NODE_CONFIG_DIR=./config && node ./bin/migrate_db.js",
     "build": "npm run server-build && npm run webpack-build",
-    "webpack-build": "webpack --config webapp/webpack.config.js",
-    "webpack-dev": "webpack-dev-server --config webapp/webpack.config.js --open",
+    "webpack-build": "webpack --config webapp/webpack/production.webpack.config.js",
+    "webpack-dev": "webpack-dev-server --config webapp/webpack/dev.webpack.config.js --open",
     "server-build": "tsc --project server/tsconfig.json --outDir server/dist",
     "watch": "concurrently -k -p \"[{name}]\" -n \"Server-Build,Server,Webpack\" -c \"cyan.bold,green.bold,yellow.bold\"  \"npm run watch-server\" \"npm run nodemon-start\" \"npm run webpack-dev\"",
     "watch-server": "tsc --watch --project server/tsconfig.json --outDir server/dist",
@@ -70,12 +70,15 @@
     "script-loader": "^0.7.0",
     "ts-loader": "^2.3.2",
     "typescript": "^2.4.1",
+    "uglify-es": "^3.0.27",
+    "uglifyjs-webpack-plugin": "^1.0.0-beta.1",
     "vue-class-component": "^5.0.2",
     "vue-loader": "^12.2.2",
     "vue-template-compiler": "^2.4.1",
     "vue-ts-loader": "0.0.3",
     "webpack": "^3.4.1",
-    "webpack-dev-server": "^2.6.1"
+    "webpack-dev-server": "^2.6.1",
+    "webpack-merge": "^4.1.0"
   },
   "engines": {
     "node": ">=8.0"
