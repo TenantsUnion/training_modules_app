@@ -31,11 +31,11 @@ export default class SignupComponent extends Vue {
     formstate: AccountFormState;
 
     @Watch('model.username')
-    resetUsername() {
+    resetUsername () {
         this.errorMessages && delete this.errorMessages
     }
 
-    signup() {
+    signup () {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
@@ -45,9 +45,9 @@ export default class SignupComponent extends Vue {
         accountHttpService.signup({
             username: this.model.username,
             password: this.model.password
-        }).then((userId: IUserId) => {
+        }).then(() => {
             this.loading = false;
-            appRouter.push({path: `user/${this.model.username}/courses`, params: {userId: userId.id}});
+            appRouter.push({path: `user/${this.model.username}/courses`});
         }).catch((errorMessages: AccountSignupFieldErrors) => {
             this.loading = false;
             this.errorMessages = errorMessages;
