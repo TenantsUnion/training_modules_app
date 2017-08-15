@@ -19,17 +19,17 @@ const basicTransportOptions = {
     showLevel: true
 };
 
-const loggerNameToFile = (loggerName) => {
-    return 'server.log';
-};
+const DEFAULT_LOG_NAME = "run_script.log";
 
+const fileConfig = config.has("log.directory") ? config.get("logDirectory") : "";
+const defaultLogNameConfig = config.has("log.default_name") ? config.get("log.default_name") : "";
 
-const fileConfig = config.has("log.directory");
-module.exports = (loggerName) => {
+module.exports = (loggerName, fileName) => {
     let transport = fileConfig ? new winston.transports.File({
             label: loggerName,
             level: 'info',
-            filename: fileConfig + '/' + loggerNameToFile(loggerName),
+            filename: fileConfig + '/'  + fileName ? fileName :
+                defaultLogNameConfig ? defaultLogNameConfig : DEFAULT_LOG_NAME,
             maxsize: 1024 * 1024 * 1024,
             maxFiles: 5,
             zippedArchive: true,

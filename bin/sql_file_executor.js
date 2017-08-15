@@ -24,6 +24,15 @@ module.exports.tuLocalDevClient = new Client({
     database: config.get("database.db")
 });
 
+/**
+ * Establishes a connection using the {@see pg.Client} library returning an
+ * async function for reading and splitting sql queries from a file
+ *
+ * @note pg.Client can't handle multiple statements at once
+ * @param client
+ * @param directory
+ * @returns {Promise.<function(*=, *=)>}
+ */
 module.exports.getSqlFileAsyncExecutor = async (client, directory) => {
     await client.connect();
     return async (filename, split) => {
@@ -41,6 +50,7 @@ module.exports.getSqlFileAsyncExecutor = async (client, directory) => {
                         reject(e);
                     }
                 }
+                logger.log('info', 'successfully executed sql statements in file');
             } else {
                 try {
                     await client.query(sqlFileContents);
