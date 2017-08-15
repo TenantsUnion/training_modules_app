@@ -1,7 +1,7 @@
 var postgrator = require('postgrator');
 var config = require('config');
+var logger = require('./script_logger')('migrate_db');
 
-    // CREATE ROLE tu_dev_db_user LOGIN PASSWORD 'development_only' VALID UNTIL 'infinity';
 postgrator.setConfig({
     migrationDirectory: __dirname + '/../database/migrations',
     driver: 'pg',
@@ -13,18 +13,21 @@ postgrator.setConfig({
     schemaTable: 'tu_schema_version'
 });
 
+logger.log('info', 'Migrating tu_training database');
 postgrator.migrate('max', function (err, migrations) {
     if (err) {
-        console.log(err);
+        logger.log('error', err);
+    } else {
+        logger.log('info', 'Database migrated successfully');
     }
 
     postgrator.endConnection(function (err) {
         if (err) {
-            console.log('Error closing connection: \n');
-            console.log(err);
+            logger.log('error', 'Error closing connection: \n');
+            logger.log('error', err);
         }
 
-        console.log('Connection closed');
+        logger.log('info', 'Connection closed');
         process.exit(0);
     });
 });
