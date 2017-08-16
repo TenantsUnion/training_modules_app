@@ -29,7 +29,7 @@ module.exports = merge(baseConfig, {
         }
     },
     entry: [
-        'webpack-dev-server/client'
+        'webpack-dev-server/client?http://localhost:8080'
     ],
 });
 
