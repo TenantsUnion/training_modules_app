@@ -6,6 +6,8 @@ module.exports = merge(baseConfig, {
 
     devServer: {
         host: 'localhost', //replace with comp ip to have server be available on local network
+        port: 8080,
+        inline: true,
         historyApiFallback:
             true,
         // noInfo: true,
@@ -17,11 +19,9 @@ module.exports = merge(baseConfig, {
         proxy: {
             "**":
                 {
-                    target: "http://localhost:3000/",
-                    changeOrigin:
-                        true,
+                    target: "http://localhost:3000",
+                    changeOrigin: true,
                     filter:
-
                         function (pathname, req) {
                             return !pathname.match(/build\.js/);
                         }
@@ -29,7 +29,7 @@ module.exports = merge(baseConfig, {
         }
     },
     entry: [
-        'webpack-dev-server/client?http://localhost:8080',
+        'webpack-dev-server/client'
     ],
 });
 
