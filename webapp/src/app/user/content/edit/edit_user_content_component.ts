@@ -41,12 +41,6 @@ export class EditUserContentComponent extends Vue {
         this.fetchContentData();
     }
 
-    @Watch('$route')
-    refresh () {
-        this.fetchContentData();
-        this.renderContents();
-    }
-
     fetchContentData (): void {
         this.loading = true;
         this.retrievedContent = contentHttpService.loadContent(this.contentId)
@@ -56,15 +50,6 @@ export class EditUserContentComponent extends Vue {
             })
             .catch((errorMessages) => {
                 return this.errorMessages = errorMessages;
-            });
-    }
-
-    renderContents (): void {
-        this.retrievedContent
-            .then((content) => {
-                this.title = content.title;
-                this.quillDataId = content.quillDataId;
-                this.quillEditor.setQuillEditorContents(content.quillData);
             });
     }
 
@@ -88,7 +73,12 @@ export class EditUserContentComponent extends Vue {
 
     mounted () {
         this.quillEditor = <QuillComponent> this.$refs.editor;
-        this.renderContents();
+        this.retrievedContent
+            .then((content) => {
+                this.title = content.title;
+                this.quillDataId = content.quillDataId;
+                this.quillEditor.setQuillEditorContents(content.quillData);
+            });
     }
 
     done () {
