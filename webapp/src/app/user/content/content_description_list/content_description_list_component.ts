@@ -33,12 +33,6 @@ export class ContentDescriptionListComponent extends Vue {
         });
     }
 
-    watch () {
-        return {
-            '$route': this.fetchContentDescriptionList()
-        };
-    }
-
     fetchContentDescriptionList () {
         this.loading = true;
         contentHttpService.getContentDescriptionList()
