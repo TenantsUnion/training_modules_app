@@ -15,7 +15,7 @@ import * as VueRouter from "vue-router";
 })
 export class UserAdminCourseComponent extends Vue {
     errorMessages: object;
-    $router: VueRouter
+    $router: VueRouter;
     loading: boolean;
     courses: AdminCourseDescription[];
 
@@ -23,7 +23,7 @@ export class UserAdminCourseComponent extends Vue {
         this.fetchAdminCourseDescriptionsList();
     }
 
-    fetchAdminCourseDescriptionsList (){
+    fetchAdminCourseDescriptionsList () {
         this.loading = true;
         userCoursesHttpService.getUserAdminCourses()
             .then((courseDescriptions) => {
@@ -38,6 +38,10 @@ export class UserAdminCourseComponent extends Vue {
 
     createCourse () {
         this.$router.push('course/create')
+    }
+
+    go (courseTitle: string) {
+        this.$router.push(`admin-courses/${courseTitle}`);
     }
 
 }

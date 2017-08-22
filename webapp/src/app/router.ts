@@ -7,9 +7,11 @@ import {accountHttpService} from "./account/account_http_service";
 
 let router = new VueRouter({});
 
-router.addRoutes(loginRoutes);
-router.addRoutes(adminRoutes);
-router.addRoutes(userRoutes);
+router.addRoutes([
+    loginRoutes,
+    adminRoutes,
+    userRoutes
+]);
 
 router.beforeEach((to: Route, from, next) => {
     let username = to.params.username;
