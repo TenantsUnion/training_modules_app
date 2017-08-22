@@ -47,12 +47,9 @@ require('./quill_component.scss');
     },
     // language=HTML
     template: `
-        <div class="editor-container">
-            <div v-bind:class="scrollingContainerId"
-                 class="scrolling-container">
+            <div v-bind:class="scrollingContainerId" class="scrolling-container">
                 <div v-bind:class="editorId" class="editor-container"></div>
             </div>
-        </div>
     `
 })
 export class QuillComponent extends Vue {
@@ -72,7 +69,6 @@ export class QuillComponent extends Vue {
 
     getQuillEditorContents (): Quill.DeltaStatic {
         return this.quill.getContents();
-
     }
 
     setQuillEditorContents (quillContents: Quill.DeltaStatic) {
