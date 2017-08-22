@@ -9,11 +9,14 @@ import {
     IUserRepository, userRepository,
     UserRepository
 } from "../../user/users_repository";
+import {getLogger} from "../../log";
 
 export class UserContentHandler {
+    private logger;
     constructor (private contentRepository: ContentRepository,
                  private quillRepository: QuillRepository,
                  private userRepository: UserRepository) {
+        this.logger = getLogger('UserContentHandler', 'info');
     }
 
     async handleCreateUserContentCommand (createUserContentCommand: CreateUserContentCommand): Promise<void> {
@@ -22,6 +25,7 @@ export class UserContentHandler {
                 try {
                     let quillId = await this.quillRepository.getNextId();
                     await this.quillRepository.insertEditorJson(quillId, createUserContentCommand.quillContent);
+                    this.logger.info('Inserted quill data with id %s', quillId);
 
                     let contentId = await this.contentRepository.getNextId();
                     await this.contentRepository.createContent({

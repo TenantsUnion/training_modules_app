@@ -2,7 +2,6 @@ import {
     CreateUserInfo, IUserRepository,
     userRepository
 } from "./users_repository";
-import {CourseEntity} from "../courses/courses";
 import {IUserInfo} from "../../../shared/user";
 
 export interface AccountInfo {
@@ -11,7 +10,7 @@ export interface AccountInfo {
 
 export interface IUserHandler {
     createUser(createUserData: any): Promise<IUserInfo>;
-    userCreatedCourse(userId:string, courseEntity: CourseEntity): Promise<void>;
+    userCreatedCourse(userId:string, courseId: string): Promise<void>;
     loadUser(id: string): Promise<IUserInfo>;
 }
 
@@ -34,11 +33,11 @@ export class UserHandler implements IUserHandler {
         });
     }
 
-    async userCreatedCourse(createByUserId:string, courseEntity: CourseEntity): Promise<void> {
+    async userCreatedCourse(createByUserId:string, courseId: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {
-                    await this.userRepository.addToAdminOfCourseIds(createByUserId, courseEntity.id);
+                    await this.userRepository.addToAdminOfCourseIds(createByUserId, courseId);
                     resolve();
                 } catch (e) {
                     console.log(e.stack);

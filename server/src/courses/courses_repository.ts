@@ -1,17 +1,24 @@
 import {Datasource, datasource} from "../datasource";
-import {ICourseInfo} from "courses";
-import {CourseEntity, UserCoursesEntity} from "./courses";
+import {
+    EnrolledCourseDescription,
+    AdminCourseDescription, UserEnrolledCourseData, CourseData,
+    UserAdminCourseData
+} from "courses";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
 
 export interface ICoursesRepository {
-    loadCourse(courseId: string): Promise<CourseEntity>;
+    loadUserEnrolledCourse(userId: string, courseId: string): Promise<UserEnrolledCourseData>;
 
-    createCourse(courseInfo: ICourseInfo): Promise<string>;
+    loadUserAdminCourse(courseId: string)
 
-    courseExists(courseInfo: ICourseInfo): Promise<boolean>;
+    createCourse(courseData: CourseData): Promise<string>;
 
-    loadUserCourses(userId: string): Promise<UserCoursesEntity>;
+    courseExists(courseData: CourseData): Promise<boolean>;
+
+    loadUserEnrolledCourses(userId: string): Promise<EnrolledCourseDescription[]>;
+
+    loadUserAdminCourses(userId: string): Promise<AdminCourseDescription[]>;
 }
 
 class CoursesRepository extends AbstractRepository implements ICoursesRepository {
@@ -31,12 +38,19 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
     `;
 
     constructor (private datasource: Datasource) {
-        super('course_id_seqj', datasource);
+        super('course_id_seq', datasource);
     }
 
-    async loadUserCourses (userId: string): Promise<UserCoursesEntity> {
+    async loadUserAdminCourses (username: string): Promise<AdminCourseDescription[]>{
+        return new Promise<AdminCourseDescription[]>((resolve, reject) => {
 
-        return new Promise<UserCoursesEntity>((resolve, reject) => {
+        });
+    }
+
+    async loadUserEnrolledCourses (userId: string): Promise<EnrolledCourseDescription[]> {
+        this.logger.log('info', 'Retrieving courses for user: %s', userId);
+
+        return new Promise<EnrolledCourseDescription[]>((resolve, reject) => {
             if (!userId) {
                 reject(`No user id provided to load courses`);
             }
@@ -46,25 +60,23 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
                     let result = await datasource.query({
                         // language=PostgreSQL
                         text: `
-                          SELECT ARRAY(SELECT row_to_json(id, title) FROM
-                            tu.course WHERE
-                            tu.course.id <@ tu.user.enrolled_in_course_ids)
-                            AS enrolledInCourses,
-                            ARRAY(SELECT row_to_json(id, title) FROM
-                              tu.course WHERE
-                              tu.course.id <@ tu.user.admin_of_course_ids)
-                              AS adminOfCourses
-                          WHERE tu.user.id = $1
+                          SELECT id, title FROM tu.course c JOIN
+                            (SELECT unnest(
+                                     u.admin_of_course_ids) AS admin_course_id FROM
+                               tu.user u WHERE u.id = $1) u
+                              ON c.id = u.admin_course_id
                         `,
                         values: [userId]
                     });
 
-                    let userCourses: UserCoursesEntity = {
-                        userId: userId,
-                        adminOfCourses: result.rows[0].adminOfCourses,
-                        enrolledInCourses: result.rows[0].enrolledInCourses
-                    };
-                    resolve(userCourses);
+                    let enrolled:EnrolledCourseDescription[] = result.rows.map((row) => {
+                        return {
+                            id: row.id,
+                            title: row.title
+                        }
+                    });
+
+                    resolve(enrolled);
                 } catch (e) {
                     reject(e);
                 }
@@ -74,10 +86,10 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
         });
     }
 
-    async courseExists (courseInfo: ICourseInfo): Promise<boolean> {
+    async courseExists (courseData: CourseData): Promise<boolean> {
         console.log('checking course exists from courses repository');
         return new Promise<boolean>((resolve, reject) => {
-            if (!courseInfo.title) {
+            if (!courseData.title) {
                 return resolve(false);
             }
 
@@ -85,7 +97,7 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
                 try {
                     let result = await datasource.query({
                         text: `SELECT COUNT(*) FROM tu.course WHERE title = $1`,
-                        values: [courseInfo.title]
+                        values: [courseData.title]
                     });
                     resolve(result.rows[0].count !== '0');
                 } catch (e) {
@@ -95,9 +107,9 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
         });
     }
 
-    async createCourse (courseInfo: ICourseInfo): Promise<string> {
+    async createCourse (courseData: CourseData): Promise<string> {
         return new Promise<string>((resolve, reject) => {
-            if (!courseInfo.title) {
+            if (!courseData.title) {
                 return resolve(null);
             }
 
@@ -107,11 +119,11 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
                     let courseId = await this.getNextId();
                     await this.datasource.query({
                         text: `INSERT INTO tu.course (id, title, description, time_estimate) VALUES ($1, $2, $3, $4)`,
-                        values: [courseId, courseInfo.title, courseInfo.description, courseInfo.timeEstimate]
+                        values: [courseId, courseData.title, courseData.description, courseData.timeEstimate]
                     });
                     resolve(courseId);
                 } catch (e) {
-                    this.logger.log(`Error creating course: ${courseInfo.title}`, 'error');
+                    this.logger.log(`Error creating course: ${courseData.title}`, 'error');
                     this.logger.log(e, 'error');
                     reject(e);
                 }
@@ -119,8 +131,8 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
         });
     }
 
-    async loadCourse (courseId: string): Promise<CourseEntity> {
-        return new Promise<CourseEntity>((resolve, reject) => {
+    async loadUserEnrolledCourse (courseId: string): Promise<UserEnrolledCourseData> {
+        return new Promise<UserEnrolledCourseData>((resolve, reject) => {
             if (!courseId) {
                 return resolve(null);
             }
@@ -140,6 +152,12 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
                     reject(e);
                 }
             })();
+        });
+    }
+
+    async loadUserAdminCourse (courseId: string): Promise<UserAdminCourseData> {
+        return new Promise<UserAdminCourseData>((resolve, reject) => {
+
         });
     }
 }
