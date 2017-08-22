@@ -95,14 +95,15 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
     }
 
 
-    addToAdminOfCourseIds (userId: string, courseId: string): Promise<void> {
+    addToAdminOfCourseIds (username: string, courseId: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {
                     await this.datasource.query({
+                        // language=PostgreSQL
                         text: `UPDATE tu.user SET admin_of_course_ids =
-                            admin_of_course_ids || $1::BIGINT WHERE id = $2`,
-                        values: [courseId, userId]
+                            admin_of_course_ids || $1::BIGINT WHERE username = $2`,
+                        values: [courseId, username]
                     });
                     resolve();
                 } catch (e) {

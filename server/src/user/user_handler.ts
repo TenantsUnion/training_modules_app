@@ -33,11 +33,11 @@ export class UserHandler implements IUserHandler {
         });
     }
 
-    async userCreatedCourse(createByUserId:string, courseId: string): Promise<void> {
+    async userCreatedCourse(createdByUsername:string, courseId: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {
-                    await this.userRepository.addToAdminOfCourseIds(createByUserId, courseId);
+                    await this.userRepository.addToAdminOfCourseIds(createdByUsername, courseId);
                     resolve();
                 } catch (e) {
                     console.log(e.stack);
