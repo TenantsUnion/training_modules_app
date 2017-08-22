@@ -2,9 +2,6 @@ import {Quill, QuillOptionsStatic, DeltaStatic} from "quill";
 import Vue from "vue";
 import Component from "vue-class-component";
 //compression library for images
-import LZString from "lz-string";
-import * as _ from "underscore";
-
 
 //default quill theme
 require('quill/dist/quill.core.css');
