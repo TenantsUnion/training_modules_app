@@ -1,6 +1,5 @@
 import axios from "axios";
 import {
-    EnrolledCourseDescription,
     AdminCourseDescription, CourseData
 } from "courses";
 import {userQueryService} from "../../account/user_query_service";
@@ -17,7 +16,7 @@ class UserCoursesHttpService {
             });
     }
 
-    getUserEnrolledCourses (): Promise<EnrolledCourseDescription[]> {
+    getUserEnrolledCourses (): Promise<AdminCourseDescription[]> {
         let username = userQueryService.getUsername();
         return axios.get(`courses/user/enrolled/${username}`)
             .then((value) => {

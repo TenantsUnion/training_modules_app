@@ -39,11 +39,11 @@ declare namespace courses {
         timeEstimate
     }
 
-    export interface EnrolledCourseDescription extends CourseDescription {
+    export interface AdminCourseDescription extends CourseDescription {
         lastActive?: Moment;
     }
 
-    export interface AdminCourseDescription extends CourseDescription {
+    export interface EnrolledCourseDescription extends CourseDescription {
     }
 }
 
