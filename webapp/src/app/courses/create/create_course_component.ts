@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {createCourseHttpService} from "./create_course_http_service";
+import {userCoursesHttpService} from "../../user/courses/course_http_service";
 import {appRouter} from "../../router";
 
 @Component({
@@ -27,7 +27,7 @@ export class CreateCourseComponent extends Vue {
     username: string;
 
     create() {
-        createCourseHttpService.createCourse({
+        userCoursesHttpService.createCourse({
             title: this.title,
             description: this.description,
             timeEstimate: this.timeEstimate,
