@@ -1,0 +1,19 @@
+<div>
+    <h4>Admin Courses
+        <button class="button primary"
+                @click="createCourse">Create a
+            Course
+        </button>
+    </h4>
+    <ul v-if="courses.length"
+        class="content-list">
+        <li v-for="course in courses"
+            class="content-item">
+            <span>{{ course.title }}</span>
+            <button class="button primary"
+                    @click="go(course.id)">
+                Go
+            </button>
+        </li>
+    </ul>
+</div>
