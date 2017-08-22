@@ -1,8 +1,7 @@
 import {Datasource, datasource} from "../datasource";
 import {
-    EnrolledCourseDescription,
     AdminCourseDescription, UserEnrolledCourseData, CourseData,
-    UserAdminCourseData
+    UserAdminCourseData, EnrolledCourseDescription
 } from "courses";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
@@ -16,7 +15,7 @@ export interface ICoursesRepository {
 
     courseExists(courseData: CourseData): Promise<boolean>;
 
-    loadUserEnrolledCourses(userId: string): Promise<EnrolledCourseDescription[]>;
+    loadUserEnrolledCourses(userId: string): Promise<AdminCourseDescription[]>;
 
     loadUserAdminCourses(userId: string): Promise<AdminCourseDescription[]>;
 }
@@ -33,26 +32,14 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
               FROM tu.user WHERE tu.user.admin_of_course_ids @> $1)
         AS adminUsers`;
 
-    loadCourseModulesSql = `
-        
-    `;
-
     constructor (private datasource: Datasource) {
         super('course_id_seq', datasource);
     }
 
-    async loadUserAdminCourses (username: string): Promise<AdminCourseDescription[]>{
+    async loadUserAdminCourses (username: string): Promise<AdminCourseDescription[]> {
         return new Promise<AdminCourseDescription[]>((resolve, reject) => {
-
-        });
-    }
-
-    async loadUserEnrolledCourses (userId: string): Promise<EnrolledCourseDescription[]> {
-        this.logger.log('info', 'Retrieving courses for user: %s', userId);
-
-        return new Promise<EnrolledCourseDescription[]>((resolve, reject) => {
-            if (!userId) {
-                reject(`No user id provided to load courses`);
+            if (!username) {
+                reject(`No username provided to load admin courses`)
             }
 
             (async () => {
@@ -63,13 +50,50 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
                           SELECT id, title FROM tu.course c JOIN
                             (SELECT unnest(
                                      u.admin_of_course_ids) AS admin_course_id FROM
-                               tu.user u WHERE u.id = $1) u
+                               tu.user u WHERE u.username = $1) u
                               ON c.id = u.admin_course_id
                         `,
-                        values: [userId]
+                        values: [username]
                     });
 
-                    let enrolled:EnrolledCourseDescription[] = result.rows.map((row) => {
+                    let adminCourses: AdminCourseDescription[] = result.rows.map((row) => {
+                        return {
+                            id: row.id,
+                            title: row.title
+                        }
+                    });
+
+                    resolve(adminCourses);
+                } catch (e) {
+                    reject(e);
+                }
+            })();
+        });
+    }
+
+    async loadUserEnrolledCourses (username: string): Promise<EnrolledCourseDescription[]> {
+        this.logger.log('info', 'Retrieving courses for user: %s', username);
+
+        return new Promise<AdminCourseDescription[]>((resolve, reject) => {
+            if (!username) {
+                reject(`No username provided to load enrolled courses`);
+            }
+
+            (async () => {
+                try {
+                    let result = await datasource.query({
+                        // language=PostgreSQL
+                        text: `
+                          SELECT id, title FROM tu.course c JOIN
+                            (SELECT unnest(
+                                     u.enrolled_in_course_ids) AS enrolled_course_id FROM
+                               tu.user u WHERE u.username = $1) u
+                              ON c.id = u.enrolled_course_id
+                        `,
+                        values: [username]
+                    });
+
+                    let enrolled: EnrolledCourseDescription[] = result.rows.map((row) => {
                         return {
                             id: row.id,
                             title: row.title

@@ -1,15 +1,15 @@
 import {IUserHandler, userHandler} from "../user/user_handler";
 import {coursesRepository, ICoursesRepository} from "./courses_repository";
 import {
-    EnrolledCourseDescription, AdminCourseDescription, CourseData,
-    CourseUserDescription
+    AdminCourseDescription, CourseData,
+    CourseUserDescription, EnrolledCourseDescription
 } from "courses";
 
 
 export interface ICoursesHandler {
     createCourse(courseInfo: CourseData): Promise<string>;
 
-    getUserEnrolledCourses(username: string): Promise<EnrolledCourseDescription[]>;
+    getUserEnrolledCourses(username: string): Promise<AdminCourseDescription[]>;
 
     getUserAdminCourses(username: string): Promise<AdminCourseDescription[]>;
 
@@ -51,12 +51,12 @@ export class CoursesHandler implements ICoursesHandler {
         });
     }
 
-    async getUserEnrolledCourses (userId: string): Promise<EnrolledCourseDescription[]> {
-        return new Promise<EnrolledCourseDescription[]>((resolve, reject) => {
+    async getUserEnrolledCourses (username: string): Promise<AdminCourseDescription[]> {
+        return new Promise<AdminCourseDescription[]>((resolve, reject) => {
             (async () => {
                 try {
                     let courses: EnrolledCourseDescription[]
-                        = await this.coursesRepository.loadUserEnrolledCourses(userId);
+                        = await this.coursesRepository.loadUserEnrolledCourses(username);
                     resolve(courses);
                 } catch (e) {
                     console.log(e.stack);
@@ -66,12 +66,15 @@ export class CoursesHandler implements ICoursesHandler {
         })
     }
 
-    async getUserAdminCourses (userId: string): Promise<AdminCourseDescription[]> {
+    async getUserAdminCourses (username: string): Promise<AdminCourseDescription[]> {
         return new Promise<AdminCourseDescription[]>((resolve, reject) => {
             (async () => {
                 try {
+                    let courses:AdminCourseDescription[] =
+                        await this.coursesRepository.loadUserAdminCourses(username);
+                    resolve(courses)
                 } catch (e) {
-
+                    console.log(e.stack);
                     reject(e);
                 }
             })();

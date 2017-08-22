@@ -1,7 +1,7 @@
 import * as express from "express";
 import {Request, Response, Router} from "express";
 import {
-    EnrolledCourseDescription, CourseUserDescription,
+    AdminCourseDescription, CourseUserDescription,
     CourseData
 } from "courses";
 import {ContentDescriptionEntity} from "content";
@@ -13,7 +13,6 @@ export class CoursesController {
 
     createCourse(request: Request, response: Response) {
         let courseInfo: CourseData = request.body;
-        courseInfo.createdBy = request.session.user_id;
         let result;
         (async () => {
             try {
@@ -34,7 +33,7 @@ export class CoursesController {
         let username: string = request.params.username;
 
         (async () => {
-            let userCourses: EnrolledCourseDescription[];
+            let userCourses: AdminCourseDescription[];
             try {
                 userCourses = await this.coursesHandler.getUserEnrolledCourses(username);
             } catch (e) {
@@ -52,9 +51,9 @@ export class CoursesController {
         let username: string = request.params.username;
 
         (async () => {
-            let userCourses: string | ContentDescriptionEntity;
+            let userCourses: AdminCourseDescription[];
             try {
-                let userCourses = await this.coursesHandler.getUserEnrolledCourses(username);
+                userCourses = await this.coursesHandler.getUserAdminCourses(username);
             } catch (e) {
                 console.log(e.stack);
                 response.status(500)
