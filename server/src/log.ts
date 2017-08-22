@@ -19,17 +19,12 @@ const basicTransportOptions = {
     showLevel: true
 };
 
-const loggerNameToFile = (loggerName) => {
-    return 'server.log';
-};
-
-
 const fileConfig = config.has("log.directory");
-export const getLogger = (loggerName, level) => {
+export const getLogger = (loggerName:string, level:string, loggerFile?:string) => {
     let transport = fileConfig ? new winston.transports.File({
             label: loggerName,
             level: level,
-            filename: fileConfig + '/' + loggerNameToFile(loggerName),
+            filename: fileConfig + '/' + loggerFile ? loggerFile : 'server.log',
             maxsize: 1024 * 1024 * 1024,
             maxFiles: 5,
             zippedArchive: true,
