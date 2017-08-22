@@ -47,7 +47,7 @@ export default class SignupComponent extends Vue {
             password: this.model.password
         }).then(() => {
             this.loading = false;
-            appRouter.push({path: `user/${this.model.username}/courses`});
+            appRouter.push({path: `user/${this.model.username}/enrolled-courses`});
         }).catch((errorMessages: AccountSignupFieldErrors) => {
             this.loading = false;
             this.errorMessages = errorMessages;

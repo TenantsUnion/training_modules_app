@@ -10,7 +10,7 @@
     <div class="grid-x grid-padding-x align-center">
         <div class="cell small-6">
             <div class="callout float-center">
-                <vue-form :state="formstate">
+                <vue-form :state="formstate" @submit.prevent="signup">
                     <validate>
                         <field-messages name="username"
                                         show="$submitted || $dirty">
