@@ -51,8 +51,7 @@ require('./_module_list_component.scss');
 	template: require('./module_list_component.tpl.html')
 })
 export class ModuleList extends Vue {
-	constructor(){
-		super();
+	mounted() {
 		$("#menu-toggle").click(function(e) {
 			e.preventDefault();
 			$("#page-content-wrapper").toggleClass("toggled");
