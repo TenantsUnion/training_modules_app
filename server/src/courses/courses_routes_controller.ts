@@ -4,7 +4,7 @@ import {
     AdminCourseDescription, CourseUserDescription,
     CourseData
 } from "courses";
-import {ContentDescriptionEntity} from "content";
+import {ContentData} from "content";
 import {coursesHandler, ICoursesHandler} from "./courses_handler";
 
 export class CoursesController {

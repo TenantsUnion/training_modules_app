@@ -1,25 +1,25 @@
-import {IAdminModuleDetails, IAdminModuleInfo} from "modules";
+import {AdminModuleData, ModuleDetails} from "modules";
 
-export const MODULES_LIST: IAdminModuleInfo[] = [
+export const MODULES_LIST: AdminModuleData[] = [
     {
         id: "1",
-        name: "repairs",
-        visible: true,
+        title: "repairs",
+        active: true,
         lastEdited: "2017-07-20T12:00:00.0Z"
     }, {
         id: "2",
-        name: "rent increases",
-        visible: false,
+        title: "rent increases",
+        active: false,
         lastEdited: "2017-07-22T08:30:00.0Z"
     }
 ];
 
 export class ModulesService {
-    getAdminModulesList(): IAdminModuleInfo[] {
+    getAdminModulesList(): AdminModuleData[] {
         return MODULES_LIST;
     }
 
-    getAdminModuleDetails(): IAdminModuleDetails {
+    getAdminModuleDetails(): ModuleDetails {
         return null;
     }
 }

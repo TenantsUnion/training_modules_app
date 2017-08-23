@@ -1,6 +1,6 @@
 import {datasource, Datasource} from "../datasource";
 import {AbstractRepository} from "../repository";
-import {ContentDescriptionEntity} from "content";
+import {ContentData} from "content";
 
 export interface ContentEntity {
     id: string,
@@ -22,8 +22,8 @@ export class ContentRepository extends AbstractRepository {
 
     }
 
-    async getUserContent (username: string): Promise<ContentDescriptionEntity[]> {
-        return new Promise<ContentDescriptionEntity[]>((resolve, reject) => {
+    async getUserContent (username: string): Promise<ContentData[]> {
+        return new Promise<ContentData[]>((resolve, reject) => {
             (async () => {
                 let userContentResult;
 
@@ -43,7 +43,7 @@ export class ContentRepository extends AbstractRepository {
                     return reject(e);
                 }
 
-                let contentDescriptionList: ContentDescriptionEntity[] = userContentResult.rows.map((row) => {
+                let contentDescriptionList: ContentData[] = userContentResult.rows.map((row) => {
                     return {
                         id: row.id,
                         quillDataId: row.content_data_id,
@@ -88,7 +88,7 @@ export class ContentRepository extends AbstractRepository {
         }));
     }
 
-    async createContent (content: ContentDescriptionEntity): Promise<void> {
+    async createContent (content: ContentData): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {

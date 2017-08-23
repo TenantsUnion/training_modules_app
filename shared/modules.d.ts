@@ -1,21 +1,40 @@
+import {QuillEditorData} from "../server/src/quill/quill_repository";
+import {ContentData} from "./content";
+
 declare namespace modules {
 
-    interface IModuleInfo {
+    interface ModuleData {
         id: string;
-        name: string;
+        header?: QuillEditorData
+        title: string;
+        description?: string;
+        time_estimate?: string;
         lastEdited: string;
+        sections?: SectionData[]
     }
 
-    interface IAdminModuleInfo extends IModuleInfo {
-        visible: boolean;
+    interface AdminModuleData extends ModuleData {
+        active: boolean;
     }
 
-    interface IAdminModuleDetails extends IAdminModuleInfo {
-        sections: ISection[];
+    interface ModuleDetails {
+        id: string;
+        title: string;
+        description: string;
     }
 
-    interface ISection {
+    interface SectionData {
+        id: string;
+        header: QuillEditorData;
+        title: string;
+        description: string
+        content: ContentData[]
+    }
 
+    interface SectionDetails {
+        id: string;
+        title: string;
+        description: string;
     }
 }
 

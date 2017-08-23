@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ContentDescriptionEntity, CreateUserContentCommand} from "content";
+import {ContentData, CreateUserContentCommand} from "content";
 import {
     UserQueryService,
     userQueryService
@@ -26,13 +26,13 @@ class CreateContentHttpService {
             }))
     }
 
-    getContentDescriptionList (): Promise<ContentDescriptionEntity[]> {
+    getContentDescriptionList (): Promise<ContentData[]> {
         let username = this.userQueryService.getUsername();
 
         return axios.get(`user/${username}/content`)
             .then((response) => {
-                let userContentDescriptionList: ContentDescriptionEntity[] =
-                    <ContentDescriptionEntity[]> response.data;
+                let userContentDescriptionList: ContentData[] =
+                    <ContentData[]> response.data;
 
                 return userContentDescriptionList;
             })

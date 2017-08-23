@@ -5,7 +5,7 @@ declare namespace content {
         quillContent: string;
     }
 
-    export interface ContentDescriptionEntity {
+    export interface ContentData {
         id: string;
         quillDataId: string;
         title: string;

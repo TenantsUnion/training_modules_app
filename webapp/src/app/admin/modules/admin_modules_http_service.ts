@@ -1,11 +1,11 @@
 import axios from "axios";
-import {IAdminModuleInfo} from "modules";
+import {AdminModuleData} from "modules";
 
 class ModulesHttpService {
 
-    getModules(): Promise<IAdminModuleInfo[]> {
+    getModules(): Promise<AdminModuleData[]> {
         return axios.get('admin/modules').then((response) => {
-            return <IAdminModuleInfo[]> response.data;
+            return <AdminModuleData[]> response.data;
         }).catch((error) => {
             return error;
         });

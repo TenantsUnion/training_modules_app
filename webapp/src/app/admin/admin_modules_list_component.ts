@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import {modulesHttpService} from "./modules/admin_modules_http_service";
-import {IAdminModuleInfo} from "modules";
+import {AdminModuleData} from "modules";
 
 @Component({
     data: () => {
@@ -34,7 +34,7 @@ import {IAdminModuleInfo} from "modules";
 })
 export class AdminModulesList extends Vue {
     loading: boolean;
-    modules: IAdminModuleInfo[];
+    modules: AdminModuleData[];
     error: string;
 
     created() {
