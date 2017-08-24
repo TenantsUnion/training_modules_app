@@ -1,4 +1,5 @@
-import {Quill, QuillOptionsStatic, DeltaStatic} from "quill";
+import Quill from "quill";
+import {QuillOptionsStatic, DeltaStatic} from "quill";
 import Vue from "vue";
 import Component from "vue-class-component";
 //compression library for images
@@ -33,7 +34,6 @@ export const QUILL_CONFIG: QuillOptionsStatic = {
     theme: 'snow'
 };
 
-
 let counter = 0;
 
 require('./quill_component.scss');
@@ -56,7 +56,7 @@ export class QuillComponent extends Vue {
 
     editorId: string;
     scrollingContainerId: string;
-    quill: Quill;
+    quill: Quill.Quill;
 
     created () {
         this.editorId = 'editor-' + counter.toString();
