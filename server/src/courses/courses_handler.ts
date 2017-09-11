@@ -2,9 +2,21 @@ import {IUserHandler, userHandler} from "../user/user_handler";
 import {coursesRepository, ICoursesRepository} from "./courses_repository";
 import {
     AdminCourseDescription, CourseData,
-    CourseUserDescription, EnrolledCourseDescription
+    CourseUserDescription, EnrolledCourseDescription, UserAdminCourseData, UserEnrolledCourseData
 } from "courses";
+import {getLogger} from '../log';
+import {CreateModuleData} from "../../../shared/modules";
 
+export interface UsernameCourseTitle {
+    username: string;
+    courseTitle: string;
+}
+
+export const isUsernameCourseTitle = function (obj): obj is UsernameCourseTitle {
+    return typeof obj === 'object'
+        && typeof obj.username === 'string'
+        && typeof obj.courseTitle === 'string'
+};
 
 export interface ICoursesHandler {
     createCourse(courseInfo: CourseData): Promise<string>;
@@ -13,10 +25,16 @@ export interface ICoursesHandler {
 
     getUserAdminCourses(username: string): Promise<AdminCourseDescription[]>;
 
-    getCourseUsers(courseId: string): Promise<CourseUserDescription[]>;
+    loadAdminCourse(courseId: string | UsernameCourseTitle): Promise<UserAdminCourseData>;
+
+    loadEnrolledCourse(username: string, courseId: string): Promise<UserEnrolledCourseData>;
+
+    createModule(courseId: string, createModuleData: CreateModuleData): void;
+
 }
 
 export class CoursesHandler implements ICoursesHandler {
+    logger = getLogger('CourseHandler', 'info');
 
     constructor (private coursesRepository: ICoursesRepository,
                  private userHandler: IUserHandler) {
@@ -38,6 +56,7 @@ export class CoursesHandler implements ICoursesHandler {
                     await this.userHandler.userCreatedCourse(courseInfo.createdBy, courseId);
                     resolve(null);
                 } catch (e) {
+                    this.logger.error('error', );
                     console.log(e.stack);
                     reject(e);
                 }
@@ -45,9 +64,10 @@ export class CoursesHandler implements ICoursesHandler {
         });
     }
 
-    async getCourseUsers (courseId: string): Promise<CourseUserDescription[]> {
-        return new Promise<CourseUserDescription[]>((resolve, reject) => {
+    async createModule (courseId: string, createModuleData: CreateModuleData): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
 
+            coursesRepository.addModule(courseId, createModuleData);
         });
     }
 
@@ -70,7 +90,7 @@ export class CoursesHandler implements ICoursesHandler {
         return new Promise<AdminCourseDescription[]>((resolve, reject) => {
             (async () => {
                 try {
-                    let courses:AdminCourseDescription[] =
+                    let courses: AdminCourseDescription[] =
                         await this.coursesRepository.loadUserAdminCourses(username);
                     resolve(courses)
                 } catch (e) {
@@ -80,6 +100,36 @@ export class CoursesHandler implements ICoursesHandler {
             })();
         });
 
+    }
+
+    async loadAdminCourse (courseId: string | UsernameCourseTitle): Promise<UserAdminCourseData> {
+        return new Promise<UserAdminCourseData>((resolve, reject) => {
+            (async () => {
+                try {
+                    let adminCourse = await this.coursesRepository.loadUserAdminCourse(courseId);
+                    resolve(adminCourse);
+                } catch (e) {
+                    this.logger.error(e);
+                    this.logger.error(e.stack);
+                    reject(e);
+                }
+            })();
+        });
+    }
+
+    async loadEnrolledCourse (username: string, courseId: string): Promise<UserEnrolledCourseData> {
+        return new Promise<UserEnrolledCourseData>((resolve, reject) => {
+            (async () => {
+                try {
+                    let enrolledCourse = await this.coursesRepository.loadUserEnrolledCourse(username, courseId);
+                    resolve(enrolledCourse)
+                } catch (e) {
+                    this.logger.error(e);
+                    this.logger.error(e.stack);
+                    reject(e);
+                }
+            })();
+        });
     }
 }
 

@@ -4,12 +4,12 @@
             <div class="small-8 cell">
                 <div>
                     <h2>Create Content</h2>
-                    <p v-if="loading">Loading...</p>
+                    <loading v-if="loading"></loading>
                 </div>
             </div>
         </div>
     </div>
-    <vue-form :state="formstate">
+    <vue-form :state="formstate" @submit.prevent="create">
         <validate>
             <div class="cell small-2">
                 <div class="grid-x grid-padding-x align-center">
@@ -34,7 +34,7 @@
                 <div class="grid-x grid-padding-x align-center">
                     <div class="small-8 cell">
                         <label>Content</label>
-                        <quill-editor id="create-content" ref="editor"></quill-editor>
+                        <quill-editor ref="editor"></quill-editor>
                     </div>
                 </div>
             </div>

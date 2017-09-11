@@ -4,7 +4,6 @@ import {QuillComponent} from "../../../quill/quill_component";
 import {contentHttpService} from "../content_http_service";
 import {ContentEntity} from "../../../../../../server/src/content/content_repository";
 import * as VueForm from "../../../vue-form";
-import {Watch} from "vue-property-decorator";
 import {appRouter} from "../../../router";
 
 @Component({

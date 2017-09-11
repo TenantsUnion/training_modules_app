@@ -5,11 +5,14 @@ import {
 } from "courses";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
+import {LoggerInstance} from 'winston';
+import {isUsernameCourseTitle, UsernameCourseTitle} from "./courses_handler";
+import {CreateModuleData} from "../../../shared/modules";
 
 export interface ICoursesRepository {
-    loadUserEnrolledCourse(userId: string, courseId: string): Promise<UserEnrolledCourseData>;
+    loadUserEnrolledCourse(username: string, courseId: string): Promise<UserEnrolledCourseData>;
 
-    loadUserAdminCourse(courseId: string)
+    loadUserAdminCourse(courseId: string | UsernameCourseTitle): Promise<UserAdminCourseData>;
 
     createCourse(courseData: CourseData): Promise<string>;
 
@@ -21,7 +24,7 @@ export interface ICoursesRepository {
 }
 
 class CoursesRepository extends AbstractRepository implements ICoursesRepository {
-    logger = getLogger('CourseRepository', 'info');
+    logger: LoggerInstance = getLogger('CourseRepository', 'debug');
 
     loadCourseUsersSql = `
       SELECT c.id, c.title, c.open_enrollment, c.active,
@@ -171,19 +174,56 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
 
                     resolve(results.rows[0]);
                 } catch (e) {
-                    console.log(e);
-                    console.log(e.stack);
+                    this.logger.log('error', e);
+                    this.logger.log('error', e.stack);
                     reject(e);
                 }
             })();
         });
     }
 
-    async loadUserAdminCourse (courseId: string): Promise<UserAdminCourseData> {
+    async loadUserAdminCourse (courseId: string | UsernameCourseTitle): Promise<UserAdminCourseData> {
+        // username and course title are provided query for course by joining courses
+        // that user is an admin for and narrowing down by title, otherwise load by course id
+        let query = isUsernameCourseTitle(courseId) ?
+            {
+                // language=PostgreSQL
+                text: `SELECT c.* FROM tu.course c INNER JOIN
+                  (SELECT unnest(u.admin_of_course_ids) AS admin_course_id FROM
+                    tu.user u WHERE u.username = $2) u
+                    ON c.id = u.admin_course_id WHERE c.title = $1`,
+                values: [courseId.courseTitle, courseId.username]
+            } :
+            {
+                // language=POSTGRES-SQL
+                text: `SELECT * FROM tu.course c where c.id = $1`,
+                values: [courseId]
+            };
         return new Promise<UserAdminCourseData>((resolve, reject) => {
-
+            (async () => {
+                try {
+                    this.logger.log('info', 'querying for admin course');
+                    this.logger.log('debug', `sql => ${query.text}`);
+                    let results = await datasource.query(query);
+                    resolve(results.rows[0]);
+                } catch (e) {
+                    this.logger.log('error', e);
+                    this.logger.log('error', e.stack);
+                    reject(e);
+                }
+            })();
         });
     }
+
+    addModule (courseId: string, createModuleData: CreateModuleData) {
+        // todo change for module
+        let query = {
+            text: `UPDATE tu.user SET created_content_ids =
+                            created_content_ids || $1 :: BIGINT WHERE id = $2`
+            // values: [contentId, userId]
+        }
+    }
 }
+
 
 export const coursesRepository = new CoursesRepository(datasource);

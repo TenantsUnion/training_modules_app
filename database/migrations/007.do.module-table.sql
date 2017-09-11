@@ -5,7 +5,7 @@ CREATE TABLE tu.module (
   description         VARCHAR(300),
   time_estimate       VARCHAR(300),
   active              BOOLEAN,
-  ordered_section_ids BIGINT [] NOT NULL DEFAULT array[]::BIGINT[]
+  ordered_section_ids BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT []
 );
 
 CREATE INDEX module_title_gin_idx

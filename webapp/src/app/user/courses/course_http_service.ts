@@ -1,13 +1,13 @@
 import axios from "axios";
 import {
-    AdminCourseDescription, CourseData
+    AdminCourseDescription, CourseData, CreateCourseData
 } from "courses";
 import {userQueryService} from "../../account/user_query_service";
 
 class UserCoursesHttpService {
 
-    createCourse (courseInfo: CourseData): Promise<void> {
-        return axios.post('courses/create', courseInfo)
+    createCourse (createCourseData: CreateCourseData): Promise<void> {
+        return axios.post('courses/create', createCourseData)
             .then((value) => {
 
             })

@@ -1,0 +1,21 @@
+<div id="wrapper">
+    <div id="sidebar-wrapper">
+        <loading v-if="loading"></loading>
+        <course-navigation v-if="course"
+                           :course-title="course.title"
+                           :is-course-admin="isCourseAdmin">
+            <div class="menu-icon-container small-2 cell">
+                <a class="menu-icon" id="menu-toggle"></a>
+            </div>
+        </course-navigation>
+    </div>
+    <div id="page-content-wrapper">
+        <div class="main">
+            <div class="grid-x">
+                <div class="small-12 cell">
+                    <router-view></router-view>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

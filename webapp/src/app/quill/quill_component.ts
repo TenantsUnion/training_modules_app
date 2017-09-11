@@ -41,13 +41,12 @@ require('./quill_component.scss');
 @Component({
     data: () => {
         return {
-            editorId: '',
-            scrollingContainerId: ''
+            editorId: ''
         };
     },
     // language=HTML
     template: `
-            <div v-bind:class="scrollingContainerId" class="scrolling-container">
+            <div class="scrolling-container">
                 <div v-bind:class="editorId" class="editor-container"></div>
             </div>
     `
@@ -55,7 +54,6 @@ require('./quill_component.scss');
 export class QuillComponent extends Vue {
 
     editorId: string;
-    scrollingContainerId: string;
     quill: Quill.Quill;
 
     created () {

@@ -1,12 +1,23 @@
 import {Moment} from "moment";
+import {ModuleData, ModuleDetails} from './modules';
 
 declare namespace courses {
 
-    export interface CourseData {
+    export interface CreateCourseData {
         title: string,
         timeEstimate: string,
         description: string,
         createdBy: string
+    }
+
+    export interface CourseData {
+        id: string,
+        title: string,
+        timeEstimate: string,
+        description: string,
+        createdBy: string
+        moduleDetails?: ModuleDetails[],
+        modules?: ModuleData[]
     }
 
     export interface UserEnrolledCourseData extends CourseData {
@@ -36,7 +47,7 @@ declare namespace courses {
     export interface CourseDescription {
         id: string;
         title: string;
-        timeEstimate
+        timeEstimate: string;
     }
 
     export interface AdminCourseDescription extends CourseDescription {

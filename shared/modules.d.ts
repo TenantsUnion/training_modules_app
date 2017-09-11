@@ -1,5 +1,5 @@
-import {QuillEditorData} from "../server/src/quill/quill_repository";
 import {ContentData} from "./content";
+import {QuillEditorData} from "../server/src/quill/quill_repository";
 
 declare namespace modules {
 
@@ -11,6 +11,14 @@ declare namespace modules {
         time_estimate?: string;
         lastEdited: string;
         sections?: SectionData[]
+    }
+
+    interface CreateModuleData {
+        courseId: string;
+        title: string;
+        header?: Quill.DeltaStatic;
+        description?: string;
+        timeEstimate: string;
     }
 
     interface AdminModuleData extends ModuleData {

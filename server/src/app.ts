@@ -9,7 +9,6 @@ import * as session from "express-session";
 import {Express} from 'express';
 import {IErrorResponse} from '../../shared/http_responses';
 import {AccountRoutes} from './account/account_routes';
-import {AdminModulesRoute} from './modules/modules_route';
 import {CoursesRoutes} from "./courses/courses_routes_controller";
 import {ContentRoutes} from "./content/user/user_content_routes_controller";
 
@@ -63,7 +62,6 @@ app.get('/', express.Router().get('/', function (req, res, next) {
 
 app.use('/account', AccountRoutes);
 app.use(CoursesRoutes);
-app.use('/admin', AdminModulesRoute);
 app.use(ContentRoutes);
 
 // has to go last so other routes can match, catch 404 and forward to error handler

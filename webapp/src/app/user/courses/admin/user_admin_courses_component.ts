@@ -2,7 +2,8 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {AdminCourseDescription} from "courses";
 import {userCoursesHttpService} from "../course_http_service";
-import * as VueRouter from "vue-router";
+import VueRouter from "vue-router";
+import {coursesService} from '../../../courses/courses_service';
 
 @Component({
     data: () => {
@@ -40,8 +41,8 @@ export class UserAdminCourseComponent extends Vue {
         this.$router.push('course/create')
     }
 
-    go (courseTitle: string) {
-        this.$router.push(`admin-courses/${courseTitle}`);
+    go (course: AdminCourseDescription) {
+        this.$router.push(`admin-course/${course.title}`);
     }
 
 }

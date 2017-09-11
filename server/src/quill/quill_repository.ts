@@ -4,7 +4,7 @@ import {AbstractRepository} from "../repository";
 
 export interface QuillEditorData {
     id: string;
-    editor_json: string;
+    editor_json: Quill.DeltaStatic;
 }
 
 export class QuillRepository extends AbstractRepository {

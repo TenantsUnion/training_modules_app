@@ -1,3 +1,5 @@
+import {LoggerInstance} from 'winston';
+
 const winston = require('winston');
 const _ = require('underscore');
 const config = require('config');
@@ -20,7 +22,7 @@ const basicTransportOptions = {
 };
 
 const fileConfig = config.has("log.directory");
-export const getLogger = (loggerName:string, level:string, loggerFile?:string) => {
+export const getLogger = (loggerName: string, level: string, loggerFile?: string): LoggerInstance => {
     let transport = fileConfig ? new winston.transports.File({
             label: loggerName,
             level: level,
