@@ -8,8 +8,7 @@ module.exports = merge(baseConfig, {
         host: 'localhost', //replace with comp ip to have server be available on local network
         port: 8080,
         inline: true,
-        historyApiFallback:
-            true,
+        historyApiFallback: true,
         // noInfo: true,
         stats:
             {
@@ -21,6 +20,7 @@ module.exports = merge(baseConfig, {
                 {
                     target: "http://localhost:3000",
                     changeOrigin: true,
+                    secure: false,
                     filter:
                         function (pathname, req) {
                             return !pathname.match(/build\.js/);
