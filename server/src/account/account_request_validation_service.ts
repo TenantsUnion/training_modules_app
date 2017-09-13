@@ -2,7 +2,7 @@ import {
     LoginCredentials, AccountSignupRequest,
     AccountSignupFieldErrors, AccountLoginFieldErrors
 } from "../../../shared/account";
-import {accountRepository, IAccountRepository} from "./account_repository";
+import {IAccountRepository} from "./account_repository";
 
 export class AccountRequestValidator {
     constructor (private accountRepository: IAccountRepository) {
@@ -48,4 +48,3 @@ export class AccountRequestValidator {
     }
 }
 
-export const accountRequestValidator = new AccountRequestValidator(accountRepository);

@@ -1,4 +1,4 @@
-import {Datasource, datasource} from '../datasource';
+import {Datasource} from '../datasource';
 import {getLogger} from "../log";
 import {AbstractRepository} from "../repository";
 
@@ -71,4 +71,3 @@ export class QuillRepository extends AbstractRepository {
     }
 }
 
-export const quillRepository = new QuillRepository(datasource);

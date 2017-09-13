@@ -1,4 +1,4 @@
-import {Datasource, datasource} from "../datasource";
+import {Datasource} from "../datasource";
 import {IUserInfo} from "user";
 import {AccountInfo} from "./user_handler";
 import {AbstractRepository} from "../repository";
@@ -49,7 +49,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
                 try {
-                    let result = await datasource.query({
+                    let result = await this.datasource.query({
                         text: `SELECT id FROM tu.user WHERE username = $1`,
                         values: [username]
                     });
@@ -68,7 +68,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         return new Promise<IUserInfo>((resolve, reject) => {
             (async () => {
                 try {
-                    let results = await datasource.query({
+                    let results = await this.datasource.query({
                             text: `SELECT * FROM tu.user u WHERE u.id = $1`,
                             values: [id]
                         }
@@ -134,4 +134,3 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
 }
 
 
-export const userRepository = new UserRepository(datasource);

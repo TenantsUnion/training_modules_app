@@ -3,7 +3,7 @@ import {Request, Response, Router} from "express";
 import {
     AdminCourseDescription, CourseData
 } from "courses";
-import {coursesHandler, ICoursesHandler} from "./courses_handler";
+import {ICoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
 import {CreateModuleData} from "../../../shared/modules";
 
@@ -105,33 +105,4 @@ export class CoursesController {
         })();
     }
 }
-
-let coursesController = new CoursesController(coursesHandler);
-
-let router: Router = express.Router();
-router.post('/courses/create', (request, response) => {
-    coursesController.createCourse(request, response);
-});
-
-router.post('/courses/:courseId/module/create', (request, response) => {
-    //todo(EG) create modules controller
-    coursesController.createModule(request, response);
-});
-
-
-// loading courses, todo break out into separate controller
-router.get('/courses/user/enrolled/:username', (request, response) => {
-    coursesController.getUserEnrolledCourses(request, response);
-});
-
-router.get('/courses/user/admin/:username', (request, response) => {
-    coursesController.getUserAdminCourses(request, response);
-});
-
-router.get('/user/:username/courses/admin/:courseTitle', (request, response) => {
-    coursesController.loadAdminCourse(request, response);
-});
-
-
-export const CoursesRoutes = router;
 

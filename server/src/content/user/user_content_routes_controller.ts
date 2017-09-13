@@ -1,13 +1,10 @@
-import * as express from 'express';
-import {Router, Request, Response} from 'express';
+import {Request, Response} from 'express';
 import {CreateUserContentCommand} from "content";
-import {UserContentHandler, userContentHandler} from "./user_content_handler";
+import {UserContentHandler} from "./user_content_handler";
 import {getLogger} from '../../log';
-import {ContentEntity, contentRepository} from "../content_repository";
-import {
-    UserContentValidator,
-    userContentValidator
-} from "./user_content_validator";
+import {ContentEntity, ContentRepository} from "../content_repository";
+import {UserContentValidator} from "./user_content_validator";
+import {contentRepository} from "../../config/repository.config";
 
 let logger = getLogger('userContentController', 'info');
 
@@ -20,6 +17,7 @@ export interface UpdateUserContentCommand {
 }
 
 export class UserContentController {
+    private contentRepository: ContentRepository;
     constructor (private userContentHandler: UserContentHandler,
                  private userContentValidator: UserContentValidator) {
     }
@@ -70,7 +68,7 @@ export class UserContentController {
 
         (async () => {
             try {
-                let contentDescriptionList = await contentRepository.getUserContent(username);
+                let contentDescriptionList = await this.contentRepository.getUserContent(username);
                 response.status(200)
                     .send(contentDescriptionList);
             } catch (e) {
@@ -109,24 +107,3 @@ export class UserContentController {
     }
 }
 
-let userContentController =
-    new UserContentController(userContentHandler, userContentValidator);
-
-let router: Router = express.Router();
-router.post('/user/:username/contentId/:contentId/save', (request, response) => {
-    userContentController.update(request, response);
-});
-
-router.post('/user/:username/content/create', (request, response) => {
-    userContentController.create(request, response);
-});
-
-router.get('/user/:username/content', (request, response) => {
-    userContentController.list(request, response);
-});
-
-router.get('/user/:username/contentId/:quillDataId', (request, response) => {
-    userContentController.load(request, response);
-});
-
-export const ContentRoutes = router;

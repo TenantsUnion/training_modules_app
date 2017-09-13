@@ -1,6 +1,5 @@
-import {Datasource, datasource, IQueryConfig} from "../datasource";
-import {LoginCredentials, AccountSignupRequest} from "account";
-import {IUserInfo} from "user";
+import {Datasource} from "../datasource";
+import {AccountSignupRequest} from "account";
 import {AbstractRepository} from "../repository";
 import {AccountInfo} from "../user/user_handler";
 
@@ -12,7 +11,7 @@ export interface IAccountRepository {
     findAccountByUsername(loginCredentials): Promise<AccountInfo>;
 }
 
-class AccountRepository extends AbstractRepository implements IAccountRepository {
+export class AccountRepository extends AbstractRepository implements IAccountRepository {
 
     constructor(private datasource: Datasource) {
         super('account_id_seq', datasource);
@@ -29,7 +28,7 @@ class AccountRepository extends AbstractRepository implements IAccountRepository
 
             (async () => {
                 try {
-                    let result = await datasource.query({
+                    let result = await this.datasource.query({
                         text: `SELECT COUNT(*) FROM tu.account WHERE tu.account.username = $1`,
                         values: [username]
                     });
@@ -73,7 +72,7 @@ class AccountRepository extends AbstractRepository implements IAccountRepository
 
             (async () => {
                 try {
-                    let results = await datasource.query({
+                    let results = await this.datasource.query({
                             text: `SELECT * FROM tu.account a WHERE a.username = $1`,
                             values: [username]
                         }
@@ -93,5 +92,3 @@ class AccountRepository extends AbstractRepository implements IAccountRepository
         });
     }
 }
-
-export const accountRepository = new AccountRepository(datasource);

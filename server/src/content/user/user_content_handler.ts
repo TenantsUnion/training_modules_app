@@ -1,14 +1,7 @@
 import {CreateUserContentCommand} from "content";
-import {UpdateUserContentCommand} from './user_content_routes_controller';
-import {quillRepository, QuillRepository} from "../../quill/quill_repository";
-import {
-    ContentEntity, contentRepository,
-    ContentRepository
-} from "../content_repository";
-import {
-    IUserRepository, userRepository,
-    UserRepository
-} from "../../user/users_repository";
+import {QuillRepository} from "../../quill/quill_repository";
+import {ContentEntity, ContentRepository} from "../content_repository";
+import {UserRepository} from "../../user/users_repository";
 import {getLogger} from "../../log";
 
 export class UserContentHandler {
@@ -59,8 +52,5 @@ export class UserContentHandler {
         });
         //update quill data in quill table
     }
-
-
 }
 
-export const userContentHandler = new UserContentHandler(contentRepository, quillRepository, userRepository);

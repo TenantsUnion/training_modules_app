@@ -1,6 +1,6 @@
 import {LoginCredentials, AccountSignupRequest} from "account";
-import {accountRepository, IAccountRepository} from "./account_repository";
-import {IUserHandler, userHandler} from "../user/user_handler";
+import {IAccountRepository} from "./account_repository";
+import {IUserHandler} from "../user/user_handler";
 import {IUserInfo} from "../../../shared/user";
 
 export interface IAccountHandler {
@@ -50,4 +50,3 @@ export class AccountHandler implements IAccountHandler {
 
 }
 
-export const accountHandler = new AccountHandler(accountRepository, userHandler);

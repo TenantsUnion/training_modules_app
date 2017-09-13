@@ -1,6 +1,5 @@
 import {
     CreateUserInfo, IUserRepository,
-    userRepository
 } from "./users_repository";
 import {IUserInfo} from "../../../shared/user";
 
@@ -52,4 +51,3 @@ export class UserHandler implements IUserHandler {
     }
 }
 
-export const userHandler = new UserHandler(userRepository);

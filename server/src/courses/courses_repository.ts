@@ -1,4 +1,4 @@
-import {Datasource, datasource} from "../datasource";
+import {Datasource} from "../datasource";
 import {
     AdminCourseDescription, UserEnrolledCourseData, CourseData,
     UserAdminCourseData, EnrolledCourseDescription
@@ -23,7 +23,7 @@ export interface ICoursesRepository {
     loadUserAdminCourses(userId: string): Promise<AdminCourseDescription[]>;
 }
 
-class CoursesRepository extends AbstractRepository implements ICoursesRepository {
+export class CoursesRepository extends AbstractRepository implements ICoursesRepository {
     logger: LoggerInstance = getLogger('CourseRepository', 'debug');
 
     loadCourseUsersSql = `
@@ -47,7 +47,7 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
 
             (async () => {
                 try {
-                    let result = await datasource.query({
+                    let result = await this.datasource.query({
                         // language=PostgreSQL
                         text: `
                           SELECT id, title FROM tu.course c JOIN
@@ -84,7 +84,7 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
 
             (async () => {
                 try {
-                    let result = await datasource.query({
+                    let result = await this.datasource.query({
                         // language=PostgreSQL
                         text: `
                           SELECT id, title FROM tu.course c JOIN
@@ -122,7 +122,7 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
 
             (async () => {
                 try {
-                    let result = await datasource.query({
+                    let result = await this.datasource.query({
                         text: `SELECT COUNT(*) FROM tu.course WHERE title = $1`,
                         values: [courseData.title]
                     });
@@ -166,7 +166,7 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
 
             (async () => {
                 try {
-                    let results = await datasource.query({
+                    let results = await this.datasource.query({
                             text: `SELECT * FROM tu.course c WHERE c.id = $1`,
                             values: [courseId]
                         }
@@ -204,7 +204,7 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
                 try {
                     this.logger.log('info', 'querying for admin course');
                     this.logger.log('debug', `sql => ${query.text}`);
-                    let results = await datasource.query(query);
+                    let results = await this.datasource.query(query);
                     resolve(results.rows[0]);
                 } catch (e) {
                     this.logger.log('error', e);
@@ -216,14 +216,13 @@ class CoursesRepository extends AbstractRepository implements ICoursesRepository
     }
 
     addModule (courseId: string, createModuleData: CreateModuleData) {
-        // todo change for module
         let query = {
-            text: `UPDATE tu.user SET created_content_ids =
-                            created_content_ids || $1 :: BIGINT WHERE id = $2`
-            // values: [contentId, userId]
-        }
+            text: `UPDATE tu.course SET ordered_module_ids =
+                            course.ordered_module_ids || $1 :: BIGINT WHERE id = $2`,
+            values: [createModuleData, courseId]
+        };
+
     }
 }
 
 
-export const coursesRepository = new CoursesRepository(datasource);

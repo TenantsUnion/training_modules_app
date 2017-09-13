@@ -1,4 +1,4 @@
-import {datasource, Datasource} from "../datasource";
+import {Datasource} from "../datasource";
 import {AbstractRepository} from "../repository";
 import {ContentData} from "content";
 
@@ -134,4 +134,3 @@ export class ContentRepository extends AbstractRepository {
     }
 }
 
-export const contentRepository = new ContentRepository(datasource);

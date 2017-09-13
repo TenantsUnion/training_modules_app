@@ -1,11 +1,12 @@
-import {IUserHandler, userHandler} from "../user/user_handler";
-import {coursesRepository, ICoursesRepository} from "./courses_repository";
+import {IUserHandler} from "../user/user_handler";
+import {ICoursesRepository} from "./courses_repository";
 import {
     AdminCourseDescription, CourseData,
-    CourseUserDescription, EnrolledCourseDescription, UserAdminCourseData, UserEnrolledCourseData
+    EnrolledCourseDescription, UserAdminCourseData, UserEnrolledCourseData
 } from "courses";
 import {getLogger} from '../log';
 import {CreateModuleData} from "../../../shared/modules";
+import {coursesRepository} from "../config/repository.config";
 
 export interface UsernameCourseTitle {
     username: string;
@@ -133,4 +134,3 @@ export class CoursesHandler implements ICoursesHandler {
     }
 }
 
-export const coursesHandler = new CoursesHandler(coursesRepository, userHandler);
