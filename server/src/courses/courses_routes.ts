@@ -25,3 +25,5 @@ router.get('/courses/user/enrolled/:username', (request, response) => {
 router.get('/courses/user/admin/:username', (request, response) => {
     coursesController.getUserAdminCourses(request, response);
 });
+
+export const CoursesRoutes = router;

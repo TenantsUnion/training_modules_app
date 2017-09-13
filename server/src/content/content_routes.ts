@@ -18,3 +18,5 @@ router.get('/user/:username/content', (request, response) => {
 router.get('/user/:username/contentId/:quillDataId', (request, response) => {
     userContentController.load(request, response);
 });
+
+export const UserContentRoutes = router;
