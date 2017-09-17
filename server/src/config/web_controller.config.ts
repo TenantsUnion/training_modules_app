@@ -4,8 +4,9 @@ import {accountRequestValidator} from "./validator.config";
 import {CoursesController} from "../courses/courses_web_controller";
 import {UserContentController} from "../content/user/user_content_routes_controller";
 import {userContentValidator} from "../content/user/user_content_validator";
+import {contentRepository} from "./repository.config";
 
 export const accountController = new AccountController(accountHandler, userHandler, accountRequestValidator);
 export const coursesController = new CoursesController(coursesHandler);
-export const userContentController = new UserContentController(userContentHandler, userContentValidator);
+export const userContentController = new UserContentController(userContentHandler, userContentValidator, contentRepository);
 

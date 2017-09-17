@@ -4,7 +4,6 @@ import {UserContentHandler} from "./user_content_handler";
 import {getLogger} from '../../log';
 import {ContentEntity, ContentRepository} from "../content_repository";
 import {UserContentValidator} from "./user_content_validator";
-import {contentRepository} from "../../config/repository.config";
 
 let logger = getLogger('userContentController', 'info');
 
@@ -17,9 +16,9 @@ export interface UpdateUserContentCommand {
 }
 
 export class UserContentController {
-    private contentRepository: ContentRepository;
     constructor (private userContentHandler: UserContentHandler,
-                 private userContentValidator: UserContentValidator) {
+                 private userContentValidator: UserContentValidator,
+                 private contentRepository: ContentRepository) {
     }
 
     create (request: Request, response: Response) {
@@ -95,7 +94,7 @@ export class UserContentController {
         (async () => {
             try {
                 let userContentEntity
-                    = await contentRepository.loadUserContent(username, contentId);
+                    = await this.contentRepository.loadUserContent(username, contentId);
                 response.status(200).send(userContentEntity);
             } catch (e) {
                 logger.error('Error load content for user %s, content id %s', username, contentId);
