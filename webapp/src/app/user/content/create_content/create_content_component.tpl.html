@@ -43,7 +43,11 @@
         <div class="cell small-2">
             <div class="grid-x grid-padding-x align-center">
                 <div class="small-8 cell">
-                    <button @click="create" class="button primary">Create</button>
+                    <button @click="create" class="button primary" :disabled="loading">Create</button>
+                    <button @click="cancel" type="button"
+                            class="button secondary" :disabled="loading">
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>

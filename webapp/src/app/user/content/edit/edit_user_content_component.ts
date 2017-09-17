@@ -65,6 +65,8 @@ export class EditUserContentComponent extends Vue {
             quillDataId: this.quillDataId
         }).then(() => {
             this.loading = false;
+        }).then(() => {
+            appRouter.push({name: `content`})
         }).catch((errorMessages) => {
             this.errorMessages = errorMessages;
         });
@@ -81,13 +83,10 @@ export class EditUserContentComponent extends Vue {
     }
 
     done () {
-        this.save()
-            .then(() => {
-                appRouter.push({})
-            })
+        this.save();
     }
 
     cancel () {
-
+        appRouter.push({name: 'content'});
     }
 }

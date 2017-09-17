@@ -2,6 +2,8 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {QuillComponent} from "../../../quill/quill_component";
 import {contentHttpService} from "../content_http_service";
+import {appRouter} from "../../../router";
+
 
 @Component({
     data: () => {
@@ -32,9 +34,14 @@ export class CreateContentComponent extends Vue {
         contentHttpService.createContent(this.title, quillData)
             .then(() => {
                 //successfully created content
-            })
-            .catch((errorMessages) => {
+            }).then(() => {
+            appRouter.push({name: `content`})
+            }).catch((errorMessages) => {
                 this.errorMessages = errorMessages;
             });
+    }
+
+    cancel () {
+        appRouter.push({name: 'content'});
     }
 }
