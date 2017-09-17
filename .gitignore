@@ -6,3 +6,4 @@ node_modules/
 webapp/src/app/**/*.js
 *~
 npm-debug.log
+package-lock.json
