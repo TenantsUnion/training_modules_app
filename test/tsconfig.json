@@ -1,0 +1,23 @@
+{
+  "includes": [
+    "server/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "sourceMap": true,
+    "baseUrl": "..",
+    "lib": [
+      "ES2015"
+    ],
+    "paths": {
+      "*": [
+        "*",
+        "shared/*"
+      ]
+    }
+  }
+}
