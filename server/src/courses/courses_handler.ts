@@ -6,7 +6,7 @@ import {
 } from "courses";
 import {getLogger} from '../log';
 import {CreateModuleData} from "../../../shared/modules";
-import {coursesRepository} from "../config/repository.config";
+import {ModuleRepository} from "../module/module_repository";
 
 export interface UsernameCourseTitle {
     username: string;
@@ -38,7 +38,8 @@ export class CoursesHandler implements ICoursesHandler {
     logger = getLogger('CourseHandler', 'info');
 
     constructor (private coursesRepository: ICoursesRepository,
-                 private userHandler: IUserHandler) {
+                 private userHandler: IUserHandler,
+                 private modulesRepository: ModuleRepository) {
     }
 
     async createCourse (courseInfo: CourseData): Promise<null | string> {
@@ -57,7 +58,7 @@ export class CoursesHandler implements ICoursesHandler {
                     await this.userHandler.userCreatedCourse(courseInfo.createdBy, courseId);
                     resolve(null);
                 } catch (e) {
-                    this.logger.error('error', );
+                    this.logger.error('error',);
                     console.log(e.stack);
                     reject(e);
                 }
@@ -67,8 +68,10 @@ export class CoursesHandler implements ICoursesHandler {
 
     async createModule (courseId: string, createModuleData: CreateModuleData): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-
-            coursesRepository.addModule(courseId, createModuleData);
+            (async () => {
+                let moduleId = await this.modulesRepository.addModule(createModuleData);
+                await this.coursesRepository.addModule(courseId, moduleId);
+            })();
         });
     }
 

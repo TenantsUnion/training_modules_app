@@ -4,6 +4,7 @@ import {UserRepository} from "../user/users_repository";
 import {AccountRepository} from "../account/account_repository";
 import {ContentRepository} from "../content/content_repository";
 import {QuillRepository} from "../quill/quill_repository";
+import {ModuleRepository} from "../module/module_repository";
 
 const config = require('config');
 const {Pool} = require('pg');
@@ -26,6 +27,7 @@ export const userRepository = new UserRepository(datasource);
 export const accountRepository = new AccountRepository(datasource);
 export const contentRepository = new ContentRepository(datasource);
 export const quillRepository = new QuillRepository(datasource);
+export const moduleRepository = new ModuleRepository(datasource);
 
 process.on('exit', function () {
     (async () => {

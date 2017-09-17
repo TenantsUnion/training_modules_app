@@ -9,7 +9,7 @@
  */
 export interface IQueryConfig {
     text: string,
-    values: (string | number | string[] | number[] | Quill.DeltaStatic)[]
+    values: (string | number | boolean | number | string[] | number[] | Quill.DeltaStatic)[]
 }
 
 export interface IQueryResult {
@@ -74,7 +74,7 @@ export class Datasource {
         return !!this.transactionClient;
     }
 
-    query(sql: ParameterizedSql, parameters?: SqlParameters): IQueryResult {
+    query(sql: ParameterizedSql, parameters?: SqlParameters): Promise<IQueryResult> {
         return this.isTransactionInProgress() ?
             this.transactionQuery(sql, parameters) :
             this.pool.query(sql, parameters);
