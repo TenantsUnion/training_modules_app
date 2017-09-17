@@ -8,7 +8,7 @@ const logger = getLogger("init_db");
 
 const sqlDirectory = '/resources/init_postgres_db/';
 
-(async () => {
+module.exports = (async () => {
     try {
         logger.log('info', 'Establishing db connection as user: %s', sqlFs.postgresCient.user);
         let pgExecutor = await sqlFs.getSqlFileAsyncExecutor(sqlFs.postgresCient, sqlDirectory);

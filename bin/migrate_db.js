@@ -2,15 +2,16 @@ var postgrator = require('postgrator');
 var config = require('config');
 var logger = require('./script_logger')('migrate_db');
 
+console.log(process.env.NODE_ENV);
 postgrator.setConfig({
     migrationDirectory: __dirname + '/../database/migrations',
     driver: 'pg',
     host: 'localhost',
     port: 5432,
-    database: 'tu_training',
+    database: config.get('database.db'),
     username: config.get('database.db_user'),
     password: config.get('database.db_password'),
-    schemaTable: 'tu_schema_version'
+    schemaTable: config.get('database.schemaVersion')
 });
 
 logger.log('info', 'Migrating tu_training database');

@@ -6,7 +6,7 @@ const logger = require('./script_logger')('drop_db');
 const sqlDirectory = '/resources/drop_postgres_db/';
 
 
-(async () => {
+module.exports = (async () => {
     try {
         logger.log('info', 'Establishing db connection with user: %s', sqlFs.postgresCient.user);
         let pgExecutor = await sqlFs.getSqlFileAsyncExecutor(sqlFs.postgresCient, sqlDirectory);
