@@ -1,22 +1,25 @@
-<nav class="sidebar-nav">
-    <div class="grid-x menu-brand">
-        <div class="brand auto cell">
-            <a href="#">{{courseTitle}}</a>
+<nav class="sidebar-nav grid-y">
+    <div class="sidebar-nav-inner">
+        <div class="grid-x menu-brand">
+            <div class="brand auto cell">
+                <a href="#">{{courseTitle}}</a>
+            </div>
+            <slot class="course-toggle-icon"></slot>
         </div>
-        <slot class="course-toggle-icon"></slot>
-    </div>
-    <h4>Modules
-        <button v-if="isCourseAdmin" class="button" v-on:click="createModule">
-            <i class="fa fa-plus fa-fw margin-1"></i>
-            <span class="sr-only">Add module</span>
-        </button>
-    </h4>
-    <div v-if="modules">
-        <ul>
-            <li v-for="module in modules">
-                <a v-on:click="goToModule(module.title)">{{module.title }} {{
-                    module.visible }}</a>
-            </li>
-        </ul>
+        <div class="grid-x menu-header">
+            <h4>Modules</h4>
+            <button v-if="isCourseAdmin" class="button" v-on:click="createModule">
+                <i class="fa fa-plus fa-fw margin-1"></i>
+                <span class="sr-only">Add module</span>
+            </button>
+        </div>
+        <div v-if="modules">
+            <ul>
+                <li v-for="module in modules">
+                    <a v-on:click="goToModule(module.title)">{{module.title }} {{
+                        module.visible }}</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>

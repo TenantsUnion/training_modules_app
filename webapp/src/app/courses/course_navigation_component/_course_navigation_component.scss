@@ -1,149 +1,33 @@
-/* ALXS Foundation Sidebar */
-body {
-  background: #000;
-}
-
-/* Toggle Styles */
-
-#wrapper {
-  padding-left: 0;
-  position: relative;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-
-#wrapper.toggled {
-  padding-left: 0;
-}
-
-#wrapper.toggled #page-content-wrapper {
-  padding-left: 265px;
-}
-
-.menu-brand {
-  padding: 1em;
-}
-
-.menu-icon {
-  float: right;
-}
-
-#sidebar-wrapper {
-  z-index: 1;
-  position: fixed;
-  left: 100px;
-  width: 250px;
-  height: 100%;
-  margin-left: -300px;
-  overflow: hidden;
-  background: #000;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-}
-
-#sidebar-wrapper.toggled {
-  margin-left: -100px;
-  z-index: 1000;
-}
-
-#wrapper.toggled #sidebar-wrapper {
-  width: 250px;
-}
-
-#page-content-wrapper {
-  width: auto;
-  padding: 15px 15px 15px 60px;
-  z-index: 2;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
-  transition: all 0.5s ease;
-  background: #FFF;
-}
-
-#page-content-wrapper.toggled {
-  width: 100%;
-  /*margin-left: 0px;*/
-  z-index: 2;
-}
-
-#wrapper.toggled #page-content-wrapper {
-  position: absolute;
-  margin-right: -200px;
-}
-
-/* Sidebar Styles */
+/* Sidebar Navigation Styles */
 
 .sidebar-nav {
-  position: absolute;
   top: 0;
   width: 250px;
   margin: 0;
-  padding: 0;
+  padding: 1em;
   list-style: none;
   color: #999999;
+
+  &-inner {
+    width: 84%;
+    background-color: #3e3e3e;
+  }
+
+  .menu-header {
+    justify-content: space-between;
+    margin-top: 2em;
+  }
 
   li {
     text-indent: 20px;
     line-height: 40px;
-  }
-
-  li {
     display: block;
     text-decoration: none;
-  }
-
-  > .sidebar-brand {
-    height: 65px;
-    font-size: 18px;
-    line-height: 60px;
-    //color: #999999;
-  }
-
-  > .sidebar-brand hover {
-    color: #fff;
-    background: none;
   }
 }
 
 @media(min-width: 768px) {
-
-  #wrapper {
-    padding-left: 250px;
-  }
-
-  #wrapper.toggled {
-    padding-left: -300px;
-  }
-
-  #sidebar-wrapper {
-    width: 250px;
-    margin-left: -100px;
-  }
-
-  #wrapper.toggled #sidebar-wrapper {
-    width: 250px;
-    margin-left: -300px;
-
-  }
   .sidebar-nav {
     width: 250px;
-  }
-
-  #page-content-wrapper {
-    padding-left: 15px;
-  }
-
-  #wrapper.toggled #page-content-wrapper {
-    position: relative;
-    padding: 0 15px 0 60px;
-  }
-
-  #page-content-wrapper .container-fluid {
-    margin-top: 20px;
   }
 }
