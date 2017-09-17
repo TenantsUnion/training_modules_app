@@ -4,9 +4,9 @@ const path = require('path');
 const sqlFs = require('./sql_file_executor');
 const getLogger = require('./script_logger');
 
-const logger = getLogger("init_db");
+const logger = getLogger("init_test_db");
 
-const sqlDirectory = '/resources/init_postgres_db/';
+const sqlDirectory = '/resources/test_postgres_db/';
 
 module.exports = (async () => {
     try {
@@ -15,7 +15,13 @@ module.exports = (async () => {
 
         logger.log('info', 'Executing sql statements');
         await pgExecutor('01__create_roles_pg.sql');
-        await pgExecutor('02__create_database_pg.sql', true);
+
+        let testDbExists = await sqlFs.postgresCient.query(
+            'SELECT count(*) from pg_database where datname = \'' + sqlFs.tuLocalDevClient.database + '\''
+        );
+        if (!testDbExists) {
+            await pgExecutor('02__create_database_pg.sql', true);
+        }
         await pgExecutor('03__create_dev_user.pg.sql');
 
         logger.log('log', 'Establishing db connection as user: %s', sqlFs.tuLocalDevClient.user);
