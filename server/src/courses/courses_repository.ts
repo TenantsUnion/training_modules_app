@@ -185,43 +185,51 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
     }
 
     async loadUserAdminCourse (courseId: string | UsernameCourseTitle): Promise<UserAdminCourseData> {
-        return null;
         // username and course title are provided query for course by joining courses
         // that user is an admin for and narrowing down by title, otherwise load by course id
         // let query = isUsernameCourseTitle(courseId) ?
         //     {
         //         // language=PostgreSQL
-        //         text: `SELECT c.course FROM (jsonb_agg(pc.*) FROM
-        //          -- INNER JOIN
-        //
-        //
-        //                                       --c.id, C.title, C.description, C.active, C.open_enrollment, M.modules FROM
-        //         LATERAL ( SELECT jsonb_agg( M.*) AS modules FROM tu.module M WHERE M.id = ANY(C.ordered_module_ids)) M
-        //
-        //         --                 ( SELECT unnest(u.admin_of_course_ids) AS admin_course_id FROM
-        //         --                 tu.user u WHERE u.username = $2) u
-        //         ON TRUE WHERE C.id = $1) c`,
+        //         // text: `SELECT c.course FROM (jsonb_agg(pc.*) FROM
+        //         //  -- INNER JOIN
+        //         //
+        //         //
+        //         //                               --c.id, C.title, C.description, C.active, C.open_enrollment, M.modules FROM
+        //         // LATERAL ( SELECT jsonb_agg( M.*) AS modules FROM tu.module M WHERE M.id = ANY(C.ordered_module_ids)) M
+        //         //
+        //         // --                 ( SELECT unnest(u.admin_of_course_ids) AS admin_course_id FROM
+        //         // --                 tu.user u WHERE u.username = $2) u
+        //         // ON TRUE WHERE C.id = $1) c`,
         //         values: [courseId.courseTitle, courseId.username]
-        //     } :
-        //     {
-        //         // language=POSTGRES-SQL
-        //         text: `SELECT * FROM tu.course c where c.id = $1`,
-        //         values: [courseId]
-        //     };
-        // return new Promise<UserAdminCourseData>((resolve, reject) => {
-        //     (async () => {
-        //         try {
-        //             this.logger.log('info', 'querying for admin course');
-        //             this.logger.log('debug', `sql => ${query.text}`);
-        //             let results = await this.datasource.query(query);
-        //             resolve(results.rows[0]);
-        //         } catch (e) {
-        //             this.logger.log('error', e);
-        //             this.logger.log('error', e.stack);
-        //             reject(e);
-        //         }
-        //     })();
-        // });
+
+                let query = isUsernameCourseTitle(courseId) ?
+                    {
+                        // language=PostgreSQL
+                        text: `SELECT c.* FROM tu.course c INNER JOIN
+                  (SELECT unnest(u.admin_of_course_ids) AS admin_course_id FROM
+                    tu.user u WHERE u.username = $2) u
+                    ON c.id = u.admin_course_id WHERE c.title = $1`,
+                        values: [courseId.courseTitle, courseId.username]
+                    } :
+                    {
+                        // language=POSTGRES-SQL
+                        text: `SELECT * FROM tu.course c where c.id = $1`,
+                        values: [courseId]
+                    };
+        return new Promise<UserAdminCourseData>((resolve, reject) => {
+            (async () => {
+                try {
+                    this.logger.log('info', 'querying for admin course');
+                    this.logger.log('debug', `sql => ${query.text}`);
+                    let results = await this.datasource.query(query);
+                    resolve(results.rows[0]);
+                } catch (e) {
+                    this.logger.log('error', e);
+                    this.logger.log('error', e.stack);
+                    reject(e);
+                }
+            })();
+        });
     }
 
     addModule (courseId: string, moduleId: string): Promise<void> {
