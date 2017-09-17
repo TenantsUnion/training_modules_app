@@ -1,18 +1,23 @@
-<div>
-    <h4>Enrolled in courses
+<div class="inner-narrow grid-y">
+    <div class="grid-x section-header">
+
+        <h4>Enrolled in courses</h4>
         <button class="button primary"
-                @click="enrollInCourse">
-            Enroll in a Course
+                    @click="enrollInCourse">
+                Enroll in a Course
         </button>
-    </h4>
-    <ul v-if="courses.length"
+    </div>
+    <table v-if="courses.length"
         class="content-list">
-        <li v-for="course in courses"
+        <tr v-for="course in courses"
             class="content-item">
-            <span>{{ course.title }}</span>
-            <button class="button primary"
-                    @click="go(course.id)">Go
-            </button>
-        </li>
-    </ul>
+            <td>{{ course.title }}</td>
+            <td>
+                <button class="button primary"
+                        @click="go(course.id)">
+                    Go to Course
+                </button>
+            </td>
+        </tr>
+    </table>
 </div>

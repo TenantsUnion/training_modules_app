@@ -27,7 +27,10 @@ module.exports = {
         }),
         new webpack.NodeEnvironmentPlugin([
             'NODE_ENV'
-        ])
+        ]),
+        new webpack.SourceMapDevToolPlugin({
+            filename: '[file].map'
+        })
     ],
     module: {
         rules: [
@@ -99,6 +102,4 @@ module.exports = {
     performance: {
         hints: false
     }
-    ,
-    devtool: 'source-map',
 }

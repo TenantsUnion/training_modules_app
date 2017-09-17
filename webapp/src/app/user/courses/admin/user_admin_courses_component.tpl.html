@@ -10,10 +10,11 @@
         <tr v-for="course in courses"
             class="content-item">
             <td>{{ course.title }}</td>
-            <td><button class="button primary"
+            <td>
+                <button class="button primary"
                     @click="go(course)">
                 Edit
-            </button>
+                </button>
             </td>
         </tr>
     </table>
