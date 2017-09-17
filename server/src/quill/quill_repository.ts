@@ -19,7 +19,7 @@ export class QuillRepository extends AbstractRepository {
         return new Promise<QuillEditorData>((resolve, reject) => {
             (async () => {
                 try {
-                    let result = this.sqlTemplate.query({
+                    let result = await this.sqlTemplate.query({
                         text: `SELECT id, editor_json FROM tu.quill_data WHERE
                           id = $1`,
                         values: [id]

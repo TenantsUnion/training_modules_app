@@ -48,7 +48,7 @@ export const coursesRoutes: RouteConfig[] = [
             },
             {
                 path: ':courseTitle/module/create',
-                name: 'adminCourse.createModule',
+                name: 'adminCourse.addModule',
                 props: true,
                 component: CreateModuleComponent
             }

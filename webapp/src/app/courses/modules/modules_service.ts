@@ -5,7 +5,7 @@ export class ModulesService {
 
     createModule (createModuleData:CreateModuleData): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            axios.post(`course/${createModuleData.courseId}/module/create`)
+            axios.post(`courses/${createModuleData.courseId}/module/create`)
         });
     }
 }
