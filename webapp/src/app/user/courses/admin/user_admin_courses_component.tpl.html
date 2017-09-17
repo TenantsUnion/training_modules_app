@@ -1,19 +1,20 @@
-<div>
-    <h4>Admin Courses
+<div class="inner-narrow grid-y">
+    <div class="grid-x section-header">
+        <h4>Admin Courses</h4>
         <button class="button primary"
-                @click="createCourse">Create a
-            Course
+                @click="createCourse">Create a Course
         </button>
-    </h4>
-    <ul v-if="courses.length"
+    </div>
+    <table v-if="courses.length"
         class="content-list">
-        <li v-for="course in courses"
+        <tr v-for="course in courses"
             class="content-item">
-            <span>{{ course.title }}</span>
-            <button class="button primary"
+            <td>{{ course.title }}</td>
+            <td><button class="button primary"
                     @click="go(course)">
-                Go
+                Edit
             </button>
-        </li>
-    </ul>
+            </td>
+        </tr>
+    </table>
 </div>

@@ -5,6 +5,8 @@ import {userCoursesHttpService} from "../course_http_service";
 import VueRouter from "vue-router";
 import {coursesService} from '../../../courses/courses_service';
 
+require('./_user_admin_courses_component.scss');
+
 @Component({
     data: () => {
         return {
