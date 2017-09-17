@@ -1,15 +1,15 @@
-<div id="wrapper">
-    <div id="sidebar-wrapper">
+<div id="wrapper" class="wrapper">
+    <div id="sidebar-wrapper" class="sidebar-wrapper">
+        <div class="menu-icon-container grid-x grid-margin-x">
+            <a class="menu-icon" id="menu-toggle"></a>
+        </div>
         <loading v-if="loading"></loading>
         <course-navigation v-if="course"
                            :course-title="course.title"
                            :is-course-admin="isCourseAdmin">
-            <div class="menu-icon-container small-2 cell">
-                <a class="menu-icon" id="menu-toggle"></a>
-            </div>
         </course-navigation>
     </div>
-    <div id="page-content-wrapper">
+    <div id="page-content-wrapper" class="page-content-wrapper">
         <div class="main">
             <div class="grid-x">
                 <div class="small-12 cell">
