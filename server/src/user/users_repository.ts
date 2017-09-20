@@ -41,7 +41,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
                         id: id
                     });
                 } catch (e) {
-                    console.log(e.stack);
+                    this.logger.error(e.stack);
                     reject(e);
                 }
             })();
@@ -60,7 +60,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
                         id: result[0].id
                     });
                 } catch (e) {
-                    console.log(e.stack);
+                    this.logger.error(e.stack);
                     reject(e);
                 }
             })();
@@ -78,19 +78,11 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
                     );
 
                     let userRow = results[0];
-                    resolve({
-                        id: userRow.id,
-                        username: userRow.username,
-                        firstName: userRow.first_name,
-                        lastName: userRow.last_name,
-                        adminOfCourseIds: userRow.admin_of_course_ids,
-                        enrolledInCourseIds: userRow.enrolled_in_course_ids,
-                        completedCourseIds: userRow.completed_course_ids
-                    });
+                    resolve(userRow);
                 } catch (e) {
-                    console.log("Database findAccountByUsername error");
-                    console.log(e);
-                    console.log(e.stack);
+                    this.logger.error("Database findAccountByUsername error");
+                    this.logger.error(e);
+                    this.logger.error(e.stack);
                     reject(e);
                 }
             })();
