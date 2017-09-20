@@ -1,15 +1,19 @@
 import * as express from "express";
 import {RequestHandler} from 'express';
 
-let router = express.Router();
 
 export interface ModuleOperations {
     createModule: RequestHandler;
     saveModule: RequestHandler;
 }
 
-export const ModuleRoutes = (moduleCtrl:ModuleOperations) =>{
-    router.post('/course/:courseId/module/save', moduleCtrl.saveModule);
-    router.post('/course/:courseId/module/create', moduleCtrl.createModule);
+export const ModuleRoutes = (moduleCtrl: ModuleOperations) => {
+    let router = express.Router();
+    router.post('/course/:courseId/module/save', (request, response, next) => {
+        moduleCtrl.saveModule(request, response, next);
+    });
+    router.post('/course/:courseId/module/create', (request, response, next) => {
+        moduleCtrl.createModule(request, response, next);
+    });
     return router;
 };
