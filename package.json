@@ -17,7 +17,7 @@
     "nodemon-start": "export NODE_CONFIG_DIR=./config && nodemon --watch server/dist/ ./bin/start",
     "test_init_db": "export NODE_ENV=test && NODE_CONFIG_DIR=./config node ./bin/init_test_db.js && npm run test_migrate_db",
     "test_migrate_db": "export NODE_ENV=test && node ./bin/migrate_db.js",
-    "test": "export NODE_CONFIG_DIR=./config && mocha test/**/*.ts",
+    "test": "export NODE_ENV=test export NODE_CONFIG_DIR=./config && npm run test_init_db &&   mocha $NODE_DEBUG_OPTIONS test/**/*.ts",
     "test-compile": "tsc --project test/tsconfig.json"
   },
   "repository": {
