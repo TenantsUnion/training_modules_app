@@ -71,7 +71,7 @@ export class ContentRepository extends AbstractRepository {
                         values: [contentId]
                     });
 
-                    let contentResult = result.rows[0];
+                    let contentResult = result[0];
 
                     resolve({
                         id: contentResult.id,

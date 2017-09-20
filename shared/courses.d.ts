@@ -51,7 +51,7 @@ declare namespace courses {
     }
 
     export interface AdminCourseDescription extends CourseDescription {
-        lastActive?: Moment;
+        // lastActive?: Moment; todo set up user course progress tracking functionality
     }
 
     export interface EnrolledCourseDescription extends CourseDescription {

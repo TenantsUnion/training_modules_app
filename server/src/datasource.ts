@@ -7,13 +7,12 @@
  *      values: ['brianc', 'brian.m.carlson@gmail.com'],
  *  }
  */
+import {traverseActionOnProperties} from './util/property_traversal_util';
+import {snakeToCamelCase, traverseSnakeToCamelCase} from './util/snake_to_camel_case_util';
+
 export interface IQueryConfig {
     text: string,
-    values: (string | number | boolean | number | string[] | number[] | Quill.DeltaStatic)[]
-}
-
-export interface IQueryResult {
-    rows: any;
+    values: (string | number | boolean | number | string[] | number[] | Quill.DeltaStatic | Date)[]
 }
 
 declare type ParameterizedSql = string | IQueryConfig;
@@ -21,6 +20,7 @@ declare type SqlParameters = string | string[]
 
 export class Datasource {
     private transactionClient: any = null;
+    private convertPropertiesToCamelCase = traverseSnakeToCamelCase;
 
     constructor(private pool: any) {
     }
@@ -74,9 +74,16 @@ export class Datasource {
         return !!this.transactionClient;
     }
 
-    query(sql: ParameterizedSql, parameters?: SqlParameters): Promise<IQueryResult> {
-        return this.isTransactionInProgress() ?
+    query(sql: ParameterizedSql, parameters?: SqlParameters): Promise<any[]> {
+        let queryResult = this.isTransactionInProgress() ?
             this.transactionQuery(sql, parameters) :
             this.pool.query(sql, parameters);
+        return queryResult.then((result) => {
+           return this.processRows(result.rows);
+        });
+    }
+
+    processRows(result: any[]): any[] {
+        return this.convertPropertiesToCamelCase(result);
     }
 }

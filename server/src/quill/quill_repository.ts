@@ -4,7 +4,7 @@ import {AbstractRepository} from "../repository";
 
 export interface QuillEditorData {
     id: string;
-    editor_json: Quill.DeltaStatic;
+    editor_json?: Quill.DeltaStatic;
 }
 
 export class QuillRepository extends AbstractRepository {
@@ -25,7 +25,7 @@ export class QuillRepository extends AbstractRepository {
                         values: [id]
                     });
 
-                    resolve(result.rows[0]);
+                    resolve(result[0]);
                 } catch (e) {
                     this.logger.error('Failed to execute ')
                 }

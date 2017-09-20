@@ -1,20 +1,22 @@
 import * as express from "express";
 import {Request, Response, Router} from "express";
 import {
-    AdminCourseDescription, CourseData
+    AdminCourseDescription, CourseData, CreateCourseData
 } from "courses";
-import {ICoursesHandler} from "./courses_handler";
+import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
 import {CreateModuleData} from "../../../shared/modules";
+import {CoursesRepository} from './courses_repository';
 
 export class CoursesController {
     logger = getLogger('CoursesController', 'info');
 
-    constructor (private coursesHandler: ICoursesHandler) {
+    constructor (private coursesHandler: CoursesHandler,
+                 private coursesRepo: CoursesRepository) {
     }
 
     createCourse (request: Request, response: Response) {
-        let courseInfo: CourseData = request.body;
+        let courseInfo: CreateCourseData = request.body;
         let result;
         (async () => {
             try {
@@ -75,7 +77,7 @@ export class CoursesController {
         (async () => {
             let course: CourseData;
             try {
-                course = await this.coursesHandler.loadAdminCourse({
+                course = await this.coursesRepo.loadUserAdminCourse({
                     username: username,
                     courseTitle: courseTitle
                 });
@@ -94,7 +96,7 @@ export class CoursesController {
         let createModuleData: CreateModuleData = request.body;
         (async () => {
             try {
-                await this.coursesHandler.createModule(courseId, createModuleData);
+                await this.coursesHandler.createModule(createModuleData);
                 response.sendStatus(200);
             } catch (e) {
                 this.logger.log('error', e);

@@ -32,7 +32,7 @@ export class AccountRepository extends AbstractRepository implements IAccountRep
                         text: `SELECT COUNT(*) FROM tu.account WHERE tu.account.username = $1`,
                         values: [username]
                     });
-                    resolve(result.rows[0].count !== '0');
+                    resolve(result[0].count !== '0');
                 } catch (e) {
                     reject(e);
                 }
@@ -78,7 +78,7 @@ export class AccountRepository extends AbstractRepository implements IAccountRep
                         }
                     );
 
-                    let userRow = results.rows[0];
+                    let userRow = results[0];
                     resolve({
                         id: userRow.id,
                     });
