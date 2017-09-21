@@ -15,7 +15,7 @@ export abstract class AbstractRepository {
                         text: ` SELECT nextval('tu.${this.sequenceName}')`,
                         values: []
                     });
-                    resolve(id.rows[0].nextval);
+                    resolve('' + id[0].nextval);
                 } catch (e) {
                     reject(e);
                 }

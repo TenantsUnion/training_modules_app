@@ -33,7 +33,7 @@ export class CreateCourseComponent extends Vue {
             timeEstimate: this.timeEstimate,
             createdBy: this.username
         }).then(()=>{
-            appRouter.push({name: `course/${this.title}`})
+            appRouter.push({name: 'adminCourse.courseDetails', params: {courseTitle: this.title}})
         }).catch((msg)=>{
             this.errorMessages = msg;
         })

@@ -2,6 +2,7 @@ import {Datasource} from "../datasource";
 import {IUserInfo} from "user";
 import {AccountInfo} from "./user_handler";
 import {AbstractRepository} from "../repository";
+import {getLogger} from '../log';
 
 export interface CreateUserInfo {
     id: string,
@@ -21,11 +22,13 @@ export interface IUserRepository {
 }
 
 export class UserRepository extends AbstractRepository implements IUserRepository {
-    constructor (private datasource: Datasource) {
+    logger = getLogger('UserRepository', 'info');
+
+    constructor(private datasource: Datasource) {
         super('user_id_seq', datasource);
     }
 
-    async createUser (createUserInfo: CreateUserInfo): Promise<AccountInfo> {
+    async createUser(createUserInfo: CreateUserInfo): Promise<AccountInfo> {
         let {id, username, firstName, lastName} = createUserInfo;
         return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
@@ -38,14 +41,14 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
                         id: id
                     });
                 } catch (e) {
-                    console.log(e.stack);
+                    this.logger.error(e.stack);
                     reject(e);
                 }
             })();
         });
     }
 
-    async getIdFromUsername (username: string): Promise<AccountInfo> {
+    async getIdFromUsername(username: string): Promise<AccountInfo> {
         return new Promise<AccountInfo>((resolve, reject) => {
             (async () => {
                 try {
@@ -54,17 +57,17 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
                         values: [username]
                     });
                     resolve({
-                        id: result.rows[0].id
+                        id: result[0].id
                     });
                 } catch (e) {
-                    console.log(e.stack);
+                    this.logger.error(e.stack);
                     reject(e);
                 }
             })();
         });
     }
 
-    async loadUser (id: string): Promise<IUserInfo> {
+    async loadUser(id: string): Promise<IUserInfo> {
         return new Promise<IUserInfo>((resolve, reject) => {
             (async () => {
                 try {
@@ -74,20 +77,12 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
                         }
                     );
 
-                    let userRow = results.rows[0];
-                    resolve({
-                        id: userRow.id,
-                        username: userRow.username,
-                        firstName: userRow.first_name,
-                        lastName: userRow.last_name,
-                        adminOfCourseIds: userRow.admin_of_course_ids,
-                        enrolledInCourseIds: userRow.enrolled_in_course_ids,
-                        completedCourseIds: userRow.completed_course_ids
-                    });
+                    let userRow = results[0];
+                    resolve(userRow);
                 } catch (e) {
-                    console.log("Database findAccountByUsername error");
-                    console.log(e);
-                    console.log(e.stack);
+                    this.logger.error("Database findAccountByUsername error");
+                    this.logger.error(e);
+                    this.logger.error(e.stack);
                     reject(e);
                 }
             })();
@@ -95,41 +90,36 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
     }
 
 
-    addToAdminOfCourseIds (username: string, courseId: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            (async () => {
-                try {
+    addToAdminOfCourseIds(username: string, courseId: string): Promise<void> {
+            return (async () => {
                     await this.datasource.query({
                         // language=PostgreSQL
                         text: `UPDATE tu.user SET admin_of_course_ids =
                             admin_of_course_ids || $1::BIGINT WHERE username = $2`,
                         values: [courseId, username]
                     });
-                    resolve();
-                } catch (e) {
-                    console.log(e);
-                    reject(e);
-                }
-            })();
-        });
+            })().catch((e) => {
+                this.logger.error('Failed to add admin of course ids for username: %s, course: %s',
+                    username, courseId);
+                this.logger.error('Error:\n');
+                this.logger.error(e);
+                throw e;
+            });
     }
 
-    async addContentId (userId: string, contentId: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            (async () => {
-                try {
-                    await this.datasource.query({
-                        text: `UPDATE tu.user SET created_content_ids =
+    async addContentId(userId: string, contentId: string): Promise<void> {
+        return (async () => {
+            await this.datasource.query({
+                text: `UPDATE tu.user SET created_content_ids =
                             created_content_ids || $1 :: BIGINT WHERE id = $2`,
-                        values: [contentId, userId]
-                    });
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            })();
+                values: [contentId, userId]
+            });
+        })().catch((e) => {
+            this.logger.error('Failed to add content id for userId: %s, contentId: %s', userId, contentId);
+            this.logger.error('Error:\n');
+            this.logger.error(e);
+            throw e;
         });
-
     }
 }
 

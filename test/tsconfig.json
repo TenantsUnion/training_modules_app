@@ -16,7 +16,8 @@
     "paths": {
       "*": [
         "*",
-        "shared/*"
+        "shared/*",
+        "server/src/"
       ]
     }
   }

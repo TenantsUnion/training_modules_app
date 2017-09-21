@@ -15,5 +15,13 @@
     "schema": "tu",
     "user": "tu_dev_db_user",
     "password": "development_only"
+  },
+  "test": {
+    "host": "localhost",
+    "driver": "pg",
+    "database": "test_tu_training",
+    "schema": "tu",
+    "user": "tu_dev_db_user",
+    "password": "development_only"
   }
 }

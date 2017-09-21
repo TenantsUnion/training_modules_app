@@ -1,14 +1,15 @@
 import {Datasource} from '../datasource';
 import {getLogger} from "../log";
 import {AbstractRepository} from "../repository";
+import {LoggerInstance} from 'winston';
 
 export interface QuillEditorData {
     id: string;
-    editor_json: Quill.DeltaStatic;
+    editor_json?: Quill.DeltaStatic;
 }
 
 export class QuillRepository extends AbstractRepository {
-    logger: any;
+    logger: LoggerInstance;
 
     constructor (sqlTemplate: Datasource) {
         super('quill_data_id_seq', sqlTemplate);
@@ -25,7 +26,7 @@ export class QuillRepository extends AbstractRepository {
                         values: [id]
                     });
 
-                    resolve(result.rows[0]);
+                    resolve(result[0]);
                 } catch (e) {
                     this.logger.error('Failed to execute ')
                 }
@@ -33,7 +34,7 @@ export class QuillRepository extends AbstractRepository {
         });
     }
 
-    async insertEditorJson (quillId: string, editorJson: string): Promise<void> {
+    async insertEditorJson (quillId: string, editorJson: Quill.DeltaStatic): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {

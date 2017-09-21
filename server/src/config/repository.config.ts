@@ -5,6 +5,7 @@ import {AccountRepository} from "../account/account_repository";
 import {ContentRepository} from "../content/content_repository";
 import {QuillRepository} from "../quill/quill_repository";
 import {ModuleRepository} from "../module/module_repository";
+import {SectionRepository} from '../section/section_repository';
 
 const config = require('config');
 const {Pool} = require('pg');
@@ -21,13 +22,14 @@ pool.on('error', (err, client) => {
     console.log('Unexpected error on idle client: ', err);
 });
 
-export const datasource = new Datasource(pool);
-export const coursesRepository = new CoursesRepository(datasource);
-export const userRepository = new UserRepository(datasource);
-export const accountRepository = new AccountRepository(datasource);
-export const contentRepository = new ContentRepository(datasource);
-export const quillRepository = new QuillRepository(datasource);
-export const moduleRepository = new ModuleRepository(datasource);
+const postgresDb = new Datasource(pool);
+export const coursesRepository = new CoursesRepository(postgresDb);
+export const userRepository = new UserRepository(postgresDb);
+export const accountRepository = new AccountRepository(postgresDb);
+export const contentRepository = new ContentRepository(postgresDb);
+export const quillRepository = new QuillRepository(postgresDb);
+export const moduleRepository = new ModuleRepository(postgresDb);
+export const sectionRepository = new SectionRepository(postgresDb);
 
 process.on('exit', function () {
     (async () => {

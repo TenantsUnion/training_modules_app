@@ -5,6 +5,7 @@ import VueForm from 'vue-form';
 import {AppHeader} from "./user/header/user_header_component";
 import {loginRoutes} from "./account/account_routes";
 import {userRoutes} from "./user/user_routes";
+import {coursesService} from './courses/courses_service';
 
 //global styling
 require('foundation-sites');
@@ -21,6 +22,10 @@ appRouter.addRoutes([
     loginRoutes,
     userRoutes
 ]);
+
+appRouter.afterEach((to, from) => {
+    coursesService.refresh();
+});
 
 let app = new Vue({
     components: {},

@@ -2,22 +2,32 @@
     <div class="sidebar-nav-inner">
         <div class="grid-x menu-brand">
             <div class="brand auto cell">
-                <a href="#">{{courseTitle}}</a>
             </div>
             <slot class="course-toggle-icon"></slot>
         </div>
         <div class="grid-x menu-header">
-            <h4>Modules</h4>
-            <button v-if="isCourseAdmin" class="button" v-on:click="createModule">
+            <h4>
+                <router-link :to="courseDetails">{{course.title}}</router-link>
+            </h4>
+            <button title="Add Module" v-if="isCourseAdmin" class="button" v-on:click="createModule">
                 <i class="fa fa-plus fa-fw margin-1"></i>
                 <span class="sr-only">Add module</span>
             </button>
         </div>
-        <div v-if="modules">
+        <div>
             <ul>
-                <li v-for="module in modules">
-                    <a v-on:click="goToModule(module.title)">{{module.title }} {{
-                        module.visible }}</a>
+                <li v-for="module in course.modules">
+                    <h5>
+                        <router-link :to="moduleDetailsRoute(module.title)">{{module.title}}</router-link>
+                    </h5>
+                    <ul>
+                        <li v-for="section in module.sections">
+                            <h6>
+                                <router-link :to="sectionRoute(module.title, section.title)">{{section.title}}
+                                </router-link>
+                            </h6>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>

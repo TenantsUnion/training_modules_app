@@ -1,4 +1,4 @@
-DROP SCHEMA IF EXISTS test_tu_schema_version;
+DROP TABLE IF EXISTS public.test_tu_schema_version;
 DROP SCHEMA IF EXISTS tu CASCADE;
 CREATE SCHEMA IF NOT EXISTS tu;
 

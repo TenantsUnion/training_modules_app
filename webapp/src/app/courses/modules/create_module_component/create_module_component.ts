@@ -2,7 +2,6 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {QuillComponent} from "../../../quill/quill_component";
 import * as VueForm from "../../../vue-form";
-import {modulesService} from "../modules_service";
 import {coursesService} from "../../courses_service";
 import {CourseData} from "courses";
 
@@ -32,27 +31,19 @@ export class CreateModuleComponent extends Vue {
     formstate: VueForm.FormState;
     course: CourseData;
 
-    created () {
-        this.fetchData();
+    created() {
+        this.loading = true;
+        coursesService.subscribeCurrentCourse((course) => {
+            this.loading = false;
+            this.course = course;
+        });
     }
 
-    mounted () {
+    mounted() {
         this.quillEditor = <QuillComponent> this.$refs.editor;
     }
 
-    async fetchData (): Promise<void> {
-        coursesService.getCurrentCourse()
-            .then((currentCourse) => {
-                this.course = currentCourse;
-                return <CourseData> currentCourse;
-            })
-            .catch((errorMessages) => {
-                this.errorMessages = errorMessages;
-                throw errorMessages
-            });
-    }
-
-    createModule () {
+    createModule() {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
@@ -65,9 +56,7 @@ export class CreateModuleComponent extends Vue {
         (async () => {
 
             try {
-
-                await this.fetchData();
-                await modulesService.createModule({
+                await coursesService.createModule({
                     courseId: this.course.id,
                     title: this.title,
                     description: this.description,
@@ -75,9 +64,12 @@ export class CreateModuleComponent extends Vue {
                     header: quillData
                 });
                 // to do now what
-                this.$router.push('')
+                this.$router.push({
+                    name: 'adminCourse.moduleDetails',
+                    params: {moduleTitle: this.title}
+                });
 
-            } catch (errorMessages){
+            } catch (errorMessages) {
                 this.errorMessages = errorMessages;
             } finally {
                 this.loading = false;

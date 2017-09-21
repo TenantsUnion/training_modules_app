@@ -3,6 +3,7 @@ var config = require('config');
 var logger = require('./script_logger')('migrate_db');
 
 console.log(process.env.NODE_ENV);
+console.log(config.get('database.db'));
 postgrator.setConfig({
     migrationDirectory: __dirname + '/../database/migrations',
     driver: 'pg',
@@ -14,7 +15,7 @@ postgrator.setConfig({
     schemaTable: config.get('database.schemaVersion')
 });
 
-logger.log('info', 'Migrating tu_training database');
+logger.log('info', 'Migrating %s database', config.get('database.db'));
 postgrator.migrate('max', function (err, migrations) {
     if (err) {
         logger.log('error', err);
