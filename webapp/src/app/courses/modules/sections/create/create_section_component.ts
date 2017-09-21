@@ -1,9 +1,10 @@
-import Vue from "vue";
-import Component from "vue-class-component";
-import {QuillComponent} from "../../../quill/quill_component";
-import * as VueForm from "../../../vue-form";
-import {coursesService} from "../../courses_service";
-import {CourseData} from "courses";
+import Component from 'vue-class-component';
+import {QuillComponent} from '../../../../quill/quill_component';
+import * as Vue from 'vue';
+import * as VueForm from '../../../../vue-form';
+import {CourseData} from '../../../../../../../shared/courses';
+import {coursesService} from '../../../courses_service';
+import {ModuleData} from '../../../../../../../shared/modules';
 
 @Component({
     data: () => {
@@ -21,7 +22,7 @@ import {CourseData} from "courses";
     },
     template: require('./create_module_component.tpl.html')
 })
-export class CreateModuleComponent extends Vue {
+export class CreateSectionComponent extends Vue {
     loading: boolean;
     errorMessages: { [index: string]: string };
     title: string;
@@ -29,13 +30,13 @@ export class CreateModuleComponent extends Vue {
     description: string;
     quillEditor: QuillComponent;
     formstate: VueForm.FormState;
-    course: CourseData;
+    module: ModuleData;
 
     created() {
         this.loading = true;
-        coursesService.subscribeCurrentCourse((course) => {
+        coursesService.subscribeCurrentModule((module) => {
             this.loading = false;
-            this.course = course;
+            this.module = module;
         });
     }
 
@@ -57,7 +58,7 @@ export class CreateModuleComponent extends Vue {
 
             try {
                 await coursesService.createModule({
-                    courseId: this.course.id,
+                    courseId: this.module.id,
                     title: this.title,
                     description: this.description,
                     timeEstimate: this.timeEstimate,

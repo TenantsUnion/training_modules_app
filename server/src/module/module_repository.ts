@@ -1,5 +1,5 @@
 import {AbstractRepository} from "../repository";
-import {CreateModuleData, ModuleData} from "../../../shared/modules";
+import {CreateModuleData, CreateModuleDataHeaderId, ModuleData} from "../../../shared/modules";
 import {LoggerInstance} from "winston";
 import {getLogger} from "../log";
 import {Datasource} from "../datasource";
@@ -13,7 +13,7 @@ export class ModuleRepository extends AbstractRepository {
         super('module_id_seq', sqlTemplate);
     }
 
-    async addModule(moduleData: CreateModuleData): Promise<string> {
+    async addModule(moduleData: CreateModuleDataHeaderId): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             (async () => {
                 try {

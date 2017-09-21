@@ -7,12 +7,12 @@ class AccountHttpService {
 
     login (loginCredentials: LoginCredentials): Promise<IUserInfo> {
         return axios.post('account/login', loginCredentials)
-            .then((value => {
+            .then((value) => {
                 //todo attach cookie, maintain authentication for future requests
                 let userInfo: IUserInfo = <IUserInfo> value.data;
                 userQueryService.setCurrentUser(userInfo);
                 return <IUserInfo> value.data;
-            })).catch((response => {
+            }).catch((response => {
                 throw response.response.data;
             }))
     }

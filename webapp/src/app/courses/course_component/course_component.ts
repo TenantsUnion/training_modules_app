@@ -14,7 +14,7 @@ require('./_course_component.scss');
         return {
             loading: false,
             course: null,
-            isAdmin: false
+            isCourseAdmin: false
         };
     },
     template: require('./course_component.tpl.html'),
@@ -24,18 +24,18 @@ require('./_course_component.scss');
     }
 })
 export class CourseComponent extends Vue {
+    courseUnsubscribe;
     course: CourseData;
     loading: boolean;
     isCourseAdmin: boolean;
 
-    created () {
+    created() {
         this.loading = true;
         this.isCourseAdmin = coursesService.isCourseAdmin();
-        coursesService.getCurrentCourse()
-            .then((course) => {
-                this.loading = false;
-                this.course = course;
-            });
+        this.courseUnsubscribe = coursesService.subscribeCurrentCourse((course: CourseData) => {
+            this.loading = false;
+            this.course = course;
+        });
     }
 
     updated() {
@@ -46,6 +46,9 @@ export class CourseComponent extends Vue {
             $('.sidebar-nav').toggleClass('toggled');
             $('#wrapper').toggleClass('toggled');
         });
+    }
 
+    destroyed() {
+        this.courseUnsubscribe();
     }
 }

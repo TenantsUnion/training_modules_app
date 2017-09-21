@@ -1,15 +1,15 @@
 import {IUserHandler} from "../user/user_handler";
 import {ICoursesRepository} from "./courses_repository";
 import {
-    AdminCourseDescription, CourseData, CreateCourseData,
-    EnrolledCourseDescription, UserAdminCourseData, UserEnrolledCourseData
-} from "courses";
+    AdminCourseDescription, CreateCourseData,
+    EnrolledCourseDescription, UserAdminCourseData} from "courses";
 import {getLogger} from '../log';
 import {CreateModuleData, ModuleData} from "../../../shared/modules";
-import {ModuleRepository} from "../module/module_repository";
 import {ModuleHandler} from '../module/module_handler';
-import {CreateSectionData, SectionData} from '../../../shared/sections';
+import {CreateSectionData, SaveSectionData} from '../../../shared/sections';
 import {SectionHandler} from '../section/section_handler';
+import {QuillRepository} from '../quill/quill_repository';
+import  * as _ from "underscore";
 
 export interface UsernameCourseTitle {
     username: string;
@@ -26,6 +26,7 @@ export class CoursesHandler {
     logger = getLogger('CourseHandler', 'info');
 
     constructor(private coursesRepository: ICoursesRepository,
+                private quillRepository: QuillRepository,
                 private userHandler: IUserHandler,
                 private moduleHandler: ModuleHandler,
                 private sectionHandler: SectionHandler) {
@@ -52,18 +53,24 @@ export class CoursesHandler {
         });
     }
 
-    async createModule(createModuleData: CreateModuleData): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
+    async createModule(createModuleData: CreateModuleData): Promise<UserAdminCourseData> {
+        return new Promise<UserAdminCourseData>((resolve, reject) => {
             (async () => {
                 try {
-                    let updateLastActive = this.coursesRepository.updateLastModified(createModuleData.courseId);
-                    let moduleId = await this.moduleHandler.addModule(createModuleData);
-                    let addCoursesModule = this.coursesRepository.addModule(createModuleData.courseId, moduleId);
+                    let moduleHeaderQuillId = await this.quillRepository.getNextId();
+                    await this.quillRepository.insertEditorJson(moduleHeaderQuillId, createModuleData.header);
 
-                    await Promise.all([addCoursesModule, updateLastActive])
-                        .then(() => {
-                            resolve(moduleId);
-                        });
+                    let moduleId = await this.moduleHandler.addModule(
+                        _.extend({headerContentId: moduleHeaderQuillId}, createModuleData));
+
+                    let addCoursesModule = this.coursesRepository.addModule(createModuleData.courseId, moduleId);
+                    let updateLastActive = this.coursesRepository.updateLastModified(createModuleData.courseId);
+                    await Promise.all([addCoursesModule, updateLastActive]).then(()=> {
+                       this.logger.info('Adding module to course finished');
+                    });
+
+                    let loadedCourse = await this.coursesRepository.loadUserAdminCourse(createModuleData.courseId);
+                    resolve(loadedCourse);
                 } catch (e) {
                     this.logger.log('error', 'Failed to add module to course %s', createModuleData.courseId);
                     reject(e);
@@ -115,7 +122,7 @@ export class CoursesHandler {
         });
     }
 
-    async saveSection(courseId, moduleId, sectionData: SectionData): Promise<void> {
+    async saveSection(courseId, moduleId, sectionData: SaveSectionData): Promise<void> {
         return Promise.all([
             this.coursesRepository.updateLastModified(courseId),
             this.moduleHandler.updateLastModified(moduleId),

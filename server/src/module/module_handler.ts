@@ -1,4 +1,4 @@
-import {CreateModuleData, ModuleData} from 'modules';
+import {CreateModuleData, CreateModuleDataHeaderId, ModuleData} from 'modules';
 import {ModuleRepository} from './module_repository';
 import {moduleRepository} from '../config/repository.config';
 import {SectionData} from '../../../shared/sections';
@@ -8,7 +8,7 @@ export class ModuleHandler {
 
     }
 
-    async addModule(createModuleData: CreateModuleData): Promise<string> {
+    async addModule(createModuleData: CreateModuleDataHeaderId): Promise<string> {
         return this.moduleRepo.addModule(createModuleData);
     }
 

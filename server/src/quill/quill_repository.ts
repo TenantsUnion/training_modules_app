@@ -1,6 +1,7 @@
 import {Datasource} from '../datasource';
 import {getLogger} from "../log";
 import {AbstractRepository} from "../repository";
+import {LoggerInstance} from 'winston';
 
 export interface QuillEditorData {
     id: string;
@@ -8,7 +9,7 @@ export interface QuillEditorData {
 }
 
 export class QuillRepository extends AbstractRepository {
-    logger: any;
+    logger: LoggerInstance;
 
     constructor (sqlTemplate: Datasource) {
         super('quill_data_id_seq', sqlTemplate);
@@ -33,7 +34,7 @@ export class QuillRepository extends AbstractRepository {
         });
     }
 
-    async insertEditorJson (quillId: string, editorJson: string): Promise<void> {
+    async insertEditorJson (quillId: string, editorJson: Quill.DeltaStatic): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {

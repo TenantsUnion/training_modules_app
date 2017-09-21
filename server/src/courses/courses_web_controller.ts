@@ -7,15 +7,17 @@ import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
 import {CreateModuleData} from "../../../shared/modules";
 import {CoursesRepository} from './courses_repository';
+import {ModuleOperations} from '../module/module_routes';
 
-export class CoursesController {
+export class CoursesController implements ModuleOperations {
+    saveModule: () => {};
     logger = getLogger('CoursesController', 'info');
 
-    constructor (private coursesHandler: CoursesHandler,
-                 private coursesRepo: CoursesRepository) {
+    constructor(private coursesHandler: CoursesHandler,
+                private coursesRepo: CoursesRepository) {
     }
 
-    createCourse (request: Request, response: Response) {
+    createCourse(request: Request, response: Response) {
         let courseInfo: CreateCourseData = request.body;
         let result;
         (async () => {
@@ -34,7 +36,7 @@ export class CoursesController {
         })();
     }
 
-    getUserEnrolledCourses (request: Request, response: Response) {
+    getUserEnrolledCourses(request: Request, response: Response) {
         let username: string = request.params.username;
 
         (async () => {
@@ -52,7 +54,7 @@ export class CoursesController {
         })();
     }
 
-    getUserAdminCourses (request: Request, response: Response) {
+    getUserAdminCourses(request: Request, response: Response) {
         let username: string = request.params.username;
 
         (async () => {
@@ -71,13 +73,12 @@ export class CoursesController {
         })();
     }
 
-    loadAdminCourse (request: Request, response: Response) {
+    loadAdminCourse(request: Request, response: Response) {
         let courseTitle: string = request.params.courseTitle;
         let username: string = request.params.username;
         (async () => {
-            let course: CourseData;
             try {
-                course = await this.coursesRepo.loadUserAdminCourse({
+                let course = await this.coursesRepo.loadUserAdminCourse({
                     username: username,
                     courseTitle: courseTitle
                 });
@@ -91,13 +92,14 @@ export class CoursesController {
         })();
     }
 
-    createModule (request: express.Request, response: express.Response) {
+    createModule(request: express.Request, response: express.Response) {
         let courseId: string = request.params.courseId;
         let createModuleData: CreateModuleData = request.body;
         (async () => {
             try {
-                await this.coursesHandler.createModule(createModuleData);
-                response.sendStatus(200);
+                let course = await this.coursesHandler.createModule(createModuleData);
+                response.status(200)
+                    .send(course);
             } catch (e) {
                 this.logger.log('error', e);
                 this.logger.log('error', e.stack);

@@ -1,40 +1,52 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {ModuleDetails} from '../../../../../shared/modules';
-import {CourseDescription} from '../../../../../shared/courses';
-import {coursesService} from '../courses_service';
-import {userQueryService} from '../../account/user_query_service';
-import {CreateModuleComponent} from "../modules/create_module_component/create_module_component";
+import {CourseData} from '../../../../../shared/courses';
+import {RawLocation, RouteRecord} from 'vue-router/types/router';
 
 require('./_course_navigation_component.scss');
 
 @Component({
+    data: () => {
+      return {
+          courseDetails: {
+              name: 'adminCourse.courseDetails',
+          } as RouteRecord
+      }
+    },
     props: {
-        modules: Object,
-        courseTitle: String,
+        course: Object,
         isCourseAdmin: Boolean
     },
     template: require('./course_navigation_component.tpl.html'),
 })
 export class CourseNavigationComponent extends Vue {
-    modules: ModuleDetails[];
-    courseTitle: string;
+    course: CourseData;
     isCourseAdmin: boolean;
-    activeModule: string;
 
-    created () {
-    }
-
-    isActiveModule (moduleName: string): boolean {
+    isActiveModule(moduleName: string): boolean {
         return this.$route.params.module === moduleName;
     }
 
-    goToModule (title: string): void {
-        this.activeModule = title;
+    goToModule(title: string): void {
         this.$router.push('title')
     }
 
-    createModule () {
-        this.$router.push(`${this.courseTitle}/module/create`)
+    createModule() {
+        this.$router.push({
+            name: 'adminCourse.createModule',
+        })
+    }
+
+    get activeModule():string {
+        return this.$route.params.moduleTitle;
+    }
+
+    moduleDetailsRoute(moduleTitle): RawLocation {
+        return {
+            name: 'adminCourse.moduleDetails',
+            params: {
+                moduleTitle: moduleTitle
+            }
+        };
     }
 }

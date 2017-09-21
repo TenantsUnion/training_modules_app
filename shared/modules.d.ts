@@ -23,6 +23,10 @@ declare namespace modules {
         active?: boolean;
     }
 
+    interface CreateModuleDataHeaderId extends CreateModuleData {
+        headerContentId: string;
+    }
+
 
     interface AdminModuleData extends ModuleData {
     }

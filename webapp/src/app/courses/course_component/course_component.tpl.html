@@ -5,8 +5,8 @@
         </div>
         <loading v-if="loading"></loading>
         <course-navigation v-if="course"
-                           :course-title="course.title"
-                           :is-course-admin="isCourseAdmin">
+                           :is-course-admin="isCourseAdmin"
+                           :course="course">
         </course-navigation>
     </div>
     <div id="page-content-wrapper" class="page-content-wrapper">

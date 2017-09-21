@@ -1,13 +1,14 @@
 import {Datasource} from "../datasource";
 import {
-    AdminCourseDescription, UserEnrolledCourseData, CourseData,
+    AdminCourseDescription, UserEnrolledCourseData,
     UserAdminCourseData, EnrolledCourseDescription, CreateCourseData
 } from "courses";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
 import {LoggerInstance} from 'winston';
-import {UsernameCourseTitle} from "./courses_handler";
+import {isUsernameCourseTitle, UsernameCourseTitle} from "./courses_handler";
 import * as _ from "underscore";
+import {ModuleData} from '../../../shared/modules';
 
 export interface ICoursesRepository {
     loadUserEnrolledCourse(username: string, courseId: string): Promise<UserEnrolledCourseData>;
@@ -170,7 +171,7 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
         });
     }
 
-    async loadUserAdminCourse(courseId: UsernameCourseTitle): Promise<UserAdminCourseData> {
+    async loadUserAdminCourse(courseId: UsernameCourseTitle | string): Promise<UserAdminCourseData> {
         // let query = {
         //     // language=PostgreSQL
         //     text: `
@@ -187,7 +188,7 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
         //     `,
         //     values: [courseId.courseTitle, courseId.username]
         // };
-        let query = {
+        let query = isUsernameCourseTitle(courseId) ? {
             text: `
                 SELECT c.*, m.modules FROM tu.user u
                   INNER JOIN LATERAL
@@ -204,6 +205,21 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                     ON c.id IN (select unnest(u.admin_of_course_ids)) WHERE u.username = $2;
                     `,
             values: [courseId.courseTitle, courseId.username]
+        } : {
+            // language=POSTGRES-SQL
+            text: `
+                SELECT c.*, m.modules FROM tu.course c
+                    INNER JOIN LATERAL
+                    (SELECT json_agg(m.*) AS modules
+                     FROM (SELECT m.*, s.sections FROM tu.module m
+                          INNER JOIN LATERAL (SELECT json_agg(s.*) AS sections
+                                              FROM tu.section s
+                                              WHERE s.id IN (SELECT unnest(m.ordered_section_ids))) s
+                            ON TRUE)
+                            m where m.id IN (select unnest(c.ordered_module_ids))) m ON TRUE
+                  WHERE c.id = $1;
+            `,
+            values: [courseId]
         };
         return new Promise<UserAdminCourseData>((resolve, reject) => {
                 (async () => {
@@ -214,8 +230,8 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                         let processedResults = results.map((row) => {
                             return _.extend({}, row, {
                                 id: '' + row.id,
-                                modules: row.modules.map((module) => {
-                                    return _.extend({}, module, {id: '' + module.id,});
+                                modules: _.map(row.modules, (module: ModuleData) => {
+                                    return _.extend({}, module, {id: '' + module.id});
                                 })
                             });
                         });
