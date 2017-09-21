@@ -2,23 +2,32 @@
     <div class="sidebar-nav-inner">
         <div class="grid-x menu-brand">
             <div class="brand auto cell">
-                <router-link :to="courseDetails">{{course.title}}</router-link>
             </div>
             <slot class="course-toggle-icon"></slot>
         </div>
         <div class="grid-x menu-header">
-            <h4>Modules</h4>
-            <!--<abbr title="Add module">-->
-                <button v-if="isCourseAdmin" class="button" v-on:click="createModule">
-                    <i class="fa fa-plus fa-fw margin-1"></i>
-                    <span class="sr-only">Add module</span>
-                </button>
-            <!--</abbr>-->
+            <h4>
+                <router-link :to="courseDetails">{{course.title}}</router-link>
+            </h4>
+            <button title="Add Module" v-if="isCourseAdmin" class="button" v-on:click="createModule">
+                <i class="fa fa-plus fa-fw margin-1"></i>
+                <span class="sr-only">Add module</span>
+            </button>
         </div>
         <div>
             <ul>
                 <li v-for="module in course.modules">
-                    <router-link :to="moduleDetailsRoute(module.title)">{{module.title}}</router-link>
+                    <h5>
+                        <router-link :to="moduleDetailsRoute(module.title)">{{module.title}}</router-link>
+                    </h5>
+                    <ul>
+                        <li v-for="section in module.sections">
+                            <h6>
+                                <router-link :to="sectionRoute(module.title, section.title)">{{section.title}}
+                                </router-link>
+                            </h6>
+                        </li>
+                    </ul>
                 </li>
             </ul>
         </div>

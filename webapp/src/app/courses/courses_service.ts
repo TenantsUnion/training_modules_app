@@ -5,15 +5,16 @@ import VueRouter from "vue-router";
 import {appRouter} from "../router";
 import {coursesRoutesService} from './courses_routes';
 import {CreateSectionData} from '../../../../shared/sections';
+import * as _ from "underscore";
 
 type ObserveCourse = (courseData: CourseData) => any;
 type ObserveModule = (moduleData: ModuleData) => any;
 
-let findModuleFromCourse = (course:CourseData, moduleTitle:string) => {
-    return course.modules.reduce((acc, module) => {
+let findModuleFromCourse = (course: CourseData, moduleTitle: string) => {
+    return course ? _.reduce(course.modules, (acc, module) => {
         acc[module.title] = module;
         return acc;
-    }, {})[moduleTitle];
+    }, {})[moduleTitle] : null;
 };
 
 export class CoursesService {
@@ -75,7 +76,7 @@ export class CoursesService {
             }
 
             this.currentCourseTitle = routeCourseTitle;
-            if(!this.currentCourseTitle) {
+            if (!this.currentCourseTitle) {
                 return Promise.resolve(null);
             }
 
@@ -98,7 +99,6 @@ export class CoursesService {
         let module = this.getCurrentCourse()
             .then((course) => {
                 let currentModule = findModuleFromCourse(course, moduleTitle);
-                this.notifyModuleUpdate(currentModule);
                 return currentModule;
             });
 
@@ -128,33 +128,38 @@ export class CoursesService {
 
     createModule(createModuleData: CreateModuleData): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            axios.post(`courses/${createModuleData.courseId}/module/create`, createModuleData)
+            axios.post(`course/${createModuleData.courseId}/module/create`, createModuleData)
                 .then((course) => {
                     this.notifyCourseUpdate(course.data);
                     resolve(course.data);
                 })
                 .catch((e) => {
-                    throw e.data.data;
+                    throw e;
                 });
         });
     }
 
     createSection(createSectionData: CreateSectionData): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            axios.post(`courses/${createSectionData.courseId}/module/${createSectionData.moduleId}/section/create}`,
+            axios.post(`course/${createSectionData.courseId}/module/${createSectionData.moduleId}/section/create`,
                 createSectionData)
                 .then((response) => {
                     this.notifyCourseUpdate(response.data);
                     resolve(response.data);
                 })
                 .catch((e) => {
-                    throw e.data.data;
+                    throw e;
                 });
         });
     }
 
     refresh(): Promise<any> {
-        return Promise.all([this.getCurrentCourse(), this.getCurrentModule()]);
+        return (async () => {
+            let course = await this.getCurrentCourse();
+            let module = await this.getCurrentModule();
+            this.notifyCourseUpdate(course);
+            this.notifyModuleUpdate(module);
+        })();
     }
 }
 

@@ -5,6 +5,7 @@ import {RequestHandler} from 'express';
 export interface ModuleOperations {
     createModule: RequestHandler;
     saveModule: RequestHandler;
+    createSection: RequestHandler;
 }
 
 export const ModuleRoutes = (moduleCtrl: ModuleOperations) => {
@@ -15,5 +16,10 @@ export const ModuleRoutes = (moduleCtrl: ModuleOperations) => {
     router.post('/course/:courseId/module/create', (request, response, next) => {
         moduleCtrl.createModule(request, response, next);
     });
-    return router;
+
+    router.post('/course/:courseId/module/:moduleId/section/create', (request, response, next) => {
+        moduleCtrl.createSection(request, response, next);
+    });
+
+    return router
 };

@@ -49,4 +49,14 @@ export class CourseNavigationComponent extends Vue {
             }
         };
     }
+
+    sectionRoute(moduleTitle, sectionTitle): RawLocation {
+        return {
+            name: 'adminCourse.section',
+            params: {
+                moduleTitle: moduleTitle,
+                sectionTitle: sectionTitle
+            }
+        }
+    }
 }

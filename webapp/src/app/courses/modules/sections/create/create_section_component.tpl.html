@@ -1,11 +1,11 @@
 <div class="grid-y medium-grid-frame">
     <div class="grid-x grid-padding-x">
         <div class="small-8">
-            <h1>Create Module</h1>
+            <h1>Create Section</h1>
             <loading v-if="loading"></loading>
         </div>
     </div>
-    <vue-form :state="formstate" @submit.prevent="createModule">
+    <vue-form :state="formstate" @submit.prevent="createSection">
         <validate>
             <div class="cell small-3">
                 <div class="grid-x grid-padding-x">
@@ -13,7 +13,7 @@
                         <field-messages name="title"
                                         show="$submitted || $dirty">
                             <small class="error" slot="required">
-                                A title is need to create a module
+                                A title is need to create a section
                             </small>
                         </field-messages>
                         <small class="error"
@@ -21,12 +21,12 @@
                             {{errorMessages.title}}
                         </small>
                         <div>
-                            <label for="module-title">Title
+                            <label for="section-title">Title
                                 <input v-model="title" type="text"
                                        name="title"
                                        required
-                                       placeholder="Module Title"
-                                       id="module-title"/>
+                                       placeholder="Section Title"
+                                       id="section-title"/>
                             </label>
                         </div>
                     </div>
@@ -45,10 +45,10 @@
             <div class="cell small-2">
                 <div class="grid-x grid-padding-x">
                     <div class="cell small-8">
-                        <label for="module-description">Description</label>
+                        <label for="section-description">Description</label>
                         <textarea v-model="description" type="text"
-                                  placeholder="Course description"
-                                  id="module-description"></textarea>
+                                  placeholder="Section description"
+                                  id="section-description"></textarea>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
         </validate>
         <div class="grid-x grid-padding-x">
             <div class="cell small-2">
-                <button @click="createModule" class="button" type="button">
+                <button @click="createSection" class="button" type="button">
                     Create
                 </button>
             </div>

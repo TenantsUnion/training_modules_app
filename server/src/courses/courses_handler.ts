@@ -1,8 +1,9 @@
 import {IUserHandler} from "../user/user_handler";
 import {ICoursesRepository} from "./courses_repository";
 import {
-    AdminCourseDescription, CreateCourseData,
-    EnrolledCourseDescription, UserAdminCourseData} from "courses";
+    AdminCourseDescription, CourseData, CreateCourseData,
+    EnrolledCourseDescription, UserAdminCourseData
+} from "courses";
 import {getLogger} from '../log';
 import {CreateModuleData, ModuleData} from "../../../shared/modules";
 import {ModuleHandler} from '../module/module_handler';
@@ -136,8 +137,8 @@ export class CoursesHandler {
         })
     }
 
-    async createSection(sectionData: CreateSectionData): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
+    async createSection(sectionData: CreateSectionData): Promise<CourseData> {
+        return new Promise<CourseData>((resolve, reject) => {
             (async () => {
                 try {
                     let sectionId = await this.sectionHandler.createSection(sectionData);
@@ -147,7 +148,9 @@ export class CoursesHandler {
                     await this.moduleHandler.addSection(sectionData.moduleId, sectionId);
                     this.logger.info('Added section to module: %s', sectionData.moduleId);
 
-                    resolve(sectionId);
+                    let course = await this.coursesRepository.loadUserAdminCourse(sectionData.courseId);
+
+                    resolve(course);
                 } catch (e) {
                     this.logger.error(e);
                     this.logger.error(e.stack);

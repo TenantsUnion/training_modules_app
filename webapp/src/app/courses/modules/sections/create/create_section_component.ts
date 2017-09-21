@@ -1,10 +1,8 @@
 import Component from 'vue-class-component';
 import {QuillComponent} from '../../../../quill/quill_component';
-import * as Vue from 'vue';
-import * as VueForm from '../../../../vue-form';
-import {CourseData} from '../../../../../../../shared/courses';
+import Vue from 'vue';
 import {coursesService} from '../../../courses_service';
-import {ModuleData} from '../../../../../../../shared/modules';
+import * as VueForm from '../../../../vue-form';
 
 @Component({
     data: () => {
@@ -15,12 +13,12 @@ import {ModuleData} from '../../../../../../../shared/modules';
             timeEstimate: '',
             description: '',
             formstate: {}
-        }
+        };
     },
     components: {
         'quill-editor': QuillComponent
     },
-    template: require('./create_module_component.tpl.html')
+    template: require('./create_section_component.tpl.html')
 })
 export class CreateSectionComponent extends Vue {
     loading: boolean;
@@ -30,21 +28,16 @@ export class CreateSectionComponent extends Vue {
     description: string;
     quillEditor: QuillComponent;
     formstate: VueForm.FormState;
-    module: ModuleData;
 
     created() {
-        this.loading = true;
-        coursesService.subscribeCurrentModule((module) => {
-            this.loading = false;
-            this.module = module;
-        });
+        this.loading = false;
     }
 
     mounted() {
         this.quillEditor = <QuillComponent> this.$refs.editor;
     }
 
-    createModule() {
+    createSection() {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
@@ -56,13 +49,17 @@ export class CreateSectionComponent extends Vue {
 
         (async () => {
 
+            let course = await coursesService.getCurrentCourse();
+            let module = await coursesService.getCurrentModule();
+
             try {
-                await coursesService.createModule({
-                    courseId: this.module.id,
+                await coursesService.createSection({
                     title: this.title,
+                    courseId: course.id,
+                    moduleId: module.id,
                     description: this.description,
                     timeEstimate: this.timeEstimate,
-                    header: quillData
+                    quillData: quillData
                 });
                 // to do now what
                 this.$router.push({

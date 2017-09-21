@@ -13,10 +13,6 @@ router.post('/courses/create', (request, response) => {
     coursesController.createCourse(request, response);
 });
 
-router.post('/courses/:courseId/module/create', (request, response) => {
-    coursesController.createModule(request, response);
-});
-
 router.get('/courses/user/enrolled/:username', (request, response) => {
     coursesController.getUserEnrolledCourses(request, response);
 });

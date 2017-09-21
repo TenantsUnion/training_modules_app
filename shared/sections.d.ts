@@ -32,8 +32,10 @@ declare namespace sections {
         courseId: string;
         moduleId: string;
         title: string;
+        quillData: Quill.DeltaStatic;
         description?: string;
         quillContentId?: string;
+        timeEstimate?: string;
     }
 }
 

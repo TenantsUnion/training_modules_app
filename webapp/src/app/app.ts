@@ -23,7 +23,7 @@ appRouter.addRoutes([
     userRoutes
 ]);
 
-appRouter.afterEach(() => {
+appRouter.afterEach((to, from) => {
     coursesService.refresh();
 });
 

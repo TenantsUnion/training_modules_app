@@ -7,6 +7,7 @@ import {CourseDetailsComponent} from './course_details_component/course_details_
 import {CreateModuleComponent} from "./modules/create_module_component/create_module_component";
 import {ModuleDetailsComponent} from './modules/module_details_component/module_details_component';
 import {appRouter} from '../router';
+import {CreateSectionComponent} from './modules/sections/create/create_section_component';
 
 export const COURSES_ROUTE_NAMES = {
     enrolledCourses: 'enrolledCourses',
@@ -15,7 +16,8 @@ export const COURSES_ROUTE_NAMES = {
     adminCourse: 'adminCourse',
     adminCourseDetails: 'adminCourse.courseDetails',
     createModule: 'adminCourse.createModule',
-    moduleDetails: 'adminCourse.moduleDetails'
+    moduleDetails: 'adminCourse.moduleDetails',
+    createSection: 'adminCourse.createSection'
 };
 
 let courseTitle = 'courseTitle';
@@ -71,6 +73,12 @@ export const coursesRoutes: RouteConfig[] = [
                 name: COURSES_ROUTE_NAMES.moduleDetails,
                 props: true,
                 component: ModuleDetailsComponent
+            },
+            {
+                path: ':courseTitle/module/:moduleTitle/section/create',
+                name: 'adminCourse.createSection',
+                props: true,
+                component: CreateSectionComponent
             }
         ]
     },
@@ -83,21 +91,22 @@ export const coursesRoutes: RouteConfig[] = [
 ];
 
 export class CoursesRoutesService {
-    constructor(private router: VueRouter){}
+    constructor(private router: VueRouter) {
+    }
 
-    getCurrentModule(){
+    getCurrentModule() {
         return this.router.currentRoute.params.moduleTitle;
     }
 
-    getCurrentCourse(){
+    getCurrentCourse() {
         return this.router.currentRoute.params.courseTitle;
     }
 
-    getCurrentUser(){
+    getCurrentUser() {
         return this.router.currentRoute.params.username;
     }
 
-    isCourseAdmin(){
+    isCourseAdmin() {
         return this.router.currentRoute.matched.some((matchedRoute) => {
             return matchedRoute.name === 'adminCourse';
         });

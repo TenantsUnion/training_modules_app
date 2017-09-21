@@ -5,7 +5,9 @@
     <div v-if="module" class="grid-x">
         <div class="small-12 cell">
             <div class="callout">
-                <h2>{{module.title}}</h2>
+                <h2>{{module.title}}
+                    <button v-if="isCourseAdmin" class="button" v-on:click="createSection">Create Section</button>
+                </h2>
                 <h3>{{module.title}}</h3>
             </div>
             <div v-for="section in module.sections" class="callout">
