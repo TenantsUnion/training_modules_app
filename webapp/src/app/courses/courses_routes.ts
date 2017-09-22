@@ -15,6 +15,7 @@ export const COURSES_ROUTE_NAMES = {
     enrolledCourse: 'enrolledCourse',
     adminCourses: 'adminCourses',
     adminCourse: 'adminCourse',
+    editCourse: 'adminCourse.editCourse',
     adminCourseDetails: 'adminCourse.courseDetails',
     createModule: 'adminCourse.createModule',
     moduleDetails: 'adminCourse.moduleDetails',
@@ -62,6 +63,12 @@ export const coursesRoutes: RouteConfig[] = [
             {
                 path: ':courseTitle',
                 name: COURSES_ROUTE_NAMES.adminCourseDetails,
+                props: true,
+                component: CourseDetailsComponent
+            },
+            {
+                path: ':courseTitle/edit',
+                name: COURSES_ROUTE_NAMES.editCourse,
                 props: true,
                 component: CourseDetailsComponent
             },

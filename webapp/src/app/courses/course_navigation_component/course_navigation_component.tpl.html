@@ -6,9 +6,13 @@
         </div>
         <div class="grid-x menu menu-header">
             <h4 v-bind:class="{'is-active': activeNavigation.course}">
-                <router-link :to="courseDetails">{{course.title}}
-                </router-link>
+                <router-link :to="courseDetails">{{course.title}}</router-link>
             </h4>
+            <button title="Edit Course" v-if="isCourseAdmin" class="button"
+                    v-on:click="editCourse(module.title)">
+                <i class="fa fa-pencil fa-fw margin-1"></i>
+                <span class="sr-only">Edit course</span>
+            </button>
             <button title="Add Module" v-if="isCourseAdmin" class="button" v-on:click="createModule">
                 <i class="fa fa-plus fa-fw margin-1"></i>
                 <span class="sr-only">Add module</span>
@@ -17,9 +21,20 @@
         <div class="menu-section">
             <ul class="menu">
                 <li v-for="module in course.modules">
-                    <h5 v-bind:class="{'is-active': activeNavigation.module === module.title}">
-                        <router-link :to="moduleDetailsRoute(module.title)">{{module.title}}</router-link>
-                    </h5>
+                    <div>
+                        <h5 v-bind:class="{'is-active': activeNavigation.module === module.title}">
+                            <router-link :to="moduleDetailsRoute(module.title)">{{module.title}}</router-link>
+                        </h5>
+                        <button title="Edit Module" v-if="isCourseAdmin" class="button"
+                                v-on:click="editModule(module.title)">
+                            <i class="fa fa-pencil fa-fw margin-1"></i>
+                            <span class="sr-only">Edit section</span>
+                        </button>
+                        <button title="Add Section" v-if="isCourseAdmin" class="button" v-on:click="createSection">
+                            <i class="fa fa-plus fa-fw margin-1"></i>
+                            <span class="sr-only">Add section</span>
+                        </button>
+                    </div>
                     <ul>
                         <li v-for="section in module.sections">
                             <h6 v-bind:class="{'is-active': activeNavigation.section === section.title}">
@@ -27,6 +42,11 @@
                                     {{section.title}}
                                 </router-link>
                             </h6>
+                            <button title="Edit Section" v-if="isCourseAdmin" class="button"
+                                    v-on:click="editSection(section.title)">
+                                <i class="fa fa-pencil fa-fw margin-1"></i>
+                                <span class="sr-only">Edit section</span>
+                            </button>
                         </li>
                     </ul>
                 </li>

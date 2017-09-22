@@ -5,6 +5,7 @@ declare namespace courses {
 
     export interface CreateCourseData {
         title: string,
+        active: boolean,
         timeEstimate: string,
         description: string,
         createdBy: string
@@ -13,6 +14,7 @@ declare namespace courses {
     export interface CourseData {
         id: string,
         title: string,
+        active: boolean,
         timeEstimate: string,
         description: string,
         createdBy: string

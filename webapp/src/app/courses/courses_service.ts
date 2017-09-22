@@ -6,6 +6,7 @@ import {appRouter} from "../router";
 import {coursesRoutesService} from './courses_routes';
 import {CreateSectionData, SectionData} from '../../../../shared/sections';
 import * as _ from "underscore";
+import {userCoursesHttpService} from '../user/courses/course_http_service';
 
 type ObserveCourse = (courseData: CourseData) => any;
 type ObserveModule = (moduleData: ModuleData) => any;
@@ -191,6 +192,19 @@ export class CoursesService {
     private notifySectionUpdate(currentSection: SectionData) {
         this.sectionObservers.forEach((sectionObs)=>{
             sectionObs(currentSection);
+        });
+    }
+
+    saveCourse(course: CourseData): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            axios.post(`course/${course.id}`, course)
+                .then(() => {
+                    this.notifyCourseUpdate(course);
+                    resolve();
+                })
+                .catch((e) => {
+                    throw e;
+                });
         });
     }
 }

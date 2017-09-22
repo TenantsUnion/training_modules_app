@@ -2,6 +2,8 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {userCoursesHttpService} from "../../user/courses/course_http_service";
 import {appRouter} from "../../router";
+import {CreateCourseData} from '../../../../../shared/courses';
+import {COURSES_ROUTE_NAMES} from '../courses_routes';
 
 @Component({
     props: {
@@ -11,9 +13,13 @@ import {appRouter} from "../../router";
         return {
             loading: false,
             errorMessages: '',
-            title: '',
-            description: '',
-            timeEstimate: '',
+            course: {
+                active: true,
+                title: '',
+                description: '',
+                timeEstimate: '',
+                createdBy: ''
+            }
         };
     },
     template: require('./create_course_component.tpl.html')
@@ -21,20 +27,17 @@ import {appRouter} from "../../router";
 export class CreateCourseComponent extends Vue {
     errorMessages: {};
     loading: boolean;
-    title: string;
-    description: string;
-    timeEstimate: string;
+    course: CreateCourseData;
     username: string;
 
     create() {
-        userCoursesHttpService.createCourse({
-            title: this.title,
-            description: this.description,
-            timeEstimate: this.timeEstimate,
-            createdBy: this.username
-        }).then(()=>{
-            appRouter.push({name: 'adminCourse.courseDetails', params: {courseTitle: this.title}})
-        }).catch((msg)=>{
+        this.course.createdBy = this.username;
+        this.loading = true;
+        userCoursesHttpService.createCourse(this.course).then(() => {
+            this.loading = false;
+            appRouter.push({name: COURSES_ROUTE_NAMES.adminCourseDetails, params: {courseTitle: this.course.title}})
+        }).catch((msg) => {
+            this.loading = false;
             this.errorMessages = msg;
         })
     }

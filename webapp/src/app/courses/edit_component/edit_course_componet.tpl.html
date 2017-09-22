@@ -2,7 +2,7 @@
     <div class="grid-x grid-padding-x align-center">
         <div class="cell small-8">
             <div class="callout float-center">
-                <h1>Create Course</h1>
+                <h1>Edit Course</h1>
                 <p v-if="errorMessages">{{ errorMessages }}</p>
             </div>
         </div>
@@ -29,12 +29,9 @@
                               placeholder="Course description"
                               id="course-description"></textarea>
                 </div>
-                <div>
-                    <label for="course-active">Active</label>
-                    <input v-model="course.active" type="checkbox" id="course-active"/>
-                </div>
 
-                <button @click="create" class="button">Create</button>
+                <button @click="save" class="button">Save</button>
+                <button @click="cancel" class="button secondary">Cancel</button>
             </div>
         </div>
     </div>

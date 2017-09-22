@@ -61,4 +61,16 @@ export class CourseNavigationComponent extends Vue {
             }
         }
     }
+
+    editCourse(){
+        this.$router.push({name: COURSES_ROUTE_NAMES.editCourse})
+    }
+
+    editModule(moduleTitle: string) {
+
+    }
+
+    editSection(sectionTitle: string) {
+
+    }
 }
