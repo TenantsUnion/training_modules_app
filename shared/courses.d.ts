@@ -16,8 +16,7 @@ declare namespace courses {
         timeEstimate: string,
         description: string,
         createdBy: string
-        moduleDetails?: ModuleDetails[],
-        modules?: ModuleData[]
+        modules: ModuleData[]
     }
 
     export interface UserEnrolledCourseData extends CourseData {
