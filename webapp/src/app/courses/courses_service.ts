@@ -4,22 +4,18 @@ import {CourseData} from 'courses';
 import VueRouter from "vue-router";
 import {appRouter} from "../router";
 import {coursesRoutesService} from './courses_routes';
-import {CreateSectionData} from '../../../../shared/sections';
+import {CreateSectionData, SectionData} from '../../../../shared/sections';
 import * as _ from "underscore";
 
 type ObserveCourse = (courseData: CourseData) => any;
 type ObserveModule = (moduleData: ModuleData) => any;
+type ObserverSection = (sectionData: SectionData) => any;
 
-let findModuleFromCourse = (course: CourseData, moduleTitle: string) => {
-    return course ? _.reduce(course.modules, (acc, module) => {
-        acc[module.title] = module;
-        return acc;
-    }, {})[moduleTitle] : null;
-};
 
 export class CoursesService {
     courseObservers: ObserveCourse[] = [];
     moduleObservers: ObserveModule[] = [];
+    sectionObservers: ObserverSection[] = [];
     currentCourseTitle: string;
     currentCourse: Promise<CourseData>;
     currentModuleTitle: string;
@@ -35,8 +31,8 @@ export class CoursesService {
             .then((response) => {
                 this.notifyCourseUpdate(response.data);
                 return <CourseData> response.data;
-            }).catch((response) => {
-                throw response.data.data;
+            }).catch((error) => {
+                throw error;
             });
     }
 
@@ -56,13 +52,12 @@ export class CoursesService {
     }
 
     subscribeCurrentModule(moduleObs: ObserveModule) {
-        let unsubcribeIndex = this.moduleObservers.length;
         this.moduleObservers.push(moduleObs);
         this.getCurrentModule().then((course) => {
             moduleObs(course);
         });
         return () => {
-            this.moduleObservers = this.moduleObservers.splice(unsubcribeIndex, 1);
+            this.moduleObservers = this.moduleObservers.splice(this.moduleObservers.indexOf(moduleObs), 1);
         };
     }
 
@@ -96,13 +91,14 @@ export class CoursesService {
             return Promise.resolve(null);
         }
 
-        let module = this.getCurrentCourse()
+        this.currentModule = this.getCurrentCourse()
             .then((course) => {
-                let currentModule = findModuleFromCourse(course, moduleTitle);
-                return currentModule;
+                return _.find(course && course.modules, (module) => {
+                    return module.title === moduleTitle;
+                });
             });
 
-        return module;
+        return this.currentModule;
     }
 
     notifyCourseUpdate(course: CourseData) {
@@ -110,7 +106,9 @@ export class CoursesService {
         this.courseObservers.forEach((obs: ObserveCourse) => {
             obs(course);
         });
-        this.notifyModuleUpdate(findModuleFromCourse(course, coursesRoutesService.getCurrentModule()));
+        let currentModuleTitle = coursesRoutesService.getCurrentModule();
+        let currentModule = _.find(course.modules, (module) => module.title === currentModuleTitle);
+        this.notifyModuleUpdate(currentModule);
     }
 
     private notifyModuleUpdate(module: ModuleData) {
@@ -118,6 +116,10 @@ export class CoursesService {
         this.moduleObservers.forEach((obs: ObserveModule) => {
             obs(module);
         });
+
+        let currentSectionTitle = coursesRoutesService.getCurrentSection();
+        let currentSection = _.find(module && module.sections, section => currentSectionTitle === section.title);
+        this.notifySectionUpdate(currentSection);
     }
 
     isCourseAdmin(): boolean {
@@ -153,13 +155,43 @@ export class CoursesService {
         });
     }
 
+    public getCurrentSection(): Promise<SectionData> {
+        let sectionTitle = coursesRoutesService.getCurrentSection();
+
+        if (!sectionTitle) {
+            return Promise.resolve(null);
+        }
+
+        return this.getCurrentModule()
+            .then((module) => {
+                    return _.find(module && module.sections, (section) => {
+                        return  section.title === sectionTitle;
+                    });
+            });
+    }
+
     refresh(): Promise<any> {
         return (async () => {
             let course = await this.getCurrentCourse();
-            let module = await this.getCurrentModule();
             this.notifyCourseUpdate(course);
-            this.notifyModuleUpdate(module);
         })();
+    }
+
+    subscribeCurrentSection(obsSection: (section) => any) {
+        this.sectionObservers.push(obsSection);
+        this.getCurrentSection().then((section)=>{
+            obsSection(section);
+        });
+
+        return () => {
+            this.sectionObservers = this.sectionObservers.splice(this.sectionObservers.indexOf(obsSection), 1);
+        };
+    }
+
+    private notifySectionUpdate(currentSection: SectionData) {
+        this.sectionObservers.forEach((sectionObs)=>{
+            sectionObs(currentSection);
+        });
     }
 }
 

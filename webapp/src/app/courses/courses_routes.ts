@@ -8,6 +8,7 @@ import {CreateModuleComponent} from "./modules/create_module_component/create_mo
 import {ModuleDetailsComponent} from './modules/module_details_component/module_details_component';
 import {appRouter} from '../router';
 import {CreateSectionComponent} from './modules/sections/create/create_section_component';
+import {ViewSectionComponent} from './modules/sections/view/view_section_component';
 
 export const COURSES_ROUTE_NAMES = {
     enrolledCourses: 'enrolledCourses',
@@ -17,7 +18,9 @@ export const COURSES_ROUTE_NAMES = {
     adminCourseDetails: 'adminCourse.courseDetails',
     createModule: 'adminCourse.createModule',
     moduleDetails: 'adminCourse.moduleDetails',
-    createSection: 'adminCourse.createSection'
+    createSection: 'adminCourse.createSection',
+    editSection: 'course.editSection',
+    viewSection: 'course.viewSection'
 };
 
 let courseTitle = 'courseTitle';
@@ -76,9 +79,21 @@ export const coursesRoutes: RouteConfig[] = [
             },
             {
                 path: ':courseTitle/module/:moduleTitle/section/create',
-                name: 'adminCourse.createSection',
+                name: COURSES_ROUTE_NAMES.createSection,
                 props: true,
                 component: CreateSectionComponent
+            },
+            {
+                path: ':courseTitle/module/:moduleTitle/section/:sectionTitle',
+                name: COURSES_ROUTE_NAMES.viewSection,
+                props: true,
+                component: ViewSectionComponent
+            },
+            {
+                path: ':courseTitle/module/:moduleTitle/section/:sectionTitle/edit',
+                name: COURSES_ROUTE_NAMES.editSection,
+                props: true,
+                component: ViewSectionComponent
             }
         ]
     },
@@ -104,6 +119,10 @@ export class CoursesRoutesService {
 
     getCurrentUser() {
         return this.router.currentRoute.params.username;
+    }
+
+    getCurrentSection() {
+        return this.router.currentRoute.params.sectionTitle;
     }
 
     isCourseAdmin() {

@@ -2,16 +2,18 @@ import Vue from 'vue';
 import Component from "vue-class-component";
 import {CourseData} from '../../../../../shared/courses';
 import {RawLocation, RouteRecord} from 'vue-router/types/router';
+import {COURSES_ROUTE_NAMES} from '../courses_routes';
 
 require('./_course_navigation_component.scss');
 
+
 @Component({
     data: () => {
-      return {
-          courseDetails: {
-              name: 'adminCourse.courseDetails',
-          } as RouteRecord
-      }
+        return {
+            courseDetails: {
+                name: 'adminCourse.courseDetails',
+            } as RouteRecord
+        }
     },
     props: {
         course: Object,
@@ -23,8 +25,12 @@ export class CourseNavigationComponent extends Vue {
     course: CourseData;
     isCourseAdmin: boolean;
 
-    isActiveModule(moduleName: string): boolean {
-        return this.$route.params.module === moduleName;
+    get activeNavigation() {
+        return {
+            course: this.$route.name === COURSES_ROUTE_NAMES.adminCourseDetails, //todo enrolled course details
+            module: this.$route.params.moduleTitle,
+            section: this.$route.params.sectionTitle
+        };
     }
 
     goToModule(title: string): void {
@@ -35,10 +41,6 @@ export class CourseNavigationComponent extends Vue {
         this.$router.push({
             name: 'adminCourse.createModule',
         })
-    }
-
-    get activeModule():string {
-        return this.$route.params.moduleTitle;
     }
 
     moduleDetailsRoute(moduleTitle): RawLocation {
@@ -52,7 +54,7 @@ export class CourseNavigationComponent extends Vue {
 
     sectionRoute(moduleTitle, sectionTitle): RawLocation {
         return {
-            name: 'adminCourse.section',
+            name: COURSES_ROUTE_NAMES.viewSection,
             params: {
                 moduleTitle: moduleTitle,
                 sectionTitle: sectionTitle
