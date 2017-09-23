@@ -1,12 +1,17 @@
 /* Sidebar Navigation Styles */
 
+$breakpoint-mobile: 768px;
+$sidebar-width: 320px;
+
 .sidebar-nav {
-  top: 0;
-  width: 250px;
+  top: 2em;
+  width: $sidebar-width;
   margin: 0;
   padding: 1em;
   list-style: none;
   color: #999999;
+  position: absolute;
+  bottom: 0;
 
   &-inner {
     width: 84%;
@@ -28,6 +33,6 @@
 
 @media(min-width: 768px) {
   .sidebar-nav {
-    width: 250px;
+    width: $sidebar-width;
   }
 }

@@ -1,6 +1,11 @@
 /* Sidebar */
 /* Toggle Styles */
 
+$breakpoint-mobile: 768px;
+$sidebar-width: 320px;
+$sidebar-collapsed-width: 50px;
+$main-content-side-padding: 10px;
+
 .wrapper {
   //height: 100vh;
   padding-left: 0;
@@ -13,13 +18,13 @@
     padding-left: 0;
 
     .page-content-wrapper {
-      padding-left: 265px;
+      padding-left: $sidebar-width + $main-content-side-padding;
       position: absolute;
-      margin-right: -200px;
+      margin-right: -($sidebar-width) + $sidebar-collapsed-width;
     }
 
     .sidebar-wrapper {
-      width: 250px;
+      width: $sidebar-width;
     }
   }
 
@@ -27,9 +32,9 @@
     z-index: 1;
     position: absolute;
     left: 100px;
-    width: 250px;
+    width: $sidebar-width;
     height: 100%;
-    margin-left: -300px;
+    margin-left: -($sidebar-width) - $sidebar-collapsed-width;
     overflow: hidden;
     background: #000;
     -webkit-transition: all 0.5s ease;
@@ -52,7 +57,7 @@
   .page-content-wrapper {
     width: auto;
     z-index: 2;
-    padding-left: 65px;
+    padding-left: $sidebar-collapsed-width + $main-content-side-padding;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
@@ -67,33 +72,36 @@
   }
 }
 
-@media(min-width:768px) {
+@media(min-width: $breakpoint-mobile) {
 
   .wrapper {
-    padding-left: 250px;
+    padding-left: $sidebar-width;
     height: 100%;
 
     &.toggled {
-      padding-left: -300px;
+      padding-left: -($sidebar-width) - $sidebar-collapsed-width;
 
       .sidebar-wrapper {
-        width: 250px;
-        margin-left: -300px;
+        width: $sidebar-width;
+        margin-left: -($sidebar-width) - $sidebar-collapsed-width;
       }
 
       .page-content-wrapper {
         position: relative;
-        padding: 0 15px 0 60px;
+        padding-top: 0;
+        padding-bottom: 0;
+        padding-left: $sidebar-collapsed-width + $main-content-side-padding;
+        padding-right: $main-content-side-padding;
       }
     }
 
     .sidebar-wrapper {
-      width: 250px;
+      width: $sidebar-width;
       margin-left: -100px;
     }
 
     .page-content-wrapper {
-      padding-left: 15px;
+      padding-left: $main-content-side-padding;
 
       .container-fluid {
         margin-top: 20px;
