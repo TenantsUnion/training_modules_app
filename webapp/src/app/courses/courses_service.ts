@@ -108,7 +108,7 @@ export class CoursesService {
             obs(course);
         });
         let currentModuleTitle = coursesRoutesService.getCurrentModule();
-        let currentModule = _.find(course.modules, (module) => module.title === currentModuleTitle);
+        let currentModule = _.find(course && course.modules, (module) => module.title === currentModuleTitle);
         this.notifyModuleUpdate(currentModule);
     }
 
@@ -121,6 +121,12 @@ export class CoursesService {
         let currentSectionTitle = coursesRoutesService.getCurrentSection();
         let currentSection = _.find(module && module.sections, section => currentSectionTitle === section.title);
         this.notifySectionUpdate(currentSection);
+    }
+
+    private notifySectionUpdate(currentSection: SectionData) {
+        this.sectionObservers.forEach((sectionObs)=>{
+            sectionObs(currentSection);
+        });
     }
 
     isCourseAdmin(): boolean {
@@ -189,11 +195,6 @@ export class CoursesService {
         };
     }
 
-    private notifySectionUpdate(currentSection: SectionData) {
-        this.sectionObservers.forEach((sectionObs)=>{
-            sectionObs(currentSection);
-        });
-    }
 
     saveCourse(course: CourseData): Promise<void> {
         return new Promise<void>((resolve, reject) => {
