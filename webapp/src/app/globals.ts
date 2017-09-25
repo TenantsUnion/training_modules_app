@@ -1,7 +1,7 @@
 import jQuery from 'jquery';
 import Quill from 'quill';
 import Vue from 'vue';
-import {LoadingComponent} from './components/loading';
+import {LoadingComponent} from './global_components/loading';
 
 //put jquery on global window for debugging,
 //workaround for webpack doing this with module number prefixes

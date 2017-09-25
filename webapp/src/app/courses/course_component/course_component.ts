@@ -6,9 +6,6 @@ import {coursesService} from '../courses_service';
 import {CourseData} from 'courses';
 import {CourseDetailsComponent} from "../course_details_component/course_details_component";
 
-require('./_course_component.scss');
-
-
 @Component({
     data: () => {
         return {

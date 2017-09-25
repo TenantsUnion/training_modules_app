@@ -4,9 +4,6 @@ import {CourseData} from '../../../../../shared/courses';
 import {RawLocation, RouteRecord} from 'vue-router/types/router';
 import {COURSES_ROUTE_NAMES} from '../courses_routes';
 
-require('./_course_navigation_component.scss');
-
-
 @Component({
     data: () => {
         return {

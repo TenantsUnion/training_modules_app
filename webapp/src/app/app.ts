@@ -11,7 +11,7 @@ import {coursesService} from './courses/courses_service';
 require('foundation-sites');
 require('./_style.scss');
 
-//global components
+//global global_components
 Vue.component('app-header', AppHeader);
 
 Vue.use(VueRouter);

@@ -36,8 +36,6 @@ export const QUILL_CONFIG: QuillOptionsStatic = {
 
 let counter = 0;
 
-require('./quill_component.scss');
-
 @Component({
     data: () => {
         return {

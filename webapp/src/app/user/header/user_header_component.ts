@@ -3,9 +3,6 @@ import Vue from "vue";
 import {appRouter} from "../../router";
 import {Route} from "vue-router";
 
-
-require('./_user_header_component.scss');
-
 @Component({
     props: {
         username: String
