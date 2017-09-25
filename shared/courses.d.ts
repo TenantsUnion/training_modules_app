@@ -21,6 +21,16 @@ declare namespace courses {
         modules: ModuleData[]
     }
 
+    export interface SaveCourseData {
+        id: string,
+        title: string,
+        active: boolean,
+        description: string,
+        timeEstimate: string,
+        updatedByUserId: string;
+        modules: string[]
+    }
+
     export interface UserEnrolledCourseData extends CourseData {
         username: string
         userId: string

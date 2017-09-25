@@ -1,7 +1,7 @@
 import {Datasource} from "../datasource";
 import {
     AdminCourseDescription, UserEnrolledCourseData,
-    UserAdminCourseData, EnrolledCourseDescription, CreateCourseData
+    UserAdminCourseData, EnrolledCourseDescription, CreateCourseData, SaveCourseData
 } from "courses";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
@@ -26,6 +26,8 @@ export interface ICoursesRepository {
     addModule(courseId: string, moduleId: string): Promise<void>;
 
     updateLastModified(courseId: string): Promise<string>;
+
+    saveCourse(course: SaveCourseData): Promise<void>;
 }
 
 export class CoursesRepository extends AbstractRepository implements ICoursesRepository {
@@ -266,6 +268,15 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
         return this.sqlTemplate.query(query).then(() => {
             return lastModified.toISOString();
         });
+    }
+
+    saveCourse(course: SaveCourseData): Promise<void> {
+        const lastModified = new Date();
+        return this.sqlTemplate.query({
+            text: `UPDATE tu.course SET title = $1, description = $2, time_estimate = $3,
+                    active = $4, ordered_module_ids = $5, last_modified_at = $6 where id = $7`,
+            values: [course.title, course.description, course.timeEstimate, course.active, course.modules, lastModified, course.id]
+        }).then(() => {});
     }
 
 }

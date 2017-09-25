@@ -1,6 +1,6 @@
 import {CreateModuleData, ModuleData, ModuleDetails} from "modules";
 import axios from "axios";
-import {CourseData} from 'courses';
+import {CourseData, SaveCourseData} from 'courses';
 import VueRouter from "vue-router";
 import {appRouter} from "../router";
 import {coursesRoutesService} from './courses_routes';
@@ -196,11 +196,11 @@ export class CoursesService {
     }
 
 
-    saveCourse(course: CourseData): Promise<void> {
+    saveCourse(course: SaveCourseData): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            axios.post(`course/${course.id}`, course)
-                .then(() => {
-                    this.notifyCourseUpdate(course);
+            axios.post(`course/save/${course.id}`, course)
+                .then((response) => {
+                    this.notifyCourseUpdate(response.data);
                     resolve();
                 })
                 .catch((e) => {
