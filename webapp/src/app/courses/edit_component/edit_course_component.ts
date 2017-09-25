@@ -32,7 +32,7 @@ export class EditCourseComponent extends Vue {
     save() {
         this.loading = true;
         coursesService.saveCourse(this.course).then(()=>{
-            appRouter.push({name: 'adminCourse.courseDetails', params: {courseTitle: this.title}})
+            appRouter.push({name: 'adminCourse.courseDetails', params: {courseTitle: this.course.title}})
         }).catch((msg)=>{
             this.errorMessages = msg;
         })
