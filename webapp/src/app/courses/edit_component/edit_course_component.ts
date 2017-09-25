@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {userCoursesHttpService} from "../../user/courses/course_http_service";
 import {appRouter} from "../../router";
 import {coursesService} from '../courses_service';
 import {CourseData} from '../../../../../shared/courses';
+import {COURSES_ROUTE_NAMES} from '../courses_routes';
 
 @Component({
     data: () => {
@@ -13,7 +13,7 @@ import {CourseData} from '../../../../../shared/courses';
             course: {}
         };
     },
-    template: require('./create_course_component.tpl.html')
+    template: require('./edit_course_component.tpl.html')
 })
 export class EditCourseComponent extends Vue {
     errorMessages: {};
@@ -32,10 +32,14 @@ export class EditCourseComponent extends Vue {
     save() {
         this.loading = true;
         coursesService.saveCourse(this.course).then(()=>{
-            appRouter.push({name: 'adminCourse.courseDetails', params: {courseTitle: this.course.title}})
+            appRouter.push({name: COURSES_ROUTE_NAMES.adminCourseDetails})
         }).catch((msg)=>{
             this.errorMessages = msg;
         })
+    }
+
+    cancel() {
+        this.$router.push({name: COURSES_ROUTE_NAMES.adminCourseDetails})
     }
 
 }

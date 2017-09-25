@@ -9,6 +9,7 @@ import {ModuleDetailsComponent} from './modules/module_details_component/module_
 import {appRouter} from '../router';
 import {CreateSectionComponent} from './modules/sections/create/create_section_component';
 import {ViewSectionComponent} from './modules/sections/view/view_section_component';
+import {EditCourseComponent} from './edit_component/edit_course_component';
 
 export const COURSES_ROUTE_NAMES = {
     enrolledCourses: 'enrolledCourses',
@@ -70,7 +71,7 @@ export const coursesRoutes: RouteConfig[] = [
                 path: ':courseTitle/edit',
                 name: COURSES_ROUTE_NAMES.editCourse,
                 props: true,
-                component: CourseDetailsComponent
+                component: EditCourseComponent
             },
             {
                 path: ':courseTitle/module/create',

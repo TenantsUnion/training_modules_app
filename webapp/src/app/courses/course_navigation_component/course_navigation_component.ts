@@ -60,7 +60,9 @@ export class CourseNavigationComponent extends Vue {
     }
 
     editCourse(){
-        this.$router.push({name: COURSES_ROUTE_NAMES.editCourse})
+        this.$router.push({name: COURSES_ROUTE_NAMES.editCourse, params: {
+            courseTitle: this.course.title
+        }});
     }
 
     editModule(moduleTitle: string) {
@@ -69,5 +71,9 @@ export class CourseNavigationComponent extends Vue {
 
     editSection(sectionTitle: string) {
 
+    }
+
+    createSection(){
+        this.$router.push({name: COURSES_ROUTE_NAMES.createSection});
     }
 }
