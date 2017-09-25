@@ -7,8 +7,9 @@ import {loginRoutes} from "./account/account_routes";
 import {userRoutes} from "./user/user_routes";
 import {coursesService} from './courses/courses_service';
 
-//global styling
+// load javascript functionality for foundation
 require('foundation-sites');
+// entry point for loading sass files
 require('./_style.scss');
 
 //global global_components
