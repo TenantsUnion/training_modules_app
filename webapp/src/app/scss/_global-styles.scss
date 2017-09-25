@@ -36,12 +36,24 @@ table {
       padding: 0 1em 0;
 
       button {
-        margin: 1em !important;
+        margin: 1em;
       }
 
       &:nth-child(2) {
         float: right;
       }
+    }
+  }
+}
+
+button.button {
+  background-color: $pinky-pink;
+
+  &__icon {
+    padding: .5rem;
+
+    .menu & {
+      padding: .5rem;
     }
   }
 }

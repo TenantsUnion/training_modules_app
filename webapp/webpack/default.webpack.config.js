@@ -81,7 +81,9 @@ module.exports = {
                             options: {
                                 sourceMap: true,
                                 includePaths: [
+                                    'node_modules/foundation-sites/scss',
                                     'node_modules/foundation-sites/scss/util',
+                                    'node_modules/foundation-sites/_vendor',
                                     'node_modules/font-awesome-sass/assets/stylesheets/font-awesome'
                                 ]
                             }

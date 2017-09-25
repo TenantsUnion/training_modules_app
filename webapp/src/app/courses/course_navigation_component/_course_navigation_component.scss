@@ -31,6 +31,17 @@ $sidebar-width: 320px;
   }
 }
 
+.menu {
+  .buttons {
+    display: flex;
+    flex-flow: row nowrap;
+
+    .button__icon {
+      margin-left: .2em;
+    }
+  }
+}
+
 @media(min-width: 768px) {
   .sidebar-nav {
     width: $sidebar-width;
