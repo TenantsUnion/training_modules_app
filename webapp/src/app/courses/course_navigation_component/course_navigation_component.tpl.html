@@ -43,7 +43,7 @@
                     <ul>
                         <li v-for="section in module.sections">
                             <div class="grid-x">
-                                <h6 v-bind:class="{'is-active': activeNavigation.section === section.title}">
+                                <h6 v-bind:class="{'is-active': isActiveSection(module.title, section.title)}">
                                     <router-link :to="sectionRoute(module.title, section.title)">
                                         {{section.title}}
                                     </router-link>

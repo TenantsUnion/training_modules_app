@@ -57,10 +57,12 @@ export class CourseNavigationComponent extends Vue {
         }
     }
 
-    editCourse(){
-        this.$router.push({name: COURSES_ROUTE_NAMES.editCourse, params: {
-            courseTitle: this.course.title
-        }});
+    editCourse() {
+        this.$router.push({
+            name: COURSES_ROUTE_NAMES.editCourse, params: {
+                courseTitle: this.course.title
+            }
+        });
     }
 
     editModule(moduleTitle: string) {
@@ -71,9 +73,16 @@ export class CourseNavigationComponent extends Vue {
 
     }
 
-    createSection(moduleTitle: string){
-        this.$router.push({name: COURSES_ROUTE_NAMES.createSection, params: {
-            moduleTitle: moduleTitle
-        }});
+    createSection(moduleTitle: string) {
+        this.$router.push({
+            name: COURSES_ROUTE_NAMES.createSection, params: {
+                moduleTitle: moduleTitle
+            }
+        });
+    }
+
+    isActiveSection(moduleTitle: string, sectionTitle: string) {
+        return this.$route.params.moduleTitle === moduleTitle
+            && this.$route.params.sectionTitle === sectionTitle;
     }
 }
