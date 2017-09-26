@@ -35,9 +35,7 @@ export class CourseNavigationComponent extends Vue {
     }
 
     createModule() {
-        this.$router.push({
-            name: 'adminCourse.createModule',
-        })
+        this.$router.push({name: COURSES_ROUTE_NAMES.createModule})
     }
 
     moduleDetailsRoute(moduleTitle): RawLocation {
@@ -59,8 +57,12 @@ export class CourseNavigationComponent extends Vue {
         }
     }
 
-    editCourse(){
-        this.$router.push({name: COURSES_ROUTE_NAMES.editCourse})
+    editCourse() {
+        this.$router.push({
+            name: COURSES_ROUTE_NAMES.editCourse, params: {
+                courseTitle: this.course.title
+            }
+        });
     }
 
     editModule(moduleTitle: string) {
@@ -69,5 +71,18 @@ export class CourseNavigationComponent extends Vue {
 
     editSection(sectionTitle: string) {
 
+    }
+
+    createSection(moduleTitle: string) {
+        this.$router.push({
+            name: COURSES_ROUTE_NAMES.createSection, params: {
+                moduleTitle: moduleTitle
+            }
+        });
+    }
+
+    isActiveSection(moduleTitle: string, sectionTitle: string) {
+        return this.$route.params.moduleTitle === moduleTitle
+            && this.$route.params.sectionTitle === sectionTitle;
     }
 }

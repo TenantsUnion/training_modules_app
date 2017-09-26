@@ -1,13 +1,13 @@
-import {AdminCourseDescription, CreateCourseData} from "courses";
 import {expect} from "chai";
-import {IUserInfo} from "user";
 import {getLogger} from "../../../../server/src/log";
 import * as _ from "underscore";
 import {accountHandler, coursesHandler} from "../../../../server/src/config/handler.config";
 import {clearDbUtil} from "../clear_db_util";
-import {CreateModuleData, ModuleData} from "../../../../shared/modules";
-import {CreateSectionData} from '../../../../shared/sections';
+import {CreateModuleData, ModuleData} from 'modules';
+import {CreateSectionData} from 'shared/sections';
 import {coursesRepository} from '../../../../server/src/config/repository.config';
+import {IUserInfo} from 'user';
+import {AdminCourseDescription, CreateCourseData} from 'courses';
 
 describe('courses handler', function () {
     let logger = getLogger('CoursesHandlerTest', 'debug');
@@ -17,13 +17,16 @@ describe('courses handler', function () {
         title: 'created course',
         timeEstimate: '1 hour',
         description: 'Course description',
-        createdBy: username
+        createdBy: username,
+        active: true
     };
     let courseInfo2: CreateCourseData = {
         title: 'created course 1',
         timeEstimate: '2 hours',
         description: 'Course description 2',
-        createdBy: username
+        createdBy: username,
+        active: false
+
     };
 
     let moduleCreator: (module) => () => CreateModuleData = function (module) {

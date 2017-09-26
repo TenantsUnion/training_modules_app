@@ -2,7 +2,7 @@ import {IUserHandler} from "../user/user_handler";
 import {ICoursesRepository} from "./courses_repository";
 import {
     AdminCourseDescription, CourseData, CreateCourseData,
-    EnrolledCourseDescription, UserAdminCourseData
+    EnrolledCourseDescription, SaveCourseData, UserAdminCourseData
 } from "courses";
 import {getLogger} from '../log';
 import {CreateModuleData, ModuleData} from "../../../shared/modules";
@@ -151,6 +151,24 @@ export class CoursesHandler {
                     let course = await this.coursesRepository.loadUserAdminCourse(sectionData.courseId);
 
                     resolve(course);
+                } catch (e) {
+                    this.logger.error(e);
+                    this.logger.error(e.stack);
+                    reject(e);
+                }
+            })();
+        });
+    }
+
+    saveCourse(saveCourse: SaveCourseData): Promise<CourseData> {
+        return new Promise<CourseData> ((resolve, reject) => {
+            (async () => {
+                try {
+
+                await this.coursesRepository.saveCourse(saveCourse);
+                let course = await this.coursesRepository.loadUserAdminCourse(saveCourse.id);
+
+                resolve(course);
                 } catch (e) {
                     this.logger.error(e);
                     this.logger.error(e.stack);

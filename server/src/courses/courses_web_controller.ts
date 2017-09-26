@@ -1,7 +1,7 @@
 import * as express from "express";
 import {Request, Response, Router} from "express";
 import {
-    AdminCourseDescription, CourseData, CreateCourseData
+    AdminCourseDescription, CourseData, CreateCourseData, SaveCourseData
 } from "courses";
 import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
@@ -9,9 +9,10 @@ import {CreateModuleData} from "../../../shared/modules";
 import {CoursesRepository} from './courses_repository';
 import {ModuleOperations} from '../module/module_routes';
 import {CreateSectionData} from '../../../shared/sections';
+import {coursesHandler} from '../config/handler.config';
+import {Exception} from 'winston';
 
 export class CoursesController implements ModuleOperations {
-    saveModule: () => {};
     logger = getLogger('CoursesController', 'info');
 
     constructor(private coursesHandler: CoursesHandler,
@@ -20,20 +21,33 @@ export class CoursesController implements ModuleOperations {
 
     createCourse(request: Request, response: Response) {
         let courseInfo: CreateCourseData = request.body;
-        let result;
         (async () => {
             try {
                 //todo check permissions/validate
-                result = await this.coursesHandler.createCourse(courseInfo);
+                let result = await this.coursesHandler.createCourse(courseInfo);
+                response.status(200).send(result);
             } catch (e) {
                 this.logger.log('error', e);
                 this.logger.log('error', e.stack);
-                response.status(500) //server error
-                    .send(e);
+                response.status(500).send(e);
+                //server error
             }
 
-            response.status(200)
-                .send(result);
+        })();
+    }
+
+    saveCourse(request: express.Request, response: express.Response) {
+        let course: SaveCourseData = request.body;
+        (async () => {
+            try {
+                let result = await coursesHandler.saveCourse(course);
+                response.status(200).send(result);
+            } catch (e) {
+                this.logger.log('error', e);
+                this.logger.log('error', e.stack);
+                response.status(500).send(e);
+                //server error
+            }
         })();
     }
 
@@ -108,6 +122,10 @@ export class CoursesController implements ModuleOperations {
                     .send(e.stack.join('\n'));
             }
         })();
+    }
+
+    saveModule(request: express.Request, response: express.Response) {
+
     }
 
     createSection(request: express.Request, response: express.Response) {

@@ -1,7 +1,7 @@
 import {Datasource} from "../datasource";
 import {
     AdminCourseDescription, UserEnrolledCourseData,
-    UserAdminCourseData, EnrolledCourseDescription, CreateCourseData
+    UserAdminCourseData, EnrolledCourseDescription, CreateCourseData, SaveCourseData
 } from "courses";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
@@ -26,6 +26,8 @@ export interface ICoursesRepository {
     addModule(courseId: string, moduleId: string): Promise<void>;
 
     updateLastModified(courseId: string): Promise<string>;
+
+    saveCourse(course: SaveCourseData): Promise<void>;
 }
 
 export class CoursesRepository extends AbstractRepository implements ICoursesRepository {
@@ -172,22 +174,6 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
     }
 
     async loadUserAdminCourse(courseId: UsernameCourseTitle | string): Promise<UserAdminCourseData> {
-        // let query = {
-        //     // language=PostgreSQL
-        //     text: `
-        //       SELECT c.*, m.modules FROM tu.user u
-        //         INNER JOIN LATERAL
-        //                    (SELECT *
-        //                     FROM tu.course c WHERE c.title = $1) c
-        //         INNER JOIN LATERAL
-        //                    (SELECT json_agg(m.*) AS modules
-        //                     FROM tu.module m WHERE
-        //                       m.id = ANY (c.ordered_module_ids)) m
-        //             ON TRUE
-        //           ON c.id = ANY (u.admin_of_course_ids) WHERE u.username = $2;
-        //     `,
-        //     values: [courseId.courseTitle, courseId.username]
-        // };
         let query = isUsernameCourseTitle(courseId) ? {
             text: `
                 SELECT c.*, m.modules FROM tu.user u
@@ -206,7 +192,6 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                     `,
             values: [courseId.courseTitle, courseId.username]
         } : {
-            // language=POSTGRES-SQL
             text: `
                 SELECT c.*, m.modules FROM tu.course c
                     INNER JOIN LATERAL
@@ -230,10 +215,36 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                         let processedResults = results.map((row) => {
                             return _.extend({}, row, {
                                 id: '' + row.id,
-                                modules: _.map(row.modules, (module: ModuleData) => {
-                                    return _.extend({}, module, {id: '' + module.id});
-                                })
-                            });
+                                // modules aren't pull out in order since results are narrowed down via 'WHERE'
+                                // clause and then automatically joined with ON TRUE. Have to manually
+                                modules: _.chain(<ModuleData>row.modules)
+                                    .map((module) => {
+                                    // fixme better way to convert integer ids to strings
+                                        return _.extend({}, module, {id: module.id + ''})
+                                    })
+                                    .reduce((ordered, module, index, modules) => {
+                                            if (!Object.keys(ordered.moduleIndex).length) {
+                                                // initialize lookup
+                                                ordered.moduleIndex = _.reduce(row.orderedModuleIds, (moduleIndex, moduleId, index) => {
+                                                    moduleIndex[moduleId + ''] = index;
+                                                    return moduleIndex;
+                                                }, {});
+                                            }
+
+                                            let moduleIndex = ordered.moduleIndex[module.id + ''];
+                                            ordered.modules[parseInt(moduleIndex)] = module;
+
+                                            return ordered;
+
+                                        },
+                                        {
+                                            moduleIndex: {},
+                                            modules: []
+                                        }
+                                    )
+                                    .value().modules
+                            })
+                                ;
                         });
                         resolve(processedResults[0]);
                     } catch (e) {
@@ -265,6 +276,16 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
         };
         return this.sqlTemplate.query(query).then(() => {
             return lastModified.toISOString();
+        });
+    }
+
+    saveCourse(course: SaveCourseData): Promise<void> {
+        const lastModified = new Date();
+        return this.sqlTemplate.query({
+            text: `UPDATE tu.course SET title = $1, description = $2, time_estimate = $3,
+                    active = $4, ordered_module_ids = $5, last_modified_at = $6 where id = $7`,
+            values: [course.title, course.description, course.timeEstimate, course.active, course.modules, lastModified, course.id]
+        }).then(() => {
         });
     }
 

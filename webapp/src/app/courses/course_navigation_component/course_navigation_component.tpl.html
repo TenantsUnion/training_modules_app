@@ -3,57 +3,57 @@
             <span v-bind:class="{'is-active': activeNavigation.course}">
                 <router-link :to="courseDetails">{{course.title}}</router-link>
             </span>
-        <div class="buttons">
-            <button title="Edit Course" v-if="isCourseAdmin" class="button button__icon"
-                    v-on:click="editCourse(module.title)">
-                <i class="fa fa-pencil fa-fw"></i>
-                <span class="sr-only">Edit course</span>
-            </button>
-            <button title="Add Module" v-if="isCourseAdmin" class="button button__icon" v-on:click="createModule">
-                <i class="fa fa-plus fa-fw"></i>
-                <span class="sr-only">Add module</span>
-            </button>
+            <div class="buttons">
+                <button title="Edit Course" v-if="isCourseAdmin" class="button button__icon"
+                        v-on:click="editCourse">
+                    <i class="fa fa-pencil fa-fw "></i>
+                    <span class="sr-only">Edit course</span>
+                </button>
+                <button title="Add Module" v-if="isCourseAdmin" class="button button__icon" v-on:click="createModule">
+                    <i class="fa fa-plus fa-fw "></i>
+                    <span class="sr-only">Add module</span>
+                </button>
+            </div>
         </div>
-    </div>
-    <div class="menu-section row">
-        <ul class="columns">
-            <li v-for="module in course.modules">
-                <div class="row">
-                    <h5 v-bind:class="{'is-active': activeNavigation.module === module.title}">
-                        <router-link :to="moduleDetailsRoute(module.title)">{{module.title}}</router-link>
-                    </h5>
-                    <div class="buttons">
-                        <button title="Edit Module" v-if="isCourseAdmin" class="button button__icon"
-                                v-on:click="editModule(module.title)">
-                            <i class="fa fa-pencil fa-fw"></i>
-                            <span class="sr-only">Edit section</span>
-                        </button>
-                        <button title="Add Section" v-if="isCourseAdmin" class="button button__icon"
-                                v-on:click="createSection">
-                            <i class="fa fa-plus fa-fw"></i>
-                            <span class="sr-only">Add section</span>
-                        </button>
-                    </div>
-                </div>
-                <ul>
-                    <li v-for="section in module.sections">
-                        <div class="row">
-                            <h6 v-bind:class="{'is-active': activeNavigation.section === section.title}">
-                                <router-link :to="sectionRoute(module.title, section.title)">
-                                    {{section.title}}
-                                </router-link>
-                            </h6>
-                            <div class="buttons">
-                                <button title="Edit Section" v-if="isCourseAdmin" class="button button__icon"
-                                        v-on:click="editSection(section.title)">
-                                    <i class="fa fa-pencil fa-fw"></i>
-                                    <span class="sr-only">Edit section</span>
-                                </button>
-                            </div>
+        <div class="menu-section row">
+            <ul class="columns">
+                <li v-for="module in course.modules">
+                    <div class="row">
+                        <h5 v-bind:class="{'is-active': activeNavigation.module === module.title}">
+                            <router-link :to="moduleDetailsRoute(module.title)">{{module.title}}</router-link>
+                        </h5>
+                        <div class="buttons">
+                            <button title="Edit Module" v-if="isCourseAdmin" class="button button__icon"
+                                    v-on:click="editModule(module.title)">
+                                <i class="fa fa-pencil fa-fw "></i>
+                                <span class="sr-only">Edit section</span>
+                            </button>
+                            <button title="Add Section" v-if="isCourseAdmin" class="button button__icon" v-on:click="createSection(module.title)">
+                                <i class="fa fa-plus fa-fw "></i>
+                                <span class="sr-only">Add section</span>
+                            </button>
                         </div>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+                    </div>
+                    <ul>
+                        <li v-for="section in module.sections">
+                            <div class="row">
+                                <h6 v-bind:class="{'is-active': isActiveSection(module.title, section.title)}">
+                                    <router-link :to="sectionRoute(module.title, section.title)">
+                                        {{section.title}}
+                                    </router-link>
+                                </h6>
+                                <div class="buttons">
+                                    <button title="Edit Section" v-if="isCourseAdmin" class="button button__icon"
+                                            v-on:click="editSection(section.title)">
+                                        <i class="fa fa-pencil fa-fw "></i>
+                                        <span class="sr-only">Edit section</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
     </div>
 </nav>

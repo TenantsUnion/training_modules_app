@@ -9,7 +9,7 @@
     </div>
     <div class="row align-center">
         <div class="columns small-8">
-            <div class="callout float-center">
+            <div>
                 <div>
                     <label for="course-title">Title
                         <input v-model="course.title" type="text"
@@ -30,8 +30,10 @@
                               id="course-description"></textarea>
                 </div>
 
-                <button @click="save" class="button">Save</button>
-                <button @click="cancel" class="button secondary">Cancel</button>
+                <div>
+                    <button @click="save" class="button">Save</button>
+                    <button @click="cancel" class="button secondary">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
