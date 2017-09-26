@@ -1,66 +1,65 @@
-<div>
+<div class="row">
+    <div class="small-8">
+        <h1>Create Section</h1>
+        <loading v-if="loading"></loading>
+    </div>
+</div>
+<vue-form :state="formstate" @submit.prevent="createSection">
+    <validate>
+        <div class="row">
+            <div class="columns small-8">
+                <field-messages name="title"
+                                show="$submitted || $dirty">
+                    <small class="error" slot="required">
+                        A title is need to create a section
+                    </small>
+                </field-messages>
+                <small class="error"
+                       v-if="errorMessages && errorMessages.title">
+                    {{errorMessages.title}}
+                </small>
+                <div>
+                    <label for="section-title">Title
+                        <input v-model="title" type="text"
+                               name="title"
+                               required
+                               placeholder="Section Title"
+                               id="section-title"/>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="columns small-8">
+                <label for="time-estimate">Time Estimate</label>
+                <input v-model="timeEstimate" type="text"
+                       placeholder="Time estimate"
+                       id="time-estimate">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="columns small-8">
+                <label for="section-description">Description</label>
+                <textarea v-model="description" type="text"
+                          placeholder="Section description"
+                          id="section-description"></textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="small-12 columns">
+                <label>Content</label>
+                <quill-editor ref="editor"></quill-editor>
+            </div>
+        </div>
+    </validate>
     <div class="row">
-        <div class="small-8">
-            <h1>Create Section</h1>
-            <loading v-if="loading"></loading>
+        <div class="columns small-2">
+            <button @click="createSection" class="button" type="button">
+                Create
+            </button>
         </div>
     </div>
-    <vue-form :state="formstate" @submit.prevent="createSection">
-        <validate>
-            <div class="row">
-                <div class="columns small-8">
-                    <field-messages name="title"
-                                    show="$submitted || $dirty">
-                        <small class="error" slot="required">
-                            A title is need to create a section
-                        </small>
-                    </field-messages>
-                    <small class="error"
-                           v-if="errorMessages && errorMessages.title">
-                        {{errorMessages.title}}
-                    </small>
-                    <div>
-                        <label for="section-title">Title
-                            <input v-model="title" type="text"
-                                   name="title"
-                                   required
-                                   placeholder="Section Title"
-                                   id="section-title"/>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="columns small-8">
-                    <label for="time-estimate">Time Estimate</label>
-                    <input v-model="timeEstimate" type="text"
-                           placeholder="Time estimate"
-                           id="time-estimate">
-                </div>
-            </div>
+</vue-form>
 
-            <div class="row">
-                <div class="columns small-8">
-                    <label for="section-description">Description</label>
-                    <textarea v-model="description" type="text"
-                              placeholder="Section description"
-                              id="section-description"></textarea>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="small-12 columns">
-                    <label>Content</label>
-                    <quill-editor ref="editor"></quill-editor>
-                </div>
-            </div>
-        </validate>
-        <div class="row">
-            <div class="columns small-2">
-                <button @click="createSection" class="button" type="button">
-                    Create
-                </button>
-            </div>
-        </div>
-    </vue-form>
-</div>
