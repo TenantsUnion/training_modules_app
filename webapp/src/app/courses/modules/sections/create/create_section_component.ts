@@ -3,6 +3,7 @@ import {QuillComponent} from '../../../../quill/quill_component';
 import Vue from 'vue';
 import {coursesService} from '../../../courses_service';
 import * as VueForm from '../../../../vue-form';
+import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
 
 @Component({
     data: () => {
@@ -63,8 +64,8 @@ export class CreateSectionComponent extends Vue {
                 });
                 // to do now what
                 this.$router.push({
-                    name: 'adminCourse.moduleDetails',
-                    params: {moduleTitle: this.title}
+                    name: COURSES_ROUTE_NAMES.viewSection,
+                    params: {sectionTitle: this.title}
                 });
 
             } catch (errorMessages) {
