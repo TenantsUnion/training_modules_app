@@ -8,10 +8,11 @@
 
 
 @import "scss/foundation";
+$flex: true;
+@include foundation-custom(true);
 
 $fa-font-path: "~font-awesome-sass/assets/fonts/font-awesome/";
 @import "~font-awesome-sass/assets/stylesheets/font-awesome";
 
-$flex: true;
-@include foundation-custom;
+
 

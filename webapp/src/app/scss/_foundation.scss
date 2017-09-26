@@ -136,22 +136,12 @@
   $flex: true,
   $prototype: false
 ) {
-  @if $flex {
-    $global-flexbox: true !global;
-  }
 
+  $flex: true;
+  $global-flexbox: true !global;
   @include foundation-global-styles;
-  @if not $flex {
-    @include foundation-grid;
-  }
-  @else {
-    @if $xy-grid {
-      @include foundation-xy-grid-classes;
-    }
-    @else {
-      @include foundation-flex-grid;
-    }
-  }
+  @include foundation-flex-grid;
+
   @include foundation-typography;
   @include foundation-forms;
   @include foundation-button;
@@ -188,11 +178,6 @@
   @include foundation-visibility-classes;
   @include foundation-float-classes;
 
-  @if $flex {
-    @include foundation-flex-classes;
-  }
-
-  @if $prototype {
-    @include foundation-prototype-classes;
-  }
+  @include foundation-flex-classes;
+  @include foundation-prototype-classes;
 }

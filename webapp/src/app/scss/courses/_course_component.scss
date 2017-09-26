@@ -7,6 +7,7 @@
   -moz-transition: padding 0.5s ease;
   -o-transition: padding 0.5s ease;
   transition: padding 0.5s ease;
+  background-color: black;
 
   &.toggled {
     padding-left: 0;
@@ -26,6 +27,8 @@
     z-index: 1;
     position: absolute;
     left: 100px;
+    top: 70px;
+    bottom: 0;
     width: $sidebar-width;
     height: 100%;
     margin-left: -($sidebar-width) - $sidebar-collapsed-width;
@@ -45,6 +48,10 @@
       width: 100%;
       justify-content: flex-end;
       margin-top: 1em;
+
+      .menu-icon {
+        margin-right: 1em;
+      }
     }
   }
 

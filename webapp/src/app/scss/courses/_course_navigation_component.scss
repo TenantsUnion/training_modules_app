@@ -4,16 +4,12 @@
   top: 2em;
   width: $sidebar-width;
   margin: 0;
-  padding: 1em;
+  padding: 0;
   list-style: none;
   color: #999999;
   position: absolute;
   bottom: 0;
-
-  &-inner {
-    width: 84%;
-    background-color: #3e3e3e;
-  }
+  background-color: #3e3e3e;
 
   .menu-header {
     justify-content: space-between;
@@ -41,6 +37,6 @@
 
 @media(min-width: 768px) {
   .sidebar-nav {
-    width: $sidebar-width;
+    width: $sidebar-width - $sidebar-collapsed-width;
   }
 }

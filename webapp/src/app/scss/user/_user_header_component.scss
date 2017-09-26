@@ -1,11 +1,8 @@
-@import 'mixins';
-
 .user-header-wrapper {
   background-color: black;
   color: white;
 
   nav {
-    height: 60px;
     padding: 1em;
 
     .menu-section {
@@ -24,9 +21,10 @@
 
       &.user-actions {
         justify-content: space-between;
+        align-items: center;
 
         .button {
-          margin: 0;
+          margin: 0 0 0 1em;
         }
       }
     }
