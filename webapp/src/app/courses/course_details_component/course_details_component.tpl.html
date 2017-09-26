@@ -1,11 +1,12 @@
 <div class="main">
-    <div v-if="loading" class="grid-x">
+    <div v-if="loading" class="row">
         <loading></loading>
     </div>
-    <div v-if="course" class="grid-x">
-        <div class="small-12 cell">
+    <div v-if="course" class="row">
+        <div class="small-12 columns">
             <div class="callout">
                 <h2>{{course.title}}</h2>
+                <span>{{course.description}}</span>
             </div>
             <div v-for="module in course.modules" class="callout">
                 <h3>{{module.title}}</h3>

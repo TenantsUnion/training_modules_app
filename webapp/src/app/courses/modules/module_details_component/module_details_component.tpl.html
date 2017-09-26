@@ -1,9 +1,9 @@
 <div class="main">
-    <div v-if="loading" class="grid-x">
+    <div v-if="loading" class="row">
         <loading></loading>
     </div>
-    <div v-if="module" class="grid-x">
-        <div class="small-12 cell">
+    <div v-if="module" class="row">
+        <div class="small-12 columns">
             <div class="callout">
                 <h2>{{module.title}}
                     <button v-if="isCourseAdmin" class="button" v-on:click="createSection">Create Section</button>

@@ -1,7 +1,7 @@
-<div class="grid-y small-grid-frame">
-    <div class="cell small-2">
-        <div class="grid-x grid-padding-x align-center">
-            <div class="small-8 cell">
+<div>
+    <div class="columns small-2">
+        <div class="row align-center">
+            <div class="small-8 columns">
                 <div>
                     <h2>Create Content</h2>
                     <loading v-if="loading"></loading>
@@ -11,8 +11,8 @@
     </div>
     <vue-form :state="formstate" @submit.prevent="create">
         <validate>
-            <div class="cell small-2">
-                <div class="grid-x grid-padding-x align-center">
+            <div class="columns small-2">
+                <div class="row align-center">
                     <field-messages name="title"
                                     show="$submitted || $dirty">
                         <small class="error" slot="required">
@@ -20,7 +20,7 @@
                         </small>
                     </field-messages>
 
-                    <div class="small-8 cell">
+                    <div class="small-8 columns">
                         <label for="content-title">Title
                             <input v-model="title" type="text"
                                    required
@@ -30,9 +30,9 @@
                     </div>
                 </div>
             </div>
-            <div class="cell small-6">
-                <div class="grid-x grid-padding-x align-center">
-                    <div class="small-8 cell">
+            <div class="columns small-6">
+                <div class="row align-center">
+                    <div class="small-8 columns">
                         <label>Content</label>
                         <quill-editor ref="editor"></quill-editor>
                     </div>
@@ -40,9 +40,9 @@
             </div>
 
         </validate>
-        <div class="cell small-2">
-            <div class="grid-x grid-padding-x align-center">
-                <div class="small-8 cell">
+        <div class="columns small-2">
+            <div class="row grid-padding-x align-center">
+                <div class="small-8 columns">
                     <button @click="create" class="button primary" :disabled="loading">Create</button>
                     <button @click="cancel" type="button"
                             class="button secondary" :disabled="loading">
