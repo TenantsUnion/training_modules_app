@@ -35,9 +35,7 @@ export class CourseNavigationComponent extends Vue {
     }
 
     createModule() {
-        this.$router.push({
-            name: 'adminCourse.createModule',
-        })
+        this.$router.push({name: COURSES_ROUTE_NAMES.createModule})
     }
 
     moduleDetailsRoute(moduleTitle): RawLocation {
@@ -73,7 +71,9 @@ export class CourseNavigationComponent extends Vue {
 
     }
 
-    createSection(){
-        this.$router.push({name: COURSES_ROUTE_NAMES.createSection});
+    createSection(moduleTitle: string){
+        this.$router.push({name: COURSES_ROUTE_NAMES.createSection, params: {
+            moduleTitle: moduleTitle
+        }});
     }
 }
