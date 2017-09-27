@@ -9,8 +9,8 @@ import {ModuleDetailsComponent} from './modules/module_details_component/module_
 import {appRouter} from '../router';
 import {CreateSectionComponent} from './modules/sections/create/create_section_component';
 import {ViewSectionComponent} from './modules/sections/view/view_section_component';
-import {EditCourseComponent} from './edit_component/edit_course_component';
 import {EditSectionComponent} from './modules/sections/edit/edit_section_component';
+import {EditCourseComponent} from './edit_course_component/edit_course_component';
 
 export const COURSES_ROUTE_NAMES = {
     enrolledCourses: 'enrolledCourses',
@@ -21,6 +21,7 @@ export const COURSES_ROUTE_NAMES = {
     adminCourseDetails: 'adminCourse.courseDetails',
     createModule: 'adminCourse.createModule',
     moduleDetails: 'adminCourse.moduleDetails',
+    editModule: undefined,
     createSection: 'adminCourse.createSection',
     editSection: 'course.editSection',
     viewSection: 'course.viewSection'
@@ -85,6 +86,10 @@ export const coursesRoutes: RouteConfig[] = [
                 name: COURSES_ROUTE_NAMES.moduleDetails,
                 props: true,
                 component: ModuleDetailsComponent
+            },
+            {
+                path: ':courseTitle/module/:moduleTitle/edit',
+                name: COURSES_ROUTE_NAMES.editModule
             },
             {
                 path: ':courseTitle/module/:moduleTitle/section/create',
