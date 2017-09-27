@@ -42,13 +42,16 @@ export class CoursesService {
     }
 
     subscribeCurrentCourse(courseObs: ObserveCourse) {
-        let unsubcribeIndex = this.courseObservers.length;
         this.courseObservers.push(courseObs);
         this.getCurrentCourse().then((course) => {
             courseObs(course);
         });
         return () => {
-            this.courseObservers = this.courseObservers.splice(unsubcribeIndex, 1);
+            let unsubIndex = this.courseObservers.indexOf(courseObs);
+            if(unsubIndex === -1 ) {
+                throw 'Observer not found to unsubscribe';
+            }
+            this.courseObservers.splice(unsubIndex, 1);
         };
     }
 
@@ -58,7 +61,7 @@ export class CoursesService {
             moduleObs(course);
         });
         return () => {
-            this.moduleObservers = this.moduleObservers.splice(this.moduleObservers.indexOf(moduleObs), 1);
+            this.moduleObservers.splice(this.moduleObservers.indexOf(moduleObs), 1);
         };
     }
 
@@ -169,12 +172,17 @@ export class CoursesService {
             return Promise.resolve(null);
         }
 
-        return this.getCurrentModule()
+        let currentSection = this.getCurrentModule()
             .then((module) => {
                     return _.find(module && module.sections, (section) => {
                         return  section.title === sectionTitle;
                     });
             });
+
+
+        return currentSection;
+
+
     }
 
     refresh(): Promise<any> {
@@ -191,7 +199,7 @@ export class CoursesService {
         });
 
         return () => {
-            this.sectionObservers = this.sectionObservers.splice(this.sectionObservers.indexOf(obsSection), 1);
+            this.sectionObservers.splice(this.sectionObservers.indexOf(obsSection), 1);
         };
     }
 
