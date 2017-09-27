@@ -1,5 +1,5 @@
-import {QuillEditorData} from "../server/src/quill/quill_repository";
 import {SectionData} from 'sections';
+import {QuillEditorData} from './quill';
 
 declare namespace modules {
 
