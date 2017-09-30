@@ -3,7 +3,9 @@ p, h1, h2, h3, h4 {
 }
 
 #app {
-  height: 100%;
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
 
   > div {
     height: 100%;
