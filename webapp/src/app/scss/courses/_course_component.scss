@@ -60,10 +60,10 @@
     height: 100%;
     z-index: 2;
     padding-left: $sidebar-collapsed-width + $main-content-side-padding;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
+    -webkit-transition: padding 0.5s ease;
+    -moz-transition: padding 0.5s ease;
+    -o-transition: padding 0.5s ease;
+    transition: padding 0.5s ease;
     background: #FFF;
 
     &.toggled {

@@ -1,7 +1,7 @@
 /* Sidebar Navigation Styles */
 
 .sidebar-nav {
-  top: 2em;
+  top: 3em;
   width: $sidebar-width;
   margin: 0;
   padding: 0;
@@ -13,7 +13,45 @@
 
   .menu-header {
     justify-content: space-between;
-    margin-top: 2em;
+  }
+
+  .menu-section {
+
+    &__row {
+      justify-content: space-between;
+    }
+
+    &__inner {
+      padding-left: 0;
+    }
+
+    &__item {
+      text-indent: 10px;
+    }
+
+    &__course-title {
+      font-size: 1.4em;
+
+      .router-link-active {
+        color: white;
+      }
+    }
+
+    &__module-title {
+      font-size: 1.2em;
+
+      .router-link-active {
+        color: purple;
+      }
+    }
+
+    &__section-title {
+      font-size: 1em;
+
+      .router-link-active {
+        color: white;
+      }
+    }
   }
 
   li {
@@ -29,8 +67,9 @@
     display: flex;
     flex-flow: row nowrap;
 
-    .button__icon {
+    .button.button__icon {
       margin-left: .2em;
+      margin-bottom: 0;
     }
   }
 }
