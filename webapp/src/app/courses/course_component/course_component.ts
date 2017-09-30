@@ -25,6 +25,7 @@ export class CourseComponent extends Vue {
     course: CourseData;
     loading: boolean;
     isCourseAdmin: boolean;
+    addedNavigationCollapse: boolean = false;
 
     created() {
         this.loading = true;
@@ -36,13 +37,17 @@ export class CourseComponent extends Vue {
     }
 
     updated() {
-        $(this.$el).find('#menu-toggle').click(function (e) {
-            e.preventDefault();
-            $('#page-content-wrapper').toggleClass('toggled');
-            $('#sidebar-wrapper').toggleClass('toggled');
-            $('.sidebar-nav').toggleClass('toggled');
-            $('#wrapper').toggleClass('toggled');
-        });
+        // fixme vue lifecycle hook that is only when child elements first created?
+        if (!this.addedNavigationCollapse) {
+            $(this.$el).find('#menu-toggle').click(function (e) {
+                e.preventDefault();
+                $('#page-content-wrapper').toggleClass('toggled');
+                $('#sidebar-wrapper').toggleClass('toggled');
+                $('.sidebar-nav').toggleClass('toggled');
+                $('#wrapper').toggleClass('toggled');
+            });
+            this.addedNavigationCollapse = true;
+        }
     }
 
     destroyed() {

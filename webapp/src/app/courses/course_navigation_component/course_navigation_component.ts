@@ -69,8 +69,13 @@ export class CourseNavigationComponent extends Vue {
 
     }
 
-    editSection(sectionTitle: string) {
-
+    editSection(moduleTitle: string, sectionTitle: string) {
+        this.$router.push({
+            name: COURSES_ROUTE_NAMES.editSection,
+            params: {
+                sectionTitle: sectionTitle
+            }
+        })
     }
 
     createSection(moduleTitle: string) {
