@@ -1,10 +1,12 @@
 import {SectionRepository} from './section_repository';
-import {CreateSectionData, SaveSectionData, SectionData} from '../../../shared/sections';
-import {userContentHandler} from '../config/handler.config';
+import {CreateSectionData, SaveSectionData, ViewSectionQuillData} from '../../../shared/sections';
 import {QuillRepository} from '../quill/quill_repository';
-import {quillRepository, sectionRepository} from '../config/repository.config';
+import {LoggerInstance} from 'winston';
+import {getLogger} from '../log';
 
 export class SectionHandler {
+    logger: LoggerInstance = getLogger('SectionHandler', 'info');
+
     constructor(private sectionRepo: SectionRepository,
                 private quillRepo: QuillRepository) {
     }
@@ -12,8 +14,12 @@ export class SectionHandler {
     createSection(createSectionData: CreateSectionData): Promise<string> {
         return (async () => {
             let quillId = await this.quillRepo.getNextId();
-            await this.quillRepo.insertEditorJson(quillId, null);
-            let sectionId = await this.sectionRepo.createSection(createSectionData);
+
+            this.logger.info('Inserting quill data id: %s json: %s', quillId,
+                JSON.stringify(createSectionData.quillData, null, '\t'));
+            await this.quillRepo.insertEditorJson(quillId, createSectionData.quillData);
+            this.logger.info('Creating section with quill id: %s', quillId);
+            let sectionId = await this.sectionRepo.createSection(createSectionData, quillId);
             return sectionId;
         })();
     }

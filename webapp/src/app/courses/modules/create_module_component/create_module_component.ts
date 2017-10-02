@@ -3,7 +3,7 @@ import Component from "vue-class-component";
 import {QuillComponent} from "../../../quill/quill_component";
 import * as VueForm from "../../../vue-form";
 import {coursesService} from "../../courses_service";
-import {CourseData} from "courses";
+import {ViewCourseQuillData} from "courses";
 
 @Component({
     data: () => {
@@ -29,7 +29,7 @@ export class CreateModuleComponent extends Vue {
     description: string;
     quillEditor: QuillComponent;
     formstate: VueForm.FormState;
-    course: CourseData;
+    course: ViewCourseQuillData;
 
     created() {
         this.loading = true;

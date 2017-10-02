@@ -15,4 +15,5 @@ unTypedWindow.Quill = Quill;
 Vue.component('loading', LoadingComponent);
 
 
+
 export const $ = jQuery;

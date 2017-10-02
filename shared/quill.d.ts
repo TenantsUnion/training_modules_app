@@ -1,7 +1,12 @@
 import {Moment} from 'moment';
 
-export interface QuillEditorData {
-    id: string;
-    editor_json?: Quill.DeltaStatic;
-    lastModified: Moment;
+declare namespace quill {
+
+    export interface QuillEditorData {
+        id: string;
+        editorJson: Quill.DeltaStatic;
+        lastModified: Moment | string;
+    }
 }
+
+export = quill;

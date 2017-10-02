@@ -1,17 +1,26 @@
-import {SectionData} from 'sections';
+import {ViewSectionQuillData, ViewSectionTransferData} from 'sections';
 import {QuillEditorData} from './quill';
+import {Moment} from 'moment';
 
 declare namespace modules {
-
-    interface ModuleData {
+    interface ViewModuleData {
         id: string;
-        header?: QuillEditorData
         title: string;
         description?: string;
         timeEstimate?: string;
-        lastEdited: string;
-        sections: SectionData[]
         active: boolean;
+    }
+
+    interface ViewModuleQuillData extends ViewModuleData {
+        headerContent: QuillEditorData
+        lastModified: Moment;
+        sections: ViewSectionTransferData[]
+    }
+
+    interface ViewModuleTransferData extends ViewModuleData {
+        headerContent: string;
+        lastModified: string;
+        sections: ViewSectionTransferData[]
     }
 
     interface CreateModuleData {
@@ -23,12 +32,9 @@ declare namespace modules {
         active?: boolean;
     }
 
-    interface CreateModuleDataHeaderId extends CreateModuleData {
-        headerContentId: string;
-    }
-
-
-    interface AdminModuleData extends ModuleData {
+    interface SaveModuleData extends CreateModuleData {
+        moduleId: string;
+        orderedSectionIds: string[]
     }
 
     interface ModuleDetails {

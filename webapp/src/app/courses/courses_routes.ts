@@ -11,6 +11,7 @@ import {CreateSectionComponent} from './modules/sections/create/create_section_c
 import {ViewSectionComponent} from './modules/sections/view/view_section_component';
 import {EditSectionComponent} from './modules/sections/edit/edit_section_component';
 import {EditCourseComponent} from './edit_course_component/edit_course_component';
+import {coursesService} from './courses_service';
 
 export const COURSES_ROUTE_NAMES = {
     enrolledCourses: 'enrolledCourses',
@@ -100,6 +101,9 @@ export const coursesRoutes: RouteConfig[] = [
             {
                 path: ':courseTitle/module/:moduleTitle/section/:sectionTitle',
                 name: COURSES_ROUTE_NAMES.viewSection,
+                beforeEnter: (to, from, next) => {
+                    coursesService.refresh().then(() => next());
+                },
                 props: true,
                 component: ViewSectionComponent
             },
@@ -123,7 +127,7 @@ export class CoursesRoutesService {
     constructor(private router: VueRouter) {
     }
 
-    getCurrentModule() {
+    getCurrentModuleTitle() {
         return this.router.currentRoute.params.moduleTitle;
     }
 
@@ -135,7 +139,7 @@ export class CoursesRoutesService {
         return this.router.currentRoute.params.username;
     }
 
-    getCurrentSection() {
+    getCurrentSectionTitle() {
         return this.router.currentRoute.params.sectionTitle;
     }
 

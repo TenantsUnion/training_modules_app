@@ -3,7 +3,7 @@ import Component from "vue-class-component";
 import {CourseNavigationComponent} from '../course_navigation_component/course_navigation_component';
 import {$} from '../../globals';
 import {coursesService} from '../courses_service';
-import {CourseData} from 'courses';
+import {ViewCourseQuillData} from 'courses';
 import {CourseDetailsComponent} from "../course_details_component/course_details_component";
 
 @Component({
@@ -22,7 +22,7 @@ import {CourseDetailsComponent} from "../course_details_component/course_details
 })
 export class CourseComponent extends Vue {
     courseUnsubscribe;
-    course: CourseData;
+    course: ViewCourseQuillData;
     loading: boolean;
     isCourseAdmin: boolean;
     addedNavigationCollapse: boolean = false;
@@ -30,7 +30,7 @@ export class CourseComponent extends Vue {
     created() {
         this.loading = true;
         this.isCourseAdmin = coursesService.isCourseAdmin();
-        this.courseUnsubscribe = coursesService.subscribeCurrentCourse((course: CourseData) => {
+        this.courseUnsubscribe = coursesService.subscribeCurrentCourse((course: ViewCourseQuillData) => {
             this.loading = false;
             this.course = course;
         });

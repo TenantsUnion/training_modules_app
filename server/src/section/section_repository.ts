@@ -1,6 +1,6 @@
 import {AbstractRepository} from '../repository';
 import {Datasource} from '../datasource';
-import {CreateSectionData, SaveSectionData, SectionData} from '../../../shared/sections';
+import {CreateSectionData, SaveSectionData, ViewSectionQuillData} from '../../../shared/sections';
 import {getLogger} from '../log';
 
 export class SectionRepository extends AbstractRepository {
@@ -10,14 +10,14 @@ export class SectionRepository extends AbstractRepository {
         super('section_id_seq', sqlTemplate);
     }
 
-    createSection(data: CreateSectionData): Promise<string> {
+    createSection(data: CreateSectionData, quillId:string): Promise<string> {
         return (async () => {
             let sectionId = await this.getNextId();
             await this.sqlTemplate.query({
                 // language=POSTGRES-PSQL
                 text: ` INSERT INTO tu.section (id, title, description, ordered_content_ids)
                              VALUES ($1, $2, $3, ARRAY[$4::bigint])`,
-                values: [sectionId, data.title, data.description, data.quillContentId]
+                values: [sectionId, data.title, data.description, quillId]
             });
             return sectionId;
         })().catch((e) => {

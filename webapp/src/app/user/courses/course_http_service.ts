@@ -1,6 +1,6 @@
 import axios from "axios";
 import {
-    AdminCourseDescription, CourseData, CreateCourseData
+    AdminCourseDescription, ViewCourseQuillData, CreateCourseData
 } from "courses";
 import {userQueryService} from "../../account/user_query_service";
 

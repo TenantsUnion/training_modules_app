@@ -2,7 +2,7 @@ import Quill from "quill";
 import {QuillOptionsStatic, DeltaStatic} from "quill";
 import Vue from "vue";
 import Component from "vue-class-component";
-//compression library for images
+import * as _ from "underscore";
 
 //default quill theme
 require('quill/dist/quill.core.css');
@@ -29,8 +29,10 @@ export const QUILL_CONFIG: QuillOptionsStatic = {
             ['bold', 'italic', 'underline'],
             ['image', 'background', 'color']
         ]
+
     },
-    debug:  process.env.NODE_ENV === 'debug' ? 'info' : undefined,
+    // readOnly: true,
+    debug: process.env.NODE_ENV === 'debug' ? 'info' : undefined,
     theme: 'snow'
 };
 
@@ -42,32 +44,55 @@ let counter = 0;
             editorId: ''
         };
     },
+    props: {
+        readOnly: String
+    },
     // language=HTML
     template: `
-            <div class="scrolling-container">
-                <div v-bind:class="editorId" class="editor-container"></div>
-            </div>
+        <div class="scrolling-container">
+            <div v-bind:class="editorId" class="editor-container"></div>
+        </div>
     `
 })
 export class QuillComponent extends Vue {
 
     editorId: string;
     quill: Quill.Quill;
+    readOnly: boolean;
 
-    created () {
+    created() {
         this.editorId = 'editor-' + counter.toString();
         counter++;
     }
 
-    mounted () {
-        this.quill = new Quill('.' + this.editorId, QUILL_CONFIG)
+    mounted() {
+        this.quill = new Quill(`.${this.editorId}`, {
+                modules: {
+                    history: {
+                        delay: 1000,
+                        maxStack: 100,
+                        userOnly: true
+                    },
+                    toolbar: [
+                        [{header: [1, 2, false]}],
+                        ['bold', 'italic', 'underline'],
+                        ['image', 'background', 'color']
+                    ]
+
+                },
+                debug: process.env.NODE_ENV === 'debug' ? 'info' : undefined,
+                readOnly: this.readOnly,
+                theme: 'snow'
+            }
+        );
+
     }
 
-    getQuillEditorContents (): Quill.DeltaStatic {
+    getQuillEditorContents(): Quill.DeltaStatic {
         return this.quill.getContents();
     }
 
-    setQuillEditorContents (quillContents: Quill.DeltaStatic) {
+    setQuillEditorContents(quillContents: Quill.DeltaStatic) {
         this.quill.setContents(quillContents);
     }
 }

@@ -1,8 +1,9 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {ModuleData, ModuleDetails} from '../../../../../../shared/modules';
 import {coursesService} from '../../courses_service';
 import {COURSES_ROUTE_NAMES, coursesRoutesService} from '../../courses_routes';
+import {ViewModuleQuillData} from '../../../../../../shared/modules';
+import {CourseRefreshComponent} from '../../../global_components/refresh_route';
 
 @Component({
     data: () => {
@@ -11,6 +12,7 @@ import {COURSES_ROUTE_NAMES, coursesRoutesService} from '../../courses_routes';
             isCourseAdmin: false
         };
     },
+    extends: CourseRefreshComponent,
     template: require('./module_details_component.tpl.html')
 })
 
@@ -18,7 +20,7 @@ export class ModuleDetailsComponent extends Vue {
     moduleUnsubscribe: () => any;
     loading: boolean;
     isCourseAdmin: boolean;
-    module: ModuleData;
+    module: ViewModuleQuillData;
 
     created() {
         this.loading = true;
