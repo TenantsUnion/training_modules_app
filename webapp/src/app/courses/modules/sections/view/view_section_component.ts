@@ -3,7 +3,8 @@ import Component from 'vue-class-component';
 import {QuillComponent} from '../../../../quill/quill_component';
 import {coursesRoutesService} from '../../../courses_routes';
 import {coursesService} from '../../../courses_service';
-import {SectionData} from '../../../../../../../shared/sections';
+import {ViewSectionQuillData} from '../../../../../../../shared/sections';
+import {CourseRefreshComponent} from '../../../../global_components/refresh_route';
 
 @Component({
     data: () => {
@@ -12,6 +13,7 @@ import {SectionData} from '../../../../../../../shared/sections';
             section: {}
         };
     },
+    extends: CourseRefreshComponent,
     template: require('./view_section_component.tpl.html'),
     components: {
         'quill-editor': QuillComponent
@@ -21,7 +23,7 @@ export class ViewSectionComponent extends Vue {
     loading: boolean;
     isCourseAdmin: boolean;
     sectionUnsubscribe: () => any;
-    section: SectionData;
+    section: ViewSectionQuillData;
 
     created() {
         this.loading = true;
@@ -36,7 +38,9 @@ export class ViewSectionComponent extends Vue {
         this.sectionUnsubscribe();
     }
 
-    next(){}
+    next() {
+    }
 
-    back(){}
+    back() {
+    }
 }

@@ -1,27 +1,27 @@
 import {AbstractRepository} from "../repository";
-import {CreateModuleData, CreateModuleDataHeaderId, ModuleData} from "../../../shared/modules";
 import {LoggerInstance} from "winston";
 import {getLogger} from "../log";
 import {Datasource} from "../datasource";
-import * as _ from "underscore";
+import {CreateModuleDataHeaderId} from './modules';
+import {CreateModuleData} from 'modules';
+import {SaveModuleData} from 'modules';
 
 export class ModuleRepository extends AbstractRepository {
     logger: LoggerInstance = getLogger('ModuleRepository', 'debug');
-
 
     constructor(sqlTemplate: Datasource) {
         super('module_id_seq', sqlTemplate);
     }
 
-    async addModule(moduleData: CreateModuleDataHeaderId): Promise<string> {
+    async addModule(moduleData: CreateModuleData, headerId: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             (async () => {
                 try {
 
                     let courseId = await this.getNextId();
                     await this.sqlTemplate.query({
-                        text: `INSERT INTO tu.module (id, title, description, time_estimate, active) VALUES ($1, $2, $3, $4, $5)`,
-                        values: [courseId, moduleData.title, moduleData.description, moduleData.timeEstimate, false]
+                        text: `INSERT INTO tu.module (id, title, description, time_estimate, active, header_content) VALUES ($1, $2, $3, $4, $5, $6)`,
+                        values: [courseId, moduleData.title, moduleData.description, moduleData.timeEstimate, moduleData.active, headerId]
                     });
                     resolve(courseId);
                 } catch (e) {
@@ -33,26 +33,26 @@ export class ModuleRepository extends AbstractRepository {
         });
     }
 
-    async saveModule(moduleData: ModuleData): Promise<void> {
-        let sectionIds = _.map(moduleData.sections, (section) => section.id);
+    async saveModule(moduleData: SaveModuleData): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             return this.sqlTemplate.query({
                 // language=POSTGRES-SQL
                 text: `UPDATE tu.module m SET title = $1, description = $2, time_estimate = $3,
                                 active = $4, ordered_section_ids = $5
                                     where m.id = $6`,
-                values: [moduleData.title, moduleData.description, moduleData.timeEstimate, moduleData.active, sectionIds]
+                values: [moduleData.title, moduleData.description, moduleData.timeEstimate, moduleData.active,
+                    moduleData.orderedSectionIds, moduleData.moduleId]
             })
         });
     }
 
-    updateLastModified(moduleId: string):Promise<string> {
+    updateLastModified(moduleId: string): Promise<string> {
         const lastModified = new Date();
         let query = {
             text: `UPDATE tu.module m SET last_modified_at = $1 WHERE m.id = $2`,
             values: [lastModified, moduleId]
         };
-        return this.sqlTemplate.query(query).then(()=>{
+        return this.sqlTemplate.query(query).then(() => {
             return lastModified.toISOString();
         });
     }

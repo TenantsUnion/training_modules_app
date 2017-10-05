@@ -1,5 +1,6 @@
 import {Moment} from "moment";
-import {ModuleData, ModuleDetails} from './modules';
+import {ModuleDetails, ViewModuleQuillData, ViewModuleTransferData} from './modules';
+import {QuillEditorData} from './quill';
 
 declare namespace courses {
 
@@ -11,48 +12,46 @@ declare namespace courses {
         createdBy: string
     }
 
-    export interface CourseData {
-        id: string,
-        title: string,
-        active: boolean,
-        timeEstimate: string,
-        description: string,
-        createdBy: string
-        modules: ModuleData[]
-    }
-
     export interface SaveCourseData {
         id: string,
         title: string,
         active: boolean,
-        description: string,
         timeEstimate: string,
+        description: string,
         updatedByUserId: string;
         modules: string[]
     }
 
-    export interface UserEnrolledCourseData extends CourseData {
+    interface ViewCourseData {
+        id: string,
+        title: string,
+        active: boolean,
+        description: string,
+        timeEstimate: string,
+        createdBy: string
+    }
+
+    export interface ViewCourseQuillData extends ViewCourseData {
+        lastModified: Moment;
+        modules: ViewModuleTransferData[];
+        content: QuillEditorData[];
+    }
+
+    /**
+     * The transfer shape of a course view where properties that refer to quill data instead of have a string of
+     * the corresponding ids and timestamps are in string form.
+     */
+    export interface ViewCourseTransferData extends ViewCourseData {
+        lastModified: string;
+        modules: ViewModuleTransferData[],
+        contentIds: string[]
+    }
+
+    export interface UserEnrolledCourseData extends ViewCourseQuillData {
         username: string
         userId: string
         //todo maybe user description?
         //todo module and section progress
-    }
-
-    export interface UserAdminCourseData extends CourseData {
-        admins: string[]
-    }
-
-
-    export interface CourseUserInfo {
-        userId: string;
-        username: string;
-    }
-
-    export interface CourseUserDescription {
-        id: string;
-        username: string;
-        firstName: string;
-        lastName: string;
     }
 
     export interface CourseDescription {

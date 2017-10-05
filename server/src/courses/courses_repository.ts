@@ -1,19 +1,19 @@
 import {Datasource} from "../datasource";
 import {
     AdminCourseDescription, UserEnrolledCourseData,
-    UserAdminCourseData, EnrolledCourseDescription, CreateCourseData, SaveCourseData
+    EnrolledCourseDescription, CreateCourseData, SaveCourseData, ViewCourseTransferData
 } from "courses";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
 import {LoggerInstance} from 'winston';
 import {isUsernameCourseTitle, UsernameCourseTitle} from "./courses_handler";
 import * as _ from "underscore";
-import {ModuleData} from '../../../shared/modules';
+import {ViewModuleTransferData} from '../../../shared/modules';
 
 export interface ICoursesRepository {
     loadUserEnrolledCourse(username: string, courseId: string): Promise<UserEnrolledCourseData>;
 
-    loadUserAdminCourse(courseId: string | UsernameCourseTitle): Promise<UserAdminCourseData>;
+    loadUserAdminCourse(courseId: string | UsernameCourseTitle): Promise<ViewCourseTransferData>;
 
     createCourse(courseData: CreateCourseData): Promise<string>;
 
@@ -91,7 +91,7 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                         return <EnrolledCourseDescription> {
                             id: row.id,
                             title: row.title
-                        }
+                        };
                     });
 
                     resolve(enrolled);
@@ -173,7 +173,7 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
         });
     }
 
-    async loadUserAdminCourse(courseId: UsernameCourseTitle | string): Promise<UserAdminCourseData> {
+    async loadUserAdminCourse(courseId: UsernameCourseTitle | string): Promise<ViewCourseTransferData> {
         let query = isUsernameCourseTitle(courseId) ? {
             text: `
                 SELECT c.*, m.modules FROM tu.user u
@@ -206,7 +206,7 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
             `,
             values: [courseId]
         };
-        return new Promise<UserAdminCourseData>((resolve, reject) => {
+        return new Promise<ViewCourseTransferData>((resolve, reject) => {
                 (async () => {
                     try {
                         this.logger.log('info', 'querying for admin course');
@@ -215,9 +215,10 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                         let processedResults = results.map((row) => {
                             return _.extend({}, row, {
                                 id: '' + row.id,
-                                // modules aren't pull out in order since results are narrowed down via 'WHERE'
-                                // clause and then automatically joined with ON TRUE. Have to manually
-                                modules: _.chain(<ModuleData>row.modules)
+                                // modules aren't pulled out in order since results are narrowed down via 'WHERE'
+                                // clause and then automatically joined with ON TRUE. Have to manually order according
+                                // to orderedModuleIds property
+                                modules: _.chain(<ViewModuleTransferData>row.modules)
                                     .map((module) => {
                                     // fixme better way to convert integer ids to strings
                                         return _.extend({}, module, {id: module.id + ''})
@@ -233,6 +234,8 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
 
                                             let moduleIndex = ordered.moduleIndex[module.id + ''];
                                             ordered.modules[parseInt(moduleIndex)] = module;
+
+                                            // todo order sections as well?
 
                                             return ordered;
 

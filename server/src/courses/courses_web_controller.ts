@@ -1,7 +1,7 @@
 import * as express from "express";
 import {Request, Response, Router} from "express";
 import {
-    AdminCourseDescription, CourseData, CreateCourseData, SaveCourseData
+    AdminCourseDescription, ViewCourseQuillData, CreateCourseData, SaveCourseData
 } from "courses";
 import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';

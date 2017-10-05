@@ -4,7 +4,8 @@ import Vue from 'vue';
 import {coursesService} from '../../../courses_service';
 import * as VueForm from '../../../../vue-form';
 import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
-import {SectionData} from '../../../../../../../shared/sections';
+import {ViewSectionQuillData} from '../../../../../../../shared/sections';
+import {CourseRefreshComponent} from '../../../../global_components/refresh_route';
 
 @Component({
     data: () => {
@@ -18,6 +19,7 @@ import {SectionData} from '../../../../../../../shared/sections';
             formstate: {}
         };
     },
+    extends: CourseRefreshComponent,
     components: {
         'quill-editor': QuillComponent
     },
@@ -31,8 +33,8 @@ export class EditSectionComponent extends Vue {
     description: string;
     quillEditor: QuillComponent;
     formstate: VueForm.FormState;
-    section: SectionData;
-    currentSectionLoaded: Promise<SectionData>;
+    section: ViewSectionQuillData;
+    currentSectionLoaded: Promise<ViewSectionQuillData>;
 
     created() {
         this.loading = true;

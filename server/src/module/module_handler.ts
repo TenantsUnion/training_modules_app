@@ -1,18 +1,17 @@
-import {CreateModuleData, CreateModuleDataHeaderId, ModuleData} from 'modules';
+import {CreateModuleData, SaveModuleData} from 'modules';
 import {ModuleRepository} from './module_repository';
-import {moduleRepository} from '../config/repository.config';
-import {SectionData} from '../../../shared/sections';
+import {CreateModuleDataHeaderId} from './modules';
 
 export class ModuleHandler {
     constructor(private moduleRepo: ModuleRepository){
 
     }
 
-    async addModule(createModuleData: CreateModuleDataHeaderId): Promise<string> {
-        return this.moduleRepo.addModule(createModuleData);
+    async addModule(createModuleData: CreateModuleData, quillHeaderId: string): Promise<string> {
+        return this.moduleRepo.addModule(createModuleData, quillHeaderId);
     }
 
-    async saveModule(moduleData: ModuleData): Promise<void> {
+    async saveModule(moduleData: SaveModuleData): Promise<void> {
         return this.moduleRepo.saveModule(moduleData)
     }
 

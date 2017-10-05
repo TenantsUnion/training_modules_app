@@ -24,10 +24,6 @@ appRouter.addRoutes([
     userRoutes
 ]);
 
-appRouter.afterEach((to, from) => {
-    coursesService.refresh();
-});
-
 let app = new Vue({
     components: {},
     router: appRouter,

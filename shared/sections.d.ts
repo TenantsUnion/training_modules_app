@@ -1,3 +1,6 @@
+import {QuillEditorData} from './quill';
+import {Moment} from 'moment';
+
 declare namespace sections {
     interface SectionDetails {
         id: string;
@@ -5,25 +8,25 @@ declare namespace sections {
         description?: string;
     }
 
-    interface SectionData {
+    interface ViewSectionData {
         id: string;
         title: string;
-        description?: string;
-        orderedContentIds: string[];
+        description: string;
         timeEstimate: string;
-        lastModified: string;
+    }
+
+    export interface ViewSectionQuillData extends ViewSectionData {
+        createdAt: Moment;
+        lastModified: Moment;
+        content: QuillEditorData[];
+    }
+
+    export interface ViewSectionTransferData extends ViewSectionData {
         createdAt: string;
-        content: { id: string, editorJson: Quill.DeltaStatic }[];
-    }
-
-    interface SectionLoadingContentId {
+        lastModified: string;
+        orderedContentIds: string[];
 
     }
-
-    interface SectionContentData {
-
-    }
-
 
     interface SaveSectionData {
         id: string;

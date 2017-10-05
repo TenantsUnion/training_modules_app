@@ -11,6 +11,7 @@ import {IErrorResponse} from '../../shared/http_responses';
 import {AccountRoutes} from "./account/account_routes";
 import {UserContentRoutes} from "./content/content_routes";
 import {CoursesRoutes} from "./courses/courses_routes";
+import {QuillRoutes} from './quill/quill_routes_controller';
 
 /**
  * Configured to listen on port and started in /bin scripts
@@ -63,6 +64,7 @@ app.get('/', express.Router().get('/', function (req, res, next) {
 app.use(AccountRoutes);
 app.use(UserContentRoutes);
 app.use(CoursesRoutes);
+app.use(QuillRoutes);
 
 // has to go last so other routes can match, catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {CourseData} from '../../../../../shared/courses';
+import {ViewCourseQuillData} from '../../../../../shared/courses';
 import {coursesService} from '../courses_service';
 
 @Component({
@@ -15,7 +15,7 @@ import {coursesService} from '../courses_service';
 export class CourseDetailsComponent extends Vue {
     courseUnsubscribe: () => any;
     loading: boolean;
-    course: CourseData;
+    course: ViewCourseQuillData;
 
     created() {
         this.loading = true;

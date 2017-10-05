@@ -2,7 +2,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {appRouter} from "../../router";
 import {coursesService} from '../courses_service';
-import {CourseData, SaveCourseData} from '../../../../../shared/courses';
+import {ViewCourseQuillData, SaveCourseData} from '../../../../../shared/courses';
 import {COURSES_ROUTE_NAMES} from '../courses_routes';
 import {userQueryService} from '../../account/user_query_service';
 
@@ -19,7 +19,7 @@ import {userQueryService} from '../../account/user_query_service';
 export class EditCourseComponent extends Vue {
     errorMessages: {};
     loading: boolean;
-    course: CourseData;
+    course: ViewCourseQuillData;
 
     created(){
         this.loading = true;

@@ -2,11 +2,11 @@ import {Datasource} from '../datasource';
 import {getLogger} from "../log";
 import {AbstractRepository} from "../repository";
 import {LoggerInstance} from 'winston';
+import * as moment from 'moment';
+import * as _ from 'underscore';
+import {Moment} from 'moment';
+import {QuillEditorData} from '../../../shared/quill';
 
-export interface QuillEditorData {
-    id: string;
-    editor_json?: Quill.DeltaStatic;
-}
 
 export class QuillRepository extends AbstractRepository {
     logger: LoggerInstance;
@@ -59,9 +59,10 @@ export class QuillRepository extends AbstractRepository {
                 try {
                     this.sqlTemplate.query({
                         text: `UPDATE tu.quill_data SET
-                          editor_json = $1 WHERE
-                          id = $2`,
-                        values: [editorJson, id]
+                          editor_json = $1,
+                           last_modified = $2 WHERE
+                          id = $3`,
+                        values: [editorJson, new Date(), id]
                     });
                     resolve();
                 } catch (e) {
