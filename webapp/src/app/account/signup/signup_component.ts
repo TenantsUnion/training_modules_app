@@ -6,6 +6,7 @@ import {IUserId} from "user";
 import {AccountFormState} from '../login/login_component';
 import {Watch} from 'vue-property-decorator';
 import {AccountSignupFieldErrors} from '../../../../../shared/account';
+import {$} from "../../globals";
 
 @Component({
     data: () => {
@@ -52,5 +53,9 @@ export default class SignupComponent extends Vue {
             this.loading = false;
             this.errorMessages = errorMessages;
         });
+    }
+
+    mounted() {
+        $(this.$refs.signup).focus();
     }
 }

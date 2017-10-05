@@ -7,6 +7,7 @@ import * as VueForm from "../../vue-form";
 import {FormField} from "../../vue-form";
 import {Watch} from "vue-property-decorator";
 import {AccountLoginFieldErrors} from "../../../../../shared/account";
+import {$} from "../../globals";
 
 export interface AccountFormState extends VueForm.FormState {
     username: FormField;
@@ -60,5 +61,9 @@ export default class LoginComponent extends Vue {
             this.loading = false;
             this.errorMessages = errorMessages;
         });
+    }
+
+    mounted() {
+        $(this.$refs.login).focus();
     }
 }
