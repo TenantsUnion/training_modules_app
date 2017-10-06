@@ -3,11 +3,11 @@ p, h1, h2, h3, h4 {
 }
 
 #app {
-  position: absolute;
+  position: fixed;
   width: 100%;
   min-height: 100%;
 
-  > div {
+  > .main {
     height: 100%;
   }
 }

@@ -1,13 +1,13 @@
 /* Sidebar Navigation Styles */
 
 .sidebar-nav {
-  top: 3em;
+  top: 1em;
   width: $sidebar-width;
   margin: 0;
-  padding: 0;
+  padding: 0 0 3em;
   list-style: none;
   color: #999999;
-  position: absolute;
+  position: relative;
   bottom: 0;
   background-color: #3e3e3e;
 
