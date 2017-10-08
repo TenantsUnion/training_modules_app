@@ -8,16 +8,13 @@
   -o-transition: padding 0.5s ease;
   transition: padding 0.5s ease;
   background-color: black;
-  //position: fixed;
   width: 100%;
-  //overflow-y: scroll;
 
   &.toggled {
     padding-left: 0;
 
     .page-content-wrapper {
       padding-left: $sidebar-width + $main-content-side-padding;
-      //position: absolute;
       margin-right: -($sidebar-width) + $sidebar-collapsed-width;
     }
 
@@ -30,7 +27,7 @@
     z-index: 1;
     position: fixed;
     left: 100px;
-    top: 70px;
+    top: 72px;
     bottom: 0;
     width: $sidebar-width;
     margin-left: -($sidebar-width) - $sidebar-collapsed-width;
@@ -44,6 +41,7 @@
     &.toggled {
       margin-left: -100px;
       z-index: 1000;
+      overflow: hidden;
     }
 
     .menu-icon-container {
@@ -90,7 +88,6 @@
       }
 
       .page-content-wrapper {
-        position: relative;
         padding-left: $sidebar-collapsed-width + $main-content-side-padding;
         padding-right: $main-content-side-padding;
       }
