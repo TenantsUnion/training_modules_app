@@ -1,17 +1,17 @@
 <div class="main">
     <div class="row">
-        <div class="columns small-8">
+        <div class="columns small-12 large-10">
             <h2>{{section.title}}</h2>
             <loading v-if="loading"></loading>
         </div>
     </div>
     <div class="row">
-        <div class="columns small-8">
+        <div class="columns small-12 large-10">
             <quill-editor ref="editor"></quill-editor>
         </div>
     </div>
     <div class="row">
-        <div class="columns small-8">
+        <div class="columns small-12 large-10">
             <button @click="back" type="button"
                     class="button secondary" :disabled="loading">
                 Back

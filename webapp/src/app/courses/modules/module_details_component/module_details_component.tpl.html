@@ -3,7 +3,7 @@
         <loading></loading>
     </div>
     <div v-if="module" class="row">
-        <div class="small-12 columns">
+        <div class="small-12 large-10 columns">
             <div class="callout">
                 <h2>{{module.title}}
                     <button v-if="isCourseAdmin" class="button" v-on:click="createSection">Create Section</button>
@@ -12,7 +12,7 @@
             </div>
             <div v-for="section in module.sections" class="callout">
                 <h3>{{section.title}}</h3>
-                <h4>{{section.description}}</h4>
+                <p>{{section.description}}</p>
             </div>
         </div>
     </div>

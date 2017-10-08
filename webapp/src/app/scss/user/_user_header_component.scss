@@ -12,13 +12,19 @@
     .menu-section {
       display: flex;
 
-      li {
-        a {
-          color: #fff;
+      &__menu {
+        flex-flow: row nowrap;
 
-          &:hover,
-          &:focus {
-            color: #1cc7ff;
+        li {
+          a {
+            color: #fff;
+            max-width: 80px;
+            padding: .2em .1em;
+
+            &:hover,
+            &:focus {
+              color: #1cc7ff;
+            }
           }
         }
       }
@@ -27,10 +33,32 @@
         justify-content: space-between;
         align-items: center;
 
+        .welcome-message {
+          display: none;
+        }
+
         .button {
           margin: 0 0 0 1em;
         }
       }
     }
   }
+
+  @media screen and (min-width: 560px) {
+    nav .menu-section {
+      &__menu {
+        li a {
+          padding: .7em 1em;
+          max-width: 100%;
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 740px) {
+     nav .menu-section.user-actions .welcome-message {
+      display: block;
+    }
+  }
 }
+

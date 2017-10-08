@@ -1,6 +1,6 @@
 <div class="main">
     <div class="row">
-        <div class="columns small-8">
+        <div class="columns small-12 large-10">
             <h1>Edit Section</h1>
             <loading v-if="loading"></loading>
         </div>
@@ -8,7 +8,7 @@
     <vue-form :state="formstate" @submit.prevent="saveSection">
         <validate>
             <div class="row">
-                <div class="columns small-8">
+                <div class="columns small-12 large-10">
                     <field-messages name="title"
                                     show="$submitted || $dirty">
                         <small class="error" slot="required">
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="columns small-8">
+                <div class="columns small-12 large-10">
                     <label for="time-estimate">Time Estimate</label>
                     <input v-model="section.timeEstimate" type="text"
                            placeholder="Time estimate"
@@ -39,7 +39,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="columns small-8">
+                <div class="columns small-12 large-10">
                     <label for="section-description">Description</label>
                     <textarea v-model="section.description" type="text"
                               placeholder="Section description"
@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="small-12 columns">
+                <div class="small-12 large-10 columns">
                     <label>Content</label>
                     <quill-editor ref="editor"></quill-editor>
                 </div>

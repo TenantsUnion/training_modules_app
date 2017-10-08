@@ -3,18 +3,18 @@
         <loading></loading>
     </div>
     <div v-if="course" class="row">
-        <div class="small-12 columns">
+        <div class="small-12 large-10 columns">
             <div class="callout">
                 <h2>{{course.title}}</h2>
-                <span>{{course.description}}</span>
+                <p>{{course.description}}</p>
             </div>
             <div v-for="module in course.modules" class="callout">
                 <h3>{{module.title}}</h3>
-                <h4>{{module.description}}</h4>
+                <p>{{module.description}}</p>
                 <ul class="content-list">
                     <li v-for="section in module.sections" class="content-item">
                         <h5>{{section.title}}</h5>
-                        <h6>{{section.description}}</h6>
+                        <p>{{section.description}}</p>
                     </li>
                 </ul>
             </div>

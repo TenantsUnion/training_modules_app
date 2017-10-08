@@ -12,7 +12,7 @@ import {Route} from "vue-router";
         <div class="user-header-wrapper">
             <nav class="row">
                 <div class="menu-section columns">
-                    <ul class="menu">
+                    <ul class="menu menu-section__menu">
                         <li v-bind:class="{'is-active': adminCoursesActive}">
                             <router-link :to="{name: 'adminCourses'}">
                                 Admin Courses
@@ -30,7 +30,7 @@ import {Route} from "vue-router";
                     </ul>
                 </div>
                 <div class="menu-section columns shrink user-actions">
-                    <span>Welcome, {{ username }}!</span>
+                    <span class="welcome-message">Welcome, {{ username }}!</span>
                     <button class="button secondary" @click="signout">Sign
                         Out
                     </button>
