@@ -8,16 +8,16 @@
   -o-transition: padding 0.5s ease;
   transition: padding 0.5s ease;
   background-color: black;
-  position: fixed;
+  //position: fixed;
   width: 100%;
-  overflow-y: scroll;
+  //overflow-y: scroll;
 
   &.toggled {
     padding-left: 0;
 
     .page-content-wrapper {
       padding-left: $sidebar-width + $main-content-side-padding;
-      position: absolute;
+      //position: absolute;
       margin-right: -($sidebar-width) + $sidebar-collapsed-width;
     }
 
