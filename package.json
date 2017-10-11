@@ -4,7 +4,7 @@
   "description": "Tenants Union training modules application",
   "main": "app.js",
   "scripts": {
-    "start": "export NODE_CONFIG_DIR=./config && node $NODE_DEBUG_OPTION ./bin/start",
+    "start": "export NODE_CONFIG_DIR=./config && node ./bin/start",
     "init_db": "export NODE_CONFIG_DIR=./config && node ./bin/drop_db && node ./bin/init_db && npm run migrate_db",
     "drop_db": "export NODE_CONFIG_DIR=./config && node ./bin/drop_db",
     "migrate_db": "export NODE_CONFIG_DIR=./config && node ./bin/migrate_db.js",

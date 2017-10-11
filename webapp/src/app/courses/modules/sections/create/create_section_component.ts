@@ -60,7 +60,7 @@ export class CreateSectionComponent extends Vue {
                     moduleId: module.id,
                     description: this.description,
                     timeEstimate: this.timeEstimate,
-                    quillData: quillData
+                    content: quillData
                 });
                 // to do now what
                 this.$router.push({

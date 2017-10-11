@@ -11,12 +11,12 @@ import {QuillEditorData} from '../../../shared/quill';
 export class QuillRepository extends AbstractRepository {
     logger: LoggerInstance;
 
-    constructor (sqlTemplate: Datasource) {
+    constructor(sqlTemplate: Datasource) {
         super('quill_data_id_seq', sqlTemplate);
         this.logger = getLogger('dbLog', 'error');
     }
 
-    async loadEditorJson (id: string): Promise<QuillEditorData> {
+    async loadEditorJson(id: string): Promise<QuillEditorData> {
         return new Promise<QuillEditorData>((resolve, reject) => {
             (async () => {
                 try {
@@ -34,7 +34,7 @@ export class QuillRepository extends AbstractRepository {
         });
     }
 
-    async insertEditorJson (quillId: string, editorJson: Quill.DeltaStatic): Promise<void> {
+    async insertEditorJson(quillId: string, editorJson: Quill.DeltaStatic): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {
@@ -53,22 +53,14 @@ export class QuillRepository extends AbstractRepository {
         });
     }
 
-    async updateEditorJson (id: string, editorJson: Quill.DeltaStatic): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            (async () => {
-                try {
-                    this.sqlTemplate.query({
-                        text: `UPDATE tu.quill_data SET
+    async updateEditorJson(id: string, editorJson: Quill.DeltaStatic): Promise<void> {
+        return this.sqlTemplate.query({
+            text: `UPDATE tu.quill_data SET
                           editor_json = $1,
-                           last_modified = $2 WHERE
+                           last_modified_at = $2 WHERE
                           id = $3`,
-                        values: [editorJson, new Date(), id]
-                    });
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            })();
+            values: [editorJson, new Date(), id]
+        }).then(() => {
         });
     }
 }

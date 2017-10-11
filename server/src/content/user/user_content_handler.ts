@@ -6,13 +6,14 @@ import {getLogger} from "../../log";
 
 export class UserContentHandler {
     private logger;
-    constructor (private contentRepository: ContentRepository,
-                 private quillRepository: QuillRepository,
-                 private userRepository: UserRepository) {
+
+    constructor(private contentRepository: ContentRepository,
+                private quillRepository: QuillRepository,
+                private userRepository: UserRepository) {
         this.logger = getLogger('UserContentHandler', 'info');
     }
 
-    async handleCreateUserContentCommand (createUserContentCommand: CreateUserContentCommand): Promise<void> {
+    async handleCreateUserContentCommand(createUserContentCommand: CreateUserContentCommand): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {
@@ -37,7 +38,7 @@ export class UserContentHandler {
         });
     }
 
-    async handleUpdateUserContentCommand (updateUserContentCommand: ContentEntity): Promise<void> {
+    async handleUpdateUserContentCommand(updateUserContentCommand: ContentEntity): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             (async () => {
                 try {

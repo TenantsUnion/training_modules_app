@@ -6,18 +6,18 @@ import {coursesService} from '../courses_service';
 @Component({
     data: () => {
         return {
+            loading: false,
             course: null
         };
     },
     template: require('./course_details_component.tpl.html')
 })
-
 export class CourseDetailsComponent extends Vue {
     courseUnsubscribe: () => any;
     loading: boolean;
     course: ViewCourseQuillData;
 
-    created() {
+    mounted() {
         this.loading = true;
         this.courseUnsubscribe = coursesService.subscribeCurrentCourse((course) => {
             this.loading = false;
@@ -28,5 +28,4 @@ export class CourseDetailsComponent extends Vue {
     destroyed() {
         this.courseUnsubscribe();
     }
-
 }

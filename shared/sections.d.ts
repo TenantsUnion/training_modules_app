@@ -17,32 +17,32 @@ declare namespace sections {
 
     export interface ViewSectionQuillData extends ViewSectionData {
         createdAt: Moment;
-        lastModified: Moment;
+        lastModifiedAt: Moment;
         content: QuillEditorData[];
     }
 
     export interface ViewSectionTransferData extends ViewSectionData {
         createdAt: string;
-        lastModified: string;
+        lastModifiedAt: string;
         orderedContentIds: string[];
 
     }
 
     interface SaveSectionData {
         id: string;
+        courseId: string;
+        moduleId: string;
         title: string;
         description?: string;
         content: { id: string, editorJson: Quill.DeltaStatic }[];
         timeEstimate: string;
-        lastModified: string;
-        createdAt: string;
     }
 
     interface CreateSectionData {
         courseId: string;
         moduleId: string;
         title: string;
-        quillData: Quill.DeltaStatic;
+        content: Quill.DeltaStatic;
         description?: string;
         timeEstimate?: string;
     }

@@ -11,7 +11,7 @@ import {CreateSectionComponent} from './modules/sections/create/create_section_c
 import {ViewSectionComponent} from './modules/sections/view/view_section_component';
 import {EditSectionComponent} from './modules/sections/edit/edit_section_component';
 import {EditCourseComponent} from './edit_course_component/edit_course_component';
-import {coursesService} from './courses_service';
+import {EditModuleComponent} from './modules/edit_modules_component/edit_module_component';
 
 export const COURSES_ROUTE_NAMES = {
     enrolledCourses: 'enrolledCourses',
@@ -22,7 +22,7 @@ export const COURSES_ROUTE_NAMES = {
     adminCourseDetails: 'adminCourse.courseDetails',
     createModule: 'adminCourse.createModule',
     moduleDetails: 'adminCourse.moduleDetails',
-    editModule: undefined,
+    editModule: 'admin.editModule',
     createSection: 'adminCourse.createSection',
     editSection: 'course.editSection',
     viewSection: 'course.viewSection'
@@ -90,7 +90,9 @@ export const coursesRoutes: RouteConfig[] = [
             },
             {
                 path: ':courseTitle/module/:moduleTitle/edit',
-                name: COURSES_ROUTE_NAMES.editModule
+                name: COURSES_ROUTE_NAMES.editModule,
+                props: true,
+                component: EditModuleComponent
             },
             {
                 path: ':courseTitle/module/:moduleTitle/section/create',
@@ -101,9 +103,6 @@ export const coursesRoutes: RouteConfig[] = [
             {
                 path: ':courseTitle/module/:moduleTitle/section/:sectionTitle',
                 name: COURSES_ROUTE_NAMES.viewSection,
-                beforeEnter: (to, from, next) => {
-                    coursesService.refresh().then(() => next());
-                },
                 props: true,
                 component: ViewSectionComponent
             },

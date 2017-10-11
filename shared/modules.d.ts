@@ -13,13 +13,13 @@ declare namespace modules {
 
     interface ViewModuleQuillData extends ViewModuleData {
         headerContent: QuillEditorData
-        lastModified: Moment;
+        lastModifiedAt: Moment;
         sections: ViewSectionTransferData[]
     }
 
     interface ViewModuleTransferData extends ViewModuleData {
         headerContent: string;
-        lastModified: string;
+        lastModifiedAt: string;
         sections: ViewSectionTransferData[]
     }
 
@@ -32,8 +32,10 @@ declare namespace modules {
         active?: boolean;
     }
 
-    interface SaveModuleData extends CreateModuleData {
-        moduleId: string;
+    interface SaveModuleData extends ViewModuleData {
+        courseId: string;
+        headerContent: Quill.DeltaStatic;
+        headerContentId: string;
         orderedSectionIds: string[]
     }
 

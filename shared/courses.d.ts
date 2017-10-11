@@ -32,7 +32,7 @@ declare namespace courses {
     }
 
     export interface ViewCourseQuillData extends ViewCourseData {
-        lastModified: Moment;
+        lastModifiedAt: Moment;
         modules: ViewModuleTransferData[];
         content: QuillEditorData[];
     }
@@ -42,7 +42,7 @@ declare namespace courses {
      * the corresponding ids and timestamps are in string form.
      */
     export interface ViewCourseTransferData extends ViewCourseData {
-        lastModified: string;
+        lastModifiedAt: string;
         modules: ViewModuleTransferData[],
         contentIds: string[]
     }

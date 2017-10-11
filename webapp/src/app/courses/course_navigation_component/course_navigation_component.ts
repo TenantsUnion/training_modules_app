@@ -40,7 +40,7 @@ export class CourseNavigationComponent extends Vue {
 
     moduleDetailsRoute(moduleTitle): RawLocation {
         return {
-            name: 'adminCourse.moduleDetails',
+            name: COURSES_ROUTE_NAMES.moduleDetails,
             params: {
                 moduleTitle: moduleTitle
             }
@@ -66,14 +66,19 @@ export class CourseNavigationComponent extends Vue {
     }
 
     editModule(moduleTitle: string) {
-
+        this.$router.push({
+            name: COURSES_ROUTE_NAMES.editModule, params: {
+                moduleTitle: moduleTitle
+            }
+        })
     }
 
     editSection(moduleTitle: string, sectionTitle: string) {
         this.$router.push({
             name: COURSES_ROUTE_NAMES.editSection,
             params: {
-                sectionTitle: sectionTitle
+                sectionTitle: sectionTitle,
+                moduleTitle: moduleTitle
             }
         })
     }

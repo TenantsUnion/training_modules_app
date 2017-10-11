@@ -21,7 +21,7 @@ export class EditCourseComponent extends Vue {
     loading: boolean;
     course: ViewCourseQuillData;
 
-    created(){
+    created() {
         this.loading = true;
         coursesService.getCurrentCourse()
             .then((course) => {
@@ -32,8 +32,8 @@ export class EditCourseComponent extends Vue {
 
     save() {
         this.loading = true;
-        let saveCourseData:SaveCourseData = {
-          id: this.course.id,
+        let saveCourseData: SaveCourseData = {
+            id: this.course.id,
             description: this.course.description,
             timeEstimate: this.course.timeEstimate,
             title: this.course.title,
@@ -41,9 +41,9 @@ export class EditCourseComponent extends Vue {
             modules: this.course.modules.map((module) => module.id),
             updatedByUserId: userQueryService.getUserId()
         };
-        coursesService.saveCourse(saveCourseData).then(()=>{
+        coursesService.saveCourse(saveCourseData).then(() => {
             appRouter.push({name: COURSES_ROUTE_NAMES.adminCourseDetails})
-        }).catch((msg)=>{
+        }).catch((msg) => {
             this.errorMessages = msg;
         })
     }

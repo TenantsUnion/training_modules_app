@@ -1,18 +1,18 @@
-<div class="main">
+<div>
     <div class="row">
-        <div class="columns small-12 large-10">
-            <h1>Edit Section</h1>
+        <div class="small-8 columns">
+            <h1>Save</h1>
             <loading v-if="loading"></loading>
         </div>
     </div>
-    <vue-form :state="formstate" @submit.prevent="saveSection">
+    <vue-form :state="formstate" @submit.prevent="saveModule">
         <validate>
             <div class="row">
-                <div class="columns small-12 large-10">
+                <div class="columns small-8">
                     <field-messages name="title"
                                     show="$submitted || $dirty">
                         <small class="error" slot="required">
-                            A title is need to create a section
+                            A title is need to create a module
                         </small>
                     </field-messages>
                     <small class="error"
@@ -20,34 +20,34 @@
                         {{errorMessages.title}}
                     </small>
                     <div>
-                        <label for="section-title">Title
-                            <input v-model="section.title" type="text"
+                        <label for="module-title">Title
+                            <input v-model="module.title" type="text"
                                    name="title"
                                    required
-                                   placeholder="Section Title"
-                                   id="section-title"/>
+                                   placeholder="Module Title"
+                                   id="module-title"/>
                         </label>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="columns small-12 large-10">
+                <div class="columns small-8">
                     <label for="time-estimate">Time Estimate</label>
-                    <input v-model="section.timeEstimate" type="text"
+                    <input v-model="module.timeEstimate" type="text"
                            placeholder="Time estimate"
                            id="time-estimate">
                 </div>
             </div>
             <div class="row">
-                <div class="columns small-12 large-10">
-                    <label for="section-description">Description</label>
-                    <textarea v-model="section.description" type="text"
-                              placeholder="Section description"
-                              id="section-description"></textarea>
+                <div class="columns small-8">
+                    <label for="module-description">Description</label>
+                    <textarea v-model="module.description" type="text"
+                              placeholder="Course description"
+                              id="module-description"></textarea>
                 </div>
             </div>
             <div class="row">
-                <div class="small-12 large-10 columns">
+                <div class="small-12 columns">
                     <label>Content</label>
                     <quill-editor ref="editor"></quill-editor>
                 </div>
@@ -55,7 +55,7 @@
         </validate>
         <div class="row">
             <div class="columns small-2">
-                <button @click="saveSection" class="button" type="button">
+                <button @click="saveModule" class="button" type="button">
                     Save
                 </button>
             </div>

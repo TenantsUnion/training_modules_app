@@ -5,7 +5,7 @@ import {
 } from "courses";
 import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
-import {CreateModuleData} from "../../../shared/modules";
+import {CreateModuleData, SaveModuleData} from "../../../shared/modules";
 import {CoursesRepository} from './courses_repository';
 import {ModuleOperations} from '../module/module_routes';
 import {CreateSectionData} from '../../../shared/sections';
@@ -125,7 +125,19 @@ export class CoursesController implements ModuleOperations {
     }
 
     saveModule(request: express.Request, response: express.Response) {
-
+        let saveModuleData: SaveModuleData = request.body;
+        (async () => {
+            try {
+                let course = await this.coursesHandler.saveModule(saveModuleData);
+                response.status(200)
+                    .send(course);
+            } catch (e) {
+                this.logger.log('error', e);
+                this.logger.log('error', e.stack);
+                response.status(500)
+                    .send(e.stack.join('\n'));
+            }
+        })()
     }
 
     createSection(request: express.Request, response: express.Response) {

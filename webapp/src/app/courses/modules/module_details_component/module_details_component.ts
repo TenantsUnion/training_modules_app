@@ -4,6 +4,7 @@ import {coursesService} from '../../courses_service';
 import {COURSES_ROUTE_NAMES, coursesRoutesService} from '../../courses_routes';
 import {ViewModuleQuillData} from '../../../../../../shared/modules';
 import {CourseRefreshComponent} from '../../../global_components/refresh_route';
+import {QuillComponent} from '../../../quill/quill_component';
 
 @Component({
     data: () => {
@@ -13,7 +14,10 @@ import {CourseRefreshComponent} from '../../../global_components/refresh_route';
         };
     },
     extends: CourseRefreshComponent,
-    template: require('./module_details_component.tpl.html')
+    template: require('./module_details_component.tpl.html'),
+    components: {
+        'quill-editor': QuillComponent
+    }
 })
 
 export class ModuleDetailsComponent extends Vue {

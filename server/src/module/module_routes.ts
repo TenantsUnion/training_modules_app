@@ -10,7 +10,7 @@ export interface ModuleOperations {
 
 export const ModuleRoutes = (moduleCtrl: ModuleOperations) => {
     let router = express.Router();
-    router.post('/course/:courseId/module/save', (request, response, next) => {
+    router.post('/course/:courseId/module/:moduleId/save', (request, response, next) => {
         moduleCtrl.saveModule(request, response, next);
     });
     router.post('/course/:courseId/module/create', (request, response, next) => {

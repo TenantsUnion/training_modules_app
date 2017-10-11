@@ -16,8 +16,8 @@ export class SectionHandler {
             let quillId = await this.quillRepo.getNextId();
 
             this.logger.info('Inserting quill data id: %s json: %s', quillId,
-                JSON.stringify(createSectionData.quillData, null, '\t'));
-            await this.quillRepo.insertEditorJson(quillId, createSectionData.quillData);
+                JSON.stringify(createSectionData.content, null, '\t'));
+            await this.quillRepo.insertEditorJson(quillId, createSectionData.content);
             this.logger.info('Creating section with quill id: %s', quillId);
             let sectionId = await this.sectionRepo.createSection(createSectionData, quillId);
             return sectionId;

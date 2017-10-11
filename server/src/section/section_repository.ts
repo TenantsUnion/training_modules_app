@@ -31,7 +31,7 @@ export class SectionRepository extends AbstractRepository {
         return this.sqlTemplate.query({
             text: `UPDATE tu.section s SET title = $1, description = $2, time_estimate = $3, last_modified = $4
                         WHERE s.id = $5`,
-            values: [data.title, data.description, data.timeEstimate, data.lastModified, data.id]
+            values: [data.title, data.description, data.timeEstimate, data.lastModifiedAt, data.id]
         }).then(() => {
         });
     }

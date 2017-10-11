@@ -14,6 +14,7 @@ export class ModuleRepository extends AbstractRepository {
     }
 
     async addModule(moduleData: CreateModuleData, headerId: string): Promise<string> {
+
         return new Promise<string>((resolve, reject) => {
             (async () => {
                 try {
@@ -34,16 +35,14 @@ export class ModuleRepository extends AbstractRepository {
     }
 
     async saveModule(moduleData: SaveModuleData): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
             return this.sqlTemplate.query({
                 // language=POSTGRES-SQL
                 text: `UPDATE tu.module m SET title = $1, description = $2, time_estimate = $3,
                                 active = $4, ordered_section_ids = $5
                                     where m.id = $6`,
                 values: [moduleData.title, moduleData.description, moduleData.timeEstimate, moduleData.active,
-                    moduleData.orderedSectionIds, moduleData.moduleId]
-            })
-        });
+                    moduleData.orderedSectionIds, moduleData.id]
+            }).then(() => {});
     }
 
     updateLastModified(moduleId: string): Promise<string> {

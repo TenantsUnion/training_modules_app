@@ -5,6 +5,7 @@ import {$} from '../../globals';
 import {coursesService} from '../courses_service';
 import {ViewCourseQuillData} from 'courses';
 import {CourseDetailsComponent} from "../course_details_component/course_details_component";
+import {coursesRoutesService} from '../courses_routes';
 
 @Component({
     data: () => {
@@ -29,7 +30,7 @@ export class CourseComponent extends Vue {
 
     created() {
         this.loading = true;
-        this.isCourseAdmin = coursesService.isCourseAdmin();
+        this.isCourseAdmin = coursesRoutesService.isCourseAdmin();
         this.courseUnsubscribe = coursesService.subscribeCurrentCourse((course: ViewCourseQuillData) => {
             this.loading = false;
             this.course = course;

@@ -13,9 +13,6 @@ import {CourseRefreshComponent} from '../../../../global_components/refresh_rout
             section: {},
             loading: false,
             errorMessages: null,
-            title: '',
-            timeEstimate: '',
-            description: '',
             formstate: {}
         };
     },
@@ -28,9 +25,6 @@ import {CourseRefreshComponent} from '../../../../global_components/refresh_rout
 export class EditSectionComponent extends Vue {
     loading: boolean;
     errorMessages: { [index: string]: string };
-    title: string;
-    timeEstimate: string;
-    description: string;
     quillEditor: QuillComponent;
     formstate: VueForm.FormState;
     section: ViewSectionQuillData;
@@ -44,9 +38,9 @@ export class EditSectionComponent extends Vue {
     mounted() {
         this.quillEditor = <QuillComponent> this.$refs.editor;
         this.currentSectionLoaded.then((section) => {
-           this.loading = false;
-           this.section = section;
-           this.quillEditor.setQuillEditorContents(this.section.content[0].editorJson);
+            this.loading = false;
+            this.section = section;
+            this.quillEditor.setQuillEditorContents(this.section.content[0].editorJson);
         });
 
 
@@ -63,23 +57,27 @@ export class EditSectionComponent extends Vue {
         this.errorMessages = null;
 
         (async () => {
-
             let course = await coursesService.getCurrentCourse();
             let module = await coursesService.getCurrentModule();
 
             try {
-                await coursesService.createSection({
-                    title: this.title,
+                await coursesService.saveSection({
+                    id: this.section.id,
                     courseId: course.id,
                     moduleId: module.id,
-                    description: this.description,
-                    timeEstimate: this.timeEstimate,
-                    quillData: quillData
+                    title: this.section.title,
+                    description: this.section.description,
+                    timeEstimate: this.section.timeEstimate,
+                    content: [{
+                        id: this.section.content[0].id,
+                        editorJson: quillData
+                    }]
+
                 });
                 // to do now what
                 this.$router.push({
                     name: COURSES_ROUTE_NAMES.viewSection,
-                    params: {sectionTitle: this.title}
+                    params: {sectionTitle: this.section.title}
                 });
 
             } catch (errorMessages) {
