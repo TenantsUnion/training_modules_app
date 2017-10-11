@@ -73,7 +73,7 @@ export class QuillComponent extends Vue {
                         maxStack: 100,
                         userOnly: true
                     },
-                    toolbar: [
+                    toolbar: this.readOnly ? false : [
                         ['bold', 'italic', 'underline', 'strike'],
                         ['image', { 'color': [] }, { 'background': [] }],
                         ['blockquote', 'code-block'],
