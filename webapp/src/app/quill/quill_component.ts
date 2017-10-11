@@ -2,7 +2,6 @@ import Quill from "quill";
 import {QuillOptionsStatic, DeltaStatic} from "quill";
 import Vue from "vue";
 import Component from "vue-class-component";
-import * as _ from "underscore";
 
 //default quill theme
 require('quill/dist/quill.core.css');
@@ -16,40 +15,25 @@ Quill.register(ColorClass);
 Quill.register(SizeClass);
 
 let Delta = Quill.import('delta');
-
-export const QUILL_CONFIG: QuillOptionsStatic = {
-    modules: {
-        history: {
-            delay: 1000,
-            maxStack: 100,
-            userOnly: true
-        },
-        toolbar: [
-            [{header: [1, 2, false]}],
-            ['bold', 'italic', 'underline'],
-            ['image', 'background', 'color']
-        ]
-
-    },
-    // readOnly: true,
-    debug: process.env.NODE_ENV === 'debug' ? 'info' : undefined,
-    theme: 'snow'
-};
-
 let counter = 0;
+
+const BLANK_QUILL_OP:Quill.DeltaOperation = {
+    insert: '\n'
+};
 
 @Component({
     data: () => {
         return {
-            editorId: ''
+            editorId: '',
+            quill: null
         };
     },
     props: {
-        readOnly: String
+        readOnly: Boolean
     },
     // language=HTML
     template: `
-        <div class="scrolling-container">
+        <div v-show="displayQuillEditor" class="scrolling-container">
             <div v-bind:class="editorId" class="editor-container"></div>
         </div>
     `
@@ -59,6 +43,7 @@ export class QuillComponent extends Vue {
     editorId: string;
     quill: Quill.Quill;
     readOnly: boolean;
+    delta = Delta;
 
     created() {
         this.editorId = 'editor-' + counter.toString();
@@ -75,18 +60,18 @@ export class QuillComponent extends Vue {
                     },
                     toolbar: this.readOnly ? false : [
                         ['bold', 'italic', 'underline', 'strike'],
-                        ['image', { 'color': [] }, { 'background': [] }],
+                        ['image', {'color': []}, {'background': []}],
                         ['blockquote', 'code-block'],
 
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-                        [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-                        [{ 'direction': 'rtl' }],                         // text direction
+                        [{'list': 'ordered'}, {'list': 'bullet'}],
+                        [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
+                        [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+                        [{'direction': 'rtl'}],                         // text direction
 
-                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        [{'header': [1, 2, 3, 4, 5, 6, false]}],
 
-                        [{ 'font': [] }],
-                        [{ 'align': [] }],
+                        [{'font': []}],
+                        [{'align': []}],
 
                     ]
 
@@ -105,5 +90,16 @@ export class QuillComponent extends Vue {
 
     setQuillEditorContents(quillContents: Quill.DeltaStatic) {
         this.quill.setContents(quillContents);
+    }
+
+    /**
+     * Indicates that quill editor should be displayed if not in read only mode or the quill content is not
+     * the initial blank state of an empty quill Editor
+     */
+    get displayQuillEditor(): boolean {
+        return !this.readOnly ||
+            (this.quill && (this.quill.getContents().ops.length > 1 ||
+        //empty quill editor initialized with single insert operation of new line
+                this.quill.getContents().ops[0].insert !== "\n"));
     }
 }
