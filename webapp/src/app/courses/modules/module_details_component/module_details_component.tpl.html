@@ -1,14 +1,13 @@
 <div class="main">
-    <div v-if="loading" class="row">
+    <div v-show="loading" class="row">
         <loading></loading>
     </div>
-    <div v-if="module" class="row">
+    <div v-show="!loading" class="row">
         <div class="small-12 large-10 columns">
             <div>
                 <h2>{{module.title}}
                     <button v-if="isCourseAdmin" class="button" v-on:click="createSection">Create Section</button>
                 </h2>
-                <h3>{{module.title}}</h3>
             </div>
             <div v-for="section in module.sections">
                 <h3>{{section.title}}</h3>
@@ -17,7 +16,7 @@
         </div>
         <div class="row">
             <div class="small-12 columns">
-                <quill-editor ref="editor"></quill-editor>
+                <quill-editor ref="editor" read-only="true"></quill-editor>
             </div>
         </div>
     </div>
