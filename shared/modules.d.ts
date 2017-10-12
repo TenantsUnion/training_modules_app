@@ -36,7 +36,8 @@ declare namespace modules {
         courseId: string;
         headerContent: Quill.DeltaStatic;
         headerContentId: string;
-        orderedSectionIds: string[]
+        orderedSectionIds: string[],
+        removeSectionIds: string[]
     }
 
     interface ModuleDetails {

@@ -7,15 +7,14 @@ import * as _ from 'underscore';
 import {coursesService} from '../../courses_service';
 import {coursesRoutesService} from '../../courses_routes';
 import {ViewModuleQuillData} from '../../../../../../shared/modules';
+import {ViewSectionTransferData} from '../../../../../../shared/sections';
 
 @Component({
     data: () => {
         return {
-            module: {
-                title: '',
-                timeEstimate: '',
-                description: '',
-            },
+            module: {},
+            removeSections: {},
+            sectionTitleStyleObject: {},
             loading: false,
             errorMessages: null,
             formstate: {}
@@ -35,6 +34,7 @@ export class EditModuleComponent extends Vue {
     quillEditor: QuillComponent;
     formstate: VueForm.FormState;
     module: ViewModuleQuillData;
+    removeSections: { [index: string]: boolean };
     isCourseAdmin: boolean;
     moduleUnsubscribe: () => void;
 
@@ -42,7 +42,7 @@ export class EditModuleComponent extends Vue {
         this.loading = true;
         this.moduleUnsubscribe = coursesService.subscribeCurrentModule((module) => {
             this.loading = false;
-            this.module = module;
+            this.module = _.extend({}, module);
             if (this.quillEditor) {
                 this.quillEditor.setQuillEditorContents(this.module.headerContent.editorJson);
             }
@@ -59,6 +59,14 @@ export class EditModuleComponent extends Vue {
         if (this.module.headerContent) {
             this.quillEditor.setQuillEditorContents(this.module.headerContent.editorJson);
         }
+    }
+
+    removeSection(section) {
+        this.$set(this.removeSections, section.id, true);
+    }
+
+    cancelRemoveSection(section) {
+        this.$set(this.removeSections, section.id, false);
     }
 
     async saveModule() {
@@ -82,13 +90,20 @@ export class EditModuleComponent extends Vue {
             timeEstimate: this.module.timeEstimate,
             headerContent: quillData,
             headerContentId: this.module.headerContent.id,
+            removeSectionIds: Object.keys(this.removeSections).filter((sectionId) => this.removeSections[sectionId]),
             active: this.module.active
         });
         this.loading = false;
-        console.log('saved course');
         this.$router.push({
             name: 'adminCourse.moduleDetails',
             params: {moduleTitle: this.module.title}
         });
     }
+
+    sectionTitleStyles(section: ViewSectionTransferData) {
+        return {
+            "text-decoration": this.removeSections[section.id] ? "line-through" : "none"
+        };
+    }
+
 }
