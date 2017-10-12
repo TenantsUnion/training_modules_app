@@ -7,12 +7,12 @@
  *      values: ['brianc', 'brian.m.carlson@gmail.com'],
  *  }
  */
-import {traverseActionOnProperties} from './util/property_traversal_util';
-import {snakeToCamelCase, traverseSnakeToCamelCase} from './util/snake_to_camel_case_util';
+import {traverseSnakeToCamelCase} from './util/snake_to_camel_case_util';
+import {Moment} from 'moment';
 
 export interface IQueryConfig {
     text: string,
-    values: (string | number | boolean | number | string[] | number[] | Quill.DeltaStatic | Date)[]
+    values: (string | number | boolean | number | string[] | number[] | Quill.DeltaStatic | Date | Moment)[]
 }
 
 declare type ParameterizedSql = string | IQueryConfig;

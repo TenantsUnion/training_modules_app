@@ -5,6 +5,7 @@ import {Datasource} from "../datasource";
 import {CreateModuleDataHeaderId} from './modules';
 import {CreateModuleData} from 'modules';
 import {SaveModuleData} from 'modules';
+import * as moment from "moment";
 
 export class ModuleRepository extends AbstractRepository {
     logger: LoggerInstance = getLogger('ModuleRepository', 'debug');
@@ -46,7 +47,7 @@ export class ModuleRepository extends AbstractRepository {
     }
 
     updateLastModified(moduleId: string): Promise<string> {
-        const lastModified = new Date();
+        const lastModified = moment.utc();
         let query = {
             text: `UPDATE tu.module m SET last_modified_at = $1 WHERE m.id = $2`,
             values: [lastModified, moduleId]

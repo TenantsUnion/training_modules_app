@@ -9,6 +9,8 @@ import {LoggerInstance} from 'winston';
 import {isUsernameCourseTitle, UsernameCourseTitle} from "./courses_handler";
 import * as _ from "underscore";
 import {ViewModuleTransferData} from '../../../shared/modules';
+import {ViewSectionTransferData} from '../../../shared/sections';
+import * as moment from "moment";
 
 export interface ICoursesRepository {
     loadUserEnrolledCourse(username: string, courseId: string): Promise<UserEnrolledCourseData>;
@@ -105,24 +107,19 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
     }
 
     async courseExists(courseData: CreateCourseData): Promise<boolean> {
-        console.log('checking course exists from courses repository');
-        return new Promise<boolean>((resolve, reject) => {
-            if (!courseData.title) {
-                return resolve(false);
-            }
+        if (!courseData.title) {
+            return false;
+        }
 
-            (async () => {
-                try {
-                    let result = await this.datasource.query({
-                        text: `SELECT COUNT(*) FROM tu.course WHERE title = $1`,
-                        values: [courseData.title]
-                    });
-                    resolve(result[0].count !== '0');
-                } catch (e) {
-                    reject(e);
-                }
-            })();
-        });
+        try {
+            let result = await this.datasource.query({
+                text: `SELECT COUNT(*) FROM tu.course WHERE title = $1`,
+                values: [courseData.title]
+            });
+            return result[0].count !== '0';
+        } catch (e) {
+            throw e
+        }
     }
 
     async createCourse(courseData: CreateCourseData): Promise<string> {
@@ -184,9 +181,9 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                              (SELECT json_agg(m.*) AS modules FROM
                                 (SELECT * FROM tu.module m
                                   INNER JOIN LATERAL (select json_agg(s.*) as sections from tu.section s
-                                             where s.id in (select unnest(m.ordered_section_ids))) s
+                                             where s.id = ANY(m.ordered_section_ids)) s
                                   on true)
-                                m WHERE m.id IN (select unnest(c.ordered_module_ids))) m
+                                m WHERE m.id = ANY(c.ordered_module_ids)) m
                     ON TRUE
                     ON c.id IN (select unnest(u.admin_of_course_ids)) WHERE u.username = $2;
                     `,
@@ -199,9 +196,9 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                      FROM (SELECT m.*, s.sections FROM tu.module m
                           INNER JOIN LATERAL (SELECT json_agg(s.*) AS sections
                                               FROM tu.section s
-                                              WHERE s.id IN (SELECT unnest(m.ordered_section_ids))) s
+                                              WHERE s.id = ANY(m.ordered_section_ids)) s
                             ON TRUE)
-                            m where m.id IN (select unnest(c.ordered_module_ids))) m ON TRUE
+                            m where m.id = ANY(c.ordered_module_ids)) m ON TRUE
                   WHERE c.id = $1;
             `,
             values: [courseId]
@@ -218,10 +215,13 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                                 // modules aren't pulled out in order since results are narrowed down via 'WHERE'
                                 // clause and then automatically joined with ON TRUE. Have to manually order according
                                 // to orderedModuleIds property
-                                modules: _.chain(<ViewModuleTransferData>row.modules)
+                                modules: _.chain(<ViewModuleTransferData[]> row.modules)
                                     .map((module) => {
-                                    // fixme better way to convert integer ids to strings
-                                        return _.extend({}, module, {id: module.id + ''})
+                                        // fixme better way to convert integer ids to strings
+                                        return _.extend({}, module, {
+                                            id: module.id + '',
+                                            headerContent: module.headerContent + ''
+                                        })
                                     })
                                     .reduce((ordered, module, index, modules) => {
                                             if (!Object.keys(ordered.moduleIndex).length) {
@@ -232,22 +232,39 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                                                 }, {});
                                             }
 
+                                            module.sections = _.chain(<ViewSectionTransferData[]> module.sections)
+                                                .map((section) => {
+                                                    return _.extend({}, section, {
+                                                        id: section.id + ''
+                                                    });
+                                                })
+                                                .reduce((ordered, section: ViewSectionTransferData) => {
+                                                    if (!Object.keys(ordered.sectionIndex).length) {
+                                                        // initialize lookup
+                                                        ordered.sectionIndex = _.reduce(module.orderedSectionIds, (sectionIndex, sectionId, index) => {
+                                                            sectionIndex[sectionId + ''] = index;
+                                                            return sectionIndex;
+                                                        }, {});
+                                                    }
+                                                    let sectionIndex = ordered.sectionIndex[section.id + ''];
+                                                    ordered.sections[parseInt(sectionIndex)] = section;
+                                                    return ordered;
+                                                }, {
+                                                    sectionIndex: {},
+                                                    sections: []
+                                                }).value().sections;
+
                                             let moduleIndex = ordered.moduleIndex[module.id + ''];
                                             ordered.modules[parseInt(moduleIndex)] = module;
 
-                                            // todo order sections as well?
-
                                             return ordered;
-
                                         },
                                         {
                                             moduleIndex: {},
                                             modules: []
                                         }
-                                    )
-                                    .value().modules
-                            })
-                                ;
+                                    ).value().modules
+                            });
                         });
                         resolve(processedResults[0]);
                     } catch (e) {
@@ -272,7 +289,7 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
     }
 
     updateLastModified(courseId: string): Promise<string> {
-        const lastModified = new Date();
+        const lastModified = moment.utc();
         let query = {
             text: `UPDATE tu.course SET last_modified_at = $1`,
             values: [lastModified]

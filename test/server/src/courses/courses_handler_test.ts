@@ -3,11 +3,12 @@ import {getLogger} from "../../../../server/src/log";
 import * as _ from "underscore";
 import {accountHandler, coursesHandler} from "../../../../server/src/config/handler.config";
 import {clearDbUtil} from "../clear_db_util";
-import {CreateModuleData, ModuleData} from 'modules';
+import {CreateModuleData, ViewModuleTransferData} from 'modules';
 import {CreateSectionData} from 'shared/sections';
 import {coursesRepository} from '../../../../server/src/config/repository.config';
 import {IUserInfo} from 'user';
 import {AdminCourseDescription, CreateCourseData} from 'courses';
+import * as moment from "moment";
 
 describe('courses handler', function () {
     let logger = getLogger('CoursesHandlerTest', 'debug');
@@ -43,7 +44,7 @@ describe('courses handler', function () {
     };
 
     let module1: (string) => CreateModuleData = moduleCreator({
-        description: 'Module 1 description',
+        description: 'Module 1 description blerg',
         timeEstimate: '1 hour',
         title: 'first module'
     });
@@ -54,7 +55,7 @@ describe('courses handler', function () {
         title: 'second module'
     });
 
-    let sectionCreator: (section) => (courseId, moduleId) => CreateSectionData = function (section) {
+    let sectionCreator: (section) => (courseId: string, moduleId: string) => CreateSectionData = function (section) {
         let sectionFn = (courseId, moduleId) => {
             return {
                 courseId: courseId,
@@ -129,33 +130,28 @@ describe('courses handler', function () {
     it('should add a module to a course', function () {
         return (async () => {
             let courseId = await coursesHandler.createCourse(courseInfo1);
-            let checkModule = (expected: ModuleData, actual: ModuleData) => {
-                expect(expected.id).to.equal(actual.id);
-                expect(expected.header).to.equal(actual.header);
-                expect(expected.title).to.equal(actual.title);
-                expect(expected.description).to.equal(actual.description);
-                expect(expected.timeEstimate).to.equal(actual.timeEstimate);
-                expect(expected.lastEdited).to.equal(actual.lastEdited);
-                expect(expected.sections).to.equal(actual.sections);
+            let checkModule = (actual: ViewModuleTransferData, expected: ViewModuleTransferData) => {
+                expect(actual.id).to.equal(expected.id);
+                expect(_.isString(actual.headerContent) && !!actual.headerContent).to.be.true;
+                expect(actual.title).to.equal(expected.title);
+                expect(actual.description).to.equal(expected.description);
+                expect(actual.timeEstimate).to.equal(expected.timeEstimate);
+                expect(moment(actual.lastModifiedAt, moment.ISO_8601).isValid()).to.be.true;
+                expect(actual.sections).to.deep.equal([]);
             };
             const moduleData1 = module1(courseId);
             const moduleData2 = module2(courseId);
-            let module1Id = await coursesHandler.createModule(moduleData1);
-            let module2Id = await coursesHandler.createModule(moduleData2);
+            await coursesHandler.createModule(moduleData1);
+            let course = await coursesHandler.createModule(moduleData2);
             let expectedModules = [
-                _.extend({}, {id: module1Id}, moduleData1),
-                _.extend({}, {id: module2Id}, moduleData2)
+                _.extend({}, {id: course.modules[0].id, headerContent: course.modules[0].headerContent}, moduleData1),
+                _.extend({}, {id: course.modules[1].id}, moduleData2)
             ];
 
             // todo use http://sinonjs.org/ to mock new Date() in order to be able to test lastModifiedTime being updated when course is modified
 
-            let course = await coursesRepository.loadUserAdminCourse({
-                username: username,
-                courseTitle: courseInfo1.title
-            });
-
             expect(course.modules.length).to.equal(2);
-            _.zip(expectedModules, course.modules).forEach((modulePair) => {
+            _.zip(course.modules, expectedModules).forEach((modulePair) => {
                 checkModule(modulePair[0], modulePair[1]);
             });
         })();
@@ -164,27 +160,17 @@ describe('courses handler', function () {
     it('should add a section to a module of a course', function () {
         return (async () => {
             let courseId = await coursesHandler.createCourse(courseInfo1);
-            logger.info('Created course');
             let moduleData = module1(courseId);
-            let moduleId = await coursesHandler.createModule(moduleData);
-            logger.info('created module');
-            let sectionData = section1(courseId, moduleId);
 
-            let sectionId = await coursesHandler.createSection(sectionData);
-            logger.info('created section');
-            let updatedModule = _.extend({}, {
-                sections: [_.extend({}, {id: sectionId}, sectionData)]
-            }, moduleData);
+            let course = await coursesHandler.createModule(moduleData);
+            let sectionData = section1(courseId, course.modules[0].id);
 
-            let course = await coursesRepository.loadUserAdminCourse({
-                username: username,
-                courseTitle: courseInfo1.title
-            });
+            course = await coursesHandler.createSection(sectionData);
 
             let module = course.modules[0];
             let section = module.sections[0];
             expect(module.sections.length).to.equal(1);
-            expect('' + section.id).to.equal(sectionId);
+            expect(parseInt(section.id)).to.be.greaterThan(0);
             expect(section.title).to.equal(sectionData.title);
             expect(section.description).to.equal(sectionData.description);
             expect(section.orderedContentIds.length).to.equal(1);
