@@ -12,7 +12,11 @@ import {ViewSectionTransferData} from '../../../../../../shared/sections';
 @Component({
     data: () => {
         return {
-            module: {},
+            module: {
+                title: '',
+                description: '',
+                timeEstimate: ''
+            },
             removeSections: {},
             sectionTitleStyleObject: {},
             loading: false,
