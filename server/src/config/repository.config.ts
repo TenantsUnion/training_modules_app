@@ -22,7 +22,7 @@ pool.on('error', (err, client) => {
     console.log('Unexpected error on idle client: ', err);
 });
 
-const postgresDb = new Datasource(pool);
+export const postgresDb = new Datasource(pool);
 export const coursesRepository = new CoursesRepository(postgresDb);
 export const userRepository = new UserRepository(postgresDb);
 export const accountRepository = new AccountRepository(postgresDb);

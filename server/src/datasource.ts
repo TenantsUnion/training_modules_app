@@ -9,6 +9,7 @@
  */
 import {traverseSnakeToCamelCase} from './util/snake_to_camel_case_util';
 import {Moment} from 'moment';
+import {getLogger} from './log';
 
 export interface IQueryConfig {
     text: string,
@@ -19,55 +20,50 @@ declare type ParameterizedSql = string | IQueryConfig;
 declare type SqlParameters = string | string[]
 
 export class Datasource {
+    private logger = getLogger('Datasource', 'error');
     private transactionClient: any = null;
     private convertPropertiesToCamelCase = traverseSnakeToCamelCase;
 
     constructor(private pool: any) {
     }
 
-    startTransaction(): any {
-        (async () => {
-            this.transactionClient = await this.pool.connect();
-            await this.transactionClient.query('BEGIN');
-        })();
+    async startTransaction(): Promise<void> {
+        this.transactionClient = await this.pool.connect();
+        await this.transactionClient.query('BEGIN');
     }
 
-    transactionQuery(sql: ParameterizedSql, parameters?: SqlParameters): any {
+    async transactionQuery(sql: ParameterizedSql, parameters?: SqlParameters): Promise<void> {
         if (!this.isTransactionInProgress()) {
             throw new Error('No transaction in progress to add query to ');
         }
 
-        (async () => {
-            try {
-                await this.transactionClient.query(sql, parameters);
-            } catch (e) {
-                console.error('Error executing sql ' + sql);
-                await this.transactionClient.query('ROLLBACK');
-                console.error('Rolled back client');
-                this.transactionClient.release();
-                console.error('Released client');
-                throw e;
-            }
-        })().catch(e => console.error(e.stack));
+        try {
+            await this.transactionClient.query(sql, parameters);
+        } catch (e) {
+            this.logger.error('Error executing sql ' + sql);
+            await this.transactionClient.query('ROLLBACK');
+            this.logger.error('Rolled back client');
+            this.transactionClient.release();
+            this.logger.error('Released client');
+            throw e;
+        }
     }
 
-    commitTransaction(): any {
+    async commitTransaction(): Promise<void> {
         if (!this.isTransactionInProgress()) {
             throw new Error('No transaction in progress to add query to ');
         }
 
-        (async () => {
-            try {
-                await this.transactionClient('COMMIT');
-            } catch (e) {
-                console.error('Error committing transaction');
-                console.error(e);
-                console.error('Rolled back client');
-                this.transactionClient.release();
-                console.error('Released client');
-                throw e;
-            }
-        })().catch(e => console.error(e.stack));
+        try {
+            await this.transactionClient.query('COMMIT');
+        } catch (e) {
+            this.logger.error('Error committing transaction');
+            this.logger.error(e);
+            this.logger.error('Rolled back client');
+            this.transactionClient.release();
+            this.logger.error('Released client');
+            throw e;
+        }
     }
 
     isTransactionInProgress(): boolean {
@@ -79,7 +75,7 @@ export class Datasource {
             this.transactionQuery(sql, parameters) :
             this.pool.query(sql, parameters);
         return queryResult.then((result) => {
-           return this.processRows(result.rows);
+            return result && this.processRows(result.rows);
         });
     }
 

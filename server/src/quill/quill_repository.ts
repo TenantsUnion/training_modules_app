@@ -17,50 +17,40 @@ export class QuillRepository extends AbstractRepository {
     }
 
     async loadEditorJson(id: string): Promise<QuillEditorData> {
-        return new Promise<QuillEditorData>((resolve, reject) => {
-            (async () => {
-                try {
-                    let result = await this.sqlTemplate.query({
-                        text: `SELECT id, editor_json FROM tu.quill_data WHERE
+        try {
+            let result = await this.sqlTemplate.query({
+                text: `SELECT id, editor_json FROM tu.quill_data WHERE
                           id = $1`,
-                        values: [id]
-                    });
-
-                    resolve(result[0]);
-                } catch (e) {
-                    this.logger.error('Failed to execute ')
-                }
-            })();
-        });
+                values: [id]
+            });
+            return result[0];
+        } catch (e) {
+            this.logger.error('Failed to execute ')
+        }
     }
 
     async insertEditorJson(quillId: string, editorJson: Quill.DeltaStatic): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            (async () => {
-                try {
-                    await this.sqlTemplate.query({
-                        // language=PostgreSQL
-                        text: `INSERT INTO tu.quill_data (id, editor_json)
+        await this.sqlTemplate.query({
+            text: `INSERT INTO tu.quill_data (id, editor_json)
                         VALUES ($1, $2)`,
-                        values: [quillId, editorJson]
-                    });
-
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            })();
+            values: [quillId, editorJson]
         });
     }
 
     async updateEditorJson(id: string, editorJson: Quill.DeltaStatic): Promise<void> {
-        return this.sqlTemplate.query({
+        await this.sqlTemplate.query({
             text: `UPDATE tu.quill_data SET
                           editor_json = $1,
                            last_modified_at = $2 WHERE
                           id = $3`,
             values: [editorJson, new Date(), id]
-        }).then(() => {
+        });
+    }
+
+    async remove(quillId: string): Promise<void> {
+        await this.sqlTemplate.query({
+            text: `DELETE from tu.quill_data q where q.id = $1`,
+            values: [quillId]
         });
     }
 }

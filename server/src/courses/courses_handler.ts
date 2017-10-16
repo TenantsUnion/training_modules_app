@@ -1,3 +1,4 @@
+import * as _ from "underscore";
 import {IUserHandler} from "../user/user_handler";
 import {ICoursesRepository} from "./courses_repository";
 import {
@@ -6,10 +7,11 @@ import {
 } from "courses";
 import {getLogger} from '../log';
 import {CreateModuleData, SaveModuleData} from "../../../shared/modules";
-import {CreateSectionData, SaveSectionData} from '../../../shared/sections';
+import {CreateSectionData, SaveSectionData, ViewSectionTransferData} from '../../../shared/sections';
 import {SectionHandler} from '../section/section_handler';
 import {QuillRepository} from '../quill/quill_repository';
 import {ModuleRepository} from '../module/module_repository';
+import {Datasource} from '../datasource';
 
 export interface UsernameCourseTitle {
     username: string;
@@ -25,7 +27,8 @@ export const isUsernameCourseTitle = function (obj): obj is UsernameCourseTitle 
 export class CoursesHandler {
     logger = getLogger('CourseHandler', 'info');
 
-    constructor(private coursesRepository: ICoursesRepository,
+    constructor(private sqlTemplate: Datasource,
+                private coursesRepository: ICoursesRepository,
                 private quillRepository: QuillRepository,
                 private userHandler: IUserHandler,
                 private moduleRepo: ModuleRepository,
@@ -108,54 +111,71 @@ export class CoursesHandler {
     }
 
     async saveModule(moduleData: SaveModuleData): Promise<ViewCourseTransferData> {
-        return (async () => {
-            await Promise.all([
-                this.coursesRepository.updateLastModified(moduleData.courseId),
-                this.moduleRepo.saveModule(moduleData),
-                this.moduleRepo.updateLastModified(moduleData.id),
-                this.quillRepository.updateEditorJson(moduleData.headerContentId, moduleData.headerContent),
-            ]);
-            this.logger.log('info', 'saved module id: %s, title: %s', moduleData.id, moduleData.title);
+        let course = await this.coursesRepository.loadUserAdminCourse(moduleData.courseId);
+        let sectionsRemoved = _.extend({}, moduleData, {
+            orderedSectionIds: moduleData.orderedSectionIds.filter((sectionId) => {
+                return moduleData.removeSectionIds.indexOf(sectionId) === -1;
+            })
+        });
+        await Promise.all([
+            this.coursesRepository.updateLastModified(moduleData.courseId),
+            this.moduleRepo.saveModule(sectionsRemoved),
+            this.moduleRepo.updateLastModified(moduleData.id),
+            this.quillRepository.updateEditorJson(moduleData.headerContentId, moduleData.headerContent),
+        ]);
 
-            return await this.coursesRepository.loadUserAdminCourse(moduleData.courseId);
-        })();
+        //remove sections from module
+
+        let sectionLookup: { [index: string]: ViewSectionTransferData } = _.find(course.modules, (module) => {
+            return module.id === moduleData.id;
+        })
+            .sections.reduce((acc, section) => {
+                acc[section.id] = section;
+                return acc;
+            }, {});
+
+        let asyncRemoveSections = _.chain(moduleData.removeSectionIds)
+            .map((sectionId) => {
+                return sectionLookup[sectionId];
+            })
+            .map((section) => {
+                return this.sectionHandler.removeSection(section);
+            }).value();
+        await Promise.all(asyncRemoveSections);
+
+        this.logger.log('info', 'saved module id: %s, title: %s', moduleData.id, moduleData.title);
+
+        return this.coursesRepository.loadUserAdminCourse(moduleData.courseId);
     }
 
     async saveSection(courseId, moduleId, sectionData: SaveSectionData): Promise<void> {
-        return Promise.all([
-            this.coursesRepository.updateLastModified(courseId),
-            this.moduleRepo.updateLastModified(moduleId),
-            this.sectionHandler.saveSection(sectionData)
-        ]).then(() => {
-
-        }).catch((e) => {
+        try {
+            await this.coursesRepository.updateLastModified(courseId);
+            await this.moduleRepo.updateLastModified(moduleId);
+            await this.sectionHandler.saveSection(sectionData);
+        } catch (e) {
             this.logger.error(e);
             this.logger.error(e.stack);
             throw e;
-        })
+        }
     }
 
     async createSection(sectionData: CreateSectionData): Promise<ViewCourseTransferData> {
-        return new Promise<ViewCourseTransferData>((resolve, reject) => {
-            (async () => {
-                try {
-                    let sectionId = await this.sectionHandler.createSection(sectionData);
-                    this.logger.info('Create new section with id: %s', sectionId);
-                    await this.coursesRepository.updateLastModified(sectionData.courseId);
-                    this.logger.info('Updated course last modified: %s', sectionData.courseId);
-                    await this.moduleRepo.addSection(sectionData.moduleId, sectionId);
-                    this.logger.info('Added section to module: %s', sectionData.moduleId);
+        try {
+            let sectionId = await this.sectionHandler.createSection(sectionData);
+            this.logger.info('Create new section with id: %s', sectionId);
+            await this.coursesRepository.updateLastModified(sectionData.courseId);
+            this.logger.info('Updated course last modified: %s', sectionData.courseId);
 
-                    let course = await this.coursesRepository.loadUserAdminCourse(sectionData.courseId);
+            await this.moduleRepo.addSection(sectionData.moduleId, sectionId);
+            this.logger.info('Added section to module: %s', sectionData.moduleId);
 
-                    resolve(course);
-                } catch (e) {
-                    this.logger.error(e);
-                    this.logger.error(e.stack);
-                    reject(e);
-                }
-            })();
-        });
+            return await this.coursesRepository.loadUserAdminCourse(sectionData.courseId);
+        } catch (e) {
+            this.logger.error(e);
+            this.logger.error(e.stack);
+            throw e;
+        }
     }
 
     saveCourse(saveCourse: SaveCourseData): Promise<ViewCourseTransferData> {

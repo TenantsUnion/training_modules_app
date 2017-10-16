@@ -129,8 +129,7 @@ export class CoursesController implements ModuleOperations {
         (async () => {
             try {
                 let course = await this.coursesHandler.saveModule(saveModuleData);
-                response.status(200)
-                    .send(course);
+                response.status(200).send(course);
             } catch (e) {
                 this.logger.log('error', e);
                 this.logger.log('error', e.stack);

@@ -203,89 +203,79 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
             `,
             values: [courseId]
         };
-        return new Promise<ViewCourseTransferData>((resolve, reject) => {
-                (async () => {
-                    try {
-                        this.logger.log('info', 'querying for admin course');
-                        this.logger.log('debug', `sql => ${query.text}`);
-                        let results = await this.datasource.query(query);
-                        let processedResults = results.map((row) => {
-                            return _.extend({}, row, {
-                                id: '' + row.id,
-                                // modules aren't pulled out in order since results are narrowed down via 'WHERE'
-                                // clause and then automatically joined with ON TRUE. Have to manually order according
-                                // to orderedModuleIds property
-                                modules: _.chain(<ViewModuleTransferData[]> row.modules)
-                                    .map((module) => {
-                                        // fixme better way to convert integer ids to strings
-                                        return _.extend({}, module, {
-                                            id: module.id + '',
-                                            headerContent: module.headerContent + ''
-                                        })
+        try {
+            this.logger.log('info', 'querying for admin course');
+            this.logger.log('debug', `sql => ${query.text}`);
+            let results = await this.datasource.query(query);
+            let processedResults = results.map((row) => {
+                return _.extend({}, row, {
+                    id: '' + row.id,
+                    // modules aren't pulled out in order since results are narrowed down via 'WHERE'
+                    // clause and then automatically joined with ON TRUE. Have to manually order according
+                    // to orderedModuleIds property
+                    modules: _.chain(<ViewModuleTransferData[]> row.modules)
+                        .map((module) => {
+                            // fixme better way to convert integer ids to strings
+                            return _.extend({}, module, {
+                                id: module.id + '',
+                                headerContent: module.headerContent + ''
+                            })
+                        })
+                        .reduce((ordered, module, index, modules) => {
+                                if (!Object.keys(ordered.moduleIndex).length) {
+                                    // initialize lookup
+                                    ordered.moduleIndex = _.reduce(row.orderedModuleIds, (moduleIndex, moduleId, index) => {
+                                        moduleIndex[moduleId + ''] = index;
+                                        return moduleIndex;
+                                    }, {});
+                                }
+
+                                module.sections = _.chain(<ViewSectionTransferData[]> module.sections)
+                                    .map((section) => {
+                                        return _.extend({}, section, {
+                                            id: section.id + ''
+                                        });
                                     })
-                                    .reduce((ordered, module, index, modules) => {
-                                            if (!Object.keys(ordered.moduleIndex).length) {
-                                                // initialize lookup
-                                                ordered.moduleIndex = _.reduce(row.orderedModuleIds, (moduleIndex, moduleId, index) => {
-                                                    moduleIndex[moduleId + ''] = index;
-                                                    return moduleIndex;
-                                                }, {});
-                                            }
-
-                                            module.sections = _.chain(<ViewSectionTransferData[]> module.sections)
-                                                .map((section) => {
-                                                    return _.extend({}, section, {
-                                                        id: section.id + ''
-                                                    });
-                                                })
-                                                .reduce((ordered, section: ViewSectionTransferData) => {
-                                                    if (!Object.keys(ordered.sectionIndex).length) {
-                                                        // initialize lookup
-                                                        ordered.sectionIndex = _.reduce(module.orderedSectionIds, (sectionIndex, sectionId, index) => {
-                                                            sectionIndex[sectionId + ''] = index;
-                                                            return sectionIndex;
-                                                        }, {});
-                                                    }
-                                                    let sectionIndex = ordered.sectionIndex[section.id + ''];
-                                                    ordered.sections[parseInt(sectionIndex)] = section;
-                                                    return ordered;
-                                                }, {
-                                                    sectionIndex: {},
-                                                    sections: []
-                                                }).value().sections;
-
-                                            let moduleIndex = ordered.moduleIndex[module.id + ''];
-                                            ordered.modules[parseInt(moduleIndex)] = module;
-
-                                            return ordered;
-                                        },
-                                        {
-                                            moduleIndex: {},
-                                            modules: []
+                                    .reduce((ordered, section: ViewSectionTransferData) => {
+                                        if (!Object.keys(ordered.sectionIndex).length) {
+                                            // initialize lookup
+                                            ordered.sectionIndex = _.reduce(module.orderedSectionIds, (sectionIndex, sectionId, index) => {
+                                                sectionIndex[sectionId + ''] = index;
+                                                return sectionIndex;
+                                            }, {});
                                         }
-                                    ).value().modules
-                            });
-                        });
-                        resolve(processedResults[0]);
-                    } catch (e) {
-                        this.logger.log('error', e);
-                        this.logger.log('error', e.stack);
-                        reject(e);
-                    }
-                })();
-            }
-        );
+                                        let sectionIndex = ordered.sectionIndex[section.id + ''];
+                                        ordered.sections[parseInt(sectionIndex)] = section;
+                                        return ordered;
+                                    }, {
+                                        sectionIndex: {},
+                                        sections: []
+                                    }).value().sections;
+
+                                let moduleIndex = ordered.moduleIndex[module.id + ''];
+                                ordered.modules[parseInt(moduleIndex)] = module;
+
+                                return ordered;
+                            },
+                            {
+                                moduleIndex: {},
+                                modules: []
+                            }
+                        ).value().modules
+                });
+            });
+            return processedResults[0];
+        } catch (e) {
+            this.logger.log('error', e);
+            this.logger.log('error', e.stack);
+        }
     }
 
-    addModule(courseId: string, moduleId: string): Promise<void> {
-        let query = {
+    async addModule(courseId: string, moduleId: string): Promise<void> {
+        await this.sqlTemplate.query({
             text: `UPDATE tu.course SET ordered_module_ids = course.ordered_module_ids || $1 :: BIGINT WHERE id = $2`,
             values: [moduleId, courseId]
-        };
-        return this.sqlTemplate.query(query)
-            .then(() => {
-            });
-
+        });
     }
 
     updateLastModified(courseId: string): Promise<string> {

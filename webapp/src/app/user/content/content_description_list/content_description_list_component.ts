@@ -1,8 +1,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import * as VueRouter from "vue-router";
 import {contentHttpService} from "../content_http_service";
-import {ContentData} from "content";
+import {ContentData} from '../../../../../../shared/content';
 
 @Component({
     data: () => {
@@ -16,7 +15,6 @@ import {ContentData} from "content";
 })
 export class ContentDescriptionListComponent extends Vue {
     errorMessages: object;
-    $router: VueRouter;
     loading: boolean;
     contentDescriptionList: ContentData[];
 

@@ -10,29 +10,28 @@ export class SectionRepository extends AbstractRepository {
         super('section_id_seq', sqlTemplate);
     }
 
-    createSection(data: CreateSectionData, quillId:string): Promise<string> {
-        return (async () => {
-            let sectionId = await this.getNextId();
-            await this.sqlTemplate.query({
-                // language=POSTGRES-PSQL
-                text: ` INSERT INTO tu.section (id, title, description, ordered_content_ids)
+    async createSection(data: CreateSectionData, quillId: string): Promise<string> {
+        let sectionId = await this.getNextId();
+        await this.sqlTemplate.query({
+            text: ` INSERT INTO tu.section (id, title, description, ordered_content_ids)
                              VALUES ($1, $2, $3, ARRAY[$4::bigint])`,
-                values: [sectionId, data.title, data.description, quillId]
-            });
-            return sectionId;
-        })().catch((e) => {
-            this.logger.error(e);
-            this.logger.error(e.stack);
-            throw e;
+            values: [sectionId, data.title, data.description, quillId]
         });
+        return sectionId;
     }
 
     async updateSection(data: SaveSectionData): Promise<void> {
-        return this.sqlTemplate.query({
+        await this.sqlTemplate.query({
             text: `UPDATE tu.section s SET title = $1, description = $2, time_estimate = $3, last_modified = $4
                         WHERE s.id = $5`,
             values: [data.title, data.description, data.timeEstimate, new Date(), data.id]
-        }).then(() => {
+        });
+    }
+
+    async remove(sectionId: string): Promise<void> {
+        await this.sqlTemplate.query({
+            text: `DELETE FROM tu.section s where s.id = $1`,
+            values: [sectionId]
         });
     }
 }
