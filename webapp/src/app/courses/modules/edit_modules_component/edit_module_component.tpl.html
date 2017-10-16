@@ -54,24 +54,26 @@
             </div>
         </validate>
         <div class="row">
-            <div class="columns small-12 large-10" v-for="section in module.sections">
-                <h3 v-bind:style="sectionTitleStyles(section)">
-                    {{section.title}}
-                    <button v-if="!removeSections[section.id]"
-                            v-on:click="removeSection(section)"
-                            title="Remove Section" type="button" class="button alert button__icon">
-                        <i class="fa fa-minus fa-fw" aria-hidden="true"></i>
-                        <span class="sr-only">Remove Section</span>
-                    </button>
-                    <button v-if="removeSections[section.id]"
-                            v-on:click="cancelRemoveSection(section)"
-                            title="Cancel Remove Section" type="button" class="button secondary button__icon">
-                        <i class="fa fa-times fa-fw" aria-hidden="true"></i>
-                        <span class="sr-only">Cancel Remove Section</span>
-                    </button>
-                </h3>
-                <p>{{section.description}}</p>
-            </div>
+            <draggable v-model="moduleSections" element="div" class="columns small-12 large-10">
+                <div v-for="section in moduleSections">
+                    <h3 v-bind:style="sectionTitleStyles(section)">
+                        {{section.title}}
+                        <button v-if="!removeSections[section.id]"
+                                v-on:click="removeSection(section)"
+                                title="Remove Section" type="button" class="button alert button__icon">
+                            <i class="fa fa-minus fa-fw" aria-hidden="true"></i>
+                            <span class="sr-only">Remove Section</span>
+                        </button>
+                        <button v-if="removeSections[section.id]"
+                                v-on:click="cancelRemoveSection(section)"
+                                title="Cancel Remove Section" type="button" class="button secondary button__icon">
+                            <i class="fa fa-times fa-fw" aria-hidden="true"></i>
+                            <span class="sr-only">Cancel Remove Section</span>
+                        </button>
+                    </h3>
+                    <p>{{section.description}}</p>
+                </div>
+            </draggable>
         </div>
         <div class="row">
             <div class="columns small-2">

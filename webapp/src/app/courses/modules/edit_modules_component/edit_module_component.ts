@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import draggable from 'vuedraggable';
 import Component from 'vue-class-component';
 import {CourseRefreshComponent} from '../../../global_components/refresh_route';
 import {QuillComponent} from '../../../quill/quill_component';
@@ -6,8 +7,8 @@ import * as VueForm from '../../../vue-form';
 import * as _ from 'underscore';
 import {coursesService} from '../../courses_service';
 import {coursesRoutesService} from '../../courses_routes';
-import {ViewModuleQuillData} from '../../../../../../shared/modules';
-import {ViewSectionTransferData} from '../../../../../../shared/sections';
+import {ViewModuleQuillData} from 'modules';
+import {ViewSectionTransferData} from 'sections';
 
 @Component({
     data: () => {
@@ -27,7 +28,8 @@ import {ViewSectionTransferData} from '../../../../../../shared/sections';
     extends: CourseRefreshComponent,
     template: require('./edit_module_component.tpl.html'),
     components: {
-        'quill-editor': QuillComponent
+        'quill-editor': QuillComponent,
+        draggable
     }
 })
 export class EditModuleComponent extends Vue {
@@ -38,6 +40,7 @@ export class EditModuleComponent extends Vue {
     quillEditor: QuillComponent;
     formstate: VueForm.FormState;
     module: ViewModuleQuillData;
+    private moduleSections: ViewSectionTransferData[] = [];
     removeSections: { [index: string]: boolean };
     isCourseAdmin: boolean;
     moduleUnsubscribe: () => void;
@@ -50,6 +53,7 @@ export class EditModuleComponent extends Vue {
             if (this.quillEditor) {
                 this.quillEditor.setQuillEditorContents(this.module.headerContent.editorJson);
             }
+            this.moduleSections = _.extend([], module.sections);
         });
         this.isCourseAdmin = coursesRoutesService.isCourseAdmin();
     }
@@ -89,7 +93,7 @@ export class EditModuleComponent extends Vue {
             courseId: course.id,
             id: this.module.id,
             title: this.module.title,
-            orderedSectionIds: _.map(this.module.sections, (section) => section.id),
+            orderedSectionIds: _.map(this.moduleSections, (section) => section.id),
             description: this.module.description,
             timeEstimate: this.module.timeEstimate,
             headerContent: quillData,
