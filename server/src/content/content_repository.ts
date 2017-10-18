@@ -15,7 +15,7 @@ export interface ContentEntity {
 
 export class ContentRepository extends AbstractRepository {
     constructor (sqlTemplate: Datasource) {
-        super('content_id_seq', sqlTemplate);
+        super('user_content_id_seq', sqlTemplate);
     }
 
     loadUserContentEntity (username: string, userId) {
@@ -35,7 +35,7 @@ export class ContentRepository extends AbstractRepository {
                                   unnest(u.created_content_ids) AS content_id
                                 FROM tu.user u
                                 WHERE u.username = $1) u
-                            JOIN tu.content c ON c.id = u.content_id;
+                            JOIN tu.user_content c ON c.id = u.content_id;
                         `,
                         values: [username]
                     });
@@ -66,7 +66,7 @@ export class ContentRepository extends AbstractRepository {
                     let result = await this.sqlTemplate.query({
                         text: `SELECT c.*, q.id AS quill_data_id,
                                  q.editor_json FROM
-                                 tu.content c LEFT JOIN tu.quill_data q
+                                 tu.user_content c LEFT JOIN tu.quill_data q
                                    ON q.id = c.content_data_id WHERE c.id = $1`,
                         values: [contentId]
                     });
@@ -94,7 +94,7 @@ export class ContentRepository extends AbstractRepository {
                 try {
                     await this.sqlTemplate.query({
                         text: `
-                            INSERT INTO tu.content (id, content_data_id, title, tags)
+                            INSERT INTO tu.user_content (id, content_data_id, title, tags)
                             VALUES($1, $2, $3, $4)
                         `,
                         values: [
@@ -119,7 +119,7 @@ export class ContentRepository extends AbstractRepository {
                     await this.sqlTemplate.query({
                         // language=PostgreSQL
                         text: `
-                          UPDATE tu.content SET
+                          UPDATE tu.user_content SET
                             title            = $1,
                             last_modified_at = $2 WHERE id = $3
                         `,
