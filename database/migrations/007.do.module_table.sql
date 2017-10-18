@@ -3,9 +3,11 @@ CREATE TABLE tu.module (
   header_content      BIGINT REFERENCES tu.quill_data (id),
   title               VARCHAR(100),
   description         VARCHAR(300),
-  time_estimate       VARCHAR(300),
+  time_estimate       INTEGER,
   active              BOOLEAN,
-  ordered_section_ids BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT []
+  ordered_section_ids BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  last_modified_at    TIMESTAMP NOT NULL DEFAULT now(),
+  created_at          TIMESTAMP NOT NULL DEFAULT now()
 );
 
 CREATE INDEX module_title_gin_idx

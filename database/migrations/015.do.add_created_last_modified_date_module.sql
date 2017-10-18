@@ -1,4 +1,0 @@
-ALTER TABLE tu.module
-  ADD COLUMN last_modified_at TIMESTAMP NOT NULL DEFAULT now();
-ALTER TABLE tu.module
-  ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT now();

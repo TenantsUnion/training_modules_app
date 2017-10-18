@@ -1,6 +1,6 @@
 CREATE SEQUENCE tu.account_id_seq;
 CREATE SEQUENCE tu.quill_data_id_seq;
-CREATE SEQUENCE tu.content_id_seq;
+CREATE SEQUENCE tu.user_content_id_seq;
 CREATE SEQUENCE tu.question_id_seq;
 CREATE SEQUENCE tu.question_option_id_seq;
 CREATE SEQUENCE tu.section_id_seq;

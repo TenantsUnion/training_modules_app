@@ -7,7 +7,6 @@ CREATE TABLE tu.user_course_progress (
   last_viewed_section     BIGINT REFERENCES tu.section (id),
   in_progress_section_ids BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
   completed_section_ids   BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
-  last_viewed_content     BIGINT REFERENCES tu.content (id),
   last_viewed_question    BIGINT REFERENCES tu.question (id),
   course_progress         JSONB,
   PRIMARY KEY (user_id, course_id)

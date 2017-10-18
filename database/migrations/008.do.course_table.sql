@@ -2,12 +2,14 @@ CREATE TABLE tu.course (
   id                 BIGINT PRIMARY KEY,
   title              VARCHAR(100) UNIQUE NOT NULL,
   description        VARCHAR(300),
-  time_estimate      VARCHAR(300),
+  time_estimate      INTEGER,
   open_enrollment    BOOLEAN                      DEFAULT FALSE,
   active             BOOLEAN                      DEFAULT FALSE,
   ordered_module_ids BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
   content_ids        BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
-  question_ids       BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT []
+  question_ids       BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  last_modified_at   TIMESTAMP           NOT NULL DEFAULT now(),
+  created_at         TIMESTAMP           NOT NULL DEFAULT now()
 );
 
 CREATE INDEX course_title_gin_idx

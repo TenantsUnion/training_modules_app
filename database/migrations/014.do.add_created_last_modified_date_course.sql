@@ -1,4 +1,0 @@
-ALTER TABLE tu.course
-  ADD COLUMN last_modified_at TIMESTAMP NOT NULL DEFAULT now();
-ALTER TABLE tu.course
-  ADD COLUMN created_at TIMESTAMP NOT NULL DEFAULT now();
