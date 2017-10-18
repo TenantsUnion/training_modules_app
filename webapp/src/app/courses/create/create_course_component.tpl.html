@@ -1,40 +1,44 @@
-<div class="main">
-    <div class="row">
-        <div class="columns small-12 large-10">
-            <div class="callout float-center">
-                <h1>Create Course</h1>
-                <p v-if="errorMessages">{{ errorMessages }}</p>
+<div class="wrapper">
+    <div class="page-content-wrapper">
+        <div class="main">
+            <div class="row">
+                <div class="columns small-12 large-10">
+                    <div>
+                        <h1>Create Course</h1>
+                        <p v-if="errorMessages">{{ errorMessages }}</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="columns small-12 large-10">
-            <div class="callout float-center">
-                <div>
-                    <label for="course-title">Title
-                        <input v-model="course.title" type="text"
-                               placeholder="Course Title" id="course-title"/>
-                    </label>
-                </div>
-                <div>
-                    <label for="time-estimate">Time Estimate
-                        <input v-model="course.timeEstimate" type="text"
-                               placeholder="Time estimate"
-                               id="time-estimate">
-                    </label>
-                </div>
-                <div>
-                    <label for="course-description">Description</label>
-                    <textarea v-model="course.description" type="text"
-                              placeholder="Course description"
-                              id="course-description"></textarea>
-                </div>
-                <div>
-                    <label for="course-active">Active</label>
-                    <input v-model="course.active" type="checkbox" id="course-active"/>
-                </div>
+            <div class="row">
+                <div class="columns small-12 large-10">
+                    <div>
+                        <div>
+                            <label for="course-title">Title
+                                <input v-model="course.title" type="text"
+                                       placeholder="Course Title" id="course-title"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label for="time-estimate">Time Estimate
+                                <input v-model="course.timeEstimate" type="text"
+                                       placeholder="Time estimate"
+                                       id="time-estimate">
+                            </label>
+                        </div>
+                        <div>
+                            <label for="course-description">Description</label>
+                            <textarea v-model="course.description" type="text"
+                                      placeholder="Course description"
+                                      id="course-description"></textarea>
+                        </div>
+                        <div>
+                            <label for="course-active">Active</label>
+                            <input v-model="course.active" type="checkbox" id="course-active"/>
+                        </div>
 
-                <button @click="create" class="button">Create</button>
+                        <button @click="create" class="button">Create</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
