@@ -16,14 +16,14 @@ describe('courses handler', function () {
     let userId: IUserInfo;
     let courseInfo1: CreateCourseData = {
         title: 'created course',
-        timeEstimate: '1 hour',
+        timeEstimate: '60',
         description: 'Course description',
         createdBy: username,
         active: true
     };
     let courseInfo2: CreateCourseData = {
         title: 'created course 1',
-        timeEstimate: '2 hours',
+        timeEstimate: '120',
         description: 'Course description 2',
         createdBy: username,
         active: false
@@ -45,13 +45,13 @@ describe('courses handler', function () {
 
     let module1: (string) => CreateModuleData = moduleCreator({
         description: 'Module 1 description blerg',
-        timeEstimate: '1 hour',
+        timeEstimate: '60',
         title: 'first module'
     });
 
     let module2: (string) => CreateModuleData = moduleCreator({
         description: 'Module 2 description',
-        timeEstimate: '2 hours',
+        timeEstimate: '120',
         title: 'second module'
     });
 
@@ -72,13 +72,13 @@ describe('courses handler', function () {
 
     let section1 = sectionCreator({
         description: 'section 1 description',
-        timeEstimate: '1 hour',
+        timeEstimate: '60',
         title: 'first section'
     });
 
     let section2 = sectionCreator({
         description: 'section 2 description',
-        timeEstimate: '2 hours',
+        timeEstimate: '120',
         title: 'second section'
     });
 

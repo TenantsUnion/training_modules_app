@@ -58,8 +58,13 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                         `,
                         values: [username]
                     });
+                    let processedCourses = result.map((course) => {
+                       return _.extend({}, course, {
+                          timeEstimate: '' + course.timeEstimate
+                       });
+                    });
 
-                    resolve(result);
+                    resolve(processedCourses);
                 } catch (e) {
                     reject(e);
                 }
@@ -213,12 +218,14 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                     // modules aren't pulled out in order since results are narrowed down via 'WHERE'
                     // clause and then automatically joined with ON TRUE. Have to manually order according
                     // to orderedModuleIds property
+                    timeEstimate: '' + row.timeEstimate,
                     modules: _.chain(<ViewModuleTransferData[]> row.modules)
                         .map((module) => {
                             // fixme better way to convert integer ids to strings
                             return _.extend({}, module, {
                                 id: module.id + '',
-                                headerContent: module.headerContent + ''
+                                headerContent: module.headerContent + '',
+                                timeEstimate: '' + module.timeEstimate
                             })
                         })
                         .reduce((ordered, module, index, modules) => {
@@ -233,7 +240,8 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                                 module.sections = _.chain(<ViewSectionTransferData[]> module.sections)
                                     .map((section) => {
                                         return _.extend({}, section, {
-                                            id: section.id + ''
+                                            id: section.id + '',
+                                            timeEstimate: '' + section.timeEstimate
                                         });
                                     })
                                     .reduce((ordered, section: ViewSectionTransferData) => {
