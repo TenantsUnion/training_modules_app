@@ -2,6 +2,7 @@ import Quill from "quill";
 import {QuillOptionsStatic, DeltaStatic} from "quill";
 import Vue from "vue";
 import Component from "vue-class-component";
+import {Watch} from 'vue-property-decorator';
 
 //default quill theme
 require('quill/dist/quill.core.css');
@@ -14,10 +15,10 @@ Quill.register(BackgroundClass);
 Quill.register(ColorClass);
 Quill.register(SizeClass);
 
-let Delta = Quill.import('delta');
+let Delta: Quill.DeltaStatic = Quill.import('delta');
 let counter = 0;
 
-const BLANK_QUILL_OP:Quill.DeltaOperation = {
+const BLANK_QUILL_OP: Quill.DeltaOperation = {
     insert: '\n'
 };
 
@@ -29,7 +30,8 @@ const BLANK_QUILL_OP:Quill.DeltaOperation = {
         };
     },
     props: {
-        readOnly: Boolean
+        readOnly: Boolean,
+        editorJson: Object
     },
     // language=HTML
     template: `
@@ -41,6 +43,7 @@ const BLANK_QUILL_OP:Quill.DeltaOperation = {
 export class QuillComponent extends Vue {
 
     editorId: string;
+    editorJson: Quill.DeltaStatic;
     quill: Quill.Quill;
     readOnly: boolean;
     delta = Delta;
@@ -82,6 +85,8 @@ export class QuillComponent extends Vue {
             }
         );
 
+
+        this.editorJson && this.quill.setContents(new Delta(this.editorJson.ops));
     }
 
     getQuillEditorContents(): Quill.DeltaStatic {
@@ -89,8 +94,16 @@ export class QuillComponent extends Vue {
     }
 
     setQuillEditorContents(quillContents: Quill.DeltaStatic) {
-        this.quill.setContents(quillContents);
+        this.editorJson = quillContents;
     }
+
+    @Watch('editorJson')
+    updateQuillEditorContents(newQuill: Quill.DeltaStatic, oldQuill: Quill.DeltaStatic) {
+        console.log('Watch editor json called');
+        newQuill && this.quill.setContents(new Delta(this.editorJson.ops))
+
+    }
+
 
     /**
      * Indicates that quill editor should be displayed if not in read only mode or the quill content is not
@@ -99,7 +112,7 @@ export class QuillComponent extends Vue {
     get displayQuillEditor(): boolean {
         return !this.readOnly ||
             (this.quill && (this.quill.getContents().ops.length > 1 ||
-        //empty quill editor initialized with single insert operation of new line
+                //empty quill editor initialized with single insert operation of new line
                 this.quill.getContents().ops[0].insert !== "\n"));
     }
 }
