@@ -6,7 +6,7 @@
         </div>
     </div>
     <vue-form :state="formstate" @submit.prevent="saveSection">
-        <validate>
+        <validate v-if="!loading">
             <div class="row">
                 <div class="columns small-12 large-10">
                     <field-messages name="title"
@@ -46,18 +46,16 @@
                               id="section-description"></textarea>
                 </div>
             </div>
-            <div class="row">
-                <div class="small-12 large-10 columns">
-                    <label>Content</label>
-                    <quill-editor ref="editor"></quill-editor>
-                </div>
-            </div>
         </validate>
         <div class="row">
+            <div class="small-12 large-10 columns" v-show="!loading">
+                <label>Content</label>
+                <quill-editor ref="editor" :editor-json="section.content && section.content[0].editorJson"></quill-editor>
+            </div>
+        </div>
+        <div class="row">
             <div class="columns small-2">
-                <button @click="saveSection" class="button" type="button">
-                    Save
-                </button>
+                <button @click="saveSection" class="button" type="button">Save</button>
             </div>
         </div>
     </vue-form>
