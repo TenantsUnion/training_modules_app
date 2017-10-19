@@ -14,33 +14,50 @@ const SELECTABLE_HOURS = Array.from(Array(6).keys());
             selectableHours: SELECTABLE_HOURS
         };
     },
-    template: `
-        <div class="row">
-            <label>Time Estimate
-                <div class="input-group">
-                    <label for="hours-input" class="input-group-label">Hours</label>
-                    <select id="hours-input" v-model="hours" class="input-group-field">
-                        <option v-for="hour in selectableHours">{{hour}}</option>
-                    </select>
-                    <label for="minutes-input" class="input-group-label">Minutes</label>
-                    <select id="minutes-input" class="input-group-field" type="number">
-                        <option v-for="minute in selectableMinutes">{{minute}}</option>
-                    </select>
-                </div>
-            </label>
-        </div>
-    `,
     props: {
         //the duration in minutes
-        timeEstimate: String
-    }
+        timeEstimate: String,
+        isInput: {
+            type: Boolean,
+            default: false
+        },
+        updated: {
+            type: Function,
+            default: () => {}
+        }
+    },
+    // language=HTML
+    template: `
+        <div>
+            <div v-if="isInput">
+                <label>Time Estimate
+                    <div class="input-group">
+                        <label for="hours-input" class="input-group-label">Hours</label>
+                        <select id="hours-input" class="input-group-field"
+                                v-model="hours" v-on:change="timeChanged">
+                            <option v-for="hour in selectableHours">{{hour}}</option>
+                        </select>
+                        <label for="minutes-input" class="input-group-label">Minutes</label>
+                        <select id="minutes-input" class="input-group-field"
+                                v-model="minutes" v-on:change="timeChanged">
+                            <option v-for="minute in selectableMinutes">{{minute}}</option>
+                        </select>
+                    </div>
+                </label>
+            </div>
+            <div v-if="!isInput">
+                <p>Time Estimate: {{hours}} hours {{minutes}} minutes</p>
+            </div>
+        </div>
+    `
 })
 export class TimeEstimateComponent extends Vue {
     hours: string;
     minutes: string;
     timeEstimate: string;
+    updated: (time: string) => void;
 
-    @Watch('timeEstimate')
+    @Watch('timeEstimate', {immediate: true})
     updateTimeEstimate(timeEstimate, oldTimeEstimate) {
         if (timeEstimate) {
             this.hours = (Math.floor(parseInt(timeEstimate) / 60)) + '';
@@ -49,5 +66,11 @@ export class TimeEstimateComponent extends Vue {
             this.hours = '0';
             this.minutes = '0';
         }
+        this.timeChanged();
+    }
+
+    timeChanged() {
+        // parse time
+        this.updated((parseInt(this.hours) * 60 + parseInt(this.minutes)) + '');
     }
 }

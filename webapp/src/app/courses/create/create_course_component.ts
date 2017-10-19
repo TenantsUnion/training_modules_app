@@ -42,4 +42,8 @@ export class CreateCourseComponent extends Vue {
         })
     }
 
+    timeUpdated(time: number) {
+        this.course.timeEstimate = time + '';
+    }
+
 }

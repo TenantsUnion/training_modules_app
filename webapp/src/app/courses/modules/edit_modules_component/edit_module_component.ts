@@ -16,7 +16,6 @@ import {ViewSectionTransferData} from 'sections';
             module: {
                 title: null,
                 description: null,
-                timeEstimate: null,
                 headerContent: {}
             },
             removeSections: {},
@@ -95,6 +94,10 @@ export class EditModuleComponent extends Vue {
             name: 'adminCourse.moduleDetails',
             params: {moduleTitle: this.module.title}
         });
+    }
+
+    timeEstimateUpdated(time) {
+        this.module.timeEstimate = time;
     }
 
     sectionTitleStyles(section: ViewSectionTransferData) {

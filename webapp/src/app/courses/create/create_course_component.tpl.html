@@ -18,13 +18,9 @@
                                        placeholder="Course Title" id="course-title"/>
                             </label>
                         </div>
-                        <div>
-                            <label for="time-estimate">Time Estimate
-                                <input v-model="course.timeEstimate" type="text"
-                                       placeholder="Time estimate"
-                                       id="time-estimate">
-                            </label>
-                        </div>
+                        <time-estimate :time-estimate="course.timeEstimate"
+                                       :updated="timeUpdated"
+                                       :is-input="true"></time-estimate>
                         <div>
                             <label for="course-description">Description</label>
                             <textarea v-model="course.description" type="text"
@@ -35,8 +31,9 @@
                             <label for="course-active">Active</label>
                             <input v-model="course.active" type="checkbox" id="course-active"/>
                         </div>
-
-                        <button @click="create" class="button">Create</button>
+                        <div>
+                            <button @click="create" class="button">Create</button>
+                        </div>
                     </div>
                 </div>
             </div>

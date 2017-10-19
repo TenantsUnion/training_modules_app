@@ -1,8 +1,9 @@
 <div class="main">
     <div class="row">
         <div class="columns small-12 large-10">
-            <h2>{{section.title}}</h2>
             <loading v-if="loading"></loading>
+            <h2>{{section.title}}</h2>
+            <time-estimate :time-estimate="section.timeEstimate"></time-estimate>
         </div>
     </div>
     <div class="row">

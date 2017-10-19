@@ -73,4 +73,8 @@ export class CreateSectionComponent extends Vue {
         }
 
     }
+
+    timeEstimateUpdated(time) {
+        this.timeEstimate = time;
+    }
 }

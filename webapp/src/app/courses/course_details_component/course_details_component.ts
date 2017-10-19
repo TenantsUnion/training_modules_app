@@ -7,7 +7,7 @@ import {coursesService} from '../courses_service';
     data: () => {
         return {
             loading: false,
-            course: null
+            course: {}
         };
     },
     template: require('./course_details_component.tpl.html')

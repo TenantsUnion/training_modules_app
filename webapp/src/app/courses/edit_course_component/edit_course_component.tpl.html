@@ -17,11 +17,9 @@
                     </label>
                 </div>
                 <div>
-                    <label for="time-estimate">Time Estimate
-                        <input v-model="course.timeEstimate" type="text"
-                               placeholder="Time estimate"
-                               id="time-estimate">
-                    </label>
+                    <time-estimate :time-estimate="course.timeEstimate"
+                                   :updated="timeEstimateUpdated"
+                                   :is-input="true"></time-estimate>
                 </div>
                 <div>
                     <label for="course-description">Description</label>

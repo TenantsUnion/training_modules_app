@@ -84,4 +84,8 @@ export class EditSectionComponent extends Vue {
             this.loading = false;
         }
     }
+
+    timeEstimateUpdated(time) {
+        this.section.timeEstimate = time;
+    }
 }

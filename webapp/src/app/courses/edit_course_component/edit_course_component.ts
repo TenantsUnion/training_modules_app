@@ -48,6 +48,10 @@ export class EditCourseComponent extends Vue {
         })
     }
 
+    timeEstimateUpdated(time) {
+        this.course.timeEstimate = time;
+    }
+
     cancel() {
         this.$router.push({name: COURSES_ROUTE_NAMES.adminCourseDetails})
     }

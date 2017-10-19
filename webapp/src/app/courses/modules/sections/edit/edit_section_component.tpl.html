@@ -32,10 +32,9 @@
             </div>
             <div class="row">
                 <div class="columns small-12 large-10">
-                    <label for="time-estimate">Time Estimate</label>
-                    <input v-model="section.timeEstimate" type="text"
-                           placeholder="Time estimate"
-                           id="time-estimate">
+                    <time-estimate :isInput="true"
+                                   :timeEstimate="section.timeEstimate"
+                                   :updated="timeEstimateUpdated"></time-estimate>
                 </div>
             </div>
             <div class="row">
