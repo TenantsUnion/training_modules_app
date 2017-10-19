@@ -3,7 +3,7 @@ CREATE TABLE tu.section (
   header_data_id        BIGINT REFERENCES tu.quill_data (id),
   title                 VARCHAR(100),
   description           VARCHAR(300),
-  time_estimate_minutes INTEGER,
+  time_estimate         INTEGER,
   ordered_content_ids   BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
   ordered_question_ids  BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
   last_modified_at      TIMESTAMP NOT NULL DEFAULT now(),

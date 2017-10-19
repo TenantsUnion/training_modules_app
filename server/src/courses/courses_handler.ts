@@ -148,11 +148,13 @@ export class CoursesHandler {
         return this.coursesRepository.loadUserAdminCourse(moduleData.courseId);
     }
 
-    async saveSection(courseId, moduleId, sectionData: SaveSectionData): Promise<void> {
+    async saveSection(sectionData: SaveSectionData): Promise<ViewCourseTransferData> {
         try {
-            await this.coursesRepository.updateLastModified(courseId);
-            await this.moduleRepo.updateLastModified(moduleId);
+            await this.coursesRepository.updateLastModified(sectionData.courseId);
+            await this.moduleRepo.updateLastModified(sectionData.moduleId);
             await this.sectionHandler.saveSection(sectionData);
+
+            return this.coursesRepository.loadUserAdminCourse(sectionData.courseId);
         } catch (e) {
             this.logger.error(e);
             this.logger.error(e.stack);

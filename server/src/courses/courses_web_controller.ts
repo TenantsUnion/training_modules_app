@@ -8,32 +8,29 @@ import {getLogger} from '../log';
 import {CreateModuleData, SaveModuleData} from "../../../shared/modules";
 import {CoursesRepository} from './courses_repository';
 import {ModuleOperations} from '../module/module_routes';
-import {CreateSectionData} from '../../../shared/sections';
+import {CreateSectionData, SaveSectionData} from '../../../shared/sections';
 import {coursesHandler} from '../config/handler.config';
 import {Exception} from 'winston';
+import {SectionOperations} from '../section/section_routes';
 
-export class CoursesController implements ModuleOperations {
+export class CoursesController implements ModuleOperations, SectionOperations {
     logger = getLogger('CoursesController', 'info');
 
     constructor(private coursesHandler: CoursesHandler,
                 private coursesRepo: CoursesRepository) {
     }
 
-    createCourse(request: Request, response: Response) {
+    async createCourse(request: Request, response: Response) {
         let courseInfo: CreateCourseData = request.body;
-        (async () => {
-            try {
-                //todo check permissions/validate
-                let result = await this.coursesHandler.createCourse(courseInfo);
-                response.status(200).send(result);
-            } catch (e) {
-                this.logger.log('error', e);
-                this.logger.log('error', e.stack);
-                response.status(500).send(e);
-                //server error
-            }
-
-        })();
+        try {
+            //todo check permissions/validate
+            let result = await this.coursesHandler.createCourse(courseInfo);
+            response.status(200).send(result);
+        } catch (e) {
+            this.logger.log('error', e);
+            this.logger.log('error', e.stack);
+            response.status(500).send(e);
+        }
     }
 
     saveCourse(request: express.Request, response: express.Response) {
@@ -124,35 +121,40 @@ export class CoursesController implements ModuleOperations {
         })();
     }
 
-    saveModule(request: express.Request, response: express.Response) {
+    async saveModule(request: express.Request, response: express.Response) {
         let saveModuleData: SaveModuleData = request.body;
-        (async () => {
-            try {
-                let course = await this.coursesHandler.saveModule(saveModuleData);
-                response.status(200).send(course);
-            } catch (e) {
-                this.logger.log('error', e);
-                this.logger.log('error', e.stack);
-                response.status(500)
-                    .send(e.stack.join('\n'));
-            }
-        })()
+        try {
+            let course = await this.coursesHandler.saveModule(saveModuleData);
+            response.status(200).send(course);
+        } catch (e) {
+            this.logger.log('error', e);
+            this.logger.log('error', e.stack);
+            response.status(500).send(e);
+        }
     }
 
-    createSection(request: express.Request, response: express.Response) {
+    async createSection(request: express.Request, response: express.Response) {
         let createSectionData: CreateSectionData = request.body;
-        (async () => {
-            try {
-                let course = await this.coursesHandler.createSection(createSectionData);
-                response.status(200)
-                    .send(course);
-            } catch (e) {
-                this.logger.error(e);
-                this.logger.error(e.stack);
-                response.status(500)
-                    .send(e.stack.join('\n'));
-            }
-        })();
+        try {
+            let course = await this.coursesHandler.createSection(createSectionData);
+            response.status(200).send(course);
+        } catch (e) {
+            this.logger.error(e);
+            this.logger.error(e.stack);
+            response.status(500).send(e.stack);
+        }
+    }
+
+    async saveSection(request: express.Request, response: express.Response) {
+        let saveSectionData: SaveSectionData = request.body;
+        try {
+            let course = await this.coursesHandler.saveSection(saveSectionData);
+            response.status(200).send(course);
+        } catch (e) {
+            this.logger.error(e);
+            this.logger.error(e.stack);
+
+        }
     }
 }
 

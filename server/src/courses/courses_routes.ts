@@ -1,6 +1,7 @@
 import * as express from "express";
 import {coursesController} from "../config/web_controller.config";
 import {ModuleRoutes} from '../module/module_routes';
+import {SectionRoutes} from '../section/section_routes';
 
 let router = express.Router();
 
@@ -26,5 +27,6 @@ router.get('/courses/user/admin/:username', (request, response) => {
 });
 
 router.use(ModuleRoutes(coursesController));
+router.use(SectionRoutes(coursesController));
 
 export const CoursesRoutes = router;
