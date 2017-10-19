@@ -38,7 +38,7 @@ export class CreateSectionComponent extends Vue {
         this.quillEditor = <QuillComponent> this.$refs.editor;
     }
 
-    createSection() {
+    async createSection() {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
@@ -48,32 +48,29 @@ export class CreateSectionComponent extends Vue {
         this.loading = true;
         this.errorMessages = null;
 
-        (async () => {
-
+        try {
             let course = await coursesService.getCurrentCourse();
             let module = await coursesService.getCurrentModule();
 
-            try {
-                await coursesService.createSection({
-                    title: this.title,
-                    courseId: course.id,
-                    moduleId: module.id,
-                    description: this.description,
-                    timeEstimate: this.timeEstimate,
-                    content: quillData
-                });
-                // to do now what
-                this.$router.push({
-                    name: COURSES_ROUTE_NAMES.viewSection,
-                    params: {sectionTitle: this.title}
-                });
+            await coursesService.createSection({
+                title: this.title,
+                courseId: course.id,
+                moduleId: module.id,
+                description: this.description,
+                timeEstimate: this.timeEstimate,
+                content: quillData
+            });
+            // to do now what
+            this.$router.push({
+                name: COURSES_ROUTE_NAMES.viewSection,
+                params: {sectionTitle: this.title}
+            });
 
-            } catch (errorMessages) {
-                this.errorMessages = errorMessages;
-            } finally {
-                this.loading = false;
-            }
+        } catch (errorMessages) {
+            this.errorMessages = errorMessages;
+        } finally {
+            this.loading = false;
+        }
 
-        })();
     }
 }

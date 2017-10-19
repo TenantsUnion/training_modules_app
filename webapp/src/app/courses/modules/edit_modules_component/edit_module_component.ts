@@ -14,16 +14,17 @@ import {ViewSectionTransferData} from 'sections';
     data: () => {
         return {
             module: {
-                title: '',
-                description: '',
-                timeEstimate: ''
+                title: null,
+                description: null,
+                timeEstimate: null,
+                headerContent: {}
             },
             removeSections: {},
             sectionTitleStyleObject: {},
             loading: false,
             errorMessages: null,
             formstate: {}
-        }
+        };
     },
     extends: CourseRefreshComponent,
     template: require('./edit_module_component.tpl.html'),
@@ -37,7 +38,6 @@ export class EditModuleComponent extends Vue {
     errorMessages: { [index: string]: string };
     timeEstimate: string;
     description: string;
-    quillEditor: QuillComponent;
     formstate: VueForm.FormState;
     module: ViewModuleQuillData;
     private moduleSections: ViewSectionTransferData[] = [];
@@ -50,9 +50,6 @@ export class EditModuleComponent extends Vue {
         this.moduleUnsubscribe = coursesService.subscribeCurrentModule((module) => {
             this.loading = false;
             this.module = _.extend({}, module);
-            if (this.quillEditor) {
-                this.quillEditor.setQuillEditorContents(this.module.headerContent.editorJson);
-            }
             this.moduleSections = _.extend([], module.sections);
         });
         this.isCourseAdmin = coursesRoutesService.isCourseAdmin();
@@ -60,13 +57,6 @@ export class EditModuleComponent extends Vue {
 
     destroyed() {
         this.moduleUnsubscribe();
-    }
-
-    mounted() {
-        this.quillEditor = <QuillComponent> this.$refs.editor;
-        if (this.module.headerContent) {
-            this.quillEditor.setQuillEditorContents(this.module.headerContent.editorJson);
-        }
     }
 
     removeSection(section) {
@@ -83,7 +73,6 @@ export class EditModuleComponent extends Vue {
             return;
         }
 
-        let quillData: Quill.DeltaStatic = this.quillEditor.getQuillEditorContents();
         this.loading = true;
         this.errorMessages = null;
 
@@ -96,7 +85,7 @@ export class EditModuleComponent extends Vue {
             orderedSectionIds: _.map(this.moduleSections, (section) => section.id),
             description: this.module.description,
             timeEstimate: this.module.timeEstimate,
-            headerContent: quillData,
+            headerContent: (<QuillComponent> this.$refs.editor).getQuillEditorContents(),
             headerContentId: this.module.headerContent.id,
             removeSectionIds: Object.keys(this.removeSections).filter((sectionId) => this.removeSections[sectionId]),
             active: this.module.active

@@ -6,7 +6,7 @@
         </div>
     </div>
     <vue-form :state="formstate" @submit.prevent="saveModule">
-        <validate>
+        <validate v-if="!loading">
             <div class="row">
                 <div class="columns small-8">
                     <field-messages name="title"
@@ -46,13 +46,13 @@
                               id="module-description"></textarea>
                 </div>
             </div>
-            <div class="row">
-                <div class="small-12 columns">
-                    <label>Content</label>
-                    <quill-editor ref="editor"></quill-editor>
-                </div>
-            </div>
         </validate>
+        <div class="row">
+            <div class="small-12 columns" v-show="!loading">
+                <label>Content</label>
+                <quill-editor ref="editor" :editor-json="module.headerContent.editorJson"></quill-editor>
+            </div>
+        </div>
         <div class="row">
             <draggable v-model="moduleSections" element="div" class="columns small-12 large-10">
                 <div v-for="section in moduleSections">

@@ -9,7 +9,12 @@ import {QuillComponent} from '../../../quill/quill_component';
 @Component({
     data: () => {
         return {
-            module: {},
+            module: {
+                title: null,
+                description: null,
+                timeEstimate: null,
+                headerContent: {}
+            },
             isCourseAdmin: false
         };
     },
@@ -22,7 +27,6 @@ import {QuillComponent} from '../../../quill/quill_component';
 
 export class ModuleDetailsComponent extends Vue {
     moduleUnsubscribe: () => any;
-    quillEditor: QuillComponent;
     loading: boolean;
     isCourseAdmin: boolean;
     module: ViewModuleQuillData;
@@ -33,16 +37,7 @@ export class ModuleDetailsComponent extends Vue {
         this.moduleUnsubscribe = coursesService.subscribeCurrentModule((module) => {
             this.loading = false;
             this.module = module;
-            this.quillEditor &&
-                 this.quillEditor.setQuillEditorContents(this.module.headerContent.editorJson);
         });
-    }
-
-    mounted() {
-        this.quillEditor = <QuillComponent> this.$refs.editor;
-        if(this.module && this.module.headerContent) {
-            this.quillEditor.setQuillEditorContents(this.module.headerContent.editorJson);
-        }
     }
 
     createSection(){
