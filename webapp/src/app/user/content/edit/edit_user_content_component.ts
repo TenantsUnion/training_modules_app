@@ -6,6 +6,7 @@ import {ContentEntity} from "../../../../../../server/src/content/content_reposi
 import * as VueForm from "../../../vue-form";
 import {appRouter} from "../../../router";
 
+//todo is this still needed?
 @Component({
     props: {
         contentId: String
@@ -16,6 +17,7 @@ import {appRouter} from "../../../router";
             loading: false,
             errorMessages: '',
             formstate: {},
+            content: {},
             model: {
                 title: '',
             }
@@ -74,12 +76,6 @@ export class EditUserContentComponent extends Vue {
 
     mounted () {
         this.quillEditor = <QuillComponent> this.$refs.editor;
-        this.retrievedContent
-            .then((content) => {
-                this.title = content.title;
-                this.quillDataId = content.quillDataId;
-                this.quillEditor.setQuillEditorContents(content.quillData);
-            });
     }
 
     done () {

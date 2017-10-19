@@ -23,10 +23,6 @@ import {Route} from "vue-router";
                                 Enrolled Courses
                             </router-link>
                         </li>
-                        <li v-bind:class="{'is-active': contentActive}">
-                            <router-link :to="{name:'content'}">Content
-                            </router-link>
-                        </li>
                     </ul>
                 </div>
                 <div class="menu-section columns shrink user-actions">
