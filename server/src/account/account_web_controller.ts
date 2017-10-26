@@ -4,64 +4,67 @@ import {SignupData} from "./account";
 import {AccountRequestValidator} from "./account_request_validation_service";
 import {IUserHandler} from "../user/user_handler";
 import {Response, Request} from "express";
+import {LoggerInstance} from 'winston';
+import {getLogger} from '../log';
 
 export class AccountController {
-    constructor (private accountHandler: IAccountHandler,
-                 private userHandler: IUserHandler,
-                 private accountRequestValidator: AccountRequestValidator) {
+    private logger: LoggerInstance = getLogger('AccountController', 'info');
+
+    constructor(private accountHandler: IAccountHandler,
+                private userHandler: IUserHandler,
+                private accountRequestValidator: AccountRequestValidator) {
     }
 
-    signup (request: Request, response: Response) {
-        console.log('handling signup');
+    async signup(request: Request, response: Response) {
         let signupData: SignupData = request.body;
-        (async () => {
-            try {
-                let errorMessages = await this.accountRequestValidator.signup(signupData);
-                if (errorMessages) {
-                    return response.status(400).send(errorMessages);
-                }
-
-                let accountInfo = await this.accountHandler.signup(signupData);
-                request.session.user_id = accountInfo.id;
-                response.status(200).send(accountInfo);
-            } catch (e) {
-                console.log(e.stack);
-                response.status(500) //server error
-                    .send(e.stack.join('\n'));
+        try {
+            let errorMessages = await this.accountRequestValidator.signup(signupData);
+            if (errorMessages) {
+                this.logger.error(`Sign up validation errors username: ${signupData.username}\n
+                    Error messages: ${JSON.stringify(errorMessages, null, 2)}`);
+                response.status(400).send(errorMessages);
+                return;
             }
-        })();
+
+            let accountInfo = await this.accountHandler.signup(signupData);
+            request.session.user_id = accountInfo.id;
+            response.status(200).send(accountInfo);
+        } catch (e) {
+            this.logger.error(`${e}`);
+            this.logger.error(`${e.stack}`);
+            response.status(500).send(e);
+        }
     }
 
-    login (request: Request, response: Response) {
+    async login(request: Request, response: Response) {
         let loginCredentials: LoginCredentials = request.body;
-        (async () => {
-            try {
-                let errorMessages = await this.accountRequestValidator.login(loginCredentials);
-                if (errorMessages) {
-                    return response.status(400).send(errorMessages);
-                }
-                let accountInfo = await this.accountHandler.login(loginCredentials);
-                request.session.user_id = accountInfo.id;
-                response.status(200).send(accountInfo);
-            } catch (e) {
-                console.log(e.stack);
-                response.status(500).send(e.stack('\n'));
+        try {
+            let errorMessages = await this.accountRequestValidator.login(loginCredentials);
+            if (errorMessages) {
+                this.logger.error(`Login validation errors username: ${loginCredentials.username}\n
+                    Error messages: ${JSON.stringify(errorMessages, null, 2)}`);
+                return response.status(400).send(errorMessages);
             }
-        })();
+            let accountInfo = await this.accountHandler.login(loginCredentials);
+            request.session.user_id = accountInfo.id;
+            response.status(200).send(accountInfo);
+        } catch (e) {
+            this.logger.error(`${e}`);
+            this.logger.error(`${e.stack}`);
+            response.status(500).send(e);
+        }
     }
 
-    getLoggedInUserInfo (request: Request, response: Response) {
+    async getLoggedInUserInfo(request: Request, response: Response) {
         if (request.session && request.session.user_id) {
-            (async () => {
-                try {
-                    let userAccountInfo = await this.userHandler.loadUser(request.session.user_id);
-                    response.status(200).send(userAccountInfo);
-                } catch (e) {
-                    response.status(500)
-                        .send(e);
-                }
-
-            })();
+            try {
+                let userAccountInfo = await this.userHandler.loadUser(request.session.user_id);
+                response.status(200).send(userAccountInfo);
+            } catch (e) {
+                this.logger.error(`${e}`);
+                this.logger.error(`${e.stack}`);
+                response.status(500).send(e);
+            }
         }
     }
 }

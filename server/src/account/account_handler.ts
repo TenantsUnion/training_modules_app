@@ -2,37 +2,37 @@ import {LoginCredentials, AccountSignupRequest} from "account";
 import {IAccountRepository} from "./account_repository";
 import {IUserHandler} from "../user/user_handler";
 import {IUserInfo} from "../../../shared/user";
+import {getLogger} from '../log';
 
 export interface IAccountHandler {
     signup(signupInfo: AccountSignupRequest): Promise<IUserInfo>;
+
     login(loginCredentials: LoginCredentials): Promise<IUserInfo>;
 }
 
 export class AccountHandler implements IAccountHandler {
-    constructor (private accountRepository: IAccountRepository,
-                 private userHandler: IUserHandler) {
+    private logger = getLogger('AccountHandler', 'info');
+
+    constructor(private accountRepository: IAccountRepository,
+                private userHandler: IUserHandler,
+                private userSocketServer: SocketIO.Server) {
     }
 
-    async signup (signupInfo: AccountSignupRequest): Promise<IUserInfo> {
-        return new Promise<IUserInfo>((resolve, reject) => {
-            (async () => {
-                try {
-                    let accountId = await this.accountRepository.createAccount(signupInfo);
-                    let userId = await this.userHandler.createUser({
-                        id: accountId,
-                        username: signupInfo.username
-                    });
+    async signup(signupInfo: AccountSignupRequest): Promise<IUserInfo> {
+        this.logger.info(`Signing up ${signupInfo.username}`);
 
-                    resolve(userId);
-                } catch (e) {
-                    console.log(e.stack);
-                    reject(e);
-                }
-            })();
+        let accountId = await this.accountRepository.createAccount(signupInfo);
+        let userId = await this.userHandler.createUser({
+            id: accountId,
+            username: signupInfo.username
         });
+
+        this.logger.info(`Signed up ${signupInfo.username} user id: ${userId}, account id: ${accountId}`);
+
+        return userId;
     }
 
-    async login (loginCredentials: LoginCredentials): Promise<IUserInfo> {
+    async login(loginCredentials: LoginCredentials): Promise<IUserInfo> {
         return new Promise<IUserInfo>((resolve, reject) => {
             (async () => {
                 try {
