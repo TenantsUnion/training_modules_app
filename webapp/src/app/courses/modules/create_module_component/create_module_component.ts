@@ -16,9 +16,6 @@ import {ViewCourseQuillData} from "courses";
             formstate: {}
         }
     },
-    components: {
-        'quill-editor': QuillComponent
-    },
     template: require('./create_module_component.tpl.html')
 })
 export class CreateModuleComponent extends Vue {
@@ -56,7 +53,8 @@ export class CreateModuleComponent extends Vue {
                 timeEstimate: this.timeEstimate,
                 header: (<QuillComponent> this.$refs.editor).getQuillEditorContents()
             });
-            // to do now what
+
+            //todo handle validation errors
             this.$router.push({
                 name: 'adminCourse.moduleDetails',
                 params: {moduleTitle: this.title}

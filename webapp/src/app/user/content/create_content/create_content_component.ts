@@ -14,10 +14,7 @@ import {appRouter} from "../../../router";
             formstate: {}
         };
     },
-    template: require('./create_content_component.tpl.html'),
-    components: {
-        'quill-editor': QuillComponent
-    }
+    template: require('./create_content_component.tpl.html')
 })
 export class CreateContentComponent extends Vue {
     errorMessages: object;

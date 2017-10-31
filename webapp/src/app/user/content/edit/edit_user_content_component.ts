@@ -23,9 +23,6 @@ import {appRouter} from "../../../router";
             }
         };
     },
-    components: {
-        'quill-editor': QuillComponent
-    },
     template: require('./edit_user_content_component.tpl.html')
 })
 export class EditUserContentComponent extends Vue {
