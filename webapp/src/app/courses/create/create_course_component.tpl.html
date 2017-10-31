@@ -28,8 +28,13 @@
                                       id="course-description"></textarea>
                         </div>
                         <div>
-                            <label for="course-active">Active</label>
-                            <input v-model="course.active" type="checkbox" id="course-active"/>
+                            <label for="course-active">Active
+                                <input v-model="course.active" type="checkbox" id="course-active"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label>Content</label>
+                            <quill-editor ref="editor"></quill-editor>
                         </div>
                         <div>
                             <button @click="create" class="button">Create</button>

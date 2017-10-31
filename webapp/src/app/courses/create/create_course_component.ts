@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import {userCoursesHttpService} from "../../user/courses/course_http_service";
-import {appRouter} from "../../router";
 import {CreateCourseData} from '../../../../../shared/courses';
 import {COURSES_ROUTE_NAMES} from '../courses_routes';
+import {QuillComponent} from '../../quill/quill_component';
 
 @Component({
     props: {
@@ -12,7 +12,7 @@ import {COURSES_ROUTE_NAMES} from '../courses_routes';
     data: () => {
         return {
             loading: false,
-            errorMessages: '',
+            errorMessages: null,
             course: {
                 active: true,
                 title: '',
@@ -30,20 +30,35 @@ export class CreateCourseComponent extends Vue {
     course: CreateCourseData;
     username: string;
 
-    create() {
-        this.course.createdBy = this.username;
+    async create() {
+        this.errorMessages = {};
         this.loading = true;
-        userCoursesHttpService.createCourse(this.course).then(() => {
-            this.loading = false;
-            appRouter.push({name: COURSES_ROUTE_NAMES.adminCourseDetails, params: {courseTitle: this.course.title}})
-        }).catch((msg) => {
-            this.loading = false;
+
+        try {
+            await userCoursesHttpService.createCourse({
+                title: this.course.title,
+                timeEstimate: this.course.timeEstimate,
+                active: this.course.active,
+                createdBy: this.username,
+                content: (<QuillComponent> this.$refs.editor).getQuillEditorContents(),
+                description: this.course.description
+            });
+
+            // todo validation
+            this.$router.push({
+                name: COURSES_ROUTE_NAMES.adminCourseDetails,
+                params: {
+                    courseTitle: this.course.title
+                }
+            });
+        } catch (msg) {
             this.errorMessages = msg;
-        })
+        } finally {
+            this.loading = false
+        }
     }
 
-    timeUpdated(time: number) {
-        this.course.timeEstimate = time + '';
+    timeUpdated(time: string) {
+        this.course.timeEstimate = time;
     }
-
 }
