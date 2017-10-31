@@ -1,0 +1,38 @@
+import * as socket from 'socket.io';
+import * as socketWildcard from 'socketio-wildcard';
+import {getLogger} from './log';
+import {ADMIN_COURSE_NSP, SUBSCRIBE} from '../../shared/socket';
+
+let socketServerLogger = getLogger('SocketServer', 'info');
+let adminSocketLogger = getLogger('AdminCourseSocket', 'info');
+
+export let io:SocketIO.Server;
+export let adminCourseSocket;
+module.exports = (httpServer) => {
+    socketServerLogger.info('Initializing socket');
+    io = socket.listen(httpServer);
+    io.use(socketWildcard());
+    adminCourseSocket = io.of(ADMIN_COURSE_NSP);
+
+    io.on('connection', (socket: SocketIO.Socket) => {
+        socketServerLogger.info(`Socket connected: ${socket.id}`);
+
+        socket.on(SUBSCRIBE, (courseId) => {
+            socketServerLogger.info(`Subscribing socket: ${socket.id} to course room: ${courseId}`);
+            socket.join(courseId)
+        });
+    });
+
+    io.on('disconnect', (socket: SocketIO.Socket) => {
+       socketServerLogger.info(`Socket disconnected: ${socket.id}`);
+    });
+
+    adminCourseSocket.on('connection', (socket: SocketIO.Socket) => {
+        adminSocketLogger.info(`Connected to admin course id: ${socket.id}`);
+
+        socket.on(SUBSCRIBE, (courseId) => {
+            adminSocketLogger.info(`Subscribing socket: ${socket.id} to course room: ${courseId}`);
+            socket.join(courseId);
+        });
+    });
+};
