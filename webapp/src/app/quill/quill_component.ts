@@ -30,7 +30,10 @@ const BLANK_QUILL_OP: Quill.DeltaOperation = {
         };
     },
     props: {
-        readOnly: Boolean,
+        readOnly: {
+            type: Boolean,
+            default: false
+        },
         editorJson: Object
     },
     // language=HTML
@@ -97,9 +100,8 @@ export class QuillComponent extends Vue {
         this.editorJson = quillContents;
     }
 
-    @Watch('editorJson')
+    @Watch('editorJson', {immediate: true})
     updateQuillEditorContents(newQuill: Quill.DeltaStatic, oldQuill: Quill.DeltaStatic) {
-        console.log('Watch editor json called');
         newQuill && this.quill.setContents(new Delta(this.editorJson.ops))
 
     }
