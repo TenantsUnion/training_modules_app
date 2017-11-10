@@ -3,7 +3,7 @@ import {IUserHandler} from "../user/user_handler";
 import {ICoursesRepository} from "./courses_repository";
 import {
     AdminCourseDescription, CreateCourseData,
-    EnrolledCourseDescription, SaveCourseData, ViewCourseTransferData
+    EnrolledCourseDescription, SaveCourseEntityCommand, ViewCourseTransferData
 } from "courses";
 import {getLogger} from '../log';
 import {CreateModuleData, SaveModuleData} from "../../../shared/modules";
@@ -11,7 +11,9 @@ import {CreateSectionData, SaveSectionData, ViewSectionTransferData} from '../..
 import {SectionHandler} from '../section/section_handler';
 import {QuillRepository} from '../quill/quill_repository';
 import {ModuleRepository} from '../module/module_repository';
-import {Datasource} from '../datasource';
+import {ContentSegment, isContentSegment} from '../../../shared/segment';
+import {quillRepository} from '../config/repository.config';
+import * as content from '../../../shared/content';
 
 export interface UsernameCourseTitle {
     username: string;
@@ -27,8 +29,7 @@ export const isUsernameCourseTitle = function (obj): obj is UsernameCourseTitle 
 export class CoursesHandler {
     logger = getLogger('CourseHandler', 'info');
 
-    constructor(private sqlTemplate: Datasource,
-                private coursesRepository: ICoursesRepository,
+    constructor(private coursesRepository: ICoursesRepository,
                 private quillRepository: QuillRepository,
                 private userHandler: IUserHandler,
                 private moduleRepo: ModuleRepository,
@@ -36,24 +37,26 @@ export class CoursesHandler {
     }
 
     async createCourse(courseInfo: CreateCourseData): Promise<string> {
-        return new Promise<null | string>((resolve, reject) => {
-            if (!courseInfo.title) {
-                return resolve('Title required for course');
-            } //todo other validation
+        try {
+            let contentSegments: ContentSegment[] = <ContentSegment[]> courseInfo.segments
+                .filter((el) => isContentSegment(el));
+            this.logger.info(`Content segments: ${JSON.stringify(contentSegments, null, 2)}`);
 
-            (async () => {
-                let courseExists = await this.coursesRepository.courseExists(courseInfo);
-                if (courseExists) {
-                    return reject(`Courses with title: ${courseInfo.title} already exists`);
-                }
-                let courseId = await this.coursesRepository.createCourse(courseInfo);
-                await this.userHandler.userCreatedCourse(courseInfo.createdBy, courseId);
-                resolve(courseId);
-            })().catch((e) => {
-                this.logger.error('Exception creating course\n%s', e);
-                return e;
+            // create quill content
+            let quillIds = await this.quillRepository.getNextIds(contentSegments.length);
+            this.logger.info(`Using quill ids ${JSON.stringify(quillIds, null, 2)}`);
+            let insertContent = contentSegments.map((content, index) => {
+                return quillRepository.insertEditorJson(quillIds[index], content.editorJson);
             });
-        });
+
+            await insertContent;
+            let courseId = await this.coursesRepository.createCourse(courseInfo, quillIds);
+            await this.userHandler.userCreatedCourse(courseInfo.createdBy, courseId);
+            return courseId;
+        } catch (e) {
+            this.logger.error('Exception creating course\n%s', e);
+            throw e;
+        }
     }
 
     async createModule(createModuleData: CreateModuleData): Promise<ViewCourseTransferData> {
@@ -61,7 +64,7 @@ export class CoursesHandler {
             (async () => {
                 try {
                     let moduleHeaderQuillId = await this.quillRepository.getNextId();
-                    await this.quillRepository.insertEditorJson(moduleHeaderQuillId, createModuleData.header);
+                    // await this.quillRepository.insertEditorJson(moduleHeaderQuillId, createModuleData);
 
                     let moduleId = await this.moduleRepo.addModule(createModuleData, moduleHeaderQuillId);
                     let addCoursesModule = this.coursesRepository.addModule(createModuleData.courseId, moduleId);
@@ -180,7 +183,7 @@ export class CoursesHandler {
         }
     }
 
-    saveCourse(saveCourse: SaveCourseData): Promise<ViewCourseTransferData> {
+    saveCourse(saveCourse: SaveCourseEntityCommand): Promise<ViewCourseTransferData> {
         return new Promise<ViewCourseTransferData>((resolve, reject) => {
             (async () => {
                 try {

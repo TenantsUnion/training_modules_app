@@ -1,7 +1,7 @@
 import {Datasource} from "../datasource";
 import {
     AdminCourseDescription, UserEnrolledCourseData,
-    EnrolledCourseDescription, CreateCourseData, SaveCourseData, ViewCourseTransferData
+    EnrolledCourseDescription, CreateCourseData, SaveCourseEntityCommand, ViewCourseTransferData
 } from "courses";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
@@ -17,7 +17,7 @@ export interface ICoursesRepository {
 
     loadUserAdminCourse(courseId: string | UsernameCourseTitle): Promise<ViewCourseTransferData>;
 
-    createCourse(courseData: CreateCourseData): Promise<string>;
+    createCourse(courseData: CreateCourseData, quillIds: string[]): Promise<string>;
 
     courseExists(courseData: CreateCourseData): Promise<boolean>;
 
@@ -29,7 +29,7 @@ export interface ICoursesRepository {
 
     updateLastModified(courseId: string): Promise<string>;
 
-    saveCourse(course: SaveCourseData): Promise<void>;
+    saveCourse(course: SaveCourseEntityCommand): Promise<void>;
 }
 
 export class CoursesRepository extends AbstractRepository implements ICoursesRepository {
@@ -59,9 +59,9 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                         values: [username]
                     });
                     let processedCourses = result.map((course) => {
-                       return _.extend({}, course, {
-                          timeEstimate: '' + course.timeEstimate
-                       });
+                        return _.extend({}, course, {
+                            timeEstimate: '' + course.timeEstimate
+                        });
                     });
 
                     resolve(processedCourses);
@@ -127,28 +127,20 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
         }
     }
 
-    async createCourse(courseData: CreateCourseData): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            if (!courseData.title) {
-                return resolve(null);
-            }
-
-            (async () => {
-                try {
-
-                    let courseId = await this.getNextId();
-                    await this.datasource.query({
-                        text: `INSERT INTO tu.course (id, title, description, time_estimate) VALUES ($1, $2, $3, $4)`,
-                        values: [courseId, courseData.title, courseData.description, courseData.timeEstimate]
-                    });
-                    resolve(courseId);
-                } catch (e) {
-                    this.logger.log(`Error creating course: ${courseData.title}`, 'error');
-                    this.logger.log(e, 'error');
-                    reject(e);
-                }
-            })();
-        });
+    async createCourse(courseData: CreateCourseData, quillIds: string[]): Promise<string> {
+        try {
+            let courseId = await this.getNextId();
+            await this.datasource.query({
+                text: `INSERT INTO tu.course (id, title, description, time_estimate, ordered_content_ids, ordered_content_question_ids)
+                        VALUES ($1, $2, $3, $4, $5, $5)`,
+                values: [courseId, courseData.title, courseData.description, courseData.timeEstimate, quillIds]
+            });
+            return courseId;
+        } catch (e) {
+            this.logger.log(`Error creating course: ${courseData.title}`, 'error');
+            this.logger.log(e, 'error');
+            throw e;
+        }
     }
 
     async loadUserEnrolledCourse(courseId: string): Promise<UserEnrolledCourseData> {
@@ -297,14 +289,15 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
         });
     }
 
-    saveCourse(course: SaveCourseData): Promise<void> {
+    async saveCourse(course: SaveCourseEntityCommand): Promise<void> {
+
         const lastModified = new Date();
-        return this.sqlTemplate.query({
-            text: `UPDATE tu.course SET title = $1, description = $2, time_estimate = $3,
-                    active = $4, ordered_module_ids = $5, last_modified_at = $6 where id = $7`,
-            values: [course.title, course.description, course.timeEstimate, course.active, course.modules, lastModified, course.id]
-        }).then(() => {
-        });
+        // return this.sqlTemplate.query({
+        //     text: `UPDATE tu.course SET title = $1, description = $2, time_estimate = $3,
+        //             active = $4, ordered_module_ids = $5, last_modified_at = $6 where id = $7`,
+        //     values: [course.title, course.description, course.timeEstimate, course.active, course.modules, lastModified, course.id]
+        // }).then(() => {
+        // });
     }
 
 }

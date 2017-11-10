@@ -1,7 +1,7 @@
 import * as express from "express";
 import {Request, Response, Router} from "express";
 import {
-    AdminCourseDescription, ViewCourseQuillData, CreateCourseData, SaveCourseData
+    AdminCourseDescription, ViewCourseQuillData, CreateCourseData, SaveCourseEntityCommand
 } from "courses";
 import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
@@ -12,9 +12,13 @@ import {CreateSectionData, SaveSectionData} from '../../../shared/sections';
 import {coursesHandler} from '../config/handler.config';
 import {Exception} from 'winston';
 import {SectionOperations} from '../section/section_routes';
+import {validateCreateCourse, validateSaveCourse} from './courses_validation';
+import {logHandleServerError, logHandleValidationError} from '../util/handle_validation_error';
 
 export class CoursesController implements ModuleOperations, SectionOperations {
-    logger = getLogger('CoursesController', 'info');
+    private logger = getLogger('CoursesController', 'info');
+    private handleValidationErr = logHandleValidationError(this.logger);
+    private handleServerErr = logHandleServerError(this.logger);
 
     constructor(private coursesHandler: CoursesHandler,
                 private coursesRepo: CoursesRepository) {
@@ -23,102 +27,79 @@ export class CoursesController implements ModuleOperations, SectionOperations {
     async createCourse(request: Request, response: Response) {
         let courseInfo: CreateCourseData = request.body;
         try {
-            //todo check permissions/validate
-            let result = await this.coursesHandler.createCourse(courseInfo);
-            response.status(200).send(result);
+            let errMsgs = validateCreateCourse(courseInfo);
+            if (errMsgs) {
+                this.handleValidationErr(errMsgs, request, response);
+            } else {
+                let result = await this.coursesHandler.createCourse(courseInfo);
+                // todo handle room creation for course
+                response.status(200).send(result);
+            }
         } catch (e) {
-            this.logger.log('error', e);
-            this.logger.log('error', e.stack);
-            response.status(500).send(e);
+            this.handleServerErr(e, request, response);
         }
     }
 
-    saveCourse(request: express.Request, response: express.Response) {
-        let course: SaveCourseData = request.body;
-        (async () => {
-            try {
+    async saveCourse(request: express.Request, response: express.Response) {
+        let course: SaveCourseEntityCommand = request.body;
+        try {
+            let errMsgs = validateSaveCourse(course);
+            if (errMsgs) {
+                this.handleValidationErr(errMsgs, request, response);
+            } else {
                 let result = await coursesHandler.saveCourse(course);
                 response.status(200).send(result);
-            } catch (e) {
-                this.logger.log('error', e);
-                this.logger.log('error', e.stack);
-                response.status(500).send(e);
-                //server error
             }
-        })();
+        } catch (e) {
+            this.handleServerErr(e, request, response);
+        }
     }
 
-    getUserEnrolledCourses(request: Request, response: Response) {
+    async getUserEnrolledCourses(request: Request, response: Response) {
         let username: string = request.params.username;
-
-        (async () => {
-            let userCourses: AdminCourseDescription[];
-            try {
-                userCourses = await this.coursesHandler.getUserEnrolledCourses(username);
-            } catch (e) {
-                console.log(e.stack);
-                response.status(500)
-                    .send(e);
-            }
-
-            response.status(200)
-                .send(userCourses);
-        })();
+        try {
+            let userCourses = await this.coursesHandler.getUserEnrolledCourses(username);
+            response.status(200).send(userCourses);
+        } catch (e) {
+            this.handleServerErr(e, request, response);
+        }
     }
 
-    getUserAdminCourses(request: Request, response: Response) {
+    async getUserAdminCourses(request: Request, response: Response) {
         let username: string = request.params.username;
+        try {
+            let userCourses: AdminCourseDescription[] = await this.coursesHandler.getUserAdminCourses(username);
+            response.status(200).send(userCourses);
+        } catch (e) {
+            this.handleServerErr(e, request, response);
+        }
 
-        (async () => {
-            let userCourses: AdminCourseDescription[];
-            try {
-                userCourses = await this.coursesHandler.getUserAdminCourses(username);
-            } catch (e) {
-                this.logger.log('error', e);
-                this.logger.log('error', e.stack);
-                response.status(500)
-                    .send(e.stack.join('\n'));
-            }
-
-            response.status(200)
-                .send(userCourses);
-        })();
     }
 
-    loadAdminCourse(request: Request, response: Response) {
+    async loadAdminCourse(request: Request, response: Response) {
         let courseTitle: string = request.params.courseTitle;
         let username: string = request.params.username;
-        (async () => {
-            try {
-                let course = await this.coursesRepo.loadUserAdminCourse({
-                    username: username,
-                    courseTitle: courseTitle
-                });
-                response.status(200).send(course);
-            } catch (e) {
-                this.logger.log('error', e);
-                this.logger.log('error', e.stack);
-                response.status(500)
-                    .send(e.stack.join('\n'));
-            }
-        })();
+        try {
+            let course = await this.coursesRepo.loadUserAdminCourse({
+                username: username,
+                courseTitle: courseTitle
+            });
+
+            response.status(200).send(course);
+        } catch (e) {
+            this.handleServerErr(e, request, response);
+        }
     }
 
-    createModule(request: express.Request, response: express.Response) {
+    async createModule(request: express.Request, response: express.Response) {
         let courseId: string = request.params.courseId;
         let createModuleData: CreateModuleData = request.body;
-        (async () => {
-            try {
-                let course = await this.coursesHandler.createModule(createModuleData);
-                response.status(200)
-                    .send(course);
-            } catch (e) {
-                this.logger.log('error', e);
-                this.logger.log('error', e.stack);
-                response.status(500)
-                    .send(e.stack.join('\n'));
-            }
-        })();
+        try {
+            let course = await this.coursesHandler.createModule(createModuleData);
+            response.status(200).send(course);
+        } catch (e) {
+            this.handleServerErr(e, request, response);
+        }
     }
 
     async saveModule(request: express.Request, response: express.Response) {
@@ -127,9 +108,7 @@ export class CoursesController implements ModuleOperations, SectionOperations {
             let course = await this.coursesHandler.saveModule(saveModuleData);
             response.status(200).send(course);
         } catch (e) {
-            this.logger.log('error', e);
-            this.logger.log('error', e.stack);
-            response.status(500).send(e);
+            this.handleServerErr(e, request, response);
         }
     }
 
@@ -139,9 +118,7 @@ export class CoursesController implements ModuleOperations, SectionOperations {
             let course = await this.coursesHandler.createSection(createSectionData);
             response.status(200).send(course);
         } catch (e) {
-            this.logger.error(e);
-            this.logger.error(e.stack);
-            response.status(500).send(e.stack);
+            this.handleServerErr(e, request, response);
         }
     }
 
@@ -151,9 +128,7 @@ export class CoursesController implements ModuleOperations, SectionOperations {
             let course = await this.coursesHandler.saveSection(saveSectionData);
             response.status(200).send(course);
         } catch (e) {
-            this.logger.error(e);
-            this.logger.error(e.stack);
-
+            this.handleServerErr(e, request, response);
         }
     }
 }
