@@ -1,5 +1,6 @@
 CREATE TABLE tu.account (
   id             BIGINT PRIMARY KEY,
+  version        BIGINT    NOT NULL DEFAULT 0,
   username       VARCHAR(30) UNIQUE,
   password       VARCHAR(20),
   password_salt  TEXT,

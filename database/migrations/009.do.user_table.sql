@@ -1,5 +1,6 @@
 CREATE TABLE tu.user (
   id                     BIGINT PRIMARY KEY REFERENCES tu.account (id),
+  version                BIGINT    NOT NULL DEFAULT 0,
   username               VARCHAR(30) REFERENCES tu.account (username),
   first_name             VARCHAR(200),
   last_name              VARCHAR(200),

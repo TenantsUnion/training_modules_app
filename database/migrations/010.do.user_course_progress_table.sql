@@ -1,4 +1,5 @@
 CREATE TABLE tu.user_course_progress (
+  version                 BIGINT    NOT NULL DEFAULT 0,
   user_id                 BIGINT REFERENCES tu.user (id),
   course_id               BIGINT REFERENCES tu.course (id),
   last_viewed_module      BIGINT REFERENCES tu.module (id),

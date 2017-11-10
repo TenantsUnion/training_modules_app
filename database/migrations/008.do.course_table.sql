@@ -1,15 +1,21 @@
 CREATE TABLE tu.course (
-  id                 BIGINT PRIMARY KEY,
-  title              VARCHAR(100) UNIQUE NOT NULL,
-  description        VARCHAR(300),
-  time_estimate      INTEGER,
-  open_enrollment    BOOLEAN                      DEFAULT FALSE,
-  active             BOOLEAN                      DEFAULT FALSE,
-  ordered_module_ids BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
-  content_ids        BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
-  question_ids       BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
-  last_modified_at   TIMESTAMP           NOT NULL DEFAULT now(),
-  created_at         TIMESTAMP           NOT NULL DEFAULT now()
+  id                           BIGINT PRIMARY KEY,
+  version                      BIGINT              NOT NULL DEFAULT 0,
+  title                        VARCHAR(100) UNIQUE NOT NULL,
+  description                  VARCHAR(300),
+  time_estimate                INTEGER,
+  open_enrollment              BOOLEAN                      DEFAULT FALSE,
+  active                       BOOLEAN                      DEFAULT FALSE,
+  --references id pk column of tu.modules
+  ordered_module_ids           BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  --references id pk column of tu.quill_data
+  ordered_content_ids          BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  --references id pk column of tu.question
+  ordered_question_ids         BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  --ordering of content and questions together -- ids from ordered_module_ids and ordered_content_ids
+  ordered_content_question_ids BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  last_modified_at             TIMESTAMP           NOT NULL DEFAULT now(),
+  created_at                   TIMESTAMP           NOT NULL DEFAULT now()
 );
 
 CREATE INDEX course_title_gin_idx
@@ -25,7 +31,7 @@ CREATE INDEX course_ordered_module_ids_gin_idx
   ON tu.course USING GIN (ordered_module_ids);
 
 CREATE INDEX content_ids_gin_idx
-  ON tu.course USING GIN (content_ids);
+  ON tu.course USING GIN (ordered_content_ids);
 
 CREATE INDEX question_ids_gin_idx
-  ON tu.course USING GIN (question_ids);
+  ON tu.course USING GIN (ordered_question_ids);

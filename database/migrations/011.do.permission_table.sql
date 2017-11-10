@@ -1,7 +1,9 @@
 CREATE TABLE tu.permission (
-  id BIGINT PRIMARY KEY,
-  action text
+  id      BIGINT PRIMARY KEY,
+  version BIGINT NOT NULL DEFAULT 0,
+  action  TEXT
 );
 
-CREATE INDEX tu_permission_idx on tu.permission(action);
+CREATE INDEX tu_permission_idx
+  ON tu.permission (action);
 

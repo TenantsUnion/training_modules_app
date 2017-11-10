@@ -1,5 +1,6 @@
 CREATE TABLE tu.user_content (
   id               BIGINT PRIMARY KEY,
+  version          BIGINT                                      NOT NULL DEFAULT 0,
   content_data_id  BIGINT REFERENCES tu.quill_data (id) UNIQUE NOT NULL,
   title            VARCHAR(100),
   tags             VARCHAR(30) []                              NOT NULL DEFAULT ARRAY [] :: VARCHAR [],
