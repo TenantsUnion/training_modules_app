@@ -1,28 +1,37 @@
 'use strict';
 const path = require('path');
 const fs = require('fs');
-const pg = require('pg');
+import {Client} from 'pg';
+
 const config = require('config');
-const logger = require('./script_logger')('SQL File Executor');
-const Client = pg.Client;
-module.exports = {};
+const logger = require('./script_logger').getLogger('SQL File Executor');
+// module.exports = {};
 
-module.exports.postgresCient = new Client({
-    user: 'postgres',
-    password: 'postgres',
-    host: config.get("database.db_host"),
-    port: config.get("database.db_port"),
-    database: 'postgres'
-});
+export const postgresClient = async () => {
+    let client = new Client({
+        user: 'postgres',
+        password: 'postgres',
+        host: config.get("database.db_host"),
+        port: config.get("database.db_port"),
+        database: 'postgres'
+    });
+    await client.connect();
+    return client;
+};
 
 
-module.exports.tuLocalDevClient = new Client({
-    user: config.get("database.db_user"),
-    password: config.get("database.db_password"),
-    host: config.get("database.db_host"),
-    port: config.get("database.db_port"),
-    database: config.get("database.db")
-});
+export const tuLocalDevClient = async () => {
+    let client = new Client({
+        user: config.get("database.db_user"),
+        password: config.get("database.db_password"),
+        host: config.get("database.db_host"),
+        port: config.get("database.db_port"),
+        database: config.get("database.db")
+    });
+    await client.connect();
+    return client;
+};
+
 
 /**
  * Establishes a connection using the {@see pg.Client} library returning an
@@ -31,36 +40,30 @@ module.exports.tuLocalDevClient = new Client({
  * @note pg.Client can't handle multiple statements at once
  * @param client
  * @param directory
- * @returns {Promise.<function(*=, *=)>}
+ * @returns {function(*=, *=)}
  */
-module.exports.getSqlFileAsyncExecutor = async (client, directory) => {
-    await client.connect();
+export const getSqlFileAsyncExecutor = (client, directory) => {
     return async (filename, split) => {
         const sqlFileContents = fs.readFileSync(path.resolve(__dirname + directory, filename), 'utf-8');
-
         logger.log('info', 'Executing sql file: %s', filename);
-        return new Promise(async (resolve, reject) => {
-            if (split) {
-                let statements = sqlFileContents.split(/;\s*$/m);
-                for (let statement of statements) {
-                    try {
-                        let response = await client.query(statement);
-                    } catch (e) {
-                        logger.log('error', e);
-                        reject(e);
-                    }
-                }
-                logger.log('info', 'successfully executed sql statements in file');
-            } else {
+        if (split) {
+            let statements = sqlFileContents.split(/;\s*$/m);
+            for (let statement of statements) {
                 try {
-                    await client.query(sqlFileContents);
+                    let response = await client.query(statement);
                 } catch (e) {
                     logger.log('error', e);
-                    reject(e);
+                    throw e;
                 }
             }
-            resolve();
-        });
+            logger.log('info', 'successfully executed sql statements in file');
+        } else {
+            try {
+                await client.query(sqlFileContents);
+            } catch (e) {
+                logger.log('error', e);
+                throw e;
+            }
+        }
     };
 };
-

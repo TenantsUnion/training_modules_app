@@ -1,9 +1,10 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {QuillComponent} from "../../../quill/quill_component";
 import * as VueForm from "../../../vue-form";
 import {coursesService} from "../../courses_service";
-import {ViewCourseQuillData} from "courses";
+import {ViewCourseQuillData} from "courses.ts";
+import {QuillComponent} from '../../../global/quill/quill_component';
+import {MODULE_ACTIONS} from '../../store/module/module_actions';
 
 @Component({
     data: () => {
@@ -28,11 +29,12 @@ export class CreateModuleComponent extends Vue {
     course: ViewCourseQuillData;
 
     created() {
-        this.loading = true;
-        coursesService.subscribeCurrentCourse((course) => {
-            this.loading = false;
-            this.course = course;
-        });
+        // todo delete
+        // this.loading = true;
+        // coursesService.subscribeCurrentCourse((course) => {
+        //     this.loading = false;
+        //     this.course = course;
+        // });
     }
 
     async createModule() {
@@ -44,15 +46,16 @@ export class CreateModuleComponent extends Vue {
         this.loading = true;
         this.errorMessages = null;
 
-
+        // todo rewrite with store actions
         try {
-            await coursesService.createModule({
-                courseId: this.course.id,
+            let createModulePayload = {
                 title: this.title,
                 description: this.description,
                 timeEstimate: this.timeEstimate,
-                header: (<QuillComponent> this.$refs.editor).getQuillEditorContents()
-            });
+                courseId: this.course.id,
+                orderedContentQuestions: []
+            };
+            await this.$store.dispatch(MODULE_ACTIONS.CREATE_MODULE, createModulePayload);
 
             //todo handle validation errors
             this.$router.push({

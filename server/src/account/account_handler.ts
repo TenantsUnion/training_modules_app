@@ -1,4 +1,4 @@
-import {LoginCredentials, AccountSignupRequest} from "account";
+import {LoginCredentials, AccountSignupRequest} from "account.ts";
 import {IAccountRepository} from "./account_repository";
 import {IUserHandler} from "../user/user_handler";
 import {IUserInfo} from "../../../shared/user";
@@ -14,8 +14,7 @@ export class AccountHandler implements IAccountHandler {
     private logger = getLogger('AccountHandler', 'info');
 
     constructor(private accountRepository: IAccountRepository,
-                private userHandler: IUserHandler,
-                private userSocketServer: SocketIO.Server) {
+                private userHandler: IUserHandler) {
     }
 
     async signup(signupInfo: AccountSignupRequest): Promise<IUserInfo> {

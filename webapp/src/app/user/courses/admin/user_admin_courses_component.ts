@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {AdminCourseDescription} from "courses";
+import {AdminCourseDescription} from "courses.ts";
 import {userCoursesHttpService} from "../course_http_service";
 import VueRouter from "vue-router";
 import {coursesService} from '../../../courses/courses_service';

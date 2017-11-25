@@ -3,8 +3,7 @@ import Component from "vue-class-component";
 import {coursesService} from '../../courses_service';
 import {COURSES_ROUTE_NAMES, coursesRoutesService} from '../../courses_routes';
 import {ViewModuleQuillData} from '../../../../../../shared/modules';
-import {CourseRefreshComponent} from '../../../global_components/refresh_route';
-import {QuillComponent} from '../../../quill/quill_component';
+import {CourseRefreshComponent} from '../../../global/refresh_route';
 
 @Component({
     data: () => {
@@ -19,10 +18,7 @@ import {QuillComponent} from '../../../quill/quill_component';
         };
     },
     extends: CourseRefreshComponent,
-    template: require('./module_details_component.tpl.html'),
-    components: {
-        'quill-editor': QuillComponent
-    }
+    template: require('./module_details_component.tpl.html')
 })
 
 export class ModuleDetailsComponent extends Vue {
@@ -32,12 +28,13 @@ export class ModuleDetailsComponent extends Vue {
     module: ViewModuleQuillData;
 
     created() {
-        this.loading = true;
-        this.isCourseAdmin = coursesRoutesService.isCourseAdmin();
-        this.moduleUnsubscribe = coursesService.subscribeCurrentModule((module) => {
-            this.loading = false;
-            this.module = module;
-        });
+        // todo delete
+        // this.loading = true;
+        // this.isCourseAdmin = coursesRoutesService.isCourseAdmin();
+        // this.moduleUnsubscribe = coursesService.subscribeCurrentModule((module) => {
+        //     this.loading = false;
+        //     this.module = module;
+        // });
     }
 
     createSection(){

@@ -1,29 +1,25 @@
-const fs = require('fs');
-const path = require('path');
-const sqlFs = require('./sql_file_executor');
-const logger = require('./script_logger')('drop_db');
+import {getSqlFileAsyncExecutor, postgresClient} from './sql_file_executor';
+import {getLogger} from './script_logger';
 
+const logger = getLogger('DropDb');
 const sqlDirectory = '/resources/drop_postgres_db/';
 
-
-module.exports = (async () => {
+(async () => {
     try {
-        logger.log('info', 'Establishing db connection with user: %s', sqlFs.postgresCient.user);
-        let pgExecutor = await sqlFs.getSqlFileAsyncExecutor(sqlFs.postgresCient, sqlDirectory);
+        var pgClient = await postgresClient();
+        logger.log('info', 'Establishing db connection with user: %s', pgClient.user);
+
+        let pgExecutor = await getSqlFileAsyncExecutor(pgClient, sqlDirectory);
         await pgExecutor('00__drop_database_pg.sql', true);
-    } catch (e) {
-        throw e;
-    }
-})()
-    .then(() => {
-        //todo replace with npm logging library
         logger.log('info', 'Dropped database successfully');
-        process.exit(0);
-    })
-    .catch((e) => {
+    } catch (e) {
         logger.log('error', 'Failed to drop database');
         logger.log('error', e);
+        throw e;
+    } finally {
+        pgClient && pgClient.end();
         process.exit(0);
-    });
+    }
+})();
 
 

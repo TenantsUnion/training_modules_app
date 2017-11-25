@@ -1,12 +1,12 @@
 import {Datasource} from "../datasource";
 import {
     AdminCourseDescription, UserEnrolledCourseData,
-    EnrolledCourseDescription, CreateCourseData, SaveCourseEntityCommand, ViewCourseTransferData
-} from "courses";
+    EnrolledCourseDescription, SaveCourseEntityCommand, ViewCourseTransferData, CreateCourseEntityPayload
+} from "courses.ts";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
 import {LoggerInstance} from 'winston';
-import {isUsernameCourseTitle, UsernameCourseTitle} from "./courses_handler";
+import {isUsernameCourseTitle, LoadAdminCourseParameters} from "./courses_handler";
 import * as _ from "underscore";
 import {ViewModuleTransferData} from '../../../shared/modules';
 import {ViewSectionTransferData} from '../../../shared/sections';
@@ -15,11 +15,9 @@ import * as moment from "moment";
 export interface ICoursesRepository {
     loadUserEnrolledCourse(username: string, courseId: string): Promise<UserEnrolledCourseData>;
 
-    loadUserAdminCourse(courseId: string | UsernameCourseTitle): Promise<ViewCourseTransferData>;
+    loadUserAdminCourse(courseId: string | LoadAdminCourseParameters): Promise<ViewCourseTransferData>;
 
-    createCourse(courseData: CreateCourseData, quillIds: string[]): Promise<string>;
-
-    courseExists(courseData: CreateCourseData): Promise<boolean>;
+    createCourse(courseData: CreateCourseEntityPayload, quillIds: string[]): Promise<string>;
 
     loadUserEnrolledCourses(userId: string): Promise<AdminCourseDescription[]>;
 
@@ -40,36 +38,24 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
     }
 
     async loadUserAdminCourses(username: string): Promise<AdminCourseDescription[]> {
-        return new Promise<AdminCourseDescription[]>((resolve, reject) => {
-            if (!username) {
-                reject(`No username provided to load admin courses`)
-            }
-
-            (async () => {
-                try {
-                    let result = await this.datasource.query({
-                        // language=PostgreSQL
-                        text: `
+        let result = await this.datasource.query({
+            // language=PostgreSQL
+            text: `
                           SELECT c.id, c.title, c.time_estimate FROM tu.course c JOIN
                             (SELECT unnest(
                                      u.admin_of_course_ids) AS admin_course_id FROM
                                tu.user u WHERE u.username = $1) u
                               ON c.id = u.admin_course_id
                         `,
-                        values: [username]
-                    });
-                    let processedCourses = result.map((course) => {
-                        return _.extend({}, course, {
-                            timeEstimate: '' + course.timeEstimate
-                        });
-                    });
-
-                    resolve(processedCourses);
-                } catch (e) {
-                    reject(e);
-                }
-            })();
+            values: [username]
         });
+        let processedCourses = result.map((course) => {
+            return _.extend({}, course, {
+                timeEstimate: '' + course.timeEstimate
+            });
+        });
+
+        return processedCourses;
     }
 
     async loadUserEnrolledCourses(username: string): Promise<EnrolledCourseDescription[]> {
@@ -106,28 +92,13 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                     reject(e);
                 }
             })();
-
-
         });
     }
 
-    async courseExists(courseData: CreateCourseData): Promise<boolean> {
-        if (!courseData.title) {
-            return false;
-        }
 
-        try {
-            let result = await this.datasource.query({
-                text: `SELECT COUNT(*) FROM tu.course WHERE title = $1`,
-                values: [courseData.title]
-            });
-            return result[0].count !== '0';
-        } catch (e) {
-            throw e
-        }
-    }
 
-    async createCourse(courseData: CreateCourseData, quillIds: string[]): Promise<string> {
+
+    async createCourse(courseData: CreateCourseEntityPayload, quillIds: string[]): Promise<string> {
         try {
             let courseId = await this.getNextId();
             await this.datasource.query({
@@ -144,31 +115,17 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
     }
 
     async loadUserEnrolledCourse(courseId: string): Promise<UserEnrolledCourseData> {
-        return new Promise<UserEnrolledCourseData>((resolve, reject) => {
-            if (!courseId) {
-                return resolve(null);
-            }
-
-            (async () => {
-                try {
-                    let results = await this.datasource.query({
-                            text: `SELECT * FROM tu.course c WHERE c.id = $1`,
-                            values: [courseId]
-                        }
-                    );
-
-                    resolve(results[0]);
-                } catch (e) {
-                    this.logger.log('error', e);
-                    this.logger.log('error', e.stack);
-                    reject(e);
+            let results = await this.datasource.query({
+                    text: `SELECT * FROM tu.course c WHERE c.id = $1`,
+                    values: [courseId]
                 }
-            })();
-        });
+            );
+
+            return results[0];
     }
 
-    async loadUserAdminCourse(courseId: UsernameCourseTitle | string): Promise<ViewCourseTransferData> {
-        let query = isUsernameCourseTitle(courseId) ? {
+    async loadUserAdminCourse({courseId, courseTitle, username}: { courseId: string, courseTitle: string, username: string }): Promise<ViewCourseTransferData> {
+        let query = courseTitle && username ? {
             text: `
                 SELECT c.*, m.modules FROM tu.user u
                   INNER JOIN LATERAL
@@ -184,7 +141,7 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
                     ON TRUE
                     ON c.id IN (select unnest(u.admin_of_course_ids)) WHERE u.username = $2;
                     `,
-            values: [courseId.courseTitle, courseId.username]
+            values: [courseTitle, username]
         } : {
             text: `
                 SELECT c.*, m.modules FROM tu.course c

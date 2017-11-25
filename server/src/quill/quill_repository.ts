@@ -5,7 +5,7 @@ import {LoggerInstance} from 'winston';
 import * as moment from 'moment';
 import * as _ from 'underscore';
 import {Moment} from 'moment';
-import {QuillEditorData} from '../../../shared/quill';
+import {QuillEditorData} from '../../../shared/quill_editor';
 
 
 export class QuillRepository extends AbstractRepository {

@@ -1,1 +1,1 @@
---compilers ts:test/test_hook.js
+--require test/test_hook.js

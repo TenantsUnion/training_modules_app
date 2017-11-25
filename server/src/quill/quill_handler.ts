@@ -1,6 +1,6 @@
 import {QuillRepository} from './quill_repository';
-import {QuillEditorData} from '../../../shared/quill';
-import {quillRepository} from '../config/repository.config';
+import {QuillEditorData} from '../../../shared/quill_editor';
+import {quillRepository} from '../config/repository_config';
 
 export class QuillHandler {
     constructor(private quillRepository: QuillRepository){

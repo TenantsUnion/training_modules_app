@@ -1,22 +1,19 @@
 import axios from "axios";
-import {
-    AdminCourseDescription, ViewCourseQuillData, CreateCourseData
-} from "courses";
+import {AdminCourseDescription, CreateCourseEntityPayload} from 'courses';
 import {userQueryService} from "../../account/user_query_service";
 
 class UserCoursesHttpService {
 
-    createCourse (createCourseData: CreateCourseData): Promise<void> {
-        return axios.post('courses/create', createCourseData)
-            .then((value) => {
-
-            })
-            .catch((response) => {
-                throw response.response.data;
-            });
+    async createCourse(createCourseData: CreateCourseEntityPayload): Promise<void> {
+        // todo get command meta data
+        try {
+            await axios.post('courses/create', createCourseData);
+        } catch (response) {
+            throw response.response.data;
+        }
     }
 
-    getUserEnrolledCourses (): Promise<AdminCourseDescription[]> {
+    getUserEnrolledCourses(): Promise<AdminCourseDescription[]> {
         let username = userQueryService.getUsername();
         return axios.get(`courses/user/enrolled/${username}`)
             .then((value) => {

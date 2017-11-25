@@ -1,31 +1,29 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {ViewCourseQuillData} from '../../../../../shared/courses';
-import {coursesService} from '../courses_service';
+import {CourseEntity} from '../../../../../shared/courses';
+import {mapGetters} from 'vuex';
 
 @Component({
-    data: () => {
-        return {
-            loading: false,
-            course: {}
-        };
+    computed: {
+        ...mapGetters(['currentCourse', 'currentCourseLoading'])
     },
     template: require('./course_details_component.tpl.html')
 })
 export class CourseDetailsComponent extends Vue {
-    courseUnsubscribe: () => any;
-    loading: boolean;
-    course: ViewCourseQuillData;
+    // courseUnsubscribe: () => any;
+    currentCourseLoading: boolean;
+    currentCourse: CourseEntity;
 
     mounted() {
-        this.loading = true;
-        this.courseUnsubscribe = coursesService.subscribeCurrentCourse((course) => {
-            this.loading = false;
-            this.course = course;
-        });
+        // todo delete me
+        // this.currentCourseLoading = true;
+        // this.courseUnsubscribe = coursesService.subscribeCurrentCourse((course) => {
+        //     this.currentCourseLoading = false;
+        //     this.currentCourse = course;
+        // });
     }
 
     destroyed() {
-        this.courseUnsubscribe();
+        // this.courseUnsubscribe();
     }
 }

@@ -9,7 +9,9 @@ export interface AccountInfo {
 
 export interface IUserHandler {
     createUser(createUserData: any): Promise<IUserInfo>;
-    userCreatedCourse(userId:string, courseId: string): Promise<void>;
+
+    userCreatedCourse(userId: string, courseId: string): Promise<void>;
+
     loadUser(id: string): Promise<IUserInfo>;
 }
 
@@ -18,35 +20,26 @@ export class UserHandler implements IUserHandler {
     }
 
     async createUser(createUserData: CreateUserInfo): Promise<IUserInfo> {
-        return new Promise<IUserInfo>((resolve, reject) => {
-            (async () => {
-                try {
-                    let accountInfo: AccountInfo = await this.userRepository.createUser(createUserData);
-                    let userInfo: IUserInfo = await this.userRepository.loadUser(accountInfo.id);
-                    resolve(userInfo);
-                } catch (e) {
-                    console.log(e.stack);
-                    reject(e);
-                }
-            })();
-        });
+        try {
+            let accountInfo: AccountInfo = await this.userRepository.createUser(createUserData);
+            let userInfo: IUserInfo = await this.userRepository.loadUser(accountInfo.id);
+            return userInfo;
+        } catch (e) {
+            console.log(e.stack);
+            throw e;
+        }
     }
 
-    async userCreatedCourse(createdByUsername:string, courseId: string): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            (async () => {
-                try {
-                    await this.userRepository.addToAdminOfCourseIds(createdByUsername, courseId);
-                    resolve();
-                } catch (e) {
-                    console.log(e.stack);
-                    reject(e);
-                }
-            })();
-        });
+    async userCreatedCourse(createdByUserId: string, courseId: string): Promise<void> {
+        try {
+            await this.userRepository.addToAdminOfCourseIds(createdByUserId, courseId);
+        } catch (e) {
+            console.log(e.stack);
+            throw e;
+        }
     }
 
-    async loadUser (id: string): Promise<IUserInfo> {
+    async loadUser(id: string): Promise<IUserInfo> {
         return this.userRepository.loadUser(id);
     }
 }

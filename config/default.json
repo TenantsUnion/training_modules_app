@@ -1,7 +1,7 @@
 {
   "server": {
-    "views_dir": "../../webapp/views",
-    "webapp_dir": "../../webapp/dist/"
+    "views_dir": "../../../../webapp/views",
+    "webapp_dir": "../../../../webapp/dist/"
   },
   "webapp": {
     "webpack_context": "webapp/"

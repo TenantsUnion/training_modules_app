@@ -1,5 +1,5 @@
 import * as express from "express";
-import {coursesController} from "../config/web_controller.config";
+import {coursesController} from "../config/web_controller_config";
 import {ModuleRoutes} from '../module/module_routes';
 import {SectionRoutes} from '../section/section_routes';
 
@@ -8,6 +8,11 @@ let router = express.Router();
 router.get('/user/:username/courses/admin/:courseTitle', (request, response) => {
     coursesController.loadAdminCourse(request, response);
 });
+
+router.get('/view/course/admin/:courseId', (request, response) => {
+    coursesController.loadAdminCourse(request, response)
+});
+
 
 
 router.post('/courses/create', (request, response) => {

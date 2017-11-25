@@ -1,6 +1,5 @@
-const winston = require('winston');
-const _ = require('underscore');
-const config = require('config');
+import winston from 'winston';
+import config from 'config';
 
 const logLevel = 'info';
 
@@ -24,7 +23,7 @@ const DEFAULT_LOG_NAME = "run_script.log";
 const fileConfig = config.has("log.directory") ? config.get("logDirectory") : "";
 const defaultLogNameConfig = config.has("log.default_name") ? config.get("log.default_name") : "";
 
-module.exports = (loggerName, fileName) => {
+export const getLogger = (loggerName, fileName) => {
     let transport = fileConfig ? new winston.transports.File({
             label: loggerName,
             level: 'info',

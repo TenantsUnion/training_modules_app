@@ -8,10 +8,14 @@ let adminSocketLogger = getLogger('AdminCourseSocket', 'info');
 
 export let io:SocketIO.Server;
 export let adminCourseSocket;
+export let rootSocket;
 module.exports = (httpServer) => {
     socketServerLogger.info('Initializing socket');
     io = socket.listen(httpServer);
+
     io.use(socketWildcard());
+    rootSocket = io.of('/');
+
     adminCourseSocket = io.of(ADMIN_COURSE_NSP);
 
     io.on('connection', (socket: SocketIO.Socket) => {

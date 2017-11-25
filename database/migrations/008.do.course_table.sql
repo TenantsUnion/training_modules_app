@@ -1,7 +1,7 @@
 CREATE TABLE tu.course (
   id                           BIGINT PRIMARY KEY,
   version                      BIGINT              NOT NULL DEFAULT 0,
-  title                        VARCHAR(100) UNIQUE NOT NULL,
+  title                        VARCHAR(100) NOT NULL,
   description                  VARCHAR(300),
   time_estimate                INTEGER,
   open_enrollment              BOOLEAN                      DEFAULT FALSE,

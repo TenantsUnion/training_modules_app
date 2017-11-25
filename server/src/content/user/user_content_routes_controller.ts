@@ -1,5 +1,5 @@
 import {Request, Response} from 'express';
-import {CreateUserContentCommand} from "content";
+import {CreateUserContentCommand} from "content.ts";
 import {UserContentHandler} from "./user_content_handler";
 import {getLogger} from '../../log';
 import {ContentEntity, ContentRepository} from "../content_repository";

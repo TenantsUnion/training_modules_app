@@ -1,11 +1,10 @@
-import {LoginCredentials} from 'account';
 import {IAccountHandler} from './account_handler';
-import {SignupData} from "./account";
 import {AccountRequestValidator} from "./account_request_validation_service";
 import {IUserHandler} from "../user/user_handler";
 import {Response, Request} from "express";
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../log';
+import {LoginCredentials, SignupData} from 'account';
 
 export class AccountController {
     private logger: LoggerInstance = getLogger('AccountController', 'info');

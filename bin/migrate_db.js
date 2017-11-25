@@ -1,9 +1,10 @@
-var postgrator = require('postgrator');
-var config = require('config');
-var logger = require('./script_logger')('migrate_db');
+import postgrator from 'postgrator';
+import config from 'config';
 
-console.log(process.env.NODE_ENV);
-console.log(config.get('database.db'));
+import {getLogger} from "./script_logger";
+
+let logger = getLogger('migrate_db');
+
 postgrator.setConfig({
     migrationDirectory: __dirname + '/../database/migrations',
     driver: 'pg',

@@ -2,9 +2,8 @@ import {AbstractRepository} from "../repository";
 import {LoggerInstance} from "winston";
 import {getLogger} from "../log";
 import {Datasource} from "../datasource";
-import {CreateModuleDataHeaderId} from './modules';
-import {CreateModuleData} from 'modules';
-import {SaveModuleData} from 'modules';
+import {CreateModuleEntityPayload} from 'modules.ts';
+import {SaveModuleData} from 'modules.ts';
 import * as moment from "moment";
 
 export class ModuleRepository extends AbstractRepository {
@@ -14,7 +13,7 @@ export class ModuleRepository extends AbstractRepository {
         super('module_id_seq', sqlTemplate);
     }
 
-    async addModule(moduleData: CreateModuleData, headerId: string): Promise<string> {
+    async addModule(moduleData: CreateModuleEntityPayload, headerId: string): Promise<string> {
 
         return new Promise<string>((resolve, reject) => {
             (async () => {

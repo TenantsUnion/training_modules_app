@@ -1,26 +1,25 @@
 import {Datasource} from "./datasource";
 
 export abstract class AbstractRepository {
-    constructor (private sequenceName: string,
-                 protected sqlTemplate: Datasource) {
+    constructor(private sequenceName: string,
+                protected sqlTemplate: Datasource) {
         this.sequenceName = sequenceName;
     }
 
-    async getNextId (): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            (async () => {
-                try {
-                    let id = await this.sqlTemplate.query({
-                        // language=PostgreSQL
-                        text: ` SELECT nextval('tu.${this.sequenceName}')`,
-                        values: []
-                    });
-                    resolve('' + id[0].nextval);
-                } catch (e) {
-                    reject(e);
-                }
-            })();
+    async getNextId(): Promise<string> {
+        let id = await this.sqlTemplate.query({
+            text: ` SELECT nextval('tu.${this.sequenceName}')`,
+            values: []
         });
-    }
+        return '' + id[0].nextval;
+    };
 
+    async getNextIds(count: number): Promise<string[]> {
+        let ids = [];
+        while(count && count > 0) {
+            ids.push(this.getNextId());
+            count--;
+        }
+        return Promise.all(ids);
+    }
 }

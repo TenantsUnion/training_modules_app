@@ -1,7 +1,6 @@
 import * as socketIOClient from 'socket.io-client';
 import {ADMIN_COURSE_NSP, SUBSCRIBE} from '../../../../shared/socket';
-import {ViewCourseTransferData} from '../../../../shared/courses';
-import {coursesService} from './courses_service';
+import {CourseEntity} from '../../../../shared/courses';
 
 export const adminCourseSocket = socketIOClient.connect(ADMIN_COURSE_NSP);
 
@@ -16,19 +15,18 @@ adminCourseSocket.on('connect', function(){
  */
 export const setCourseSubscription = (courseId) => {
     // unsubscribing from previous course is handled by socket server
-    adminCourseSocket.emit(SUBSCRIBE, courseId, ()=> {
-        console.log()
+    adminCourseSocket.emit(SUBSCRIBE, courseId, function () {
+        console.log(`Admin socket subscribe callback ${courseId}`);
+        console.log(arguments);
     });
 };
 
-/**
- * Notifies the {@link coursesService} that the current course has been updated
- */
-adminCourseSocket.on('message', async (data: ViewCourseTransferData) => {
+adminCourseSocket.on('message', async (data: CourseEntity) => {
     try {
         console.log('Received update from admin course socket');
         console.log(data);
-        await coursesService.notifyCourseUpdate(data);
+        //todo course action set course entity
+        // await appStore.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, data);
     } catch (e) {
         console.error(e);
     }

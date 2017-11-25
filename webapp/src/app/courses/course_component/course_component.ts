@@ -3,19 +3,17 @@ import Component from "vue-class-component";
 import {CourseNavigationComponent} from '../course_navigation_component/course_navigation_component';
 import {$} from '../../globals';
 import {coursesService} from '../courses_service';
-import {ViewCourseQuillData} from 'courses';
+import {CourseEntity, ViewCourseQuillData} from 'courses.ts';
 import {CourseDetailsComponent} from "../course_details_component/course_details_component";
 import {coursesRoutesService} from '../courses_routes';
+import {mapGetters, Store} from 'vuex';
+import {RootState} from '../../state_store';
 
 @Component({
-    data: () => {
-        return {
-            loading: false,
-            course: null,
-            isCourseAdmin: false
-        };
-    },
     template: require('./course_component.tpl.html'),
+    computed: {
+        ...mapGetters(['currentCourse', 'currentCourseLoading'])
+    },
     components: {
         'course-navigation': CourseNavigationComponent,
         'course-details': CourseDetailsComponent
@@ -23,18 +21,18 @@ import {coursesRoutesService} from '../courses_routes';
 })
 export class CourseComponent extends Vue {
     courseUnsubscribe;
-    course: ViewCourseQuillData;
-    loading: boolean;
-    isCourseAdmin: boolean;
+    currentCourse: CourseEntity;
+    currentCourseLoading: boolean;
     addedNavigationCollapse: boolean = false;
 
     created() {
-        this.loading = true;
-        this.isCourseAdmin = coursesRoutesService.isCourseAdmin();
-        this.courseUnsubscribe = coursesService.subscribeCurrentCourse((course: ViewCourseQuillData) => {
-            this.loading = false;
-            this.course = course;
-        });
+        // this.isCourseAdmin = coursesRoutesService.isCourseAdmin();
+        // todo delete
+        // this.courseUnsubscribe = coursesService.subscribeCurrentCourse((course: ViewCourseQuillData) => {
+        //     this.loading = false;
+        //     this.course = course;
+        // });
+
     }
 
     updated() {
@@ -53,5 +51,9 @@ export class CourseComponent extends Vue {
 
     destroyed() {
         this.courseUnsubscribe();
+    }
+
+    get isCourseAdmin():boolean {
+        return this.$store.state.course.getters.isCourseAdmin;
     }
 }

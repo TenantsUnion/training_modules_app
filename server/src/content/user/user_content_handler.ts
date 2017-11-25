@@ -1,4 +1,4 @@
-import {CreateUserContentCommand} from "content";
+import {CreateUserContentCommand} from "content.ts";
 import {QuillRepository} from "../../quill/quill_repository";
 import {ContentEntity, ContentRepository} from "../content_repository";
 import {UserRepository} from "../../user/users_repository";

@@ -1,6 +1,7 @@
 import {expect} from "chai";
 import * as quillDelta from "quill-delta";
-import {convertToDeltaObj, parameterErrorMsg} from "../../shared/modify/convert_delta";
+import {convertToDeltaObj, DEFAULT_DIFF_KEY_FN, parameterErrorMsg} from '../../shared/delta/convert_delta';
+import {diffDeltaObj} from '../../shared/delta/diff_delta';
 
 // use @type/quilljs for standalone quill-delta library
 let Delta: Quill.DeltaStatic = quillDelta;
@@ -25,10 +26,24 @@ describe('convertObjectValuesToDeltas function', function () {
 
     it('should convert a nested array object\'s properties to their Delta equivalents', function () {
         expect(convertToDeltaObj({
-            a: [[1, 2, 'Some Stuff'], ['Some text']]
+            a: [
+                1,
+                [
+                    2,
+                    'Some Stuff'
+                ]
+            ],
+            b: 'top level text'
         })).to.deep.equal({
-            a: new Delta().insert(1).insert(2).insert('Some Stuff').insert('Some text')
-        })
+            a: [
+                new Delta().insert(1),
+                [
+                    new Delta().insert(2),
+                    new Delta().insert('Some Stuff')
+                ]
+            ],
+            b: new Delta().insert('top level text')
+        });
     });
 
     it('should exclude properties from being being converted with a predicate', function () {
@@ -38,8 +53,11 @@ describe('convertObjectValuesToDeltas function', function () {
             c: false
         }, (key) => key !== 'b')).to.deep.equal({
             a: new Delta().insert(1),
-            b: 'Some text',
             c: new Delta().insert(false)
         })
     });
+});
+
+describe('diffDeltaObj function', function () {
+
 });

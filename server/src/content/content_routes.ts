@@ -1,5 +1,5 @@
 import * as express from "express";
-import {userContentController} from "../config/web_controller.config";
+import {userContentController} from "../config/web_controller_config";
 
 let router = express.Router();
 

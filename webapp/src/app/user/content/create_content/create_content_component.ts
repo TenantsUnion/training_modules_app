@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {QuillComponent} from "../../../quill/quill_component";
 import {contentHttpService} from "../content_http_service";
 import {appRouter} from "../../../router";
+import {QuillComponent} from '../../../global/quill/quill_component';
 
 
 @Component({

@@ -1,6 +1,6 @@
 import {Datasource} from "../datasource";
 import {AbstractRepository} from "../repository";
-import {ContentData} from "content";
+import {ContentData} from "content.ts";
 
 export interface ContentEntity {
     id: string,

@@ -7,11 +7,12 @@ import * as bodyParser from "body-parser";
 import * as config from "config";
 import * as session from "express-session";
 import {Express} from 'express';
-import {IErrorResponse} from '../../shared/http_responses';
+import {HttpResponse} from '../../shared/http_responses';
 import {AccountRoutes} from "./account/account_routes";
 import {UserContentRoutes} from "./content/content_routes";
 import {CoursesRoutes} from "./courses/courses_routes";
 import {QuillRoutes} from './quill/quill_routes_controller';
+import {getLogger, LOG_LEVEL_VALUES, LOG_LEVELS} from './log';
 
 /**
  * Configured to listen on port and started in /bin scripts
@@ -43,7 +44,7 @@ app.use(session({
 
 
 // error handler
-app.use(function (err: IErrorResponse, req, res, next) {
+app.use(function (err: HttpResponse, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -54,6 +55,12 @@ app.use(function (err: IErrorResponse, req, res, next) {
 });
 
 app.use(express.static(path.join(__dirname, config.get('server.webapp_dir'))));
+
+const httpLogger = getLogger('HttpServer', LOG_LEVELS.debug);
+app.use((req, res, next) => {
+    httpLogger.log('trace', `${req.body}`);
+    next();
+});
 // serve home page
 app.get('/', express.Router().get('/', function (req, res, next) {
     res.render('index', {

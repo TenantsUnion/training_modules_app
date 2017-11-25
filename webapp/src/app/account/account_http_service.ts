@@ -1,5 +1,5 @@
 import axios from "axios";
-import {LoginCredentials, LoginResponse, AccountSignupRequest} from 'account.d.ts';
+import {LoginCredentials, LoginResponse, AccountSignupRequest} from 'account.ts';
 import {IUserInfo} from "user";
 import {userQueryService} from "./user_query_service";
 

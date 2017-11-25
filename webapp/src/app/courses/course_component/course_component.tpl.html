@@ -3,10 +3,10 @@
         <div class="menu-icon-container row align-right">
             <a class="menu-icon" id="menu-toggle"></a>
         </div>
-        <loading v-if="loading"></loading>
-        <course-navigation v-if="course"
+        <loading v-if="currentCourseLoading"></loading>
+        <course-navigation v-if="currentCourse"
                            :is-course-admin="isCourseAdmin"
-                           :course="course">
+                           :course="currentCourse">
         </course-navigation>
     </div>
     <div id="page-content-wrapper" class="page-content-wrapper">

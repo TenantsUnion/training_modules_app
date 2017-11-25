@@ -12,22 +12,29 @@
             <div>
                 <div>
                     <label for="course-title">Title
-                        <input v-model="course.title" type="text"
+                        <input v-model="currentCourse.title" type="text"
                                placeholder="Course Title" id="course-title"/>
                     </label>
                 </div>
                 <div>
-                    <time-estimate :time-estimate="course.timeEstimate"
+                    <time-estimate :time-estimate="currentCourse.timeEstimate"
                                    :updated="timeEstimateUpdated"
                                    :is-input="true"></time-estimate>
                 </div>
                 <div>
                     <label for="course-description">Description</label>
-                    <textarea v-model="course.description" type="text"
+                    <textarea v-model="currentCourse.description" type="text"
                               placeholder="Course description"
                               id="course-description"></textarea>
                 </div>
-
+                <div>
+                    <segment-viewer :segments="currentCourse.content" ref="segmentViewer"></segment-viewer>
+                </div>
+                <div class="row">
+                    <div class="columns small-12 large-10">
+                        <add-content-component :callback="addContentCallback"></add-content-component>
+                    </div>
+                </div>
                 <div>
                     <button @click="save" class="button">Save</button>
                     <button @click="cancel" class="button secondary">Cancel</button>

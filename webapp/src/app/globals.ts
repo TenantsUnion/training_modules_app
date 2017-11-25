@@ -1,11 +1,13 @@
 import jQuery from 'jquery';
-import Quill from 'quill';
 import Vue from 'vue';
-import {LoadingComponent} from './global_components/loading';
-import {TimeEstimateComponent} from './global_components/time_estimate/time_estimate_component';
 import * as _ from "underscore";
+import Quill from 'quill';
 import axios, {AxiosRequestConfig} from "axios";
-import {QuillComponent} from './quill/quill_component';
+import {LoadingComponent} from './global/loading';
+import {TimeEstimateComponent} from './global/time_estimate/time_estimate_component';
+import {QuillComponent} from './global/quill/quill_component';
+import {AddContentComponent} from './global/content/add_content_componet';
+import {SegmentViewerComponent} from './global/segment_viewer/segment_viewer_component';
 
 //put jquery on global window for debugging,
 //workaround for webpack doing this with module number prefixes
@@ -19,6 +21,8 @@ unTypedWindow.Quill = Quill;
 Vue.component('loading', LoadingComponent);
 Vue.component('time-estimate', TimeEstimateComponent);
 Vue.component('quill-editor', QuillComponent);
+Vue.component('add-content-component', AddContentComponent);
+Vue.component('segment-viewer', SegmentViewerComponent);
 
 
 export const $ = jQuery;

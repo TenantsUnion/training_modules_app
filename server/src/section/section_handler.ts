@@ -2,7 +2,7 @@ import * as _ from "underscore";
 import {SectionRepository} from './section_repository';
 import {
     CreateSectionData, SaveSectionData, ViewSectionTransferData
-} from 'sections';
+} from 'sections.ts';
 import {QuillRepository} from '../quill/quill_repository';
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../log';

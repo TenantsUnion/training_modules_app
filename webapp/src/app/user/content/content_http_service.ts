@@ -1,5 +1,5 @@
 import axios from "axios";
-import {ContentData, CreateUserContentCommand} from "content";
+import {ContentData, CreateUserContentCommand} from "content.ts";
 import {
     UserQueryService,
     userQueryService

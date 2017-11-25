@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {coursesHandler} from "../server/src/config/handler.config";
+import {coursesHandler} from "handler_config.ts";
 
 // describe('hello world test', () => {
 //    it('should run a test', () => {

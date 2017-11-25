@@ -3,45 +3,70 @@
         <div class="main">
             <div class="row">
                 <div class="columns small-12 large-10">
-                    <div>
-                        <h1>Create Course</h1>
-                        <p v-if="errorMessages">{{ errorMessages }}</p>
-                    </div>
+                    <h1>Create Course</h1>
+                    <loading v-if="loading"></loading>
                 </div>
             </div>
-            <div class="row">
-                <div class="columns small-12 large-10">
-                    <div>
-                        <div>
-                            <label for="course-title">Title
-                                <input v-model="course.title" type="text"
-                                       placeholder="Course Title" id="course-title"/>
-                            </label>
+            <vue-form :state="formstate" @submit.prevent="createCourse">
+                <validate>
+
+                    <div class="row">
+                        <div class="columns small-12 large-10">
+                            <div>
+                                <field-messages name="title"
+                                                show="$submitted || $dirty">
+                                    <small class="error" slot="required">
+                                        A title is need to create a course
+                                    </small>
+                                </field-messages>
+                                <label for="course-title">Title
+                                    <input v-model="course.title" type="text"
+                                           name="title"
+                                           required
+                                           placeholder="Course Title" id="course-title"/>
+                                </label>
+                            </div>
                         </div>
-                        <time-estimate :time-estimate="course.timeEstimate"
-                                       :updated="timeUpdated"
-                                       :is-input="true"></time-estimate>
-                        <div>
+                    </div>
+                    <div class="row">
+                        <div class="columns small-12 large-10">
+                            <time-estimate :time-estimate="course.timeEstimate"
+                                           :updated="timeUpdated"
+                                           :is-input="true"></time-estimate>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="columns small-12 large-10">
                             <label for="course-description">Description</label>
                             <textarea v-model="course.description" type="text"
                                       placeholder="Course description"
                                       id="course-description"></textarea>
                         </div>
-                        <div>
+                    </div>
+                    <div class="row">
+                        <div class="columns small-12 large-10">
                             <label for="course-active">Active
                                 <input v-model="course.active" type="checkbox" id="course-active"/>
                             </label>
                         </div>
-                        <div>
-                            <label>Content</label>
-                            <quill-editor ref="editor"></quill-editor>
-                        </div>
-                        <div>
-                            <button @click="create" class="button">Create</button>
+                    </div>
+                    <div class="row">
+                        <div class="columns small-12 large-10">
+                            <segment-viewer :segments="quillContent" ref="segmentViewer"></segment-viewer>
                         </div>
                     </div>
-                </div>
-            </div>
+                    <div class="row">
+                        <div class="columns small-12 large-10">
+                            <add-content-component :callback="addContentCallback"></add-content-component>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="columns small-12 large-10">
+                            <button @click="createCourse" type="button" class="button">Create</button>
+                        </div>
+                    </div>
+                </validate>
+            </vue-form>
         </div>
     </div>
 </div>

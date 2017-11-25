@@ -12,10 +12,13 @@ import {ViewSectionComponent} from './modules/sections/view/view_section_compone
 import {EditSectionComponent} from './modules/sections/edit/edit_section_component';
 import {EditCourseComponent} from './edit_course_component/edit_course_component';
 import {EditModuleComponent} from './modules/edit_modules_component/edit_module_component';
+import {appStore} from '../state_store';
+import {COURSE_ACTIONS} from './store/course/course_actions';
 
 export const COURSES_ROUTE_NAMES = {
     enrolledCourses: 'enrolledCourses',
     enrolledCourse: 'enrolledCourse',
+    enrolledCourseDetails: 'enrolledCourse.courseDetails',
     adminCourses: 'adminCourses',
     adminCourse: 'adminCourse',
     editCourse: 'adminCourse.editCourse',
@@ -63,6 +66,17 @@ export const coursesRoutes: RouteConfig[] = [
         name: COURSES_ROUTE_NAMES.adminCourse,
         props: true,
         component: CourseComponent,
+        beforeEnter: async (to, from, next) => {
+            let courseId = to.params.courseId;
+            if (courseId) {
+                try {
+                    await appStore.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: courseId, isAdmin: true})
+                } catch(e){
+                    console.error(`Error setting current course. ${e}`);
+                }
+            }
+            next();
+        },
         children: [
             {
                 path: ':courseTitle',
