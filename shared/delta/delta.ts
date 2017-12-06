@@ -1,5 +1,6 @@
 import * as _ from "underscore";
 import {isDeltaStatic} from './typeguards_delta';
+import {DeltaArrayOp} from './diff_delta';
 
 export interface Delta extends Quill.DeltaStatic {
 }
@@ -17,29 +18,21 @@ export const isIdsArr = (obj: any): obj is IdsArr => {
     });
 };
 
-export type DeltaArrDiff = ArrElementChange[];
+export type DeltaArrDiff = DeltaArrayOp[];
 
 export const isDeltaArrDiff = (obj: any): obj is DeltaArrDiff => {
     return _.isObject(obj) && !_.isArray(obj)
         && Object.keys(obj).every((key) => {
-            return _.isString(key) && isArrElementChange(obj[key]);
+            return _.isString(key) && isDeltaArrOp(obj[key]);
         });
 };
 
-
-export type change = 'ADDED' | 'DELETED';
-
-export interface ArrElementChange {
-    change: change,
-    index: number | string,
-    val: any
-}
-
-export const isArrElementChange = (obj: any): obj is ArrElementChange => {
+export const isDeltaArrOp = (obj: any): obj is DeltaArrayOp => {
     return _.isObject(obj) && !_.isArray(obj)
         && (obj.change === 'MOVED' || obj.change === 'ADDED' || obj.change === 'DELETED')
         && (!obj.beforeIndex || _.isString(obj.beforeIndex) || _.isNumber(obj.beforeIndex))
-        && (!obj.index || _.isString(obj.index) || _.isNumber(obj.index));
+        && (!obj.index || _.isString(obj.index) || _.isNumber(obj.index))
+        && (obj.val || (_.isString(obj.index) || _.isNumber(obj.index)));
 };
 
 export type DeltaDiff = number | boolean | string | DeltaArrDiff | QuillContentDiff;
