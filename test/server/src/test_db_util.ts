@@ -13,7 +13,8 @@ let pgClient: Client;
 let dbClientsConnected: boolean = false;
 
 (async () => {
-    pgClient = await postgresClient();
+    pgClient = postgresClient();
+    await pgClient.connect();
     dbClientsConnected = true;
 })();
 
@@ -23,14 +24,14 @@ if (!config.get("database.db").includes("test")) {
     throw 'Not running against test database';
 }
 
-const databaseInitialized: () => Promise<boolean> = async () => {
+export const databaseInitialized: () => Promise<boolean> = async () => {
     let results = await pgClient.query(`EXISTS (select datname from pg_catalog.pg_database where datname = ${testDbName})`);
     // testDb.query()
     logger.info(`Database initialized check results: ${JSON.stringify(results)}`);
     return results[0].rows;
 };
 
-const clearData: () => Promise<void> = async () => {
+export const clearData: () => Promise<void> = async () => {
     let dropIfExists = `DROP DATABASE IF EXISTS ${testDbName}`;
     logger.log('info', 'truncating tables');
     await pgClient.query(dropIfExists);

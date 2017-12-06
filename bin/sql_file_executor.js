@@ -7,7 +7,7 @@ const config = require('config');
 const logger = require('./script_logger').getLogger('SQL File Executor');
 // module.exports = {};
 
-export const postgresClient = async () => {
+export const postgresClient = () => {
     let client = new Client({
         user: 'postgres',
         password: 'postgres',
@@ -15,12 +15,11 @@ export const postgresClient = async () => {
         port: config.get("database.db_port"),
         database: 'postgres'
     });
-    await client.connect();
     return client;
 };
 
 
-export const tuLocalDevClient = async () => {
+export const tuLocalDevClient = () => {
     let client = new Client({
         user: config.get("database.db_user"),
         password: config.get("database.db_password"),
@@ -28,7 +27,6 @@ export const tuLocalDevClient = async () => {
         port: config.get("database.db_port"),
         database: config.get("database.db")
     });
-    await client.connect();
     return client;
 };
 

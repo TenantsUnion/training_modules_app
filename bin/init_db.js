@@ -6,8 +6,10 @@ const logger = getLogger("init_db");
 const sqlDirectory = '/resources/init_postgres_db/';
 
 (async () => {
+    let tuDevClient = tuLocalDevClient();
+    let pgClient = postgresClient();
     try {
-        var pgClient = await postgresClient();
+        await pgClient.connect();
         logger.log('info', 'Establishing db connection as user: %s', postgresClient.user);
         let pgExecutor = await getSqlFileAsyncExecutor(pgClient, sqlDirectory);
 
@@ -16,7 +18,7 @@ const sqlDirectory = '/resources/init_postgres_db/';
         await pgExecutor('02__create_database_pg.sql', true);
         await pgExecutor('03__create_dev_user.pg.sql');
 
-        var tuDevClient = await tuLocalDevClient();
+        await tuDevClient.connect();
         logger.log('log', 'Establishing db connection as user: %s', tuDevClient.user);
         let tuDbExecutor = await getSqlFileAsyncExecutor(tuDevClient, sqlDirectory);
         await tuDbExecutor('04__create_schema.pg.sql', true);

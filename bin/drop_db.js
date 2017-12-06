@@ -5,8 +5,9 @@ const logger = getLogger('DropDb');
 const sqlDirectory = '/resources/drop_postgres_db/';
 
 (async () => {
+    const pgClient = postgresClient();
     try {
-        var pgClient = await postgresClient();
+        await pgClient.connect();
         logger.log('info', 'Establishing db connection with user: %s', pgClient.user);
 
         let pgExecutor = await getSqlFileAsyncExecutor(pgClient, sqlDirectory);

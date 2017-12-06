@@ -2,7 +2,6 @@ import {expect} from "chai";
 import {getLogger} from "../../../../../server/src/log";
 import * as _ from "underscore";
 import {accountHandler, coursesHandler, coursesViewHandler} from "../../../../../server/src/config/handler_config";
-import {testDbUtil} from "../../test_db_util";
 import {CreateModuleEntityCommand, ModuleEntityType, ViewModuleTransferData} from 'modules.ts';
 import {CreateSectionData} from 'sections.ts';
 import {IUserInfo} from 'user';
@@ -12,6 +11,7 @@ import * as moment from "moment";
 import * as Delta from 'quill-delta';
 import {QuillEditorData} from '../../../../../shared/quill_editor';
 import {EntityCommandMetaData} from '../../../../../shared/entity';
+import {clearData} from '../../test_db_util';
 
 describe('courses handler', function () {
     let logger = getLogger('CoursesHandlerTest', 'debug');
@@ -119,7 +119,7 @@ describe('courses handler', function () {
 
     beforeEach(async function () {
         logger.info('executing clear database');
-        await testDbUtil.clearData();
+        await clearData();
 
         logger.info('signing up user');
         userId = await accountHandler.signup({

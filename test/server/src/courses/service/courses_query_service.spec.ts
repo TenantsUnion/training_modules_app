@@ -1,3 +1,3 @@
-describe(){
+describe('Courses Query Service', function(){
 
-}
+});

@@ -1,8 +1,8 @@
 import {expect} from 'chai';
 import {convertToDeltaObj} from '../../shared/delta/convert_delta';
-import {diffDeltaObj} from '../../shared/delta/diff_delta';
+import {deltaArrayDiff, diffDeltaObj} from '../../shared/delta/diff_delta';
 import * as Delta from 'quill-delta';
-import {DeltaObjDiff} from '../../shared/delta/delta';
+import {DeltaArrDiff, DeltaObjDiff} from '../../shared/delta/delta';
 
 describe('diff delta spec', function () {
     it('should return an empty object when there are no differences', function () {
@@ -28,7 +28,7 @@ describe('diff delta spec', function () {
         });
 
         expect(diffDeltaObj(delta1, delta2)).to.deep.equal({
-            a: (<Quill.DeltaStatic> delta1.a).diff(<Quill.DeltaStatic> delta2.a)
+            a: 2
         });
     });
 
@@ -47,7 +47,7 @@ describe('diff delta spec', function () {
             b: {
                 key3: {
                     beforeIndex: 2,
-                    change: 'DELETED'
+                    change: 'DELETE'
                 }
             }
         });
@@ -65,21 +65,16 @@ describe('diff delta spec', function () {
         };
 
         let expected: DeltaObjDiff = {
-            b: [
+            b: <DeltaArrDiff>[
                 {
-                    val: 0,
-                    index: 2,
-                    change: 'ADDED'
-                },
-                {
-                    val: 1,
+                    val: 'key1',
                     index: 0,
-                    change: 'DELETED'
+                    op: 'DELETE'
                 },
                 {
-                    val: 2,
-                    index: 1,
-                    change: 'ADDED'
+                    val: 'key1',
+                    index: 2,
+                    op: 'ADD'
                 }
             ]
         };
@@ -87,31 +82,63 @@ describe('diff delta spec', function () {
         expect(diffDeltaObj(delta1, delta2)).to.deep.equal(expected);
     });
 
-    it('should return a delta object indicating adding elements to an array of keys', function () {
-        let delta1 = {
-            a: new Delta().insert(1),
-            b: ['key1', 'key3']
-        };
+    describe('delta array diff', function () {
+        it('should return a delta array indicating that the first and third element have been deleted', function () {
 
-        let delta2 = {
-            a: new Delta().insert(1),
-            b: ['key1', 'key2', 'key3']
-        };
-
-        let expected = {
-            b: {
-                key3: {
-                    beforeIndex: 1,
-                    change: "MOVED",
-                    index: 2
+            expect(deltaArrayDiff([1, 2, 3, 4], [2, 4])).to.deep.equal(<DeltaArrDiff> [
+                {
+                    val: 1,
+                    index: 0,
+                    op: 'DELETE'
                 },
-                key2: {
-                    index: 1,
-                    change: "ADDED"
+                {
+                    val: 3,
+                    index: 2,
+                    op: 'DELETE'
                 }
-            }
-        };
+            ])
+        });
 
-        expect(diffDeltaObj(delta1, delta2)).to.deep.equal(expected);
+        it('should return a delta array indicating that the first element has been deleted and the value of the first element has been inserted as the third element', function () {
+            expect(deltaArrayDiff([1, 2, 3, 4], [2, 3, 1, 4])).to.deep.equal(<DeltaArrDiff> [
+                {
+                    val: 1,
+                    index: 0,
+                    op: 'DELETE'
+                },
+                {
+                    val: 1,
+                    index: 2,
+                    op: 'ADD'
+                }
+            ]);
+        });
     });
+    // it('should return a delta object indicating adding elements to an array of keys', function () {
+    //     let delta1 = {
+    //         a: new Delta().insert(1),
+    //         b: ['key1', 'key3']
+    //     };
+    //
+    //     let delta2 = {
+    //         a: new Delta().insert(1),
+    //         b: ['key1', 'key2', 'key3']
+    //     };
+    //
+    //     let expected = {
+    //         b: {
+    //             key3: {
+    //                 beforeIndex: 1,
+    //                 change: "MOVED",
+    //                 index: 2
+    //             },
+    //             key2: {
+    //                 index: 1,
+    //                 change: "ADD"
+    //             }
+    //         }
+    //     };
+    //
+    //     expect(diffDeltaObj(delta1, delta2)).to.deep.equal(expected);
+    // });
 });
