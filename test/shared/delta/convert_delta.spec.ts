@@ -1,7 +1,6 @@
 import {expect} from "chai";
 import * as quillDelta from "quill-delta";
-import {convertToDeltaObj, DEFAULT_DIFF_KEY_FN, parameterErrorMsg} from '../../shared/delta/convert_delta';
-import {diffDeltaObj} from '../../shared/delta/diff_delta';
+import {convertToDeltaObj, parameterErrorMsg} from '../../../shared/delta/convert_delta';
 
 // use @type/quilljs for standalone quill-delta library
 let Delta: Quill.DeltaStatic = quillDelta;

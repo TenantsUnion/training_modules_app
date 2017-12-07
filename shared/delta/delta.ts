@@ -1,6 +1,6 @@
 import * as _ from "underscore";
 import {isDeltaStatic} from './typeguards_delta';
-import {DeltaArrayOp} from './diff_delta';
+import {DeltaArrayOp, DeltaArrDiff} from './diff_key_array';
 
 export interface Delta extends Quill.DeltaStatic {
 }
@@ -18,7 +18,6 @@ export const isIdsArr = (obj: any): obj is IdsArr => {
     });
 };
 
-export type DeltaArrDiff = DeltaArrayOp[];
 
 export const isDeltaArrDiff = (obj: any): obj is DeltaArrDiff => {
     return _.isObject(obj) && !_.isArray(obj)
