@@ -2,7 +2,8 @@ import {Question} from 'questions';
 import {Moment} from 'moment';
 import {QuillEditorData} from 'quill_editor.ts';
 import {Entity, EntityCommand, SaveEntityCommand} from 'entity';
-import {DeltaArrDiff, DeltaObjDiff, QuillContentDiff} from './delta/delta';
+import {DeltaObjDiff, QuillContentDiff} from './delta/delta';
+import {DeltaArrDiff} from './delta/diff_key_array';
 
 export interface TrainingEntityPayload {
     id: string;

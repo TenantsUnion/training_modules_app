@@ -6,7 +6,7 @@ import {
     TrainingEntityPayload
 } from './training_entity';
 import {EntityCommandMetaData} from './entity';
-import {DeltaArrDiff} from './delta/delta';
+import {DeltaArrDiff} from './delta/diff_key_array';
 
 export type CourseEntityType = 'CourseEntity';
 export type CreateCourseEntityCommand = CreateTrainingEntityCommand<CourseEntityType, CreateCourseEntityPayload>;

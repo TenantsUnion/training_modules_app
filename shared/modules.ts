@@ -5,7 +5,7 @@ import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, TrainingEntity,
     TrainingEntityDiffDelta
 } from './training_entity';
-import {DeltaArrDiff} from './delta/delta';
+import {DeltaArrDiff} from './delta/diff_key_array';
 
 export type ModuleEntityType = 'ModuleEntity';
 export interface ViewModuleData {
