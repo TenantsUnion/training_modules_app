@@ -20,11 +20,15 @@ export const run = async () => {
     logger.log('info', 'Migrating %s database', config.get('database.db'));
     return postgrator.migrate('max')
         .then((appliedMigrations) => {
-            logger.log('info', 'Database migrated successfully');
             let appliedMigrationsFileNames = appliedMigrations.map((migration) => {
                 return `filename: ${migration.filename}, version: ${migration.version}`;
             });
-            logger.log('info', `Applied migrations:\n\t${appliedMigrationsFileNames.join('\n\t')}`);
+            if (appliedMigrations.length) {
+                logger.log('info', `Applied migrations:\n\t${appliedMigrationsFileNames.join('\n\t')}`);
+            } else {
+                logger.log('info', 'No migrations applied. Database up to date');
+            }
+            logger.log('info', 'Database migrated successfully');
         })
         .catch((err) => {
             logger.log('error', err);

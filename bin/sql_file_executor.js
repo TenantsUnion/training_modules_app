@@ -1,10 +1,10 @@
-'use strict';
-const path = require('path');
-const fs = require('fs');
+import path from 'path';
+import fs from 'fs';
+import config from 'config';
 import {Client} from 'pg';
+import {getLogger} from './script_logger';
 
-const config = require('config');
-const logger = require('./script_logger').getLogger('SQL File Executor');
+const logger = getLogger('SQL File Executor');
 
 export const postgresClient = () => {
     let client = new Client({

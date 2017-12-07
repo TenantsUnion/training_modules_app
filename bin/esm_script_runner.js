@@ -6,7 +6,5 @@ module.exports = (async () => {
         await main.run();
     } catch (e) {
         console.log(e);
-    } finally {
-        process.exit(0);
     }
 })();
