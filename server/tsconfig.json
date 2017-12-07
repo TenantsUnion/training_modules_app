@@ -10,9 +10,10 @@
     "src/**/*.ts"
   ],
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es6",
     "target": "es6",
     "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",

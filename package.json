@@ -4,7 +4,7 @@
   "description": "Tenants Union training modules application",
   "main": "app.js",
   "scripts": {
-    "start": "export NODE_CONFIG_DIR=./config && node ./bin/start",
+    "start": "export SCRIPT_NAME=start && npm run esm_entry",
     "esm_entry": "export NODE_CONFIG_DIR=./config && node $NODE_DEBUG_OPTION ./bin/esm_script_runner",
     "init_db": "export SCRIPT_NAME=init_db && npm run esm_entry && npm run migrate_db",
     "old_init_db": "export NODE_CONFIG_DIR=./config && node ./bin/drop_db && node ./bin/init_db && npm run migrate_db",
@@ -16,7 +16,7 @@
     "server-build": "tsc --project server/tsconfig.json --outDir server/dist",
     "watch": "concurrently -k -p \"[{name}]\" -n \"Server-Build,Server,Webpack\" -c \"cyan.bold,green.bold,yellow.bold\"  \"npm run watch-server\" \"npm run nodemon-start\" \"npm run webpack-dev\"",
     "watch-server": "tsc --watch --project server/tsconfig.json --outDir server/dist",
-    "nodemon-start": "export NODE_CONFIG_DIR=./config && nodemon --watch server/dist/ ./bin/start",
+    "nodemon-start": "export NODE_CONFIG_DIR=./config && nodemon --watch server/dist/ ./bin/start.js",
     "test_init_db": "export NODE_ENV=test && export SCRIPT_NAME=init_test_db && npm run test_migrate_db",
     "test_drop_db": "export NODE_ENV=test && npm run drop_db",
     "test_migrate_db": "export NODE_ENV=test && npm run migrate_db",
@@ -69,7 +69,6 @@
   },
   "devDependencies": {
     "@types/chai": "4.0.4",
-    "@types/express": "4.0.37",
     "@types/express-session": "1.15.3",
     "@types/mocha": "2.2.43",
     "@types/node": "8.0.28",
