@@ -1,6 +1,6 @@
 import {LoggerInstance} from 'winston';
 import * as winston from 'winston';
-import * as config from 'config';
+import config from 'config';
 
 export const LOG_COLORS: {[index in keyof LogLevels]: string} = {
     emerg: 'red',
@@ -60,8 +60,8 @@ const basicTransportOptions = {
     colors: LOG_COLORS
 };
 
-const fileConfig = config.has("log.directory");
 export const getLogger = (loggerName: string, level?: string & keyof LogLevels, loggerFile?: string): LoggerInstance => {
+    const fileConfig = config.has("log.directory");
     let transport = fileConfig ? new winston.transports.File({
             label: loggerName,
             level: level ? level : LOG_LEVELS.info,

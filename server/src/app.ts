@@ -1,23 +1,22 @@
-import * as express from "express";
-import * as path from "path";
-// var path = require('path');
-import * as logger from "morgan";
-import * as cookieParser from "cookie-parser";
-import * as bodyParser from "body-parser";
-import * as config from "config";
-import * as session from "express-session";
-import {Express} from 'express';
+import express from "express";
+import path from "path";
+import logger from "morgan";
+import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
+import config from "config";
+import session from "express-session";
 import {HttpResponse} from '../../shared/http_responses';
 import {AccountRoutes} from "./account/account_routes";
 import {UserContentRoutes} from "./content/content_routes";
 import {CoursesRoutes} from "./courses/courses_routes";
 import {QuillRoutes} from './quill/quill_routes_controller';
 import {getLogger, LOG_LEVEL_VALUES, LOG_LEVELS} from './log';
+import {Express} from 'express';
 
 /**
  * Configured to listen on port and started in /bin scripts
  */
-var app: Express = express();
+let app:Express = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, config.get('server.views_dir')));
@@ -82,5 +81,4 @@ app.use(function (req, res, next) {
     next(err);
 });
 
-//export as commonjs/node module since it will be loaded from start script
-module.exports = app;
+export {app as app};

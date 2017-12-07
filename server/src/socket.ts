@@ -1,5 +1,5 @@
-import * as socket from 'socket.io';
-import * as socketWildcard from 'socketio-wildcard';
+import socket from 'socket.io';
+import socketWildcard from 'socketio-wildcard';
 import {getLogger} from './log';
 import {ADMIN_COURSE_NSP, SUBSCRIBE} from '../../shared/socket';
 
@@ -9,7 +9,8 @@ let adminSocketLogger = getLogger('AdminCourseSocket', 'info');
 export let io:SocketIO.Server;
 export let adminCourseSocket;
 export let rootSocket;
-module.exports = (httpServer) => {
+
+export const initSocket = (httpServer) => {
     socketServerLogger.info('Initializing socket');
     io = socket.listen(httpServer);
 

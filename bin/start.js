@@ -1,92 +1,70 @@
-/**
- * Module dependencies.
- */
-var app = require('../server/dist/server/src/app');
-var initSocket = require('../server/dist/server/src/socket');
-var debug = require('debug')('myapp:server');
-var http = require('http');
+import http from 'http';
+import Debug from 'debug';
+import config from 'config'
 
-/**
- * Get port from environment and store in Express.
- */
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+import {getLogger} from './script_logger';
+import {app} from '../server/dist/server/src/app';
+import {initSocket} from '../server/dist/server/src/socket';
 
-/**
- * Create HTTP server.
- */
+const logger = getLogger('start_server');
+const debug = Debug('myapp:server');
 
-var server = http.createServer(app);
+logger.info('start script');
 
-/**
- * Listen on provided port, on all network interfaces.
- */
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+export const run = async () => {
+    const port = config.get("server.port");
+    app.set('port', port);
 
-/**
- * Initialize socket.io server
- */
-initSocket(server);
+        logger.info('inside run');
 
-/**
- * Normalize a port into a number, string, or false.
- */
+        /**
+         * Create HTTP server.
+         */
+        var server = http.createServer(app);
+        server.listen(port);
+        /**
+         * Event listener for HTTP server "error" event. Default error handling for http server
+         */
+        server.on('error', function onError(error) {
+                if (error.syscall !== 'listen') {
+                    throw error;
+                }
 
-function normalizePort(val) {
-    var port = parseInt(val, 10);
+                var bind = typeof port === 'string'
+                    ? 'Pipe ' + port
+                    : 'Port ' + port;
 
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
+                // handle specific listen errors with friendly messages
+                switch (error.code) {
+                    case 'EACCES':
+                        console.error(bind + ' requires elevated privileges');
+                        process.exit(1);
+                        break;
+                    case 'EADDRINUSE':
+                        console.error(bind + ' is already in use');
+                        process.exit(1);
+                        break;
+                    default:
+                        throw error;
+                }
+            }
+        );
 
-    if (port >= 0) {
-        // port number
-        return port;
-    }
+        /**
+         * Event listener for HTTP server "listening" event. Default listening handler
+         */
+        server.on('listening', function onListening() {
+                var addr = server.address();
+                var bind = typeof addr === 'string'
+                    ? 'pipe ' + addr
+                    : 'port ' + addr.port;
+                debug('Listening on ' + bind);
+            }
+        );
 
-    return false;
-}
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
-function onError(error) {
-    if (error.syscall !== 'listen') {
-        throw error;
-    }
-
-    var bind = typeof port === 'string'
-        ? 'Pipe ' + port
-        : 'Port ' + port;
-
-    // handle specific listen errors with friendly messages
-    switch (error.code) {
-        case 'EACCES':
-            console.error(bind + ' requires elevated privileges');
-            process.exit(1);
-            break;
-        case 'EADDRINUSE':
-            console.error(bind + ' is already in use');
-            process.exit(1);
-            break;
-        default:
-            throw error;
-    }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === 'string'
-        ? 'pipe ' + addr
-        : 'port ' + addr.port;
-    debug('Listening on ' + bind);
-}
+        /**
+         * Initialize socket.io server
+         */
+        initSocket(server);
+};

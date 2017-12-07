@@ -1,5 +1,6 @@
 {
   "server": {
+    "port": 3000,
     "views_dir": "../../../../webapp/views",
     "webapp_dir": "../../../../webapp/dist/"
   },
