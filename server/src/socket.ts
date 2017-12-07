@@ -11,7 +11,6 @@ export let adminCourseSocket;
 export let rootSocket;
 
 export const initSocket = (httpServer) => {
-    socketServerLogger.info('Initializing socket');
     io = socket.listen(httpServer);
 
     io.use(socketWildcard());
@@ -40,4 +39,6 @@ export const initSocket = (httpServer) => {
             socket.join(courseId);
         });
     });
+
+    socketServerLogger.info('Socket server initialized');
 };

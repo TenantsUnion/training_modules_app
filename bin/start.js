@@ -15,9 +15,6 @@ logger.info('start script');
 export const run = async () => {
     const port = config.get("server.port");
     app.set('port', port);
-
-        logger.info('inside run');
-
         /**
          * Create HTTP server.
          */
