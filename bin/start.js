@@ -1,10 +1,3 @@
-#!/usr/bin/env node
-/**
- * Started from express generated start script with gradual changes for application specific configuration
- * like file locations.
- */
-
-
 /**
  * Module dependencies.
  */

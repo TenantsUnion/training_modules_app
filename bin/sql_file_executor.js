@@ -5,7 +5,6 @@ import {Client} from 'pg';
 
 const config = require('config');
 const logger = require('./script_logger').getLogger('SQL File Executor');
-// module.exports = {};
 
 export const postgresClient = () => {
     let client = new Client({

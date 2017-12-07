@@ -5,12 +5,12 @@ const logger = getLogger("init_db");
 
 const sqlDirectory = '/resources/init_postgres_db/';
 
-(async () => {
+export const run = async () => {
     let tuDevClient = tuLocalDevClient();
     let pgClient = postgresClient();
     try {
         await pgClient.connect();
-        logger.log('info', 'Establishing db connection as user: %s', postgresClient.user);
+        logger.log('info', 'Establishing db connection as user: %s', pgClient.user);
         let pgExecutor = await getSqlFileAsyncExecutor(pgClient, sqlDirectory);
 
         logger.log('info', 'Executing sql statements');
@@ -30,6 +30,5 @@ const sqlDirectory = '/resources/init_postgres_db/';
     } finally {
         pgClient && pgClient.end();
         tuDevClient && tuDevClient.end();
-        process.exit(0);
     }
-})();
+};

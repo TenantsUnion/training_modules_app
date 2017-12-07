@@ -5,7 +5,7 @@ import {getLogger} from './script_logger';
 const logger = getLogger("init_test_db");
 const sqlDirectory = '/resources/test_postgres_db/';
 
-(async () => {
+export const run = async () => {
     const tuDevClient = tuLocalDevClient();
     const pgClient = postgresClient();
     try {
@@ -40,4 +40,4 @@ const sqlDirectory = '/resources/test_postgres_db/';
         pgClient && pgClient.end();
         tuDevClient && tuDevClient.end();
     }
-})();
+};

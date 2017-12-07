@@ -4,7 +4,7 @@ import {getLogger} from './script_logger';
 const logger = getLogger('DropDb');
 const sqlDirectory = '/resources/drop_postgres_db/';
 
-(async () => {
+export const run = async () => {
     const pgClient = postgresClient();
     try {
         await pgClient.connect();
@@ -19,8 +19,7 @@ const sqlDirectory = '/resources/drop_postgres_db/';
         throw e;
     } finally {
         pgClient && pgClient.end();
-        process.exit(0);
     }
-})();
+};
 
 
