@@ -16,16 +16,15 @@ module.exports = merge(baseConfig, {
             }
         ,
         proxy: {
-            "**":
-                {
-                    target: "http://localhost:3000",
-                    changeOrigin: true,
-                    secure: false,
-                    filter:
-                        function (pathname, req) {
-                            return !pathname.match(/build\.js/);
-                        }
-                }
+            "**": {
+                target: "http://localhost:3000",
+                changeOrigin: true,
+                secure: false,
+                filter:
+                    function (pathname, req) {
+                        return !pathname.match(/build\.js/);
+                    }
+            }
         }
     },
     entry: [

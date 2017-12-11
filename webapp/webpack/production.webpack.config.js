@@ -1,5 +1,4 @@
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const merge = require('webpack-merge');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const defaultConfig = require('./default.webpack.config');
@@ -13,13 +12,10 @@ module.exports = merge(defaultConfig, {
                 NODE_ENV: '"production"'
             }
         }),
-        //use beta for ex6 compatibility
+        //use beta for es6 compatibility
         //https://stackoverflow.com/questions/44287584/how-to-minify-es6-code-using-webpack
         new UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                warnings: false
-            }
+            sourceMap: true
         })
     ]
 });
