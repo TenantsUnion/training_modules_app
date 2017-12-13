@@ -1,9 +1,7 @@
 import {expect} from "chai";
-import * as quillDelta from "quill-delta";
 import {convertToDeltaObj, parameterErrorMsg} from '../../../shared/delta/convert_delta';
 
 // use @type/quilljs for standalone quill-delta library
-let Delta: Quill.DeltaStatic = quillDelta;
 describe('convertObjectValuesToDeltas function', function () {
     it('should throw an error if not passed an object', function () {
         [null, undefined, true, false, NaN, 'hi', -1, 3, [], [1, 2]].forEach(function (errorArg) {

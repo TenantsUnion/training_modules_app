@@ -3,7 +3,6 @@ import * as Delta from 'quill-delta';
 import {convertToDeltaObj} from '../../../shared/delta/convert_delta';
 import {diffDeltaObj} from '../../../shared/delta/diff_delta';
 import {DeltaObjDiff} from '../../../shared/delta/delta';
-import {DeltaArrDiff} from '../../../shared/delta/diff_key_array';
 
 describe('diff delta spec', function () {
     it('should return an empty object when there are no differences', function () {
