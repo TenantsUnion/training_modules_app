@@ -2,6 +2,7 @@ import {Datasource} from "../datasource";
 import {AccountSignupRequest} from "account.ts";
 import {AbstractRepository} from "../repository";
 import {AccountInfo} from "../user/user_handler";
+import {getLogger} from '../log';
 
 export interface IAccountRepository {
     accountExists(username: string): Promise<boolean>;
@@ -12,83 +13,44 @@ export interface IAccountRepository {
 }
 
 export class AccountRepository extends AbstractRepository implements IAccountRepository {
+    logger = getLogger('Account Repository');
 
     constructor(private datasource: Datasource) {
         super('account_id_seq', datasource);
     }
 
     async accountExists(username: string): Promise<boolean> {
-        console.log('checking account exists from user repository');
-        console.log('username: ' + username);
-        return new Promise<boolean>((resolve, reject) => {
-            if (!username) {
-                resolve(false);
-                return;
-            }
+        if (!username) {
+            return false;
+        }
 
-            (async () => {
-                try {
-                    let result = await this.datasource.query({
-                        text: `SELECT COUNT(*) FROM tu.account WHERE tu.account.username = $1`,
-                        values: [username]
-                    });
-                    resolve(result[0].count !== '0');
-                } catch (e) {
-                    reject(e);
-                }
-            })();
+        let result = await this.datasource.query({
+            text: `SELECT COUNT(*) FROM tu.account WHERE tu.account.username = $1`,
+            values: [username]
         });
+        return result[0].count !== '0';
     }
 
     async createAccount(signupInfo: AccountSignupRequest): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
-            if (!signupInfo.username) {
-                return resolve(null);
-            }
-
-            (async () => {
-                try {
-                    let accountId = await this.getNextId();
-                    await this.datasource.query({
-                        text: `INSERT INTO tu.account (id, username) VALUES ($1, $2)`,
-                        values: [accountId, signupInfo.username]
-                    });
-                    resolve(accountId);
-                } catch (e) {
-                    console.log("Database error");
-                    console.log(e);
-                    console.log(e.stack);
-                    reject(e);
-                }
-            })();
+        let accountId = await this.getNextId();
+        await this.datasource.query({
+            text: `INSERT INTO tu.account (id, username) VALUES ($1, $2)`,
+            values: [accountId, signupInfo.username]
         });
+        this.logger.info(`Inserted account id: ${accountId} for username: ${signupInfo.username}`);
+        return accountId;
     }
 
     async findAccountByUsername(username: string): Promise<AccountInfo> {
-        return new Promise<AccountInfo>((resolve, reject) => {
-            if (!username) {
-                return reject(null);
+        let results = await this.datasource.query({
+                text: `SELECT * FROM tu.account a WHERE a.username = $1`,
+                values: [username]
             }
+        );
 
-            (async () => {
-                try {
-                    let results = await this.datasource.query({
-                            text: `SELECT * FROM tu.account a WHERE a.username = $1`,
-                            values: [username]
-                        }
-                    );
-
-                    let userRow = results[0];
-                    resolve({
-                        id: userRow.id,
-                    });
-                } catch (e) {
-                    console.log("Database findAccountByUsername error");
-                    console.log(e);
-                    console.log(e.stack);
-                    reject(e);
-                }
-            })();
-        });
+        let userRow = results[0];
+        return {
+            id: userRow.id,
+        };
     }
 }
