@@ -4,14 +4,16 @@
     "test/**/*.ts"
   ],
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es5",
+    "module": "commonjs", // mocha test environment ts-node doesn't support es6 modules yet.
+    "target": "es6",
     "moduleResolution": "node",
     "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": "..",
     "lib": [
-      "ES2015"
+      "ES2015",
+      "ES2016"
     ],
     "paths": {
       "*": [
