@@ -11,19 +11,19 @@ describe('convertObjectValuesToDeltas function', function () {
         });
     });
 
-    it('should convert an object\'s properties to their Delta equivalents', function () {
+    it('should not affect properties that aren\'t deltas', function () {
         expect(convertToDeltaObj({
             a: 1,
             b: 'Some text',
             c: false
         })).to.deep.equal({
-            a: new Delta().insert(1),
-            b: new Delta().insert('Some text'),
-            c: new Delta().insert(false)
+            a: 1,
+            b: 'Some text',
+            c: false
         })
     });
 
-    it('should convert a nested array object\'s properties to their Delta equivalents', function () {
+    it('should fully copy nested arrays to the delta object', function () {
         expect(convertToDeltaObj({
             a: [
                 1,
@@ -35,13 +35,13 @@ describe('convertObjectValuesToDeltas function', function () {
             b: 'top level text'
         })).to.deep.equal({
             a: [
-                new Delta().insert(1),
+                1,
                 [
-                    new Delta().insert(2),
-                    new Delta().insert('Some Stuff')
+                    2,
+                    'Some Stuff'
                 ]
             ],
-            b: new Delta().insert('top level text')
+            b: 'top level text'
         });
     });
 
@@ -51,8 +51,8 @@ describe('convertObjectValuesToDeltas function', function () {
             b: 'Some text',
             c: false
         }, (key) => key !== 'b')).to.deep.equal({
-            a: new Delta().insert(1),
-            c: new Delta().insert(false)
+            a: 1,
+            c: false
         })
     });
 });

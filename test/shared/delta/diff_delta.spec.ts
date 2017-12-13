@@ -27,16 +27,16 @@ describe('diff delta spec', function () {
         };
 
         let expected: DeltaObjDiff = {
-            b: <DeltaArrDiff>[
+            "b": [
                 {
-                    val: 'key1',
+                    beforeIndex: 1,
                     index: 0,
-                    op: 'DELETE'
+                    op: "MOVE",
                 },
                 {
-                    val: 'key1',
-                    index: 2,
-                    op: 'ADD'
+                    beforeIndex: 2,
+                    index: 1,
+                    op: "MOVE"
                 }
             ]
         };
@@ -73,12 +73,13 @@ describe('diff delta spec', function () {
         };
 
         expect(diffDeltaObj(delta1, delta2)).to.deep.equal({
-            b: {
-                key3: {
-                    beforeIndex: 2,
-                    change: 'DELETE'
+            b: [
+                {
+                    index: 2,
+                    op: "DELETE",
+                    val: "key3"
                 }
-            }
+            ]
         });
     });
 });
