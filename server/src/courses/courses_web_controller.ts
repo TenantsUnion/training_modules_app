@@ -14,6 +14,7 @@ import {SectionOperations} from '../section/section_routes';
 import {validateCreateCourse, validateSaveCourse} from './courses_validation';
 import {logHandleServerError, logHandleValidationError} from '../util/handle_validation_error';
 import {CoursesViewHandler} from './courses_view_handler';
+import {courseQueryService} from '../config/query_service_config';
 
 export class CourseCommandController implements ModuleOperations, SectionOperations {
     private logger = getLogger('CoursesController', 'info');
@@ -75,37 +76,6 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
             this.handleServerErr(e, request, response);
         }
     }
-
-    async loadAdminCourse(request: Request, response: Response) {
-        let courseTitle: string = request.params.courseTitle;
-        let courseId: string = request.params.courseId;
-        let username: string = request.params.username;
-        try {
-            let course = await this.coursesRepo.loadUserAdminCourse({
-                username, courseTitle, courseId
-            });
-
-            response.status(200).send(course);
-        } catch (e) {
-            this.handleServerErr(e, request, response);
-        }
-    }
-
-    async loadAdminCourseBySlug(request: Request, response: Response) {
-        let courseTitle: string = request.params.courseTitle;
-        let courseId: string = request.params.courseId;
-        let username: string = request.params.username;
-        try {
-            let course = await this.coursesRepo.loadUserAdminCourse({
-                username, courseTitle, courseId
-            });
-
-            response.status(200).send(course);
-        } catch (e) {
-            this.handleServerErr(e, request, response);
-        }
-    }
-
     async createModule(request: express.Request, response: express.Response) {
         let courseId: string = request.params.courseId;
         let createModuleData: CreateModuleEntityCommand = request.body;
@@ -141,6 +111,19 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         let saveSectionData: SaveSectionData = request.body;
         try {
             let course = await this.coursesHandler.saveSection(saveSectionData);
+            response.status(200).send(course);
+        } catch (e) {
+            this.handleServerErr(e, request, response);
+        }
+    }
+
+    async loadUserAdminCourseWebView(request: Request, response: Response) {
+        let courseSlug: string = request.params.courseSlug;
+        let userId: string = request.params.userId;
+        try {
+            let courseId = await courseQueryService.courseIdFromSlug(courseSlug, userId);
+            let course = await this.coursesRepo.loadAdminCourse(courseId);
+
             response.status(200).send(course);
         } catch (e) {
             this.handleServerErr(e, request, response);

@@ -1,6 +1,9 @@
 import {Datasource} from "./datasource";
+import {LoggerInstance} from 'winston';
 
 export abstract class AbstractRepository {
+    protected logger:LoggerInstance;
+
     constructor(private sequenceName: string,
                 protected sqlTemplate: Datasource) {
         this.sequenceName = sequenceName;

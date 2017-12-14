@@ -1,6 +1,6 @@
 import * as _ from "underscore";
 import {IUserHandler} from "../user/user_handler";
-import {ICoursesRepository} from "./courses_repository";
+import {CoursesRepository} from "./courses_repository";
 import {getLogger} from '../log';
 import {CreateModuleEntityCommand, SaveModuleData} from "../../../shared/modules";
 import {CreateSectionData, SaveSectionData, ViewSectionTransferData} from '../../../shared/sections';
@@ -10,8 +10,10 @@ import {ModuleRepository} from '../module/module_repository';
 import {quillRepository} from '../config/repository_config';
 import {isQuillEditorData, QuillEditorData} from '../../../shared/quill_editor';
 import {
-    CreateCourseEntityCommand, CreateCourseEntityPayload, SaveCourseEntityCommand, ViewCourseTransferData
+    CreateCourseEntityCommand, CreateCourseEntityPayload, CreateCourseResponse, SaveCourseEntityCommand,
+    ViewCourseTransferData
 } from '../../../shared/courses';
+import {CoursesQueryService} from './courses_query_service';
 
 export interface LoadAdminCourseParameters {
     username: string;
@@ -28,16 +30,17 @@ export const isUsernameCourseTitle = function (obj): obj is LoadAdminCourseParam
 export class CoursesHandler {
     logger = getLogger('CourseHandler', 'info');
 
-    constructor(private coursesRepository: ICoursesRepository,
+    constructor(private coursesRepository: CoursesRepository,
                 private quillRepository: QuillRepository,
                 private userHandler: IUserHandler,
                 private moduleRepo: ModuleRepository,
-                private sectionHandler: SectionHandler) {
+                private sectionHandler: SectionHandler,
+                private courseQueryService: CoursesQueryService) {
     }
 
-    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<string> {
+    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<CreateCourseResponse> {
         try {
-            let metadata = createCourseCommand.metadata;
+            let {userId} = createCourseCommand.metadata;
             let courseInfo: CreateCourseEntityPayload = createCourseCommand.payload;
             let contentQuestions: QuillEditorData[] = courseInfo.orderedContentQuestions
                 .map((el) => isQuillEditorData(el) && el);
@@ -52,9 +55,11 @@ export class CoursesHandler {
 
             await insertContent;
             let courseId = await this.coursesRepository.createCourse(courseInfo, quillIds);
-            await this.userHandler.userCreatedCourse(metadata.userId, courseId);
+            await this.userHandler.userCreatedCourse(userId, courseId);
             this.logger.info(`Successfully created course: ${courseId}`);
-            return courseId;
+
+            let slug = await this.courseQueryService.courseSlug(userId, courseInfo.title, courseId, true);
+            return {slug, id: courseId, title: courseInfo.title};
         } catch (e) {
             this.logger.error('Exception creating course\n%s', e);
             throw e;
@@ -75,7 +80,7 @@ export class CoursesHandler {
             await Promise.all([addCoursesModule, updateLastActive]);
             this.logger.info('Adding module to course finished');
 
-            let loadedCourse = await this.coursesRepository.loadUserAdminCourse(payload.courseId);
+            let loadedCourse = await this.coursesRepository.loadAdminCourse(payload.courseId);
             return loadedCourse;
         } catch (e) {
             this.logger.log('error', 'Failed to add module to course %s', payload.courseId);
@@ -84,7 +89,7 @@ export class CoursesHandler {
     }
 
     async saveModule(moduleData: SaveModuleData): Promise<ViewCourseTransferData> {
-        let course = await this.coursesRepository.loadUserAdminCourse(moduleData.courseId);
+        let course = await this.coursesRepository.loadAdminCourse(moduleData.courseId);
         let sectionsRemoved = _.extend({}, moduleData, {
             orderedSectionIds: moduleData.orderedSectionIds.filter((sectionId) => {
                 return moduleData.removeSectionIds.indexOf(sectionId) === -1;
@@ -118,7 +123,7 @@ export class CoursesHandler {
 
         this.logger.log('info', 'saved module id: %s, title: %s', moduleData.id, moduleData.title);
 
-        return this.coursesRepository.loadUserAdminCourse(moduleData.courseId);
+        return this.coursesRepository.loadAdminCourse(moduleData.courseId);
     }
 
     async saveSection(sectionData: SaveSectionData): Promise<ViewCourseTransferData> {
@@ -127,7 +132,7 @@ export class CoursesHandler {
             await this.moduleRepo.updateLastModified(sectionData.moduleId);
             await this.sectionHandler.saveSection(sectionData);
 
-            return this.coursesRepository.loadUserAdminCourse(sectionData.courseId);
+            return this.coursesRepository.loadAdminCourse(sectionData.courseId);
         } catch (e) {
             this.logger.error(e);
             this.logger.error(e.stack);
@@ -145,7 +150,7 @@ export class CoursesHandler {
             await this.moduleRepo.addSection(sectionData.moduleId, sectionId);
             this.logger.info('Added section to module: %s', sectionData.moduleId);
 
-            return await this.coursesRepository.loadUserAdminCourse(sectionData.courseId);
+            return await this.coursesRepository.loadAdminCourse(sectionData.courseId);
         } catch (e) {
             this.logger.error(e);
             this.logger.error(e.stack);
@@ -156,7 +161,7 @@ export class CoursesHandler {
     async saveCourse(saveCourse: SaveCourseEntityCommand): Promise<ViewCourseTransferData> {
         try {
             await this.coursesRepository.saveCourse(saveCourse);
-            return await this.coursesRepository.loadUserAdminCourse(saveCourse.metadata.id);
+            return await this.coursesRepository.loadAdminCourse(saveCourse.metadata.id);
         } catch (e) {
             this.logger.error(e);
             this.logger.error(e.stack);

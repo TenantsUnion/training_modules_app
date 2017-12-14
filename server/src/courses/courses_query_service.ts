@@ -1,23 +1,41 @@
+import * as _ from "underscore";
+import {Datasource} from '../datasource';
+import {AdminCourseDescription} from '../../../shared/courses';
+import {slugToId, slugToTitle, titleToSlug} from '../../../shared/slug/title_slug_transformations';
+
 /**
  * Service for finding out information about courses
  */
-import {Datasource} from '../datasource';
-
 export class CoursesQueryService {
     constructor(private datasource: Datasource) {
     }
 
+    /**
+     * Finds the course id embedded in the slug or the title and user id to look up the course id
+     * @param {string} slug version of the title
+     * @param {string} userId corresponds to user related to slug (id will be embedded if user has duplicate titles)
+     * @returns {Promise<string>}
+     */
     async courseIdFromSlug(slug: string, userId: string): Promise<string> {
-        let courseInfo = courseTitleIdFromSlug(slug);
-        return courseInfo.id ? courseInfo.id : await this.findCourseId(courseInfo.title, userId);
+        let title = slugToTitle(slug);
+        let courseId = slugToId(slug);
+        return courseId ? courseId : await this.findCourseId(title, userId);
     }
 
-    async courseSlug(userId: string, courseTitle: string, courseId: string, isAdmin: boolean) {
-        let isUnique = await this.isUniqueCourseTitleForUser(userId, courseTitle, isAdmin);
-        return courseSlug(courseTitle, isUnique, courseId);
+    async courseSlug(userId: string, courseTitle: string, courseId: string, isAdmin: boolean): Promise<string> {
+        let isDuplicate = await this.isDuplicateCoursesTitle(userId, courseTitle, isAdmin);
+        return titleToSlug(courseTitle, isDuplicate, courseId);
     }
 
-    async isUniqueCourseTitleForUser(userId: string, courseTitle: string, isAdmin: boolean): Promise<boolean> {
+    /**
+     * Queries the database to see if the user is enrolled in or the admin of multiple courses with the same title
+     * @param {string} userId - the user to query for
+     * @param {string} courseTitle - the title check for duplicates of
+     * @param {boolean} isAdmin - whether to check the courses the user is admin of or enrolled in
+     *
+     * @returns {Promise<boolean>} async boolean indicating if the course title has duplicates
+     */
+    async isDuplicateCoursesTitle(userId: string, courseTitle: string, isAdmin: boolean): Promise<boolean> {
         let courseColumn = isAdmin ? 'admin_of_course_ids' : 'enrolled_in_course_ids';
 
         let results = await this.datasource.query({
@@ -30,7 +48,7 @@ export class CoursesQueryService {
             values: [userId, courseTitle]
         });
 
-        return parseInt(results[0].count) < 2;
+        return parseInt(results[0].count) > 1;
     }
 
     /**
@@ -65,21 +83,3 @@ export class CoursesQueryService {
     }
 }
 
-const courseIdSlugMarker = '__';
-
-export const courseSlug = (courseTitle: string, isUnique: boolean, courseId: string): string => {
-    let title = isUnique ? courseTitle : `${courseTitle + courseIdSlugMarker + courseId}`;
-    return title.replace(/\s+/g, '-').toLowerCase();
-};
-
-/**
- * Converts the slug (string intended for path url) into the course title it was derived from by converting spaces into '-' and stripping away the
- * number course id that is needed to uniquely identify course titles that are the same
- */
-export const courseTitleIdFromSlug = (slug: string): { id: string | null, title: string } => {
-    let isCompoundId = slug.indexOf(courseIdSlugMarker);
-    return {
-        id: isCompoundId !== -1 ? slug.split(courseIdSlugMarker)[1] : null,
-        title: isCompoundId !== -1 ? slug.split(courseIdSlugMarker)[0] : slug
-    };
-};

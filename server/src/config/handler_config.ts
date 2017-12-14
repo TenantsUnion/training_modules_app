@@ -9,12 +9,13 @@ import {CoursesHandler} from "../courses/courses_handler";
 import {UserContentHandler} from "../content/user/user_content_handler";
 import {SectionHandler} from '../section/section_handler';
 import {CoursesViewHandler} from '../courses/courses_view_handler';
+import {courseQueryService} from './query_service_config';
 
 export const userHandler = new UserHandler(userRepository);
 export const accountHandler = new AccountHandler(accountRepository, userHandler);
 const sectionHandler = new SectionHandler(sectionRepository, quillRepository);
-export const coursesHandler =
-    new CoursesHandler(coursesRepository, quillRepository, userHandler, moduleRepository, sectionHandler);
-export const coursesViewHandler = new CoursesViewHandler(coursesRepository);
+export const coursesHandler = new CoursesHandler(coursesRepository, quillRepository, userHandler,
+        moduleRepository, sectionHandler, courseQueryService);
+export const coursesViewHandler = new CoursesViewHandler(coursesRepository, courseQueryService);
 export const userContentHandler = new UserContentHandler(contentRepository, quillRepository, userRepository);
 

@@ -11,26 +11,9 @@ import * as _ from "underscore";
 import {ViewModuleTransferData} from '../../../shared/modules';
 import {ViewSectionTransferData} from '../../../shared/sections';
 import * as moment from "moment";
+import {processRow} from './course_row_processor';
 
-export interface ICoursesRepository {
-    loadUserEnrolledCourse(username: string, courseId: string): Promise<UserEnrolledCourseData>;
-
-    loadUserAdminCourse(courseId: string | LoadAdminCourseParameters): Promise<ViewCourseTransferData>;
-
-    createCourse(courseData: CreateCourseEntityPayload, quillIds: string[]): Promise<string>;
-
-    loadUserEnrolledCourses(userId: string): Promise<AdminCourseDescription[]>;
-
-    loadUserAdminCourses(userId: string): Promise<AdminCourseDescription[]>;
-
-    addModule(courseId: string, moduleId: string): Promise<void>;
-
-    updateLastModified(courseId: string): Promise<string>;
-
-    saveCourse(course: SaveCourseEntityCommand): Promise<void>;
-}
-
-export class CoursesRepository extends AbstractRepository implements ICoursesRepository {
+export class CoursesRepository extends AbstractRepository implements CoursesRepository {
     logger: LoggerInstance = getLogger('CourseRepository', 'info');
 
     constructor(private datasource: Datasource) {
@@ -96,8 +79,6 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
     }
 
 
-
-
     async createCourse(courseData: CreateCourseEntityPayload, quillIds: string[]): Promise<string> {
         try {
             let courseId = await this.getNextId();
@@ -115,34 +96,17 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
     }
 
     async loadUserEnrolledCourse(courseId: string): Promise<UserEnrolledCourseData> {
-            let results = await this.datasource.query({
-                    text: `SELECT * FROM tu.course c WHERE c.id = $1`,
-                    values: [courseId]
-                }
-            );
+        let results = await this.datasource.query({
+                text: `SELECT * FROM tu.course c WHERE c.id = $1`,
+                values: [courseId]
+            }
+        );
 
-            return results[0];
+        return results[0];
     }
 
-    async loadUserAdminCourse({courseId, courseTitle, username}: { courseId: string, courseTitle: string, username: string }): Promise<ViewCourseTransferData> {
-        let query = courseTitle && username ? {
-            text: `
-                SELECT c.*, m.modules FROM tu.user u
-                  INNER JOIN LATERAL
-                             (SELECT *
-                              FROM tu.course c WHERE c.title = $1) c
-                  INNER JOIN LATERAL
-                             (SELECT json_agg(m.*) AS modules FROM
-                                (SELECT * FROM tu.module m
-                                  INNER JOIN LATERAL (select json_agg(s.*) as sections from tu.section s
-                                             where s.id = ANY(m.ordered_section_ids)) s
-                                  on true)
-                                m WHERE m.id = ANY(c.ordered_module_ids)) m
-                    ON TRUE
-                    ON c.id IN (select unnest(u.admin_of_course_ids)) WHERE u.username = $2;
-                    `,
-            values: [courseTitle, username]
-        } : {
+    async loadAdminCourse(courseId: string) {
+        let query = {
             text: `
                 SELECT c.*, m.modules FROM tu.course c
                     INNER JOIN LATERAL
@@ -161,66 +125,7 @@ export class CoursesRepository extends AbstractRepository implements ICoursesRep
             this.logger.log('info', 'querying for admin course');
             this.logger.log('debug', `sql => ${query.text}`);
             let results = await this.datasource.query(query);
-            let processedResults = results.map((row) => {
-                return _.extend({}, row, {
-                    id: '' + row.id,
-                    // modules aren't pulled out in order since results are narrowed down via 'WHERE'
-                    // clause and then automatically joined with ON TRUE. Have to manually order according
-                    // to orderedModuleIds property
-                    timeEstimate: '' + row.timeEstimate,
-                    modules: _.chain(<ViewModuleTransferData[]> row.modules)
-                        .map((module) => {
-                            // fixme better way to convert integer ids to strings
-                            return _.extend({}, module, {
-                                id: module.id + '',
-                                headerContent: module.headerContent + '',
-                                timeEstimate: '' + module.timeEstimate
-                            })
-                        })
-                        .reduce((ordered, module, index, modules) => {
-                                if (!Object.keys(ordered.moduleIndex).length) {
-                                    // initialize lookup
-                                    ordered.moduleIndex = _.reduce(row.orderedModuleIds, (moduleIndex, moduleId, index) => {
-                                        moduleIndex[moduleId + ''] = index;
-                                        return moduleIndex;
-                                    }, {});
-                                }
-
-                                module.sections = _.chain(<ViewSectionTransferData[]> module.sections)
-                                    .map((section) => {
-                                        return _.extend({}, section, {
-                                            id: section.id + '',
-                                            timeEstimate: '' + section.timeEstimate
-                                        });
-                                    })
-                                    .reduce((ordered, section: ViewSectionTransferData) => {
-                                        if (!Object.keys(ordered.sectionIndex).length) {
-                                            // initialize lookup
-                                            ordered.sectionIndex = _.reduce(module.orderedSectionIds, (sectionIndex, sectionId, index) => {
-                                                sectionIndex[sectionId + ''] = index;
-                                                return sectionIndex;
-                                            }, {});
-                                        }
-                                        let sectionIndex = ordered.sectionIndex[section.id + ''];
-                                        ordered.sections[parseInt(sectionIndex)] = section;
-                                        return ordered;
-                                    }, {
-                                        sectionIndex: {},
-                                        sections: []
-                                    }).value().sections;
-
-                                let moduleIndex = ordered.moduleIndex[module.id + ''];
-                                ordered.modules[parseInt(moduleIndex)] = module;
-
-                                return ordered;
-                            },
-                            {
-                                moduleIndex: {},
-                                modules: []
-                            }
-                        ).value().modules
-                });
-            });
+            let processedResults = results.map((row) => processRow(row));
             return processedResults[0];
         } catch (e) {
             this.logger.log('error', e);
