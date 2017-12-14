@@ -1,33 +1,27 @@
-import {MutationType} from 'store.ts';
 import {Mutation, MutationTree} from 'vuex';
 import {ModuleEntity} from '../../../../../../shared/modules';
 import {ModuleState} from './module_state';
 import Vue from 'vue';
+import {Constant} from '../../../../../../shared/typings/util_typings';
 
-export interface MODULE_MUTATIONS {
-    SET_CURRENT_MODULE: 'SET_CURRENT_MODULE',
-
-    [index: string]: keyof MODULE_MUTATIONS
+export type ModuleMutation<P> = (state: ModuleState, payload: P) => any | Mutation<ModuleState>;
+export interface ModuleMutations {
+    SET_CURRENT_MODULE: ModuleMutation<ModuleEntity>;
+    [key: string]: Mutation<ModuleState>;
 }
-
-export type ModuleMutation = MutationType<ModuleState, ModuleEntity> | Mutation<ModuleState>;
-export type ModuleMutationTree = MutationTree<ModuleState> & { [index in keyof MODULE_MUTATIONS]: ModuleMutation }
 
 /**
  * Const for using course mutation type values
  */
-export const MODULE_MUTATIONS: MODULE_MUTATIONS = {
+export const MODULE_MUTATIONS: Constant<ModuleMutations> = {
     SET_CURRENT_MODULE: 'SET_CURRENT_MODULE',
 };
 
-export interface ModuleMutations extends ModuleMutationTree {
-    SET_CURRENT_MODULE: ModuleMutation;
-}
 
 /**
  * Store mutations
  */
-export const moduleMutations: ModuleMutations = {
+export const moduleMutations: ModuleMutations & MutationTree<ModuleState>= {
     SET_CURRENT_MODULE: (state: ModuleState, module: ModuleEntity) => {
         //todo enforce quill data has been populated??
         state.currentModuleId = module.id;

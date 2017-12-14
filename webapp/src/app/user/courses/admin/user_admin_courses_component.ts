@@ -43,7 +43,7 @@ export class UserAdminCourseComponent extends Vue {
     }
 
     go (course: AdminCourseDescription) {
-        this.$router.push(`admin-course/${course.title}`);
+        this.$router.push(`admin-course/${course.slug}`);
     }
 
 }

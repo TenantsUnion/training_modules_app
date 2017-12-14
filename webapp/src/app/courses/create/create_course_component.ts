@@ -1,11 +1,10 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import {CreateCourseEntityPayload} from 'courses';
-import {COURSES_ROUTE_NAMES} from '../courses_routes';
 import {SegmentViewerComponent} from '../../global/segment_viewer/segment_viewer_component';
 import {FormState} from '../../vue-form';
 import {Segment} from 'segment';
-import {COURSE_ACTIONS, CourseActionTree} from '../store/course/course_actions';
+import {COURSE_ACTIONS, CourseActions} from '../store/course/course_actions';
 
 @Component({
     props: {

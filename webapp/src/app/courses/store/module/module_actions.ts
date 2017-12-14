@@ -1,41 +1,36 @@
 import axios from 'axios';
 import {CreateModuleEntityPayload, ModuleEntity} from '../../../../../../shared/modules';
-import {MODULE_MUTATIONS, ModuleMutationTree} from './module_mutations';
-import {ActionType, CommitType} from '../../../../../../shared/store';
+import {MODULE_MUTATIONS} from './module_mutations';
 import {ModuleState} from './module_state';
-import {ActionContext, ActionTree} from 'vuex';
+import {Action, ActionContext, ActionTree} from 'vuex';
+import {RootState} from '../../../state_store';
+import {Constant} from '../../../../../../shared/typings/util_typings';
 
-export interface MODULE_ACTIONS {
+export interface ModuleActions {
     CREATE_MODULE: CreateModuleAction,
     SET_CURRENT_MODULE: SetCurrentModuleAction;
 
     [index: string]: ModuleAction<any>;
 }
 
-export type ModuleAction<P> = ActionType<ModuleState, any, P>;
+export type ModuleAction<P> = Action<ModuleState, RootState>;
 
 export type CreateModuleAction = ModuleAction<CreateModuleEntityPayload>;
 export type PopulateModuleQuillDataAction = ModuleAction<ModuleEntity>;
 export type SetCurrentModuleAction = ModuleAction<ModuleEntity>;
 
-
-export type ModuleActionTree = ActionTree<ModuleState, any> & { [index in keyof MODULE_ACTIONS]: ModuleAction<any> }
-export type ModuleActionContext =
-    ActionContext<ModuleState, any>
-    & { commit: CommitType<keyof MODULE_MUTATIONS, ModuleMutationTree> };
-
 /**
  * Const for using course mutation type values
  */
-export const MODULE_ACTIONS: {[index in keyof MODULE_ACTIONS]: keyof MODULE_ACTIONS} = {
+export const MODULE_ACTIONS: Constant<ModuleActions> = {
     CREATE_MODULE: 'CREATE_MODULE',
     SET_CURRENT_MODULE: 'SET_CURRENT_MODULE'
 };
 /**
  * Module store actions
  */
-export const moduleActions: ModuleActionTree = {
-    CREATE_MODULE: async (context: ModuleActionContext, course: CreateModuleEntityPayload) => {
+export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions = {
+    CREATE_MODULE: async (context: ActionContext<ModuleState, RootState>, course: CreateModuleEntityPayload) => {
         let CREATE_ID = 'CREATING';
         try {
             let request = axios.post('courses/create', course);
@@ -53,7 +48,7 @@ export const moduleActions: ModuleActionTree = {
             throw response.response.data;
         }
     },
-    SET_CURRENT_MODULE: async (context: ModuleActionContext, payload: { id: string }) => {
+    SET_CURRENT_MODULE: async (context: ActionContext<ModuleState, RootState>, payload: { id: string }) => {
 
         // update course subscription
     }

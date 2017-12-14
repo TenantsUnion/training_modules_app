@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import {CreateModuleEntityCommand, SaveModuleData} from "modules.ts";
 import {
     ViewCourseQuillData, SaveCourseEntityCommand, ViewCourseTransferData, CourseEntity,
-    CreateCourseEntityCommand
+    CreateCourseEntityCommand, CreateCourseResponse
 } from 'courses';
 import {ViewSectionQuillData, SaveSectionData, CreateSectionData} from 'sections';
 import {appRouter} from "../router";
@@ -32,11 +32,11 @@ export class CoursesService {
         return null;
     }
 
-    async getCourseIdFromSlug(slug: string) {
+    async getAdminCourseFromSlug(slug: string): Promise<ViewCourseTransferData> {
         let userId = userQueryService.getUserId();
         try {
-           let response = await axios.get(`course/id/slug/${slug}/user/${userId}`);
-           return response.data;
+            let response = await axios.get(`user/${userId}/admin/course/${slug}`);
+            return response.data;
         } catch (e) {
             console.error(`Error creating course data ${e}`);
             throw e.data;
@@ -223,7 +223,7 @@ export class CoursesService {
      * @param {CreateCourseEntityCommand} createCourseCommand
      * @returns {Promise<string>}
      */
-    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<string> {
+    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<CreateCourseResponse> {
         let request = await axios.post('courses/create', createCourseCommand);
         return request.data;
     }

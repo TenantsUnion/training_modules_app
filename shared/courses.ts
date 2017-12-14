@@ -54,6 +54,7 @@ export interface ViewCourseQuillData extends ViewCourseData {
  * the corresponding ids and timestamps are in string form.
  */
 export interface ViewCourseTransferData extends ViewCourseData {
+    slug?: string;
     lastModifiedAt: string;
     modules: ViewModuleTransferData[],
     orderedContentIds: string[],
@@ -70,6 +71,7 @@ export interface UserEnrolledCourseData extends ViewCourseQuillData {
 
 export interface CourseDescription {
     id: string;
+    slug?: string;
     title: string;
     timeEstimate: string;
 }
@@ -80,4 +82,10 @@ export interface AdminCourseDescription extends CourseDescription {
 
 export interface EnrolledCourseDescription extends CourseDescription {
 }
+
+export interface CreateCourseResponse {
+    id: string,
+    title: string,
+    slug: string
+};
 

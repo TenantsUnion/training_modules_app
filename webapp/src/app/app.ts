@@ -5,7 +5,7 @@ import VueForm from 'vue-form';
 import {AppHeader} from "./user/header/user_header_component";
 import {loginRoutes} from "./account/account_routes";
 import {userRoutes} from "./user/user_routes";
-import {appStore} from "./state_store";
+import {store} from "./state_store";
 
 // load javascript functionality for foundation
 require('foundation-sites');
@@ -27,6 +27,5 @@ appRouter.addRoutes([
 let app = new Vue({
     components: {},
     router: appRouter,
-    store: appStore
+    store: store
 }).$mount('#app');
-

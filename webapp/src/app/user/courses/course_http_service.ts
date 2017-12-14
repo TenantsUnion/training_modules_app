@@ -2,7 +2,7 @@ import axios from "axios";
 import {AdminCourseDescription, CreateCourseEntityPayload} from 'courses';
 import {userQueryService} from "../../account/user_query_service";
 
-class UserCoursesHttpService {
+class UserCoursesService {
 
     async createCourse(createCourseData: CreateCourseEntityPayload): Promise<void> {
         // todo get command meta data
@@ -30,4 +30,4 @@ class UserCoursesHttpService {
     }
 }
 
-export const userCoursesHttpService = new UserCoursesHttpService();
+export const userCoursesHttpService = new UserCoursesService();

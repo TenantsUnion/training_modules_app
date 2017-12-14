@@ -4,7 +4,7 @@ import * as VueForm from "../../../vue-form";
 import {coursesService} from "../../courses_service";
 import {ViewCourseQuillData} from "courses.ts";
 import {QuillComponent} from '../../../global/quill/quill_component';
-import {MODULE_ACTIONS} from '../../store/module/module_actions';
+import {MODULE_ACTIONS, ModuleActions} from '../../store/module/module_actions';
 
 @Component({
     data: () => {
