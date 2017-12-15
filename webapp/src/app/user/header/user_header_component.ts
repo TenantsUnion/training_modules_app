@@ -1,7 +1,6 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {appRouter} from "../../router";
-import {Route} from "vue-router";
+import {USER_ACTIONS} from '../../courses/store/user/user_store';
 
 @Component({
     props: {
@@ -27,14 +26,11 @@ import {Route} from "vue-router";
                 </div>
                 <div class="menu-section columns shrink user-actions">
                     <span class="welcome-message">Welcome, {{ username }}!</span>
-                    <button class="button secondary" @click="signout">Sign
-                        Out
-                    </button>
+                    <button class="button secondary" @click="signout">Sign Out</button>
                 </div>
             </nav>
         </div>
     `
-
 })
 export class AppHeader extends Vue {
     get enrolledCoursesActive () {
@@ -49,8 +45,8 @@ export class AppHeader extends Vue {
         return this.$route.path.indexOf('/content') != -1;
     }
 
-    signout () {
-        //todo hook up to server
+    async signout () {
+        await this.$store.dispatch(USER_ACTIONS.LOGOUT);
         this.$router.push('/');
     }
 }

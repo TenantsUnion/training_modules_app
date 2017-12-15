@@ -52,13 +52,14 @@ export default class LoginComponent extends Vue {
         this.errorMessages = null;
         try {
 
-
             await this.$store.dispatch(USER_ACTIONS.LOGIN, {username: this.model.username});
             this.loading = false;
-            appRouter.push({
-                path: `user/${this.model.username}/enrolled-courses`,
-                params: {userId: this.$store.state.user.userId}
-            });
+            if (this.$store.state.user.loggedIn) {
+                appRouter.push({
+                    path: `user/${this.model.username}/enrolled-courses`,
+                    params: {userId: this.$store.state.user.userId}
+                });
+            }
         } catch (errorMessages) {
             this.loading = false;
             this.errorMessages = errorMessages;

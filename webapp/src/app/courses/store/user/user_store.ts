@@ -3,7 +3,7 @@ import {RootState} from '../../../state_store';
 import {Constant} from '../../../../../../shared/typings/util_typings';
 import {IUserInfo} from '../../../../../../shared/user';
 import {accountHttpService} from '../../../account/account_http_service';
-import {USER_COURSES_LISTING_ACTIONS} from '../courses_listing/courses_listing_store';
+import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../courses_listing/courses_listing_store';
 import {appRouter} from '../../../router';
 
 /**
@@ -63,7 +63,7 @@ export type UserAction<P> = (context: ActionContext<UserState, RootState>, paylo
 
 export interface UserActions {
     LOGIN: UserAction<{ username: string }>,
-    LOAD_INFO_FROM_USER_SESSION: UserAction<any>,
+    LOAD_INFO_FROM_USER_SESSION: UserAction<string>,
     LOGOUT: UserAction<any>
 
 }
@@ -87,20 +87,26 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
             console.error(e);
         }
     },
-    async LOAD_INFO_FROM_USER_SESSION({dispatch, state, commit}) {
-        let username = appRouter.currentRoute.params.username;
-        if (!username || state.loggedIn) {
+    async LOAD_INFO_FROM_USER_SESSION({dispatch, state, commit}, username) {
+        if(username === state.username && state.userInfo) {
+            return; // no state change
+        }
+
+        if(username !== state.username) {
+            await dispatch(USER_ACTIONS.LOGOUT);
             return;
         }
-        let userInfo = await accountHttpService.getLoggedInUserInfo();
+
+        // user session still exists on server if page has just been refreshed
+        let userInfo = await accountHttpService.getLoggedInUserInfo(username);
         if(userInfo) {
             commit(USER_MUTATIONS.USER_LOGIN, userInfo);
             dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
-        } else {
-            // todo username is part of route but user is not logged in and there is no user session on the server. should handle by redirecting to home page
         }
     },
-    async LOGOUT(context) {
-
+    async LOGOUT({commit, state, rootState}) {
+        await accountHttpService.logout();
+        commit(USER_MUTATIONS.USER_LOGOUT);
+        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, []);
     }
 };

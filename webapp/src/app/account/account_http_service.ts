@@ -28,8 +28,8 @@ class AccountHttpService {
             }));
     }
 
-    async getLoggedInUserInfo (): Promise<IUserInfo> {
-        return axios.get('account/userInfo')
+    async getLoggedInUserInfo (username: string): Promise<IUserInfo> {
+        return axios.get(`account/user-info/${username}`)
             .then((value => {
                 let userInfo = <IUserInfo> value.data;
                 return userInfo;

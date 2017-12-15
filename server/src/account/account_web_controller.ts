@@ -27,6 +27,7 @@ export class AccountController {
 
             let accountInfo = await this.accountHandler.signup(signupData);
             request.session.user_id = accountInfo.id;
+            request.session.username = accountInfo.username;
             response.status(200).send(accountInfo);
         } catch (e) {
             this.logger.error(`${e}`);
@@ -54,8 +55,26 @@ export class AccountController {
         }
     }
 
+    async logout(request: Request, response: Response) {
+        try {
+            let userId = request.session.user_id;
+            await new Promise((resolve, reject) => {
+                request.session.destroy(function (err) {
+                    err ? reject(err) : resolve();
+                });
+            });
+            this.logger.info(`Logged out ${userId}`);
+            response.sendStatus(200);
+        } catch (e) {
+            this.logger.error(`${e}`);
+            this.logger.error(`${e.stack}`);
+            response.status(500).send(e);
+        }
+    }
+
     async getLoggedInUserInfo(request: Request, response: Response) {
-        if (request.session && request.session.user_id) {
+        let {username} = request.params;
+        if (request.session && request.session.user_id && request.session.username === username) {
             try {
                 let userAccountInfo = await this.userHandler.loadUser(request.session.user_id);
                 response.status(200).send(userAccountInfo);
@@ -70,3 +89,6 @@ export class AccountController {
     }
 }
 
+const setSession = (request: Request, userInfo: { userId: string, username: string }) => {
+    Object.assign(request.session, userInfo);
+};

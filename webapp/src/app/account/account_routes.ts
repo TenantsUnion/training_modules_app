@@ -2,16 +2,19 @@ import {RouteConfig} from 'vue-router';
 import LoginComponent from './login/login_component';
 import SignupComponent from "./signup/signup_component";
 
+
+export const LOGIN_ROUTE = '/login';
+export const SIGNUP_ROUTE = '/signup';
 export const loginRoutes: RouteConfig = {
     path: '/',
     name: 'account',
     children: [
         {
-            path: '/login',
+            path: LOGIN_ROUTE,
             name: 'login',
             component: LoginComponent
         }, {
-            path: '/signup',
+            path: SIGNUP_ROUTE,
             name: 'signup',
             component: SignupComponent
         }

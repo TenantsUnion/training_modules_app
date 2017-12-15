@@ -66,7 +66,7 @@ export const USER_COURSES_LISTING_ACTIONS: Constant<UserCoursesListingActions> =
 
 export const userCoursesListingActions: UserCoursesListingActions & ActionTree<UserCoursesListingState, RootState> = {
     LOAD_USER_ADMIN_COURSES: async ({commit, state, rootState}) => {
-        if (state.courseDescriptionsLoaded || !rootState.user.loggedIn) {
+        if (state.courseDescriptionsLoaded || !rootState.user.loggedIn || state.loading) {
             return;
         }
 
