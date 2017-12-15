@@ -4,14 +4,17 @@ import {
 } from "../../../shared/account";
 import {IAccountRepository} from "./account_repository";
 
+
+const usernameRegex = /[a-zA-Z_\-0-9]+/;
 export class AccountRequestValidator {
     constructor(private accountRepository: IAccountRepository) {
     }
 
     async signup(signupInfo: AccountSignupRequest): Promise<null | AccountSignupFieldErrors> {
-        if (!signupInfo.username) {
-            return {username: 'Need username in order to createAccount'};
+        if (!usernameRegex.test(signupInfo.username)) {
+            return {username: 'username must only contain alphanumeric characters, \'-\', or \'_\''};
         }
+
         let accountExists = await this.accountRepository.accountExists(signupInfo.username);
         if (accountExists) {
             return {username: `Account with username: ${signupInfo.username} already exists`};

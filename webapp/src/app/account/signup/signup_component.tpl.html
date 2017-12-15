@@ -14,13 +14,16 @@
                     <validate>
                         <field-messages name="username"
                                         show="$submitted || $dirty">
-                            <small class="error" slot="required">A username is need to signup</small>
+                            <small class="error" slot="required">A username is needed to signup for an account</small>
+                            <small class="error" slot="pattern">A username may only consist of alphanumeric characters, '_', or '-'</small>
                         </field-messages>
                         <small class="error" v-if="errorMessages && errorMessages.username">
                             {{errorMessages.username}}
                         </small>
                         <label for="username-signup">Username</label>
                         <input v-model="model.username" type="text"
+                               required
+                               pattern="[A-Za-z\-_0-9]*"
                                name="username"
                                placeholder="username"
                                ref="signup"
