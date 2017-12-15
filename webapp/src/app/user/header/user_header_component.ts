@@ -37,8 +37,6 @@ import {Route} from "vue-router";
 
 })
 export class AppHeader extends Vue {
-    $route: Route;
-
     get enrolledCoursesActive () {
         return this.$route.path.indexOf('enrolled-courses') != -1;
     }
@@ -53,6 +51,6 @@ export class AppHeader extends Vue {
 
     signout () {
         //todo hook up to server
-        appRouter.push('/');
+        this.$router.push('/');
     }
 }

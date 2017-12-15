@@ -28,23 +28,16 @@ class AccountHttpService {
             }));
     }
 
-    getLoggedInUserInfo (): Promise<IUserInfo> {
+    async getLoggedInUserInfo (): Promise<IUserInfo> {
         return axios.get('account/userInfo')
             .then((value => {
                 let userInfo = <IUserInfo> value.data;
                 return userInfo;
             }))
-            .catch((response) => {
-                throw response.response.data;
-            });
     }
 
-    logout (): Promise<void> {
-        return axios.post('account/logout').then((value => {
-            userQueryService.resetCurrentUser();
-        })).catch((response => {
-            throw response.response.data;
-        }));
+    logout (): Promise<any> {
+        return axios.post('account/logout');
     }
 }
 

@@ -32,8 +32,7 @@ export class CoursesService {
         return null;
     }
 
-    async getAdminCourseFromSlug(slug: string): Promise<ViewCourseTransferData> {
-        let userId = userQueryService.getUserId();
+    async getAdminCourseFromSlug(slug: string, userId: string): Promise<ViewCourseTransferData> {
         try {
             let response = await axios.get(`user/${userId}/admin/course/${slug}`);
             return response.data;

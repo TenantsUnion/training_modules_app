@@ -32,38 +32,38 @@ export const COURSE_ACTIONS: Constant<CourseActions>= {
  * Course store actions
  */
 export const courseActions: CourseActions & ActionTree<CourseState, RootState> = {
-    async CREATE_COURSE(context: ActionContext<CourseState, RootState>, course: CreateCourseEntityPayload) {
+    async CREATE_COURSE({commit, dispatch, rootState, state}, course: CreateCourseEntityPayload) {
         let CREATE_ID = 'CREATING';
         try {
             let createCourseCommand: CreateCourseEntityCommand = {
                 metadata: {
-                    userId: userQueryService.getUserId(),
+                    userId: rootState.user.userId,
                     id: 'NEW',
                     version: '0',
                     type: 'CourseEntity',
                     timestamp: new Date().toUTCString(),
-                    correlationId: getCorrelationId(userQueryService.getUserId()),
+                    correlationId: getCorrelationId(rootState.user.userId),
                 },
                 payload: course
             };
             let courseInfo = coursesService.createCourse(createCourseCommand);
-            context.commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, stage: 'WAITING'});
+            commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, stage: 'WAITING'});
             let {id, slug} = await courseInfo;
-            context.commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, stage: 'SUCCESS'});
-            await context.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id, slug, isAdmin: true});
+            commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, stage: 'SUCCESS'});
+            await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id, slug, isAdmin: true});
             return 'hi';
         } catch (e) {
             console.error(e);
             throw e;
         }
     },
-    async SET_CURRENT_COURSE(context: ActionContext<CourseState, RootState>, {id, slug, isAdmin}): Promise<any> {
+    async SET_CURRENT_COURSE({state, rootState, commit}, {id, slug, isAdmin}): Promise<any> {
         try {
             if (!id && slug) {
-                let course = await coursesService.getAdminCourseFromSlug(slug);
+                let course = await coursesService.getAdminCourseFromSlug(slug, rootState.user.userId);
                 id = course.id;
             }
-            let noChange = id === context.state.currentCourseId && isAdmin === context.state.isAdmin;
+            let noChange = id === state.currentCourseId && isAdmin === state.isAdmin;
             if (noChange) {
                 // current state matches, no changes
                 return;
@@ -71,13 +71,13 @@ export const courseActions: CourseActions & ActionTree<CourseState, RootState> =
             let courseRouteName = isAdmin ? COURSES_ROUTE_NAMES.adminCourseDetails
                 : COURSES_ROUTE_NAMES.enrolledCourseDetails;
 
-            let loadingCourse = context.state.courses[id] ? context.state.courses[id]
+            let loadingCourse = state.courses[id] ? state.courses[id]
                 : await coursesService.loadAdminCourse(id);
 
             let course = await transformTransferViewService.populateTrainingEntityQuillData(loadingCourse);
             subscribeCourse(id);
 
-            context.commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, {course, id, slug, isAdmin});
+            commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, {course, id, slug, isAdmin});
             appRouter.push({
                 name: courseRouteName,
                 params: {

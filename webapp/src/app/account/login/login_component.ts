@@ -8,6 +8,8 @@ import {FormField} from "../../vue-form";
 import {Watch} from "vue-property-decorator";
 import {AccountLoginFieldErrors} from "../../../../../shared/account";
 import {$} from "../../globals";
+import {USER_COURSES_LISTING_ACTIONS} from '../../courses/store/courses_listing/courses_listing_store';
+import {USER_ACTIONS} from '../../courses/store/user/user_store';
 
 export interface AccountFormState extends VueForm.FormState {
     username: FormField;
@@ -41,26 +43,26 @@ export default class LoginComponent extends Vue {
         this.errorMessages && delete this.errorMessages.username;
     }
 
-    login() {
+    async login() {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
         }
         this.loading = true;
         this.errorMessages = null;
-        accountHttpService.login({
-            username: this.model.username,
-            password: this.model.password
-        }).then((userId: IUserId) => {
+        try {
+
+
+            await this.$store.dispatch(USER_ACTIONS.LOGIN, {username: this.model.username});
+            this.loading = false;
             appRouter.push({
                 path: `user/${this.model.username}/enrolled-courses`,
-                params: {userId: userId.id}
+                params: {userId: this.$store.state.user.userId}
             });
-            this.loading = false;
-        }).catch((errorMessages: AccountLoginFieldErrors) => {
+        } catch (errorMessages) {
             this.loading = false;
             this.errorMessages = errorMessages;
-        });
+        }
     }
 
     mounted() {

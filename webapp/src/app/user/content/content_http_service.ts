@@ -15,7 +15,7 @@ class CreateContentHttpService {
         let username = appRouter.currentRoute.params.username;
 
         let createUserContentCommand: CreateUserContentCommand = {
-            userId: this.userQueryService.getUserId(),
+            userId: '',
             title: title,
             quillContent: quillContent
         };
@@ -27,7 +27,7 @@ class CreateContentHttpService {
     }
 
     getContentDescriptionList (): Promise<ContentData[]> {
-        let username = this.userQueryService.getUsername();
+        let username = '';
 
         return axios.get(`user/${username}/content`)
             .then((response) => {
@@ -42,7 +42,7 @@ class CreateContentHttpService {
     }
 
     loadContent (contentId:string) : Promise<ContentEntity> {
-        let username = this.userQueryService.getUsername();
+        let username = '';
 
         return axios.get(`user/${username}/contentId/${contentId}`)
             .then((response) => {
@@ -57,7 +57,7 @@ class CreateContentHttpService {
     }
 
     saveContent (content: ContentEntity) : Promise<void> {
-        let username = this.userQueryService.getUsername();
+        let username = '';
         return axios.post(`user/${username}/contentId/${content.id}/save`, content)
             .then((response) => {
                 return response.data;

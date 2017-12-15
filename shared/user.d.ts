@@ -4,9 +4,9 @@ declare namespace user {
         username: string,
         firstName?: string,
         lastName?: string,
-        adminOfCourseIds: number[],
-        enrolledInCourseIds: number[],
-        completedCourseIds: number[]
+        adminOfCourseIds?: number[],
+        enrolledInCourseIds?: number[],
+        completedCourseIds?: number[]
     }
 
     interface IUserId {

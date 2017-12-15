@@ -6,6 +6,7 @@ import {AppHeader} from "./user/header/user_header_component";
 import {loginRoutes} from "./account/account_routes";
 import {userRoutes} from "./user/user_routes";
 import {store} from "./state_store";
+import {USER_ACTIONS} from './courses/store/user/user_store';
 
 // load javascript functionality for foundation
 require('foundation-sites');
@@ -27,5 +28,8 @@ appRouter.addRoutes([
 let app = new Vue({
     components: {},
     router: appRouter,
-    store: store
+    store: store,
+    beforeCreate() {
+        this.$store.dispatch(USER_ACTIONS.LOAD_INFO_FROM_USER_SESSION);
+    }
 }).$mount('#app');

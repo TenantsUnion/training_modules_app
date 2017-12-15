@@ -64,6 +64,8 @@ export class AccountController {
                 this.logger.error(`${e.stack}`);
                 response.status(500).send(e);
             }
+        } else {
+            response.sendStatus(200);
         }
     }
 }
