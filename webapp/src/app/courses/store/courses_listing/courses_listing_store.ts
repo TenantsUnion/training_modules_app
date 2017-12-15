@@ -1,9 +1,11 @@
+import Vue from 'vue';
+import * as _ from 'underscore';
 import {AdminCourseDescription} from '../../../../../../shared/courses';
 import {Action, ActionContext, ActionTree, Mutation, MutationTree} from 'vuex';
 import {RootState} from '../../../state_store';
 import {Constant} from '../../../../../../shared/typings/util_typings';
-import Vue from 'vue';
 import {userCoursesHttpService} from '../../../user/courses/course_http_service';
+import {titleToSlug} from '../../../../../../shared/slug/title_slug_transformations';
 
 /**
  * State
@@ -24,29 +26,48 @@ export const userCoursesListingState: UserCoursesListingState = {
 /**
  * Mutations
  */
-// todo document/figure out how to access/use these commit mutations from component, within action handler, other mutation, same/different modules
 export type UserCoursesListingMutation<P> = (state: UserCoursesListingState, payload: P) => any | Mutation<UserCoursesListingState>;
 
 export interface UserCoursesListingMutations {
     SET_ADMIN_COURSE_DESCRIPTIONS: UserCoursesListingMutation<AdminCourseDescription[]>,
-    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING: UserCoursesListingMutation<boolean>
+    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING: UserCoursesListingMutation<boolean>,
+    COMPLETED_LOADING: UserCoursesListingMutation<any>,
+    CLEAR_USER_COURSES_LISTINGS: UserCoursesListingMutation<any>
 }
 
 export const USER_COURSES_LISTING_MUTATIONS: Constant<UserCoursesListingMutations> = {
     SET_ADMIN_COURSE_DESCRIPTIONS: 'SET_ADMIN_COURSE_DESCRIPTIONS',
-    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING: 'SET_ADMIN_COURSE_DESCRIPTIONS_LOADING'
+    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING: 'SET_ADMIN_COURSE_DESCRIPTIONS_LOADING',
+    COMPLETED_LOADING: 'COMPLETED_LOADING',
+    CLEAR_USER_COURSES_LISTINGS: 'CLEAR_USER_COURSES_LISTINGS'
 };
 
 export const userCoursesListingMutations: UserCoursesListingMutations & MutationTree<UserCoursesListingState> = {
-    SET_ADMIN_COURSE_DESCRIPTIONS: (state: UserCoursesListingState, adminCourseDescriptions: AdminCourseDescription[]) => {
-        Vue.set(state, 'adminCourseDescriptions', adminCourseDescriptions);
+    SET_ADMIN_COURSE_DESCRIPTIONS (state: UserCoursesListingState, adminCourseDescriptions: AdminCourseDescription[]) {
+        let uniqueTitle = adminCourseDescriptions.reduce((acc, {title}: AdminCourseDescription) => {
+            acc[title] = _.isUndefined(acc[title]);
+            return acc;
+        }, {});
+        let adminCourses = adminCourseDescriptions.map((description: AdminCourseDescription) => {
+            let {id, title} = description;
+            return {
+                slug: titleToSlug(title, !uniqueTitle[title], id),
+                ...description
+            };
+        });
+        Vue.set(state, 'adminCourseDescriptions', adminCourses);
     },
-    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING: (state: UserCoursesListingState, loading: boolean) => {
+    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING (state: UserCoursesListingState, loading: boolean) {
         state.loading = loading;
     },
-    COMPLETED_LOADING: (state: UserCoursesListingState) => {
+    COMPLETED_LOADING (state: UserCoursesListingState) {
         state.loading = false;
         state.courseDescriptionsLoaded = true;
+    },
+    CLEAR_USER_COURSES_LISTINGS (state: UserCoursesListingState) {
+        state.courseDescriptionsLoaded = false;
+        state.loading = false;
+        state.adminCourseDescriptions = [];
     }
 };
 
@@ -72,7 +93,7 @@ export const userCoursesListingActions: UserCoursesListingActions & ActionTree<U
 
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS_LOADING, true);
         let userAdminCourseDescriptions = await userCoursesHttpService.getUserAdminCourses(rootState.user.username);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS_LOADING, false);
+        commit(USER_COURSES_LISTING_MUTATIONS.COMPLETED_LOADING);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, userAdminCourseDescriptions);
     }
 };

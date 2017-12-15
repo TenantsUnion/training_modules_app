@@ -33,7 +33,7 @@ const escapedToCharMap = Object.keys(charToEscapedMap).reduce((map, charKey) => 
 
 
 export const titleToSlug = (title: string, isDuplicate?: boolean, id?: string): string => {
-    let slugTitle = [...title].reduce((acc, char) => {
+    let slugTitle = title.split('').reduce((acc, char) => {
         let normalizedChar = char.toLowerCase();
         let sym = charToEscapedMap[char];
         if (sym) {
@@ -61,7 +61,7 @@ export const titleToSlug = (title: string, isDuplicate?: boolean, id?: string): 
 export const slugToTitle = (slug: string): string => {
     // if there are duplicate titles the part after the marker is the corresponding id and not part of the title
     let slugTitleSegment = slug.split(COMPOUND_SLUG_MARKER)[0].toLowerCase();
-    let lowerCaseTitle = [...slugTitleSegment].reduce((acc, char) => {
+    let lowerCaseTitle = slugTitleSegment.split('').reduce((acc, char) => {
         if (char === BEGIN_ESCAPED) {
             acc.buffer.push(char);
         } else if (char === END_ESCAPED) {

@@ -117,6 +117,6 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
     async LOGOUT({commit, state, rootState}) {
         await accountHttpService.logout();
         commit(USER_MUTATIONS.USER_LOGOUT);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, []);
+        commit(USER_COURSES_LISTING_MUTATIONS.CLEAR_USER_COURSES_LISTINGS);
     }
 };
