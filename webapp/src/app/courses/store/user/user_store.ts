@@ -64,14 +64,16 @@ export type UserAction<P> = (context: ActionContext<UserState, RootState>, paylo
 export interface UserActions {
     LOGIN: UserAction<{ username: string }>,
     LOAD_INFO_FROM_USER_SESSION: UserAction<string>,
-    LOGOUT: UserAction<any>
+    LOGOUT: UserAction<any>,
+    SIGNUP: UserAction<{ username: string }>
 
 }
 
 export const USER_ACTIONS: Constant<UserActions> = {
     LOGIN: 'LOGIN',
     LOAD_INFO_FROM_USER_SESSION: 'LOAD_INFO_FROM_USER_SESSION',
-    LOGOUT: 'LOGOUT'
+    LOGOUT: 'LOGOUT',
+    SIGNUP: 'SIGNUP'
 };
 
 export const userActions: UserActions & ActionTree<UserState, RootState> = {
@@ -87,19 +89,27 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
             console.error(e);
         }
     },
+    async SIGNUP({commit, dispatch}, {username}) {
+        let userInfo = await accountHttpService.signup({
+            username: username,
+            password: ''
+        });
+        commit(USER_MUTATIONS.USER_LOGIN, userInfo);
+        await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
+    },
     async LOAD_INFO_FROM_USER_SESSION({dispatch, state, commit}, username) {
-        if(username === state.username && state.userInfo) {
+        if (username === state.username && state.userInfo) {
             return; // no state change
         }
 
-        if(username !== state.username) {
+        if (username && state.username && username !== state.username) {
             await dispatch(USER_ACTIONS.LOGOUT);
             return;
         }
 
         // user session still exists on server if page has just been refreshed
         let userInfo = await accountHttpService.getLoggedInUserInfo(username);
-        if(userInfo) {
+        if (userInfo) {
             commit(USER_MUTATIONS.USER_LOGIN, userInfo);
             dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
         }

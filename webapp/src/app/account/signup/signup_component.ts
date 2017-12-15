@@ -7,6 +7,7 @@ import {AccountFormState} from '../login/login_component';
 import {Watch} from 'vue-property-decorator';
 import {AccountSignupFieldErrors} from '../../../../../shared/account';
 import {$} from "../../globals";
+import {USER_ACTIONS, USER_MUTATIONS} from '../../courses/store/user/user_store';
 
 @Component({
     data: () => {
@@ -32,27 +33,25 @@ export default class SignupComponent extends Vue {
     formstate: AccountFormState;
 
     @Watch('model.username')
-    resetUsername () {
+    resetUsername() {
         this.errorMessages && delete this.errorMessages
     }
 
-    signup () {
+    async signup() {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
         }
         this.loading = true;
         this.errorMessages = null;
-        accountHttpService.signup({
-            username: this.model.username,
-            password: this.model.password
-        }).then(() => {
-            this.loading = false;
-            appRouter.push({path: `user/${this.model.username}/enrolled-courses`});
-        }).catch((errorMessages: AccountSignupFieldErrors) => {
-            this.loading = false;
+        try {
+            await this.$store.dispatch(USER_ACTIONS.SIGNUP, {username: this.model.username});
+            appRouter.push({path: `user/${this.$store.state.user.username}/enrolled-courses`});
+        } catch (errorMessages) {
             this.errorMessages = errorMessages;
-        });
+        } finally {
+            this.loading = false;
+        }
     }
 
     mounted() {
