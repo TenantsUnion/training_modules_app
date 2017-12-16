@@ -8,12 +8,12 @@ export const COMPOUND_SLUG_MARKER = '__';
  * Character marking the beginning of an escaped sequence of characters
  */
 // todo validate against having [ in the title
-export const BEGIN_ESCAPED = '[';
+export const BEGIN_ESCAPED = '(';
 /**
  * Character marking the ending of an escaped sequence of characters
  */
 // todo validate against having ] in the title
-export const END_ESCAPED = ']';
+export const END_ESCAPED = ')';
 
 // The characters ";", "/", "?", ":", "@", "=" and "&"
 export const charToEscapedMap = {
