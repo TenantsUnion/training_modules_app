@@ -5,6 +5,7 @@ import {Response, Request} from "express";
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../log';
 import {LoginCredentials, SignupData} from 'account';
+import {IUserInfo} from '../../../shared/user';
 
 export class AccountController {
     private logger: LoggerInstance = getLogger('AccountController', 'info');
@@ -26,8 +27,7 @@ export class AccountController {
             }
 
             let accountInfo = await this.accountHandler.signup(signupData);
-            request.session.user_id = accountInfo.id;
-            request.session.username = accountInfo.username;
+            setSession(request, accountInfo);
             response.status(200).send(accountInfo);
         } catch (e) {
             this.logger.error(`${e}`);
@@ -46,7 +46,7 @@ export class AccountController {
                 return response.status(400).send(errorMessages);
             }
             let accountInfo = await this.accountHandler.login(loginCredentials);
-            request.session.user_id = accountInfo.id;
+            setSession(request, accountInfo);
             response.status(200).send(accountInfo);
         } catch (e) {
             this.logger.error(`${e}`);
@@ -74,9 +74,9 @@ export class AccountController {
 
     async getLoggedInUserInfo(request: Request, response: Response) {
         let {username} = request.params;
-        if (request.session && request.session.user_id && request.session.username === username) {
+        if (request.session && request.session.userId && request.session.username === username) {
             try {
-                let userAccountInfo = await this.userHandler.loadUser(request.session.user_id);
+                let userAccountInfo = await this.userHandler.loadUser(request.session.userId);
                 response.status(200).send(userAccountInfo);
             } catch (e) {
                 this.logger.error(`${e}`);
@@ -89,6 +89,7 @@ export class AccountController {
     }
 }
 
-const setSession = (request: Request, userInfo: { userId: string, username: string }) => {
-    Object.assign(request.session, userInfo);
+const setSession = (request: Request, userInfo: IUserInfo) => {
+    request.session.userId = userInfo.id;
+    request.session.username = userInfo.username;
 };
