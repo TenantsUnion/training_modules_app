@@ -1,3 +1,4 @@
+import * as _ from "underscore";
 import axios from "axios";
 import {LoginCredentials, LoginResponse, AccountSignupRequest} from 'account.ts';
 import {IUserInfo} from "user";
@@ -32,7 +33,7 @@ class AccountHttpService {
         return axios.get(`account/user-info/${username}`)
             .then((value => {
                 let userInfo = <IUserInfo> value.data;
-                return userInfo;
+                return _.isObject(userInfo) ? userInfo : null; // currently returns empty "200" status if not logged in which becomes data prop
             }))
     }
 

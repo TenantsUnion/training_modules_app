@@ -84,6 +84,8 @@ export class AccountController {
                 response.status(500).send(e);
             }
         } else {
+            this.logger.info(`No session to load`);
+            // todo should probably be an error response
             response.sendStatus(200);
         }
     }
