@@ -1,6 +1,6 @@
 import Vue from "vue";
 import {CourseState} from './course_state';
-import {CourseEntity} from 'courses.ts';
+import {CourseEntity, ViewCourseQuillData} from 'courses.ts';
 import {Mutation, MutationTree} from 'vuex';
 import {RequestStage} from '../../../../../../shared/requests';
 
@@ -17,8 +17,8 @@ export const COURSE_MUTATIONS: {[index in keyof  CourseMutations]: keyof CourseM
 };
 
 export interface CourseMutations {
-    SET_CURRENT_COURSE: CourseMutation<string>;
-    SET_COURSE_REQUEST_STAGE: CourseMutation<{id: string; stage: RequestStage}>,
+    SET_CURRENT_COURSE: CourseMutation<{id}>;
+    SET_COURSE_REQUEST_STAGE: CourseMutation<{id: string; requesting: boolean}>,
     SET_COURSE_ADMIN: CourseMutation<boolean>;
     SET_COURSE_ENTITY: CourseMutation<CourseEntity>;
 
@@ -29,11 +29,11 @@ export interface CourseMutations {
  * Store mutations
  */
 export const coursesMutations: CourseMutations & MutationTree<CourseState> = {
-    SET_CURRENT_COURSE: (state: CourseState, id: string) => {
+    SET_CURRENT_COURSE: (state: CourseState, {id}) => {
         state.currentCourseId = id;
     },
-    SET_COURSE_REQUEST_STAGE: (state: CourseState, course: {id: string, stage: RequestStage}) => {
-        Vue.set(state.courseRequests, course.id, course.stage);
+    SET_COURSE_REQUEST_STAGE: (state: CourseState, {id, requesting}) => {
+        Vue.set(state.courseRequests, id, requesting);
     },
     SET_COURSE_ADMIN: (state: CourseState, isAdmin: boolean) => {
         state.isAdmin = isAdmin;

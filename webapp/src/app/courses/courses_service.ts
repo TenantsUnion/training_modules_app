@@ -8,6 +8,7 @@ import {
 import {ViewSectionQuillData, SaveSectionData, CreateSectionData} from 'sections';
 import {appRouter} from "../router";
 import {userQueryService} from '../account/user_query_service';
+import {transformTransferViewService} from '../global/quill/transform_transfer_view_service';
 
 export class CoursesService {
     currentCourse: Promise<ViewCourseQuillData>;
@@ -21,7 +22,8 @@ export class CoursesService {
     async loadAdminCourse(courseId: string): Promise<CourseEntity> {
         try {
             let response = await axios.get(`view/course/admin/${courseId}`);
-            return response.data;
+            let course = await transformTransferViewService.populateTrainingEntityQuillData(response.data);
+            return <CourseEntity> course;
         } catch (e) {
             console.error(`Error creating course data ${e}`);
             throw e.data;

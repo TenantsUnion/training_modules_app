@@ -1,18 +1,14 @@
-import Vuex, {Dispatch, Store} from 'vuex';
+import Vuex, {Store} from 'vuex';
 import Vue from 'vue';
-import {courseGetters, CourseState, courseState} from './courses/store/course/course_state';
+import {CourseGetters, courseGetters, CourseState, courseState} from './courses/store/course/course_state';
 import {moduleGetters, ModuleState, moduleState} from './courses/store/module/module_state';
 import {SectionState} from './courses/store/section/section_state';
-import {CourseEntity} from '../../../shared/courses';
 import {coursesMutations} from './courses/store/course/course_mutations';
 import {courseActions} from './courses/store/course/course_actions';
-import {ModuleEntity} from '../../../shared/modules';
 import {moduleMutations} from './courses/store/module/module_mutations';
 import {moduleActions} from './courses/store/module/module_actions';
-import {SectionEntity} from '../../../shared/sections';
-import {SectionMutationTree} from './courses/store/section/section_mutations';
 import {
-    userCoursesListingActions,
+    userCoursesListingActions, userCoursesListingGetters, UserCoursesListingGetters,
     userCoursesListingMutations, UserCoursesListingState,
     userCoursesListingState
 } from './courses/store/courses_listing/courses_listing_store';
@@ -29,6 +25,7 @@ export const store: Store<any> = new Vuex.Store({
         },
         userCourses: {
             state: userCoursesListingState,
+            getters: userCoursesListingGetters,
             actions: userCoursesListingActions,
             mutations: userCoursesListingMutations
         },
@@ -54,3 +51,5 @@ export interface RootState {
     section: SectionState,
     userCourses: UserCoursesListingState
 }
+
+export type AppGetters = CourseGetters & UserCoursesListingGetters;

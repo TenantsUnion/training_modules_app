@@ -111,7 +111,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
         let userInfo = await accountHttpService.getLoggedInUserInfo(username);
         if (userInfo) {
             commit(USER_MUTATIONS.USER_LOGIN, userInfo);
-            dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
+            await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
         }
     },
     async LOGOUT({commit, state, rootState}) {

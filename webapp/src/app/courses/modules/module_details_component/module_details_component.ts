@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {coursesService} from '../../courses_service';
-import {COURSES_ROUTE_NAMES, coursesRoutesService} from '../../courses_routes';
+import {COURSES_ROUTE_NAMES} from '../../courses_routes';
 import {ViewModuleQuillData} from '../../../../../../shared/modules';
 import {CourseRefreshComponent} from '../../../global/refresh_route';
 
@@ -20,7 +19,6 @@ import {CourseRefreshComponent} from '../../../global/refresh_route';
     extends: CourseRefreshComponent,
     template: require('./module_details_component.tpl.html')
 })
-
 export class ModuleDetailsComponent extends Vue {
     moduleUnsubscribe: () => any;
     loading: boolean;

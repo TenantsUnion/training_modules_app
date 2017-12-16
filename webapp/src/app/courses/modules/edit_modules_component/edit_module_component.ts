@@ -2,13 +2,9 @@ import Vue from 'vue';
 import draggable from 'vuedraggable';
 import Component from 'vue-class-component';
 import * as VueForm from '../../../vue-form';
-import * as _ from 'underscore';
-import {coursesService} from '../../courses_service';
-import {coursesRoutesService} from '../../courses_routes';
 import {ViewModuleQuillData} from 'modules.ts';
 import {ViewSectionTransferData} from 'sections.ts';
 import {CourseRefreshComponent} from '../../../global/refresh_route';
-import {QuillComponent} from '../../../global/quill/quill_component';
 
 @Component({
     data: () => {

@@ -1,10 +1,9 @@
 import {GetterTree} from 'vuex';
 import {CourseEntity} from 'courses.ts';
-import {RequestStage} from 'requests';
 import {RootState} from '../../../state_store';
 
 export interface CourseState {
-    courseRequests: { [id: string]: RequestStage }
+    courseRequests: { [id: string]: boolean }
 
     currentCourseTitle: string;
     currentCourseId: string;
@@ -20,16 +19,16 @@ export interface CourseState {
     // currentSectionTransfer: ViewSectionTransferData;
 }
 
-export type CourseGetters = GetterTree<CourseState, RootState>;
-export interface CourseGetterProperties {
-    currentCourse:  CourseEntity,
+export interface CourseGetters {
+    currentCourse: CourseEntity,
+    currentCourseLoaded: boolean,
     currentCourseLoading: boolean
 }
 
-
-export const courseGetters: CourseGetters = {
+export const courseGetters: GetterTree<CourseState, RootState> = {
     currentCourse: (state) => state.courses[state.currentCourseId],
-    currentCourseLoading: (state) => state.courseRequests[state.currentCourseId] === 'WAITING'
+    currentCourseLoaded: (state) => !!state.courses[state.currentCourseId],
+    currentCourseLoading: (state) => state.courseRequests[state.currentCourseId],
 };
 
 export const courseState: CourseState = {

@@ -2,6 +2,8 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {AdminCourseDescription} from "courses.ts";
 import {mapState} from 'vuex';
+import {COURSES_ROUTE_NAMES} from '../../../courses/courses_routes';
+import {COURSE_ACTIONS} from '../../../courses/store/course/course_actions';
 
 
 @Component({
@@ -12,12 +14,19 @@ import {mapState} from 'vuex';
     })
 })
 export class UserAdminCourseComponent extends Vue {
-    createCourse () {
+    createCourse() {
         this.$router.push('course/create')
     }
 
-    go (course: AdminCourseDescription) {
-        this.$router.push(`admin-course/${course.slug}`);
+    async go(course: AdminCourseDescription) {
+        // todo -- loading indicator
+        await this.$store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: course.id, isAdmin: true});
+        this.$router.push({
+            name: COURSES_ROUTE_NAMES.adminCourseDetails,
+            params: {
+                courseSlug: course.slug
+            }
+        });
     }
 
 }

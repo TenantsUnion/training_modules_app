@@ -118,12 +118,9 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     }
 
     async loadUserAdminCourseWebView(request: Request, response: Response) {
-        let courseSlug: string = request.params.courseSlug;
-        let userId: string = request.params.userId;
+        let {courseId} = request.params;
         try {
-            let courseId = await courseQueryService.courseIdFromSlug(courseSlug, userId);
             let course = await this.coursesRepo.loadAdminCourse(courseId);
-
             response.status(200).send(course);
         } catch (e) {
             this.handleServerErr(e, request, response);
