@@ -21,8 +21,6 @@ export interface CourseMutations {
     SET_COURSE_REQUEST_STAGE: CourseMutation<{id: string; requesting: boolean}>,
     SET_COURSE_ADMIN: CourseMutation<boolean>;
     SET_COURSE_ENTITY: CourseMutation<CourseEntity>;
-
-    [key: string]: Mutation<CourseState>;
 }
 
 /**

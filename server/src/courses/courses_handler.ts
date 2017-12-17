@@ -20,13 +20,6 @@ export interface LoadAdminCourseParameters {
     courseTitle: string;
     courseId: string;
 }
-
-export const isUsernameCourseTitle = function (obj): obj is LoadAdminCourseParameters {
-    return typeof obj === 'object'
-        && typeof obj.username === 'string'
-        && typeof obj.courseTitle === 'string'
-};
-
 export class CoursesHandler {
     logger = getLogger('CourseHandler', 'info');
 
@@ -38,7 +31,7 @@ export class CoursesHandler {
                 private courseQueryService: CoursesQueryService) {
     }
 
-    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<CreateCourseResponse> {
+    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<ViewCourseTransferData> {
         try {
             let {userId} = createCourseCommand.metadata;
             let courseInfo: CreateCourseEntityPayload = createCourseCommand.payload;
@@ -57,9 +50,9 @@ export class CoursesHandler {
             let courseId = await this.coursesRepository.createCourse(courseInfo, quillIds);
             await this.userHandler.userCreatedCourse(userId, courseId);
             this.logger.info(`Successfully created course: ${courseId}`);
+            let course = await this.coursesRepository.loadAdminCourse(courseId);
 
-            let slug = await this.courseQueryService.courseSlug(userId, courseInfo.title, courseId, true);
-            return {slug, id: courseId, title: courseInfo.title};
+            return course;
         } catch (e) {
             this.logger.error('Exception creating course\n%s', e);
             throw e;

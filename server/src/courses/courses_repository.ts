@@ -6,10 +6,7 @@ import {
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
 import {LoggerInstance} from 'winston';
-import {isUsernameCourseTitle, LoadAdminCourseParameters} from "./courses_handler";
 import * as _ from "underscore";
-import {ViewModuleTransferData} from '../../../shared/modules';
-import {ViewSectionTransferData} from '../../../shared/sections';
 import * as moment from "moment";
 import {processRow} from './course_row_processor';
 
@@ -105,7 +102,7 @@ export class CoursesRepository extends AbstractRepository implements CoursesRepo
         return results[0];
     }
 
-    async loadAdminCourse(courseId: string) {
+    async loadAdminCourse(courseId: string): Promise<ViewCourseTransferData> {
         let query = {
             text: `
                 SELECT c.*, m.modules FROM tu.course c
@@ -126,7 +123,7 @@ export class CoursesRepository extends AbstractRepository implements CoursesRepo
             this.logger.log('debug', `sql => ${query.text}`);
             let results = await this.datasource.query(query);
             let processedResults = results.map((row) => processRow(row));
-            return processedResults[0];
+            return <ViewCourseTransferData> processedResults[0];
         } catch (e) {
             this.logger.log('error', e);
             this.logger.log('error', e.stack);

@@ -185,11 +185,11 @@ describe('courses handler', function () {
     });
 
     it('should add a section to a module of a course', async function () {
-        let courseId = await coursesHandler.createCourse(courseInfo1);
-        let moduleData = module1(courseId);
+        let course = await coursesHandler.createCourse(courseInfo1);
+        let moduleData = module1(course);
 
-        let course = await coursesHandler.createModule(moduleData);
-        let sectionData = section1(courseId, course.modules[0].id);
+        course = await coursesHandler.createModule(moduleData);
+        let sectionData = section1(course.id, course.modules[0].id);
 
         course = await coursesHandler.createSection(sectionData);
 
