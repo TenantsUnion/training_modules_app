@@ -1,12 +1,13 @@
 import {Action, ActionContext, ActionTree} from 'vuex';
 import {CourseState} from './course_state';
 import {COURSE_MUTATIONS} from './course_mutations';
-import {CourseEntity, CreateCourseEntityCommand, CreateCourseEntityPayload} from 'courses';
+import {AdminCourseDescription, CourseEntity, CreateCourseEntityCommand, CreateCourseEntityPayload} from 'courses';
 import {getCorrelationId} from '../../../../../../shared/correlation_id_generator';
 import {coursesService} from '../../courses_service';
 import {subscribeCourse} from '../../subscribe_course';
 import {AppGetters, RootState} from '../../../state_store';
 import {Constant} from '../../../../../../shared/typings/util_typings';
+import {USER_COURSES_LISTING_MUTATIONS} from '../courses_listing/courses_listing_store';
 
 export interface CourseActions {
     CREATE_COURSE: CourseAction<CreateCourseEntityPayload>,
@@ -45,6 +46,8 @@ export const courseActions: CourseActions & ActionTree<CourseState, RootState> =
             };
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
             let courseEntity:CourseEntity = await coursesService.createCourse(createCourseCommand);
+            let updateAdminDescriptions: AdminCourseDescription[] = [courseEntity, ...rootState.userCourses.adminCourseDescriptions];
+            commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, updateAdminDescriptions);
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
             commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, courseEntity);
             await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: courseEntity.id, isAdmin: true});

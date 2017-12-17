@@ -26,14 +26,12 @@ function isViewSectionQuillData(arg: any): arg is ViewModuleQuillData {
 export class TransformTransferViewService {
     async populateTrainingEntityQuillData<T extends TrainingEntityPayload>(course: T): Promise<T> {
         try {
-
-            let quillAsync = _.map(course.content, (quillData) => {
-                return quillData.editorJson ? Promise.resolve(quillData) :
-                    quillService.loadQuillData(quillData.id, moment(quillData.lastModified));
+            let quillAsync = _.map(course.orderedContentIds, (contentId) => {
+                return quillService.loadQuillData(contentId, moment(course.lastModifiedAt));
             });
 
             let content: QuillEditorData[] = await Promise.all(quillAsync);
-            return _.extend({}, content, course);
+            return _.extend({}, {content}, course);
         } catch (e) {
             console.log(`Error populating TrainingEntity ${course.id}\n${e}`);
             throw e;
