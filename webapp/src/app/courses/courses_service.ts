@@ -224,9 +224,10 @@ export class CoursesService {
      * @param {CreateCourseEntityCommand} createCourseCommand
      * @returns {Promise<string>}
      */
-    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<CreateCourseResponse> {
+    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<CourseEntity> {
         let request = await axios.post('courses/create', createCourseCommand);
-        return request.data;
+        let viewCourseQuillData = await transformTransferViewService.populateTrainingEntityQuillData(request.data);
+        return <CourseEntity> viewCourseQuillData;
     }
 }
 

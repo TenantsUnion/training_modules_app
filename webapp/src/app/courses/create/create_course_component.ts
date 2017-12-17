@@ -4,12 +4,11 @@ import {CreateCourseEntityPayload} from 'courses';
 import {SegmentViewerComponent} from '../../global/segment_viewer/segment_viewer_component';
 import {FormState} from '../../vue-form';
 import {Segment} from 'segment';
-import {COURSE_ACTIONS, CourseActions} from '../store/course/course_actions';
+import {COURSE_ACTIONS} from '../store/course/course_actions';
+import {appRouter} from '../../router';
+import {COURSES_ROUTE_NAMES} from '../courses_routes';
 
 @Component({
-    props: {
-        username: String
-    },
     data: () => {
         return {
             loading: false,
@@ -34,8 +33,6 @@ export class CreateCourseComponent extends Vue {
     loading: boolean;
     course: CreateCourseEntityPayload;
     quillContent: Segment[] = [];
-    contentCounter = 0;
-    username: string;
     formstate: FormState;
 
     async createCourse() {
@@ -55,6 +52,13 @@ export class CreateCourseComponent extends Vue {
         };
         try {
             await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
+            appRouter.push({
+                name: COURSES_ROUTE_NAMES.adminCourseDetails,
+                params: {
+                    courseSlug: this.$store.getters.currentCourse.slug
+                }
+            });
+
         } catch (msg) {
             this.errorMessages = msg;
         } finally {
@@ -66,13 +70,12 @@ export class CreateCourseComponent extends Vue {
         this.course.timeEstimate = time;
     }
 
-    addContentCallback() {
-        let quillId = '' + this.contentCounter++; // place holder id to identify until server assigns unique id from database
+    addContentCallback(addContentId: string) {
         this.quillContent.push({
-            id: quillId,
+            id: addContentId,
             type: 'CONTENT',
             removeCallback: () => {
-                let rmIndex = this.quillContent.findIndex((el) => el.id === quillId);
+                let rmIndex = this.quillContent.findIndex((el) => el.id === addContentId);
                 this.quillContent.splice(rmIndex, 1);
             }
         });
