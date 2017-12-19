@@ -1,10 +1,11 @@
 require = require("@std/esm")(module, true);
-console.log(`Running script: ${process.env.SCRIPT_NAME} . . .`);
+const scriptName = process.env.SCRIPT_NAME;
+console.log(`Running script: ${scriptName} . . .`);
 module.exports = (async () => {
     try {
-        let main = require(`./${process.env.SCRIPT_NAME}`);
+        let main = require(`./${scriptName}`);
         await main.run();
     } catch (e) {
-        console.log(e);
+        console.error(`Exception running script: ${scriptName}, ${e.toString()}`);
     }
 })();
