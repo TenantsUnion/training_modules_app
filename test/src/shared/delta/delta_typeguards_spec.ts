@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {isDeltaObj} from '../../../shared/delta/typeguards_delta';
+import {isDeltaObj} from '../../../../shared/delta/typeguards_delta';
 import * as Delta from 'quill-delta';
 
 describe('Delta typeguard functions', () => {

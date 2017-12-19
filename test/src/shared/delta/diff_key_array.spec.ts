@@ -1,4 +1,4 @@
-import {applyOps, deltaArrayDiff, DeltaArrayOp, DeltaArrDiff} from '../../../shared/delta/diff_key_array';
+import {applyOps, deltaArrayDiff, DeltaArrayOp, DeltaArrDiff} from '../../../../shared/delta/diff_key_array';
 import {expect} from "chai";
 
 describe('Diff Key Array', function () {

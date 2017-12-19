@@ -20,7 +20,9 @@
     "test_init_db": "export NODE_ENV=test && export SCRIPT_NAME=init_test_db && npm run test_migrate_db",
     "test_drop_db": "export NODE_ENV=test && npm run drop_db",
     "test_migrate_db": "export NODE_ENV=test && npm run migrate_db",
-    "test": "export NODE_ENV=test export NODE_CONFIG_DIR=./config && npm run test_init_db && mocha $NODE_DEBUG_OPTION test/**/*.spec.ts"
+    "test": "export NODE_ENV=test export NODE_CONFIG_DIR=./config && npm run test_init_db && mocha $NODE_DEBUG_OPTION test/**/*.spec.ts",
+    "rm_ide_compiled_ts": "./bin/rm_ide_compiled_ts.sh"
+
   },
   "repository": {
     "type": "git",

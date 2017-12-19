@@ -160,7 +160,6 @@ describe('courses handler', function () {
         let courseId = await coursesHandler.createCourse(courseInfo1);
         let checkModule = (actual: ViewModuleTransferData, expected: ViewModuleTransferData) => {
             expect(actual.id).to.equal(expected.id);
-            expect(_.isString(actual.headerContent) && !!actual.headerContent).to.be.true;
             expect(actual.title).to.equal(expected.title);
             expect(actual.description).to.equal(expected.description);
             expect(actual.timeEstimate).to.equal(expected.timeEstimate);
@@ -170,9 +169,9 @@ describe('courses handler', function () {
         const moduleData1 = module1(courseId);
         const moduleData2 = module2(courseId);
         await coursesHandler.createModule(moduleData1);
-        let course = await coursesHandler.createModule(moduleData2);
+        let {course} = await coursesHandler.createModule(moduleData2);
         let expectedModules = [
-            _.extend({}, {id: course.modules[0].id, headerContent: course.modules[0].headerContent}, moduleData1),
+            _.extend({}, {id: course.modules[0].id}, moduleData1),
             _.extend({}, {id: course.modules[1].id}, moduleData2)
         ];
 
@@ -188,10 +187,11 @@ describe('courses handler', function () {
         let course = await coursesHandler.createCourse(courseInfo1);
         let moduleData = module1(course);
 
-        course = await coursesHandler.createModule(moduleData);
-        let sectionData = section1(course.id, course.modules[0].id);
+        let createModuleResponse = await coursesHandler.createModule(moduleData);
+        let sectionData = section1(createModuleResponse.course.id, createModuleResponse.course.modules[0].id);
 
-        course = await coursesHandler.createSection(sectionData);
+        let createSectionResponse = await coursesHandler.createSection(sectionData);
+        course = createModuleResponse.course;
 
         let module = course.modules[0];
         let section = module.sections[0];
