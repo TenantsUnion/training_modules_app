@@ -8,6 +8,7 @@ export interface NavigationDescription {
     id: string,
     slug: string,
     title: string,
+    description: string
 }
 
 export type ModuleNavigationDescription = NavigationDescription & { sections: NavigationDescription[] };
@@ -54,19 +55,19 @@ export const courseGetters: {[index in keyof CourseGetters]: AppGetter<CourseSta
             acc[title] = _.isUndefined(acc[title]);
             return acc;
         }, {});
-        let moduleNavigation: ModuleNavigationDescription[] = currentCourse.modules.map(({id, title, sections}) => {
+        let moduleNavigation: ModuleNavigationDescription[] = currentCourse.modules.map(({id, title, description, sections}) => {
             let uniqueSectionTitle = sections.reduce((acc, {title}) => {
                 acc[title] = _.isUndefined(acc[title]);
                 return acc;
             }, {});
-            let sectionNavigation: NavigationDescription[] = sections.map(({id, title}) => {
+            let sectionNavigation: NavigationDescription[] = sections.map(({id, title, description}) => {
                 return {
-                    id, title,
+                    id, title, description,
                     slug: titleToSlug(title, !uniqueSectionTitle[title], id)
                 };
             });
             return {
-                id, title,
+                id, title, description,
                 slug: titleToSlug(title, !uniqueModuleTitle[title], id),
                 sections: sectionNavigation
             };
@@ -75,6 +76,7 @@ export const courseGetters: {[index in keyof CourseGetters]: AppGetter<CourseSta
         return {
             id: currentCourse.id,
             title: currentCourse.title,
+            description: currentCourse.description,
             slug: getSlugFromCourseId(state.currentCourseId),
             modules: moduleNavigation
         };
