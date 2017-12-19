@@ -15,9 +15,8 @@ export const processRow = (row): ViewCourseTransferData => {
                 // fixme better way to convert integer ids to strings
                 return _.extend({}, module, {
                     id: module.id + '',
-                    headerContent: module.headerContent + '',
                     timeEstimate: '' + module.timeEstimate
-                })
+               })
             })
             .reduce((ordered, module, index, modules) => {
                     if (!Object.keys(ordered.moduleIndex).length) {

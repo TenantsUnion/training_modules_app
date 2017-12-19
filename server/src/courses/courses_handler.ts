@@ -2,7 +2,7 @@ import * as _ from "underscore";
 import {IUserHandler} from "../user/user_handler";
 import {CoursesRepository} from "./courses_repository";
 import {getLogger} from '../log';
-import {CreateModuleEntityCommand, SaveModuleData} from "../../../shared/modules";
+import {CreateModuleEntityCommand, CreateModuleResponse, SaveModuleData} from "../../../shared/modules";
 import {CreateSectionData, SaveSectionData, ViewSectionTransferData} from '../../../shared/sections';
 import {SectionHandler} from '../section/section_handler';
 import {QuillRepository} from '../quill/quill_repository';
@@ -14,6 +14,7 @@ import {
     ViewCourseTransferData
 } from '../../../shared/courses';
 import {CoursesQueryService} from './courses_query_service';
+import {QuillHandler} from '../quill/quill_handler';
 
 export interface LoadAdminCourseParameters {
     username: string;
@@ -24,6 +25,7 @@ export class CoursesHandler {
     logger = getLogger('CourseHandler', 'info');
 
     constructor(private coursesRepository: CoursesRepository,
+                private quillHandler: QuillHandler,
                 private quillRepository: QuillRepository,
                 private userHandler: IUserHandler,
                 private moduleRepo: ModuleRepository,
@@ -35,18 +37,18 @@ export class CoursesHandler {
         try {
             let {userId} = createCourseCommand.metadata;
             let courseInfo: CreateCourseEntityPayload = createCourseCommand.payload;
-            let contentQuestions: QuillEditorData[] = courseInfo.orderedContentQuestions
+            let quillContent: QuillEditorData[] = courseInfo.orderedContentQuestions
                 .map((el) => isQuillEditorData(el) && el);
-            this.logger.info(`Content and questions: ${JSON.stringify(contentQuestions, null, 2)}`);
+            this.logger.log('trace', `Content and questions: ${JSON.stringify(quillContent, null, 2)}`);
 
             // create quill content
-            let quillIds = await this.quillRepository.getNextIds(contentQuestions.length);
+            let quillIds = await this.quillRepository.getNextIds(quillContent.length);
             this.logger.info(`Using quill ids ${JSON.stringify(quillIds, null, 2)}`);
-            let insertContent = contentQuestions.map((content, index) => {
+            let insertContentAsync = quillContent.map((content, index) => {
                 return quillRepository.insertEditorJson(quillIds[index], content.editorJson);
             });
 
-            await insertContent;
+            await insertContentAsync;
             let courseId = await this.coursesRepository.createCourse(courseInfo, quillIds);
             await this.userHandler.userCreatedCourse(userId, courseId);
             this.logger.info(`Successfully created course: ${courseId}`);
@@ -59,22 +61,25 @@ export class CoursesHandler {
         }
     }
 
-    async createModule(createModuleCommand: CreateModuleEntityCommand): Promise<ViewCourseTransferData> {
+    async createModule(createModuleCommand: CreateModuleEntityCommand): Promise<CreateModuleResponse> {
         let metadata = createModuleCommand.metadata;
         let payload = createModuleCommand.payload;
         try {
 
-            let moduleHeaderQuillId = await this.quillRepository.getNextId();
+            // let moduleHeaderQuillId = await this.quillRepository.getNextId();
             // await this.quillRepository.insertEditorJson(moduleHeaderQuillId, createModuleCommand);
-
-            let moduleId = await this.moduleRepo.addModule(payload, moduleHeaderQuillId);
+            let quillIds = await this.quillHandler.createTrainingEntityContent(payload.orderedContentQuestions);
+            let moduleId = await this.moduleRepo.addModule(payload, quillIds);
             let addCoursesModule = this.coursesRepository.addModule(payload.courseId, moduleId);
             let updateLastActive = this.coursesRepository.updateLastModified(payload.courseId);
             await Promise.all([addCoursesModule, updateLastActive]);
             this.logger.info('Adding module to course finished');
 
             let loadedCourse = await this.coursesRepository.loadAdminCourse(payload.courseId);
-            return loadedCourse;
+            return {
+                moduleId,
+                course: loadedCourse
+            };
         } catch (e) {
             this.logger.log('error', 'Failed to add module to course %s', payload.courseId);
             throw e;
