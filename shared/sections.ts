@@ -1,9 +1,9 @@
 import {Moment} from 'moment';
-import {TrainingEntity} from './training_entity';
+import {TrainingEntity, TrainingEntityPayload} from './training_entity';
 import {QuillEditorData} from 'quill_editor.ts';
 
 export type SectionEntityType = 'SectionEntity';
-export type SectionEntity = TrainingEntity<SectionEntityType>;
+export type SectionEntity = TrainingEntityPayload;
 
 export interface SectionDetails {
     id: string;

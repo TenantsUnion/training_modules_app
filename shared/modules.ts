@@ -1,34 +1,22 @@
-import {Moment} from 'moment';
 import {SectionEntity, ViewSectionTransferData} from "sections.ts";
-import {QuillEditorData} from 'quill_editor.ts';
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, TrainingEntity,
-    TrainingEntityDiffDelta
+    TrainingEntityDiffDelta, TrainingEntityPayload, ViewTrainingEntityQuillData, ViewTrainingEntityTransferData
 } from './training_entity';
 import {DeltaArrDiff} from './delta/diff_key_array';
+import {ViewCourseTransferData} from './courses';
 
 export type ModuleEntityType = 'ModuleEntity';
-export interface ViewModuleData {
-    id: string;
-    title: string;
-    description?: string;
-    timeEstimate?: string;
-    active: boolean;
-}
 
-export interface ViewModuleQuillData extends ViewModuleData {
-    headerContent: QuillEditorData
-    lastModifiedAt: Moment;
+export interface ViewModuleQuillData extends ViewTrainingEntityQuillData {
     sections: ViewSectionTransferData[]
 }
 
-export interface ViewModuleTransferData extends ViewModuleData {
-    headerContent: string;
-    lastModifiedAt: string;
-    sections: ViewSectionTransferData[]
+export interface ViewModuleTransferData extends ViewTrainingEntityTransferData {
+    sections: ViewSectionTransferData[],
 }
 
-export interface ModuleEntity extends TrainingEntity<ModuleEntityType> {
+export interface ModuleEntity extends TrainingEntityPayload {
     orderedSectionIds: string[]
     sections: SectionEntity[]
     fieldDeltas: ModuleEntityDeltas,
@@ -38,15 +26,20 @@ export interface ModuleEntityDeltas extends TrainingEntityDiffDelta {
     orderedSectionIds?: DeltaArrDiff;
 }
 
-export interface CreateModuleEntityPayload extends CreateTrainingEntityPayload{
+export interface CreateModuleEntityPayload extends CreateTrainingEntityPayload {
     courseId: string;
     active?: boolean;
+}
+
+export interface CreateModuleResponse {
+    moduleId: string;
+    course: ViewCourseTransferData;
 }
 
 export type CreateModuleEntityCommand = CreateTrainingEntityCommand<ModuleEntityType, CreateModuleEntityPayload>;
 export type SaveModuleEntityCommand = SaveTrainingEntityCommand<ModuleEntityType, ModuleEntityDeltas>;
 
-export interface SaveModuleData extends ViewModuleData {
+export interface SaveModuleData extends ViewModuleTransferData{
     courseId: string;
     headerContent: Quill.DeltaStatic;
     headerContentId: string;

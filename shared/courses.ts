@@ -38,6 +38,7 @@ export interface ViewCourseData {
     title: string,
     version: string,
     active: boolean,
+    openEnrollment: boolean,
     description: string,
     timeEstimate: string,
     createdBy: string,
@@ -57,14 +58,13 @@ export interface ViewCourseTransferData extends ViewCourseData {
     slug?: string;
     lastModifiedAt: string;
     modules: ViewModuleTransferData[],
+    orderedModuleIds: string[],
     orderedContentIds: string[],
     orderedQuestionIds: string[],
     orderedContentQuestionIds: string[]
 }
 
 export interface UserEnrolledCourseData extends ViewCourseQuillData {
-    username: string
-    userId: string
     //todo maybe user description?
     //todo module and section progress
 }
@@ -73,7 +73,7 @@ export interface CourseDescription {
     id: string;
     slug?: string;
     title: string;
-    timeEstimate: string;
+    timeEstimate?: string;
 }
 
 export interface AdminCourseDescription extends CourseDescription {
