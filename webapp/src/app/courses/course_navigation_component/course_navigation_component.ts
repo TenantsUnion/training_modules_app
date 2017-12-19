@@ -42,7 +42,7 @@ export class CourseNavigationComponent extends Vue {
         return {
             name: COURSES_ROUTE_NAMES.moduleDetails,
             params: {
-                moduleTitle: moduleTitle
+                moduleSlug: moduleTitle
             }
         };
     }

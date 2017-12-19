@@ -1,7 +1,7 @@
-import Vuex, {Store} from 'vuex';
+import Vuex, {Getter, Store} from 'vuex';
 import Vue from 'vue';
 import {CourseGetters, courseGetters, CourseState, courseState} from './courses/store/course/course_state';
-import {moduleGetters, ModuleState, moduleState} from './courses/store/module/module_state';
+import {ModuleGetters, moduleGetters, ModuleState, moduleState} from './courses/store/module/module_state';
 import {SectionState} from './courses/store/section/section_state';
 import {coursesMutations} from './courses/store/course/course_mutations';
 import {courseActions} from './courses/store/course/course_actions';
@@ -52,4 +52,8 @@ export interface RootState {
     userCourses: UserCoursesListingState
 }
 
-export type AppGetters = CourseGetters & UserCoursesListingGetters;
+export type RootGetters = CourseGetters & UserCoursesListingGetters & ModuleGetters;
+
+// getters and rootGetters are the same since the modules have the namespace option set to false
+export type AppGetter<S> = Getter<S, RootState>
+    & ((state: S, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => any);

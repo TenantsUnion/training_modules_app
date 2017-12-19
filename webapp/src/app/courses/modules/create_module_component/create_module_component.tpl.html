@@ -47,16 +47,18 @@
             </div>
             <div class="row">
                 <div class="small-12 large-10 columns">
-                    <label>Content</label>
-                    <quill-editor ref="editor"></quill-editor>
+                    <segment-viewer :segments="quillContent" ref="segmentViewer"></segment-viewer>
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns small-12 large-10">
+                    <add-content-component :callback="addContentCallback"></add-content-component>
                 </div>
             </div>
         </validate>
         <div class="row">
             <div class="columns small-2">
-                <button @click="createModule" class="button" type="button">
-                    Create
-                </button>
+                <button @click="createModule" class="button" type="button">Create</button>
             </div>
         </div>
     </vue-form>

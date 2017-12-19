@@ -2,7 +2,7 @@ import Vue from 'vue';
 import * as _ from 'underscore';
 import {AdminCourseDescription} from '../../../../../../shared/courses';
 import {Action, ActionContext, ActionTree, GetterTree, Mutation, MutationTree} from 'vuex';
-import {RootState} from '../../../state_store';
+import {AppGetter, RootGetters, RootState} from '../../../state_store';
 import {Constant} from '../../../../../../shared/typings/util_typings';
 import {userCoursesHttpService} from '../../../user/courses/course_http_service';
 import {titleToSlug} from '../../../../../../shared/slug/title_slug_transformations';
@@ -13,15 +13,15 @@ import {titleToSlug} from '../../../../../../shared/slug/title_slug_transformati
 export interface UserCoursesListingState {
     adminCourseDescriptions: AdminCourseDescription[];
     courseSlugIdMap: { [index: string]: string };
+    courseListingsLoaded: Promise<any>
     loading: boolean;
-    courseDescriptionsLoaded: boolean;
 }
 
 export const userCoursesListingState: UserCoursesListingState = {
     // change with Vue.set since new properties will be set... or init as new object?
     adminCourseDescriptions: [],
     courseSlugIdMap: {},
-    courseDescriptionsLoaded: false,
+    courseListingsLoaded: null,
     loading: false
 };
 
@@ -31,15 +31,23 @@ export const userCoursesListingState: UserCoursesListingState = {
 
 export interface UserCoursesListingGetters {
     getCourseIdFromSlug: (slug) => string;
+    getSlugFromCourseId: (courseId) => string;
 }
 
-export const userCoursesListingGetters: GetterTree<UserCoursesListingState, RootState> = {
+export const userCoursesListingGetters: {[index in keyof UserCoursesListingGetters]: AppGetter<UserCoursesListingState>} = {
     getCourseIdFromSlug(state, getters, rootState, rootGetters) {
         return function (slug) {
-            if (!state.courseDescriptionsLoaded) {
-                throw new Error('Cannot call course slug to id getter until course listings have been loaded');
-            }
             return state.courseSlugIdMap[slug];
+        }
+    },
+    getSlugFromCourseId({courseSlugIdMap}, getters: RootGetters) {
+        let courseIdSlugMap = Object.keys(courseSlugIdMap).reduce((acc, slug) => {
+            acc[slug] = courseSlugIdMap[slug];
+            return acc;
+        }, {});
+
+        return function (courseId) {
+            return courseIdSlugMap[courseId];
         }
     }
 };
@@ -52,14 +60,14 @@ export type UserCoursesListingMutation<P> = (state: UserCoursesListingState, pay
 export interface UserCoursesListingMutations {
     SET_ADMIN_COURSE_DESCRIPTIONS: UserCoursesListingMutation<AdminCourseDescription[]>,
     SET_ADMIN_COURSE_DESCRIPTIONS_LOADING: UserCoursesListingMutation<boolean>,
-    COMPLETED_LOADING: UserCoursesListingMutation<any>,
+    SET_USER_COURSES_LISTINGS_LOADED: UserCoursesListingMutation<Promise<any>>,
     CLEAR_USER_COURSES_LISTINGS: UserCoursesListingMutation<any>
 }
 
 export const USER_COURSES_LISTING_MUTATIONS: Constant<UserCoursesListingMutations> = {
     SET_ADMIN_COURSE_DESCRIPTIONS: 'SET_ADMIN_COURSE_DESCRIPTIONS',
     SET_ADMIN_COURSE_DESCRIPTIONS_LOADING: 'SET_ADMIN_COURSE_DESCRIPTIONS_LOADING',
-    COMPLETED_LOADING: 'COMPLETED_LOADING',
+    SET_USER_COURSES_LISTINGS_LOADED: 'SET_USER_COURSES_LISTINGS_LOADED',
     CLEAR_USER_COURSES_LISTINGS: 'CLEAR_USER_COURSES_LISTINGS'
 };
 
@@ -86,12 +94,11 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
     SET_ADMIN_COURSE_DESCRIPTIONS_LOADING(state: UserCoursesListingState, loading: boolean) {
         state.loading = loading;
     },
-    COMPLETED_LOADING(state: UserCoursesListingState) {
-        state.loading = false;
-        state.courseDescriptionsLoaded = true;
+    SET_USER_COURSES_LISTINGS_LOADED(state: UserCoursesListingState, coursesListing: Promise<any>) {
+        Vue.set(state, 'courseListingsLoaded', coursesListing);
     },
     CLEAR_USER_COURSES_LISTINGS(state: UserCoursesListingState) {
-        state.courseDescriptionsLoaded = false;
+        state.courseListingsLoaded = null;
         state.loading = false;
         state.adminCourseDescriptions = [];
     }
@@ -113,13 +120,14 @@ export const USER_COURSES_LISTING_ACTIONS: Constant<UserCoursesListingActions> =
 
 export const userCoursesListingActions: UserCoursesListingActions & ActionTree<UserCoursesListingState, RootState> = {
     LOAD_USER_ADMIN_COURSES: async ({commit, state, rootState}) => {
-        if (state.courseDescriptionsLoaded || !rootState.user.loggedIn || state.loading) {
+        if (state.courseListingsLoaded || !rootState.user.loggedIn || state.loading) {
             return;
         }
 
+        let courseListinsLoaded = userCoursesHttpService.getUserAdminCourses(rootState.user.username);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS_LOADING, true);
-        let userAdminCourseDescriptions = await userCoursesHttpService.getUserAdminCourses(rootState.user.username);
-        commit(USER_COURSES_LISTING_MUTATIONS.COMPLETED_LOADING);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, userAdminCourseDescriptions);
+        commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, courseListinsLoaded);
+        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS_LOADING, false);
+        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, await courseListinsLoaded);
     }
 };

@@ -64,19 +64,6 @@ export const coursesRoutes: RouteConfig[] = [
         name: COURSES_ROUTE_NAMES.adminCourse,
         props: true,
         component: CourseComponent,
-        beforeEnter: async (to, from, next) => {
-            let slug = to.params.courseSlug;
-            if (!slug || slug === 'undefined') {
-                throw new Error('Invalid route. :courseSlug must be defined');
-            }
-            try {
-                await store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {slug, isAdmin: true});
-            } catch (e) {
-                console.error(`Error setting current course. ${e}`);
-            } finally {
-                next();
-            }
-        },
         children: [
             {
                 path: ':courseSlug',
@@ -97,31 +84,31 @@ export const coursesRoutes: RouteConfig[] = [
                 component: CreateModuleComponent
             },
             {
-                path: ':courseSlug/module/:moduleTitle',
+                path: ':courseSlug/module/:moduleSlug',
                 name: COURSES_ROUTE_NAMES.moduleDetails,
                 props: true,
                 component: ModuleDetailsComponent
             },
             {
-                path: ':courseSlug/module/:moduleTitle/edit',
+                path: ':courseSlug/module/:moduleSlug/edit',
                 name: COURSES_ROUTE_NAMES.editModule,
                 props: true,
                 component: EditModuleComponent
             },
             {
-                path: ':courseSlug/module/:moduleTitle/section/create',
+                path: ':courseSlug/module/:moduleSlug/section/create',
                 name: COURSES_ROUTE_NAMES.createSection,
                 props: true,
                 component: CreateSectionComponent
             },
             {
-                path: ':courseSlug/module/:moduleTitle/section/:sectionTitle',
+                path: ':courseSlug/module/:moduleSlug/section/:sectionSlug',
                 name: COURSES_ROUTE_NAMES.viewSection,
                 props: true,
                 component: ViewSectionComponent
             },
             {
-                path: ':courseSlug/module/:moduleTitle/section/:sectionTitle/edit',
+                path: ':courseSlug/module/:moduleSlug/section/:sectionSlug/edit',
                 name: COURSES_ROUTE_NAMES.editSection,
                 props: true,
                 component: EditSectionComponent

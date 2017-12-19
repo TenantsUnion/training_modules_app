@@ -1,6 +1,6 @@
 import axios from "axios";
 import VueRouter from "vue-router";
-import {CreateModuleEntityCommand, SaveModuleData} from "modules.ts";
+import {CreateModuleEntityCommand, CreateModuleEntityPayload, CreateModuleResponse, SaveModuleData} from "modules.ts";
 import {
     ViewCourseQuillData, SaveCourseEntityCommand, ViewCourseTransferData, CourseEntity,
     CreateCourseEntityCommand, CreateCourseResponse
@@ -39,7 +39,7 @@ export class CoursesService {
             let response = await axios.get(`user/${userId}/admin/course/${slug}`);
             return response.data;
         } catch (e) {
-            console.error(`Error creating course data ${e}`);
+            console.error(`Error loading course data. userId: ${userId}, slug: ${slug},\nError: ${e}`);
             throw e.data;
         }
     }
@@ -141,14 +141,12 @@ export class CoursesService {
     //         });
     //     }
     // }
-    async createModule(createModuleData: CreateModuleEntityCommand): Promise<void> {
-        return axios.post(`course/${createModuleData.payload.courseId}/module/create`, createModuleData)
-            .then((course) => {
+    async createModule(createModule: CreateModuleEntityPayload): Promise<CreateModuleResponse> {
+        let response = await axios.post(`course/${createModule.courseId}/module/create`, {
+            payload: createModule
+        });
 
-            })
-            .catch((e) => {
-                throw e;
-            });
+        return response.data;
     }
 
     /**

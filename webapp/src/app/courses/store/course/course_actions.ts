@@ -5,9 +5,9 @@ import {AdminCourseDescription, CourseEntity, CreateCourseEntityCommand, CreateC
 import {getCorrelationId} from '../../../../../../shared/correlation_id_generator';
 import {coursesService} from '../../courses_service';
 import {subscribeCourse} from '../../subscribe_course';
-import {AppGetters, RootState} from '../../../state_store';
+import {RootGetters, RootState} from '../../../state_store';
 import {Constant} from '../../../../../../shared/typings/util_typings';
-import {USER_COURSES_LISTING_MUTATIONS} from '../courses_listing/courses_listing_store';
+import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../courses_listing/courses_listing_store';
 
 export interface CourseActions {
     CREATE_COURSE: CourseAction<CreateCourseEntityPayload>,
@@ -82,8 +82,9 @@ export const courseActions: CourseActions & ActionTree<CourseState, RootState> =
         }
     },
     async SET_CURRENT_COURSE_FROM_SLUG({getters, dispatch}, {slug, isAdmin}) {
-        let id = (<AppGetters> getters).getCourseIdFromSlug(slug);
-        dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id, isAdmin});
+        await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
+        let id = (<RootGetters> getters).getCourseIdFromSlug(slug);
+        await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id, isAdmin});
     }
 
 };

@@ -3,43 +3,44 @@ import Component from "vue-class-component";
 import {COURSES_ROUTE_NAMES} from '../../courses_routes';
 import {ViewModuleQuillData} from '../../../../../../shared/modules';
 import {CourseRefreshComponent} from '../../../global/refresh_route';
+import {mapGetters, mapState} from 'vuex';
+import {NavigationGuard} from 'vue-router';
+import {RootState, store} from '../../../state_store';
+import {MODULE_ACTIONS} from '../../store/module/module_actions';
 
+const currentModuleRouteGuard: NavigationGuard = async (to, from, next) => {
+    let slug = to.params.moduleSlug;
+    if (!slug || slug === 'undefined') {
+        throw new Error(`Invalid route ${to.fullPath}. Route param :moduleSlug must be defined`);
+    }
+    try {
+        await store.dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE_FROM_SLUG, slug);
+    } catch (e) {
+        console.error(`Error setting current course. ${e}`);
+    } finally {
+        next();
+    }
+};
 @Component({
-    data: () => {
-        return {
-            module: {
-                title: null,
-                description: null,
-                timeEstimate: null,
-                headerContent: {}
-            },
-            isCourseAdmin: false
-        };
+    computed: {
+        ...mapGetters({
+            loading: 'currentModuleLoading',
+            module: 'currentModule'
+        }),
+        ...mapState({
+            isCourseAdmin: (state:RootState) => state.course.isAdmin
+        })
     },
+    beforeRouteEnter: currentModuleRouteGuard,
+    beforeRouteUpdate: currentModuleRouteGuard,
     extends: CourseRefreshComponent,
     template: require('./module_details_component.tpl.html')
 })
 export class ModuleDetailsComponent extends Vue {
     moduleUnsubscribe: () => any;
     loading: boolean;
-    isCourseAdmin: boolean;
-    module: ViewModuleQuillData;
 
-    created() {
-        // todo delete
-        // this.loading = true;
-        // this.isCourseAdmin = coursesRoutesService.isCourseAdmin();
-        // this.moduleUnsubscribe = coursesService.subscribeCurrentModule((module) => {
-        //     this.loading = false;
-        //     this.module = module;
-        // });
-    }
-
-    createSection(){
+    createSection() {
         this.$router.push({name: COURSES_ROUTE_NAMES.createSection});
-    }
-
-    destroyed() {
-        this.moduleUnsubscribe();
     }
 }

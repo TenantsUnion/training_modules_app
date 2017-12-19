@@ -1,8 +1,8 @@
 <div class="main">
-    <div v-show="loading" class="row">
+    <div v-if="loading" class="row">
         <loading></loading>
     </div>
-    <template v-show="!loading">
+    <template v-if="!loading">
         <div class="row">
             <div class="small-12 large-10 columns">
                 <div>
@@ -22,7 +22,9 @@
         </div>
         <div class="row">
             <div class="small-12 columns">
-                <quill-editor :editor-json="module.headerContent.editorJson" :read-only="true"></quill-editor>
+                <div v-for="content in module.content">
+                    <quill-editor :read-only="true" :editor-id="content.id" :editor-json="content.editorJson"></quill-editor>
+                </div>
             </div>
         </div>
     </template>

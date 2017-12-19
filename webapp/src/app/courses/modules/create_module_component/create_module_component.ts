@@ -1,10 +1,9 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import * as VueForm from "../../../vue-form";
-import {coursesService} from "../../courses_service";
 import {ViewCourseQuillData} from "courses.ts";
-import {QuillComponent} from '../../../global/quill/quill_component';
 import {MODULE_ACTIONS, ModuleActions} from '../../store/module/module_actions';
+import {Segment} from '../../../../../../shared/segment';
 
 @Component({
     data: () => {
@@ -20,22 +19,15 @@ import {MODULE_ACTIONS, ModuleActions} from '../../store/module/module_actions';
     template: require('./create_module_component.tpl.html')
 })
 export class CreateModuleComponent extends Vue {
+    errorMessages: {};
     loading: boolean;
-    errorMessages: { [index: string]: string };
     title: string;
     timeEstimate: string;
     description: string;
     formstate: VueForm.FormState;
     course: ViewCourseQuillData;
+    quillContent: Segment[] = [];
 
-    created() {
-        // todo delete
-        // this.loading = true;
-        // coursesService.subscribeCurrentCourse((course) => {
-        //     this.loading = false;
-        //     this.course = course;
-        // });
-    }
 
     async createModule() {
         this.formstate._submit();
@@ -52,7 +44,7 @@ export class CreateModuleComponent extends Vue {
                 title: this.title,
                 description: this.description,
                 timeEstimate: this.timeEstimate,
-                courseId: this.course.id,
+                courseId: this.$store.state.course.currentCourseId,
                 orderedContentQuestions: []
             };
             await this.$store.dispatch(MODULE_ACTIONS.CREATE_MODULE, createModulePayload);
@@ -64,6 +56,8 @@ export class CreateModuleComponent extends Vue {
             });
 
         } catch (errorMessages) {
+            console.error(errorMessages);
+            // todo check if error message object from server and display, if not print stack trace since it is likely a client thrown error
             this.errorMessages = errorMessages;
         } finally {
             this.loading = false;
@@ -72,5 +66,16 @@ export class CreateModuleComponent extends Vue {
 
     timeEstimateUpdated(time) {
         this.timeEstimate = time;
+    }
+
+    addContentCallback(addContentId: string) {
+        this.quillContent.push({
+            id: addContentId,
+            type: 'CONTENT',
+            removeCallback: () => {
+                let rmIndex = this.quillContent.findIndex((el) => el.id === addContentId);
+                this.quillContent.splice(rmIndex, 1);
+            }
+        });
     }
 }
