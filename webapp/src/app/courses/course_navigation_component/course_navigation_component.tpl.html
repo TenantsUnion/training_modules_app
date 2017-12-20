@@ -40,7 +40,7 @@
                         <div class="row menu-section__row">
                                 <span class="menu-section__section-title" v-bind:class="{'is-active': isActiveSection(module.title, section.title)}">
                                     <router-link :to="sectionRoute(module.slug, section.slug)">
-                                        {{section.slug}}
+                                        {{section.title}}
                                     </router-link>
                                 </span>
                             <div class="buttons">

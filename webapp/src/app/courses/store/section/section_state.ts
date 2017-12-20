@@ -23,17 +23,24 @@ export const sectionGetters: {[index in keyof SectionGetters]: SectionGetterFn} 
     currentSection: ({sections, currentSectionId}): ViewSectionQuillData => sections[currentSectionId],
     currentSectionLoaded: ({sections, currentSectionId}) => !!sections[currentSectionId],
     currentSectionLoading: ({currentSectionId, sectionRequests}) => !!currentSectionId && sectionRequests[currentSectionId],
-    getSectionIdFromSlug(state, {courseNavigationDescription, getModuleIdFromSlug}) {
+    getSectionIdFromSlug(state, {courseNavigationDescription}) {
+        if(!courseNavigationDescription) {
+            return function(){};
+        }
         return function (slugInfo: { moduleId: string, sectionSlug: string }): string {
             let module = courseNavigationDescription.modules.find(({id}) => id === slugInfo.moduleId);
-            return module.sections.find(({slug}) => slug === slugInfo.sectionSlug).id;
+            let section = module.sections.find(({slug}) => slug === slugInfo.sectionSlug);
+            return section && section.id;
         }
     },
     getSectionSlugFromId: (state, {courseNavigationDescription}) => {
+        if(!courseNavigationDescription){
+            return function(){};
+        }
         return function (slugInfo: {moduleId: string, sectionId: string}): string {
             let module = courseNavigationDescription.modules.find(({id}) => id === slugInfo.moduleId);
             let section = module.sections.find(({id}) => id === slugInfo.sectionId);
-            return section.slug;
+            return section && section.slug;
         }
     }
 };

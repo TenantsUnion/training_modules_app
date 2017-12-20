@@ -23,11 +23,11 @@
         </div>
         <div class="row">
             <div class="columns small-12 large-10">
-                <button @click="back" type="button"
+                <button v-if="previousSectionId" @click="back" type="button"
                         class="button secondary" :disabled="loading">
                     Back
                 </button>
-                <button @click="next" class="button primary" :disabled="loading">Next</button>
+                <button v-if="nextSectionId" @click="next" class="button primary" :disabled="loading">Next</button>
             </div>
         </div>
     </template>

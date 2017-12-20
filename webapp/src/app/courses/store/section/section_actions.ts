@@ -12,13 +12,15 @@ import {MODULE_ACTIONS} from '../module/module_actions';
 export type SectionAction<P> = Action<SectionState, RootState>;
 
 export type CreateSectionAction = SectionAction<CreateSectionEntityPayload>;
-export type SetCurrentSectionAction = SectionAction<SectionEntity>;
+export type SetCurrentSectionAction = SectionAction<{ sectionId: string, moduleId: string }>;
 export type SetCurrentSectionFromSlugAction = SectionAction<{ slug: string, isAdmin: boolean }>
 
 export interface SectionActions {
     CREATE_SECTION: CreateSectionAction,
     SET_CURRENT_SECTION: SetCurrentSectionAction;
     SET_CURRENT_SECTION_FROM_SLUG: SetCurrentSectionFromSlugAction;
+    NEXT_SECTION: SectionAction<void>;
+    PREVIOUS_SECTION: SectionAction<void>;
 }
 
 /**
@@ -27,7 +29,9 @@ export interface SectionActions {
 export const SECTION_ACTIONS: Constant<SectionActions> = {
     CREATE_SECTION: 'CREATE_SECTION',
     SET_CURRENT_SECTION: 'SET_CURRENT_SECTION',
-    SET_CURRENT_SECTION_FROM_SLUG: 'SET_CURRENT_SECTION_FROM_SLUG'
+    SET_CURRENT_SECTION_FROM_SLUG: 'SET_CURRENT_SECTION_FROM_SLUG',
+    NEXT_SECTION: 'NEXT_SECTION',
+    PREVIOUS_SECTION: 'PREVIOUS_SECTION',
 };
 
 export const CREATE_ID = 'CREATING';
@@ -74,5 +78,28 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
             moduleId: slug.moduleId,
             sectionId
         });
+    },
+    async NEXT_SECTION({getters, dispatch, rootState}) {
+        let nextId = getters.nextSectionIdInModule;
+        if (!nextId) {
+            return;
+        }
+
+        await dispatch(SECTION_ACTIONS.SET_CURRENT_SECTION, {
+            sectionId: nextId,
+            moduleId: rootState.module.currentModuleId
+        });
+    },
+    async PREVIOUS_SECTION({getters, dispatch, rootState}) {
+        let previousId = getters.previousSectionIdInModule;
+        if (!previousId) {
+            return;
+        }
+
+        await dispatch(SECTION_ACTIONS.SET_CURRENT_SECTION, {
+            sectionId: previousId,
+            moduleId: rootState.module.currentModuleId
+        });
+
     }
 };

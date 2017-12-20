@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import {CourseEntity} from 'courses.ts';
-import {AppGetter} from '../../../state_store';
+import {AppGetter, RootGetters, RootState} from '../../../state_store';
 import {ViewModuleTransferData} from '../../../../../../shared/modules';
 import {titleToSlug} from '../../../../../../shared/slug/title_slug_transformations';
 import {ViewSectionTransferData} from '../../../../../../shared/sections';
@@ -29,7 +29,9 @@ export interface CourseGetters {
     currentCourseLoading: boolean,
     courseNavigationDescription: CourseNavigationDescription,
     getModuleTransferData: (moduleId: string) => ViewModuleTransferData,
-    getSectionTransferData: (moduleId: string, sectionId: string) => ViewSectionTransferData
+    getSectionTransferData: (moduleId: string, sectionId: string) => ViewSectionTransferData,
+    nextSectionIdInModule: string,
+    previousSectionIdInModule: string
 }
 
 export const courseState: CourseState = {
@@ -50,9 +52,9 @@ export const courseGetters: {[index in keyof CourseGetters]: AppGetter<CourseSta
         }
     },
     getSectionTransferData: (state, {getModuleTransferData}) => {
-      return function(moduleId, sectionId) {
-          return getModuleTransferData(moduleId).sections.find((section) => section.id ===sectionId);
-      }
+        return function (moduleId, sectionId) {
+            return getModuleTransferData(moduleId).sections.find((section) => section.id === sectionId);
+        }
     },
     courseNavigationDescription(state, {currentCourse, getSlugFromCourseId}): CourseNavigationDescription {
         if (!currentCourse) {
@@ -87,6 +89,32 @@ export const courseGetters: {[index in keyof CourseGetters]: AppGetter<CourseSta
             slug: getSlugFromCourseId(state.currentCourseId),
             modules: moduleNavigation
         };
+    },
+    nextSectionIdInModule: (state, getters: RootGetters) => {
+        let {currentCourse, currentModule, currentSection} = getters;
+        if(!currentCourse || !currentModule || !currentSection){
+            return null;
+        }
+
+        let index = currentModule.sections.findIndex((section) => section.id === currentSection.id);
+        if(index + 1 === currentModule.sections.length){
+            return null; // last section in module
+        }
+
+        return currentModule.sections[index + 1].id;
+    },
+    previousSectionIdInModule: (state, getters: RootGetters) => {
+        let {currentCourse, currentModule, currentSection} = getters;
+        if(!currentCourse || !currentModule || !currentSection){
+            return null;
+        }
+
+        let index = currentModule.sections.findIndex((section) => section.id === currentSection.id);
+        if(!index){
+            return null; // first section in module
+        }
+
+        return currentModule.sections[index - 1].id;
     }
 };
 
