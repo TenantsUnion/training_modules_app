@@ -42,7 +42,7 @@ export const userCoursesListingGetters: {[index in keyof UserCoursesListingGette
     },
     getSlugFromCourseId({courseSlugIdMap}, getters: RootGetters) {
         let courseIdSlugMap = Object.keys(courseSlugIdMap).reduce((acc, slug) => {
-            acc[slug] = courseSlugIdMap[slug];
+            acc[courseSlugIdMap[slug]] = slug;
             return acc;
         }, {});
 

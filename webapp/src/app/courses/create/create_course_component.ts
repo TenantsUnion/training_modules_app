@@ -55,7 +55,7 @@ export class CreateCourseComponent extends Vue {
             appRouter.push({
                 name: COURSES_ROUTE_NAMES.adminCourseDetails,
                 params: {
-                    courseSlug: this.$store.getters.currentCourse.slug
+                    courseSlug: this.$store.getters.getSlugFromCourseId(this.$store.state.course.currentCourseId)
                 }
             });
 
