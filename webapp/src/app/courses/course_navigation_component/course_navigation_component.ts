@@ -63,27 +63,23 @@ export class CourseNavigationComponent extends Vue {
     }
 
     editCourse() {
-        this.$router.push({
-            name: COURSES_ROUTE_NAMES.editCourse, params: {
-                courseTitle: this.course.title
-            }
-        });
+        this.$router.push({name: COURSES_ROUTE_NAMES.editCourse});
     }
 
-    editModule(moduleTitle: string) {
+    editModule(moduleSlug: string) {
         this.$router.push({
             name: COURSES_ROUTE_NAMES.editModule, params: {
-                moduleTitle: moduleTitle
+                moduleSlug: moduleSlug
             }
         })
     }
 
-    editSection(moduleTitle: string, sectionTitle: string) {
+    editSection(moduleSlug: string, sectionSlug: string) {
         this.$router.push({
             name: COURSES_ROUTE_NAMES.editSection,
             params: {
-                sectionTitle: sectionTitle,
-                moduleTitle: moduleTitle
+                moduleSlug: moduleSlug,
+                sectionSlug: sectionSlug
             }
         })
     }
