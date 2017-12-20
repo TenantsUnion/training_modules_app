@@ -29,7 +29,7 @@
                             <span class="sr-only">Edit section</span>
                         </button>
                         <button title="Add Section" v-if="isCourseAdmin" class="button button__icon"
-                                v-on:click="createSection(module.title)">
+                                v-on:click="createSection(module.slug)">
                             <i class="fa fa-plus fa-fw "></i>
                             <span class="sr-only">Add section</span>
                         </button>
@@ -45,7 +45,7 @@
                                 </span>
                             <div class="buttons">
                                 <button title="Edit Section" v-if="isCourseAdmin" class="button button__icon"
-                                        v-on:click="editSection(module.title, section.title)">
+                                        v-on:click="editSection(module.slug, section.slug)">
                                     <i class="fa fa-pencil fa-fw "></i>
                                     <span class="sr-only">Edit section</span>
                                 </button>
