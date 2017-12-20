@@ -8,7 +8,7 @@ import {getLogger} from '../log';
 import {CreateModuleEntityCommand, SaveModuleData} from "../../../shared/modules";
 import {CoursesRepository} from './courses_repository';
 import {ModuleOperations} from '../module/module_routes';
-import {CreateSectionData, SaveSectionData} from '../../../shared/sections';
+import {CreateSectionEntityPayload, SaveSectionData} from '../../../shared/sections';
 import {coursesHandler} from '../config/handler_config';
 import {SectionOperations} from '../section/section_routes';
 import {validateCreateCourse, validateSaveCourse} from './courses_validation';
@@ -98,7 +98,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     }
 
     async createSection(request: express.Request, response: express.Response) {
-        let createSectionData: CreateSectionData = request.body;
+        let createSectionData: CreateSectionEntityPayload = request.body;
         try {
             let course = await this.coursesHandler.createSection(createSectionData);
             response.status(200).send(course);

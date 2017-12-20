@@ -19,45 +19,43 @@ export interface ModuleGetters {
     currentModule: ViewModuleQuillData;
     currentModuleLoading: boolean;
     currentModuleLoaded: boolean;
-    moduleSlugIdMap: { [index: string]: string };
     getModuleIdFromSlug: (string) => string;
-    moduleNavigationDescriptions: { id: string, title: string, slug: string }[];
+    getModuleSlugFromId: (string) => string;
+    currentModuleSlug: string;
 }
 
-export const moduleGetters: { [index: string]: ModuleGetterFn } = {
+export const moduleGetters: { [index in keyof ModuleGetters]: ModuleGetterFn } = {
     currentModule: ({modules, currentModuleId}): ViewModuleQuillData => modules[currentModuleId],
-    currentModuleLoaded(state) {
-        !!state.modules[state.currentModuleId];
-    },
-    currentModuleLoading: (state: ModuleState, getters: ModuleGetters, rootState: RootState, rootGetters: RootGetters): boolean => {
-        return state.currentModuleId && state.moduleRequests[state.currentModuleId];
-    },
-    moduleNavigationDescriptions(state, getters, rootState, rootGetters) {
-        if (!getters.currentCourse || !_.isArray(getters.currentCourse.modules)) {
-            return [];
+    currentModuleLoaded: ({modules, currentModuleId}) => !!modules[currentModuleId],
+    currentModuleLoading: ({currentModuleId, moduleRequests}) => !!(currentModuleId && moduleRequests[currentModuleId]),
+    getModuleIdFromSlug(state: ModuleState, {courseNavigationDescription}) {
+        if (!courseNavigationDescription) {
+            return function () {
+            }; // noop
         }
-        let uniqueTitle = getters.currentCourse.modules.reduce((acc, {title}) => {
-            acc[title] = _.isUndefined(acc[title]);
-            return acc;
-        }, {});
-        return getters.currentCourse.modules.map(({id, title}) => {
-            return {
-                id, title,
-                slug: titleToSlug(title, !uniqueTitle[title], id)
-            }
-        });
-    },
-    getModuleIdFromSlug(state: ModuleState, getters, rootState: RootState, rootGetters: RootGetters) {
-        let moduleSlugIdMap = getters.moduleNavigationDescriptions.reduce((acc, {slug, id}) => {
+        let moduleSlugIdMap = courseNavigationDescription.modules.reduce((acc, {slug, id}) => {
             acc[slug] = id;
             return acc;
         }, {});
         return function (slug) {
             return moduleSlugIdMap[slug];
         }
-    }
+    },
+    getModuleSlugFromId(state, {courseNavigationDescription}) {
+        if (!courseNavigationDescription) {
+            return function () {
+            }; // noop
+        }
+        let moduleIdSlugMap = courseNavigationDescription.modules.reduce((acc, {slug, id}) => {
+            acc[id] = slug;
+            return acc;
+        }, {});
+        return function (id) {
+            return moduleIdSlugMap[id];
+        }
+    },
+    currentModuleSlug: ({currentModuleId}, {getModuleSlugFromId}) => getModuleSlugFromId(currentModuleId)
 };
-
 
 export const moduleState: ModuleState = {
     currentModuleTitle: '',

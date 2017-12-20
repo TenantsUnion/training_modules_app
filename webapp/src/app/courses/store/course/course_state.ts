@@ -12,7 +12,7 @@ export interface NavigationDescription {
 }
 
 export type ModuleNavigationDescription = NavigationDescription & { sections: NavigationDescription[] };
-export type CourseNavigationDescription = NavigationDescription & { modules: NavigationDescription[] };
+export type CourseNavigationDescription = NavigationDescription & { modules: ModuleNavigationDescription[] };
 
 export interface CourseState {
     courseRequests: { [id: string]: boolean }

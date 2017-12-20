@@ -1,7 +1,7 @@
 import * as _ from "underscore";
 import {SectionRepository} from './section_repository';
 import {
-    CreateSectionData, SaveSectionData, ViewSectionTransferData
+    CreateSectionEntityPayload, SaveSectionData, ViewSectionTransferData
 } from 'sections.ts';
 import {QuillRepository} from '../quill/quill_repository';
 import {LoggerInstance} from 'winston';
@@ -14,7 +14,7 @@ export class SectionHandler {
                 private quillRepo: QuillRepository) {
     }
 
-    async createSection(createSectionData: CreateSectionData): Promise<string> {
+    async createSection(createSectionData: CreateSectionEntityPayload): Promise<string> {
         let quillId = await this.quillRepo.getNextId();
 
         this.logger.info('Inserting quill data id: %s json: %s', quillId,

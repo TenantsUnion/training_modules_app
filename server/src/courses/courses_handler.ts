@@ -3,7 +3,10 @@ import {IUserHandler} from "../user/user_handler";
 import {CoursesRepository} from "./courses_repository";
 import {getLogger} from '../log';
 import {CreateModuleEntityCommand, CreateModuleResponse, SaveModuleData} from "../../../shared/modules";
-import {CreateSectionData, SaveSectionData, ViewSectionTransferData} from '../../../shared/sections';
+import {
+    CreateSectionEntityPayload, CreateSectionResponse, SaveSectionData,
+    ViewSectionTransferData
+} from '../../../shared/sections';
 import {SectionHandler} from '../section/section_handler';
 import {QuillRepository} from '../quill/quill_repository';
 import {ModuleRepository} from '../module/module_repository';
@@ -21,6 +24,7 @@ export interface LoadAdminCourseParameters {
     courseTitle: string;
     courseId: string;
 }
+
 export class CoursesHandler {
     logger = getLogger('CourseHandler', 'info');
 
@@ -138,7 +142,7 @@ export class CoursesHandler {
         }
     }
 
-    async createSection(sectionData: CreateSectionData): Promise<ViewCourseTransferData> {
+    async createSection(sectionData: CreateSectionEntityPayload): Promise<CreateSectionResponse> {
         try {
             let sectionId = await this.sectionHandler.createSection(sectionData);
             this.logger.info('Create new section with id: %s', sectionId);
@@ -148,7 +152,11 @@ export class CoursesHandler {
             await this.moduleRepo.addSection(sectionData.moduleId, sectionId);
             this.logger.info('Added section to module: %s', sectionData.moduleId);
 
-            return await this.coursesRepository.loadAdminCourse(sectionData.courseId);
+            let loadedCourse = await this.coursesRepository.loadAdminCourse(sectionData.courseId);
+            return {
+                sectionId,
+                course: loadedCourse
+            };
         } catch (e) {
             this.logger.error(e);
             this.logger.error(e.stack);

@@ -37,7 +37,6 @@
                                    :updated="timeEstimateUpdated"></time-estimate>
                 </div>
             </div>
-
             <div class="row">
                 <div class="columns small-12 large-10">
                     <label for="section-description">Description</label>
@@ -46,11 +45,14 @@
                               id="section-description"></textarea>
                 </div>
             </div>
-
             <div class="row">
                 <div class="small-12 large-10 columns">
-                    <label>Content</label>
-                    <quill-editor ref="editor"></quill-editor>
+                    <segment-viewer :segments="quillContent" ref="segmentViewer"></segment-viewer>
+                </div>
+            </div>
+            <div class="row">
+                <div class="columns small-12 large-10">
+                    <add-content-component :callback="addContentCallback"></add-content-component>
                 </div>
             </div>
         </validate>

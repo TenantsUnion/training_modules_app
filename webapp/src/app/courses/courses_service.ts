@@ -5,7 +5,7 @@ import {
     ViewCourseQuillData, SaveCourseEntityCommand, ViewCourseTransferData, CourseEntity,
     CreateCourseEntityCommand, CreateCourseResponse
 } from 'courses';
-import {ViewSectionQuillData, SaveSectionData, CreateSectionData} from 'sections';
+import {ViewSectionQuillData, SaveSectionData, CreateSectionEntityPayload, CreateSectionResponse} from 'sections';
 import {appRouter} from "../router";
 import {userQueryService} from '../account/user_query_service';
 import {transformTransferViewService} from '../global/quill/transform_transfer_view_service';
@@ -151,13 +151,13 @@ export class CoursesService {
 
     /**
      * Returns promise that resolves to the just created section id
-     * @param {CreateSectionData} createSectionData
+     * @param {CreateSectionEntityPayload} createSectionData
      * @returns {Promise<string>}
      */
-    async createSection(createSectionData: CreateSectionData): Promise<string> {
+    async createSection(createSectionData: CreateSectionEntityPayload): Promise<CreateSectionResponse> {
         let {courseId, moduleId} = createSectionData;
         try {
-            let response = await axios.post(`command/course/${courseId}/module/${moduleId}/section/create`,
+            let response = await axios.post(`course/${courseId}/module/${moduleId}/section/create`,
                 createSectionData);
             return response.data;
         } catch (e) {

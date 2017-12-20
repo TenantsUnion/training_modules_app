@@ -2,13 +2,13 @@ import Vue from 'vue';
 import Component from "vue-class-component";
 import {COURSES_ROUTE_NAMES} from '../../courses_routes';
 import {ViewModuleQuillData} from '../../../../../../shared/modules';
-import {CourseRefreshComponent} from '../../../global/refresh_route';
+import {CourseRefreshComponent, ModuleRefreshComponent} from '../../../global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
 import {NavigationGuard} from 'vue-router';
 import {RootState, store} from '../../../state_store';
 import {MODULE_ACTIONS} from '../../store/module/module_actions';
 
-const currentModuleRouteGuard: NavigationGuard = async (to, from, next) => {
+export const currentModuleRouteGuard: NavigationGuard = async (to, from, next) => {
     let slug = to.params.moduleSlug;
     if (!slug || slug === 'undefined') {
         throw new Error(`Invalid route ${to.fullPath}. Route param :moduleSlug must be defined`);
@@ -31,13 +31,11 @@ const currentModuleRouteGuard: NavigationGuard = async (to, from, next) => {
             isCourseAdmin: (state:RootState) => state.course.isAdmin
         })
     },
-    beforeRouteEnter: currentModuleRouteGuard,
+    template: require('./module_details_component.tpl.html'),
     beforeRouteUpdate: currentModuleRouteGuard,
-    extends: CourseRefreshComponent,
-    template: require('./module_details_component.tpl.html')
+    beforeRouteEnter: currentModuleRouteGuard
 })
 export class ModuleDetailsComponent extends Vue {
-    moduleUnsubscribe: () => any;
     loading: boolean;
 
     createSection() {

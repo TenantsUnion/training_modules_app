@@ -1,6 +1,6 @@
 import {AbstractRepository} from '../repository';
 import {Datasource} from '../datasource';
-import {CreateSectionData, SaveSectionData} from '../../../shared/sections';
+import {CreateSectionEntityPayload, SaveSectionData} from '../../../shared/sections';
 import {getLogger} from '../log';
 
 export class SectionRepository extends AbstractRepository {
@@ -10,7 +10,7 @@ export class SectionRepository extends AbstractRepository {
         super('section_id_seq', sqlTemplate);
     }
 
-    async createSection(data: CreateSectionData, quillId: string): Promise<string> {
+    async createSection(data: CreateSectionEntityPayload, quillId: string): Promise<string> {
         let sectionId = await this.getNextId();
         await this.sqlTemplate.query({
             text: ` INSERT INTO tu.section (id, title, description, ordered_content_ids, time_estimate)

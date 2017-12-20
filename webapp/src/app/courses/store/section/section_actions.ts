@@ -1,0 +1,75 @@
+import {SECTION_MUTATIONS} from './section_mutations';
+import {transformTransferViewService} from '../../../global/quill/transform_transfer_view_service';
+import {COURSE_MUTATIONS} from '../course/course_mutations';
+import {coursesService} from '../../courses_service';
+import {RootGetters, RootState} from '../../../state_store';
+import {SectionState} from './section_state';
+import {Action, ActionTree} from 'vuex';
+import {CreateSectionEntityPayload, SectionEntity} from '../../../../../../shared/sections';
+import {Constant} from '../../../../../../shared/typings/util_typings';
+import {MODULE_ACTIONS} from '../module/module_actions';
+
+export type SectionAction<P> = Action<SectionState, RootState>;
+
+export type CreateSectionAction = SectionAction<CreateSectionEntityPayload>;
+export type SetCurrentSectionAction = SectionAction<SectionEntity>;
+export type SetCurrentSectionFromSlugAction = SectionAction<{ slug: string, isAdmin: boolean }>
+
+export interface SectionActions {
+    CREATE_SECTION: CreateSectionAction,
+    SET_CURRENT_SECTION: SetCurrentSectionAction;
+    SET_CURRENT_SECTION_FROM_SLUG: SetCurrentSectionFromSlugAction;
+}
+
+/**
+ * Const for using course mutation type values
+ */
+export const SECTION_ACTIONS: Constant<SectionActions> = {
+    CREATE_SECTION: 'CREATE_SECTION',
+    SET_CURRENT_SECTION: 'SET_CURRENT_SECTION',
+    SET_CURRENT_SECTION_FROM_SLUG: 'SET_CURRENT_SECTION_FROM_SLUG'
+};
+
+export const CREATE_ID = 'CREATING';
+/**
+ * Section store actions
+ */
+export const sectionActions: ActionTree<SectionState, RootState> & SectionActions = {
+    CREATE_SECTION: async ({dispatch, commit, getters, rootState}, createSection: CreateSectionEntityPayload) => {
+        commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
+        let {course, sectionId} = await coursesService.createSection(createSection);
+        commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
+        commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, course);
+
+        await dispatch(MODULE_ACTIONS.LOAD_MODULE_ENTITY, rootState.module.currentModuleId);
+
+        let section = getters.currentModule.sections.find((section) => section.id === sectionId);
+
+        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, await transformTransferViewService.populateTrainingEntityQuillData(section));
+        commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, sectionId);
+    },
+    async SET_CURRENT_SECTION({state, getters, commit}, id) {
+        try {
+            if (id === state.currentSectionId) {
+                // provided id matches id of current section, no changes to state needed
+                return;
+            }
+
+            commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, id);
+            if (!getters.currentSectionLoaded) {
+                commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id, requesting: true});
+                let sectionTransferData = getters.getSectionTransferData(id);
+                let sectionEntity = await transformTransferViewService.populateTrainingEntityQuillData(sectionTransferData);
+                commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id, requesting: false});
+                commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, sectionEntity);
+            }
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    },
+    async SET_CURRENT_SECTION_FROM_SLUG({getters, dispatch}, slug: {moduleId: string, sectionSlug: string}) {
+        let id = (<RootGetters> getters).getSectionIdFromSlug(slug);
+        dispatch(SECTION_ACTIONS.SET_CURRENT_SECTION, id);
+    }
+};

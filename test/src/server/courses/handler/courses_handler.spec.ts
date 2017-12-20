@@ -3,7 +3,7 @@ import {getLogger} from "../../../../../server/src/log";
 import * as _ from "underscore";
 import {accountHandler, coursesHandler, coursesViewHandler} from "../../../../../server/src/config/handler_config";
 import {CreateModuleEntityCommand, ModuleEntityType, ViewModuleTransferData} from 'modules.ts';
-import {CreateSectionData} from 'sections.ts';
+import {CreateSectionEntityPayload} from 'sections.ts';
 import {IUserInfo} from 'user';
 import {AdminCourseDescription, CourseEntityType, CreateCourseEntityCommand} from 'courses.ts';
 import {DeltaStatic} from 'quill';
@@ -90,7 +90,7 @@ describe('courses handler', function () {
         title: 'second module'
     });
 
-    let sectionCreator: (section) => (courseId: string, moduleId: string) => CreateSectionData = function (section) {
+    let sectionCreator: (section) => (courseId: string, moduleId: string) => CreateSectionEntityPayload = function (section) {
         let sectionFn = (courseId, moduleId) => {
             return {
                 courseId: courseId,
@@ -101,7 +101,7 @@ describe('courses handler', function () {
             };
         };
         sectionFn.prototype = section;
-        return <(courseId, moduleId) => CreateSectionData> sectionFn;
+        return <(courseId, moduleId) => CreateSectionEntityPayload> sectionFn;
     };
 
 

@@ -4,7 +4,7 @@ import {ModuleState} from './module_state';
 import Vue from 'vue';
 import {Constant} from '../../../../../../shared/typings/util_typings';
 
-export type ModuleMutation<P> = (state: ModuleState, payload: P) => any | Mutation<ModuleState>;
+export type ModuleMutation<P> = (state: ModuleState, payload: P) => any & Mutation<ModuleState>;
 export interface ModuleMutations {
     SET_CURRENT_MODULE: ModuleMutation<String>;
     SET_MODULE_REQUEST_STAGE: ModuleMutation<{id: string; requesting: boolean}>
@@ -12,7 +12,7 @@ export interface ModuleMutations {
 }
 
 /**
- * Const for using course mutation type values
+ * Const for using module mutation type values
  */
 export const MODULE_MUTATIONS: Constant<ModuleMutations> = {
     SET_CURRENT_MODULE: 'SET_CURRENT_MODULE',
@@ -26,7 +26,6 @@ export const MODULE_MUTATIONS: Constant<ModuleMutations> = {
  */
 export const moduleMutations: ModuleMutations & MutationTree<ModuleState>= {
     SET_CURRENT_MODULE: (state: ModuleState, moduleId: string) => {
-        //todo enforce quill data has been populated??
         state.currentModuleId = moduleId;
     },
     SET_MODULE_REQUEST_STAGE: (state: ModuleState, {id, requesting}) => {
