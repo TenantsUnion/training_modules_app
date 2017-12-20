@@ -19,6 +19,7 @@ import {sectionMutations} from './courses/store/section/section_mutations';
 Vue.use(Vuex);
 
 export const store: Store<RootState> = new Vuex.Store({
+    strict: process.env.NODE_ENV !== 'production',
     modules: {
         user: {
             state: userState,
