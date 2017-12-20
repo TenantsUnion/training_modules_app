@@ -48,19 +48,19 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
         commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, await transformTransferViewService.populateTrainingEntityQuillData(section));
         commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, sectionId);
     },
-    async SET_CURRENT_SECTION({state, getters, commit}, id) {
+    async SET_CURRENT_SECTION({state, getters, commit}, {sectionId, moduleId}) {
         try {
-            if (id === state.currentSectionId) {
+            if (sectionId === state.currentSectionId) {
                 // provided id matches id of current section, no changes to state needed
                 return;
             }
 
-            commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, id);
+            commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, sectionId);
             if (!getters.currentSectionLoaded) {
-                commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id, requesting: true});
-                let sectionTransferData = getters.getSectionTransferData(id);
+                commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {sectionId, requesting: true});
+                let sectionTransferData = getters.getSectionTransferData(moduleId, sectionId);
                 let sectionEntity = await transformTransferViewService.populateTrainingEntityQuillData(sectionTransferData);
-                commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id, requesting: false});
+                commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {sectionId, requesting: false});
                 commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, sectionEntity);
             }
         } catch (e) {
@@ -68,8 +68,11 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
             throw e;
         }
     },
-    async SET_CURRENT_SECTION_FROM_SLUG({getters, dispatch}, slug: {moduleId: string, sectionSlug: string}) {
-        let id = (<RootGetters> getters).getSectionIdFromSlug(slug);
-        dispatch(SECTION_ACTIONS.SET_CURRENT_SECTION, id);
+    async SET_CURRENT_SECTION_FROM_SLUG({getters, dispatch}, slug: { moduleId: string, sectionSlug: string }) {
+        let sectionId = (<RootGetters> getters).getSectionIdFromSlug(slug);
+        dispatch(SECTION_ACTIONS.SET_CURRENT_SECTION, {
+            moduleId: slug.moduleId,
+            sectionId
+        });
     }
 };

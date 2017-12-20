@@ -3,6 +3,7 @@ import Component from "vue-class-component";
 import {ViewCourseQuillData} from '../../../../../shared/courses';
 import {RawLocation, RouteRecord} from 'vue-router/types/router';
 import {COURSES_ROUTE_NAMES} from '../courses_routes';
+import {mapGetters} from 'vuex';
 
 @Component({
     data: () => {
@@ -13,8 +14,12 @@ import {COURSES_ROUTE_NAMES} from '../courses_routes';
         }
     },
     props: {
-        course: Object,
         isCourseAdmin: Boolean
+    },
+    computed: {
+        ...mapGetters({
+            course: 'courseNavigationDescription'
+        })
     },
     template: require('./course_navigation_component.tpl.html'),
 })
@@ -47,12 +52,12 @@ export class CourseNavigationComponent extends Vue {
         };
     }
 
-    sectionRoute(moduleTitle, sectionTitle): RawLocation {
+    sectionRoute(moduleSlug, sectionSlug): RawLocation {
         return {
             name: COURSES_ROUTE_NAMES.viewSection,
             params: {
-                moduleTitle: moduleTitle,
-                sectionTitle: sectionTitle
+                moduleSlug: moduleSlug,
+                sectionSlug: sectionSlug
             }
         }
     }

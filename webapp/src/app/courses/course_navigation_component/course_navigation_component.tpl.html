@@ -24,7 +24,7 @@
                         </span>
                     <div class="buttons">
                         <button title="Edit Module" v-if="isCourseAdmin" class="button button__icon"
-                                v-on:click="editModule(module.title)">
+                                v-on:click="editModule(module.slug)">
                             <i class="fa fa-pencil fa-fw "></i>
                             <span class="sr-only">Edit section</span>
                         </button>
@@ -39,8 +39,8 @@
                     <li class="menu-section__item" v-for="section in module.sections">
                         <div class="row menu-section__row">
                                 <span class="menu-section__section-title" v-bind:class="{'is-active': isActiveSection(module.title, section.title)}">
-                                    <router-link :to="sectionRoute(module.title, section.title)">
-                                        {{section.title}}
+                                    <router-link :to="sectionRoute(module.slug, section.slug)">
+                                        {{section.slug}}
                                     </router-link>
                                 </span>
                             <div class="buttons">

@@ -3,6 +3,7 @@ import {CourseEntity} from 'courses.ts';
 import {AppGetter} from '../../../state_store';
 import {ViewModuleTransferData} from '../../../../../../shared/modules';
 import {titleToSlug} from '../../../../../../shared/slug/title_slug_transformations';
+import {ViewSectionTransferData} from '../../../../../../shared/sections';
 
 export interface NavigationDescription {
     id: string,
@@ -27,7 +28,8 @@ export interface CourseGetters {
     currentCourseLoaded: boolean,
     currentCourseLoading: boolean,
     courseNavigationDescription: CourseNavigationDescription,
-    getModuleTransferData: (moduleId: string) => ViewModuleTransferData
+    getModuleTransferData: (moduleId: string) => ViewModuleTransferData,
+    getSectionTransferData: (moduleId: string, sectionId: string) => ViewSectionTransferData
 }
 
 export const courseState: CourseState = {
@@ -46,6 +48,11 @@ export const courseGetters: {[index in keyof CourseGetters]: AppGetter<CourseSta
         return function (moduleId) {
             return getters.currentCourse.modules.find((module) => module.id === moduleId);
         }
+    },
+    getSectionTransferData: (state, {getModuleTransferData}) => {
+      return function(moduleId, sectionId) {
+          return getModuleTransferData(moduleId).sections.find((section) => section.id ===sectionId);
+      }
     },
     courseNavigationDescription(state, {currentCourse, getSlugFromCourseId}): CourseNavigationDescription {
         if (!currentCourse) {

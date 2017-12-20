@@ -6,8 +6,9 @@ import {ViewSectionQuillData} from '../../../../../../../shared/sections';
 import {CourseRefreshComponent} from '../../../../global/refresh_route';
 import {NavigationGuard} from 'vue-router';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
-import {store} from '../../../../state_store';
+import {RootGetters, RootState, store} from '../../../../state_store';
 import {MODULE_ACTIONS} from '../../../store/module/module_actions';
+import {mapGetters, mapState} from 'vuex';
 
 const currentSectionRouteGuard: NavigationGuard = async (to, from, next) => {
     let moduleSlug = to.params.moduleSlug;
@@ -27,37 +28,28 @@ const currentSectionRouteGuard: NavigationGuard = async (to, from, next) => {
         next();
     }
 };
+
 @Component({
-    data: () => {
-        return {
-            loading: false,
-            section: {}
-        };
+    computed: {
+        ...mapGetters({
+            section: 'currentSection',
+            isCourseAdmin: 'isAdmin',
+        }),
+        ...mapState({
+            loading: (state: RootState, getters: RootGetters) => {
+                return !getters.currentSection || getters.currentSectionLoading
+                    || getters.currentCourseLoading || getters.currentModuleLoading;
+            }
+        })
     },
+    beforeRouteUpdate: currentSectionRouteGuard,
+    beforeRouteEnter: currentSectionRouteGuard,
     extends: CourseRefreshComponent,
     template: require('./view_section_component.tpl.html')
 })
 export class ViewSectionComponent extends Vue {
-    loading: boolean;
-    isCourseAdmin: boolean;
-    sectionUnsubscribe: () => any;
-    section: ViewSectionQuillData;
-
-    created() {
-        // todo delete
-        // this.loading = true;
-        // this.isCourseAdmin = coursesRoutesService.isCourseAdmin();
-        // this.sectionUnsubscribe = coursesService.subscribeCurrentSection((section) => {
-        //     this.loading = false;
-        //     this.section = section;
-        // });
-    }
-
-    destroyed() {
-        this.sectionUnsubscribe();
-    }
-
     next() {
+
     }
 
     back() {
