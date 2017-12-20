@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {quillService} from '../quill/quill_service';
+import {createdContentPlaceholderId} from '../../../../../shared/quill_editor';
 
 @Component({
     props: {
@@ -20,9 +21,8 @@ import {quillService} from '../quill/quill_service';
 })
 export class AddContentComponent extends Vue {
     callback: (addContentId: string) => any;
-    contentCounter = 0; // use to generate place holder ids for
 
     addContent() {
-        this.callback('' + this.contentCounter++);
+        this.callback(createdContentPlaceholderId());
     }
 }

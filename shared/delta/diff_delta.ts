@@ -1,9 +1,13 @@
 import * as _ from 'underscore';
-import {DeltaObj} from './delta';
+import {DeltaObj, DeltaObjDiff} from './delta';
 import {isDeltaObj, isDeltaStatic, isKeyArr} from './typeguards_delta';
 import {deltaArrayDiff} from './diff_key_array';
 
-export const diffDeltaObj = (before: DeltaObj, after: DeltaObj): DeltaObj => {
+export const diffPropsDeltaObj = (props: string[], before: DeltaObj, after: DeltaObj) => {
+    return diffDeltaObj(_.pick(before, props), _.pick(after, props));
+};
+
+export const diffDeltaObj = (before: DeltaObj, after: DeltaObj): DeltaObjDiff => {
     return Object.keys(after).reduce((acc, key) => {
         let afterVal = after[key];
         let beforeVal = before[key];

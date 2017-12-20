@@ -9,6 +9,7 @@ import {isDeltaStatic} from './delta/typeguards_delta';
 
 export interface QuillEditorData {
     id?: string;
+    version?: string,
     editorJson: DeltaStatic;
     lastModified?: Moment | string;
 }
@@ -26,8 +27,13 @@ export const isQuillEditorData = (obj: any): obj is QuillEditorData => {
 
 export type QuillDeltaMap = { [index: string]: DeltaStatic; };
 
-export type FieldDeltas = {
-    [index: string]: DeltaStatic
-}
+let contentPlaceholderIdCounter = 0;
+const CREATED_PREFIX = 'CREATED';
+export const createdContentPlaceholderId = () => {
+    return `${CREATED_PREFIX}-${contentPlaceholderIdCounter++}`;
+};
 
+export const isCreatedPlaceholderId = (id: string) => {
+  return id.indexOf(CREATED_PREFIX) === 0;
+};
 

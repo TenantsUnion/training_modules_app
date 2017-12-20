@@ -6,8 +6,8 @@ export interface Delta extends Quill.DeltaStatic {
 }
 
 export interface DeltaObj {
-    // string is array of unique ids of child DeltaObj
-    [index: string]: Quill.DeltaStatic | Quill.DeltaStatic[] | string[] | number | boolean | string;
+    // // string is array of unique ids of child DeltaObj
+    // [index: string]: Quill.DeltaStatic | Quill.DeltaStatic[] | string[] | number | boolean | string;
 }
 
 export type IdsArr = string[];

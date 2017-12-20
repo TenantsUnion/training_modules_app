@@ -32,7 +32,7 @@ export const deltaArrayDiff = (beforeArr: (string | number)[], afterArr: (string
     let changeOps: DeltaArrayOp[] = [];
     // ops applied is the state of the current ops that are needed to transform the before array into the new one
     // applied on a copy of the before array
-    let opsApplied = applyOps(beforeArr, changeOps);
+    let opsApplied = applyDeltaArrOps(beforeArr, changeOps);
 
     // deletions, then additions, then check what has moved instead of being shifted from elements being added/removed
 
@@ -46,7 +46,7 @@ export const deltaArrayDiff = (beforeArr: (string | number)[], afterArr: (string
                 index: intermediateMap[key]
             };
             acc.push(op);
-            opsApplied = applyOps(opsApplied, [op]);
+            opsApplied = applyDeltaArrOps(opsApplied, [op]);
         }
         return acc;
     }, changeOps);
@@ -67,7 +67,7 @@ export const deltaArrayDiff = (beforeArr: (string | number)[], afterArr: (string
 
 
     // apply current insert/delete change operations
-    opsApplied = applyOps(beforeArr, changeOps);
+    opsApplied = applyDeltaArrOps(beforeArr, changeOps);
 
     // loop through after array and when the key differs from the opsApplied array create/ push a move operation
     // then update the opsApplied array to determine the next operation from the most recent version of the array
@@ -85,7 +85,7 @@ export const deltaArrayDiff = (beforeArr: (string | number)[], afterArr: (string
             console.log(`Pushing move operation: ${JSON.stringify(moveOp, null, 2)}`);
             accOps.push(moveOp);
 
-            opsApplied = applyOps(opsApplied, [moveOp]);
+            opsApplied = applyDeltaArrOps(opsApplied, [moveOp]);
         }
         return accOps;
     }, changeOps);
@@ -107,7 +107,7 @@ const toIndexMap = (keyArray: (string | number)[]) => {
  * @param {KeyArray} keyArray
  * @param {DeltaArrayOp[]} ops
  */
-export const applyOps = (keyArray: KeyArray, ops: DeltaArrayOp[]): KeyArray => {
+export const applyDeltaArrOps = (keyArray: KeyArray, ops: DeltaArrayOp[]): KeyArray => {
     return ops.reduce((intermediateArr: KeyArray, op: DeltaArrayOp) => {
         switch (op.op) {
             case 'ADD':

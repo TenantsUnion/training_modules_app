@@ -1,5 +1,8 @@
 import {Moment} from 'moment';
-import {CreateTrainingEntityPayload, TrainingEntity, TrainingEntityPayload} from './training_entity';
+import {
+    CreateTrainingEntityPayload, TrainingEntity, TrainingEntityDiffDelta,
+    TrainingEntityPayload
+} from './training_entity';
 import {QuillEditorData} from 'quill_editor.ts';
 import {ViewCourseTransferData} from './courses';
 
@@ -31,15 +34,17 @@ export interface ViewSectionTransferData extends ViewSectionData {
     orderedContentIds: string[];
 }
 
-
-export interface SaveSectionData {
+export interface SaveSectionEntityPayload {
     id: string;
     courseId: string;
     moduleId: string;
-    title: string;
-    description?: string;
-    content: { id: string, editorJson: Quill.DeltaStatic }[];
-    timeEstimate: string;
+    changes: TrainingEntityDiffDelta;
+}
+
+export interface SaveSectionResponse {
+    sectionId: string;
+    moduleId: string;
+    course: ViewCourseTransferData;
 }
 
 export interface CreateSectionResponse {

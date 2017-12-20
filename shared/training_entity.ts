@@ -36,8 +36,8 @@ export interface TrainingEntityPayload {
     orderedContentIds: string[];
     orderedQuestionIds: string[];
     orderedContentQuestionIds: string[];
-    content: QuillEditorData[];
-    questions: Question[];
+    content?: QuillEditorData[];
+    questions?: Question[];
     lastModifiedAt: Moment;
     fieldDeltas: TrainingEntityDiffDelta
 }
