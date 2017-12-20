@@ -97,7 +97,7 @@ export const courseGetters: {[index in keyof CourseGetters]: AppGetter<CourseSta
         }
 
         let index = currentModule.sections.findIndex((section) => section.id === currentSection.id);
-        if(index + 1 === currentModule.sections.length){
+        if(index === -1 || index + 1 === currentModule.sections.length){
             return null; // last section in module
         }
 
@@ -110,8 +110,8 @@ export const courseGetters: {[index in keyof CourseGetters]: AppGetter<CourseSta
         }
 
         let index = currentModule.sections.findIndex((section) => section.id === currentSection.id);
-        if(!index){
-            return null; // first section in module
+        if(index <= 0){
+            return null; // first section in module or section has changed but module hasn't
         }
 
         return currentModule.sections[index - 1].id;

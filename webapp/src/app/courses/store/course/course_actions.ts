@@ -51,7 +51,6 @@ export const courseActions: CourseActions & ActionTree<CourseState, RootState> =
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
             commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, courseEntity);
             await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: courseEntity.id, isAdmin: true});
-            return 'slug';
         } catch (e) {
             console.error(e);
             throw e;
