@@ -4,26 +4,17 @@ import {AdminCourseDescription, CreateCourseEntityPayload} from 'courses';
 class UserCoursesService {
 
     async createCourse(createCourseData: CreateCourseEntityPayload): Promise<void> {
-        // todo get command meta data
-        try {
-            await axios.post('courses/create', createCourseData);
-        } catch (response) {
-            throw response.response.data;
-        }
+        await axios.post('courses/create', createCourseData);
     }
 
-    getUserEnrolledCourses(username: string): Promise<AdminCourseDescription[]> {
-        return axios.get(`courses/user/enrolled/${username}`)
-            .then((value) => {
-                return value.data;
-            });
+    async getUserEnrolledCourses(username: string): Promise<AdminCourseDescription[]> {
+        let response = await axios.get(`courses/user/enrolled/${username}`);
+        return response.data;
     }
 
-    getUserAdminCourses(username: string): Promise<AdminCourseDescription[]> {
-        return axios.get(`courses/user/admin/${username}`)
-            .then((value) => {
-                return value.data;
-            })
+    async getUserAdminCourses(username: string): Promise<AdminCourseDescription[]> {
+        let response = await axios.get(`courses/user/admin/${username}`);
+        return response.data;
     }
 }
 
