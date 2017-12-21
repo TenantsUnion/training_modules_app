@@ -21,11 +21,12 @@ export class SectionRepository extends AbstractRepository {
     }
 
     async updateSection(data: SectionEntity): Promise<void> {
+        let {id, title, description, timeEstimate, orderedContentIds} = data;
         await this.sqlTemplate.query({
             text: `UPDATE tu.section s SET title = $1, description = $2, time_estimate = $3, last_modified_at = $4,
                         ordered_content_ids = $5, ordered_content_question_ids = $5
                    WHERE s.id = $6`,
-            values: [data.title, data.description, data.timeEstimate, new Date(), data.orderedContentIds, data.id]
+            values: [title, description, timeEstimate, new Date(), orderedContentIds, id]
         });
     }
 

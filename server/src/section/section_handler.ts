@@ -1,4 +1,3 @@
-import * as _ from "underscore";
 import {SectionRepository} from './section_repository';
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload, ViewSectionTransferData
@@ -6,7 +5,7 @@ import {
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../log';
 import {QuillHandler} from '../quill/quill_handler';
-import {DeltaArrayOp, DeltaArrDiff} from '../../../shared/delta/diff_key_array';
+import {updateArrOpsValues} from '../../../shared/delta/diff_key_array';
 import {applyDeltaDiff} from '../../../shared/delta/apply_delta';
 
 export class SectionHandler {
@@ -23,28 +22,15 @@ export class SectionHandler {
     }
 
     async saveSection(data: SaveSectionEntityPayload): Promise<void> {
-        let {changes: {changeQuillContent}} = data;
+        let {id, changes, changes: {changeQuillContent, orderedContentIds}} = data;
+        let quillIdMap = await this.quillHandler.handleQuillChanges(changeQuillContent);
 
-        await this.quillHandler.updateQuillContent(changeQuillContent);
-        let insertQuillIds = await this.quillHandler.insertQuillContentFromUpdate(changeQuillContent);
-        let quillIdMap = insertQuillIds.reduce((acc, quillIdObj) => {
-            acc[quillIdObj.placeholderId] = quillIdObj.quillId;
-            return acc;
-        }, {});
-
-        // substitute created quill ids into ordered content ids before saving section
-        let orderedContentIds: DeltaArrDiff = data.changes.orderedContentIds.map((quillArrOp: DeltaArrayOp) => {
-            let quillId = quillIdMap[quillArrOp.val];
-            return quillId ? _.extend({}, quillArrOp, {val: quillId}) : quillArrOp;
+        let section = await this.sectionRepo.loadSection(id);
+        let updatedSection = applyDeltaDiff(section, {
+            ...changes, orderedContentIds: updateArrOpsValues(orderedContentIds, quillIdMap)
         });
-
-        let section = await this.sectionRepo.loadSection(data.id);
-        let updatedSection = applyDeltaDiff(section, _.extend({}, data.changes, {
-            orderedContentIds: orderedContentIds
-        }));
         await this.sectionRepo.updateSection(updatedSection);
     }
-
     async removeSection(section: ViewSectionTransferData): Promise<void> {
         // let removeQuillContent = _.map(section.orderedContentIds, (quillId) => {
         //     return this.quillRepo.remove(quillId);
