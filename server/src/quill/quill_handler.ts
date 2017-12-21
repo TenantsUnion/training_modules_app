@@ -5,7 +5,6 @@ import {quillRepository} from '../config/repository_config';
 import {OrderedContentQuestions} from '../../../shared/training_entity';
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../log';
-import {QuillChangeObj} from '../../../webapp/src/app/global/quill/quill_component';
 import {QuillContentObj} from '../../../shared/delta/delta';
 import Delta from 'quill-delta';
 
@@ -31,6 +30,16 @@ export class QuillHandler {
         await Promise.all(insertContentAsync);
 
         return quillIds;
+    }
+
+    async handleQuillChanges(changeQuillContent: QuillContentObj): Promise<{[index: string]: string}> {
+        await this.updateQuillContent(changeQuillContent);
+        let insertQuillIds = await this.insertQuillContentFromUpdate(changeQuillContent);
+        let quillIdMap = insertQuillIds.reduce((acc, quillIdObj) => {
+            acc[quillIdObj.placeholderId] = quillIdObj.quillId;
+            return acc;
+        }, {});
+        return quillIdMap;
     }
 
     /**
