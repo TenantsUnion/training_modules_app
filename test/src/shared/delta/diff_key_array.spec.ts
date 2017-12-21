@@ -1,4 +1,4 @@
-import {applyOps, deltaArrayDiff, DeltaArrayOp, DeltaArrDiff} from '../../../../shared/delta/diff_key_array';
+import {applyDeltaArrOps, deltaArrayDiff, DeltaArrayOp, DeltaArrDiff} from '../../../../shared/delta/diff_key_array';
 import {expect} from "chai";
 
 describe('Diff Key Array', function () {
@@ -12,7 +12,7 @@ describe('Diff Key Array', function () {
                 };
                 let beforeArr = [1, 2, 3];
                 let afterArr = [1, 2, 'i', 3];
-                expect(applyOps(beforeArr, [addOp])).to.deep.equal(afterArr);
+                expect(applyDeltaArrOps(beforeArr, [addOp])).to.deep.equal(afterArr);
             });
 
             it('should insert two consecutive elements', function () {
@@ -30,7 +30,7 @@ describe('Diff Key Array', function () {
                 ];
                 let beforeArr = [1, 2, 3];
                 let afterArr = [1, 2, 'i', 'j', 3];
-                expect(applyOps(beforeArr, addOps)).to.deep.equal(afterArr);
+                expect(applyDeltaArrOps(beforeArr, addOps)).to.deep.equal(afterArr);
             });
 
             it('should insert two non consecutive elements', function () {
@@ -48,7 +48,7 @@ describe('Diff Key Array', function () {
                 ];
                 let beforeArr = [1, 2, 3];
                 let afterArr = [1, 2, 'i', 3, 'j'];
-                expect(applyOps(beforeArr, addOps)).to.deep.equal(afterArr);
+                expect(applyDeltaArrOps(beforeArr, addOps)).to.deep.equal(afterArr);
             });
         });
         describe('delete', function () {
@@ -62,7 +62,7 @@ describe('Diff Key Array', function () {
                 ];
                 let beforeArr = [1, 2, 3, 4];
                 let afterArr = [1, 2, 4];
-                expect(applyOps(beforeArr, deleteOps)).to.deep.equal(afterArr);
+                expect(applyDeltaArrOps(beforeArr, deleteOps)).to.deep.equal(afterArr);
             });
 
             it('should delete two consecutive elements', function () {
@@ -80,7 +80,7 @@ describe('Diff Key Array', function () {
                 ];
                 let beforeArr = [1, 2, 3, 4];
                 let afterArr = [1, 4];
-                expect(applyOps(beforeArr, deleteOps)).to.deep.equal(afterArr);
+                expect(applyDeltaArrOps(beforeArr, deleteOps)).to.deep.equal(afterArr);
             });
 
             it('should delete two non consecutive elements', function () {
@@ -98,7 +98,7 @@ describe('Diff Key Array', function () {
                 ];
                 let beforeArr = [1, 2, 3, 4];
                 let afterArr = [2, 4];
-                expect(applyOps(beforeArr, deleteOps)).to.deep.equal(afterArr);
+                expect(applyDeltaArrOps(beforeArr, deleteOps)).to.deep.equal(afterArr);
             });
         });
 
@@ -113,7 +113,7 @@ describe('Diff Key Array', function () {
                 ];
                 let beforeArr = [1, 2, 3, 4];
                 let afterArr = [2, 3, 4, 1];
-                expect(applyOps(beforeArr, moveOps)).to.deep.equal(afterArr);
+                expect(applyDeltaArrOps(beforeArr, moveOps)).to.deep.equal(afterArr);
             });
 
             it('should move two consecutive elements', function () {
@@ -131,7 +131,7 @@ describe('Diff Key Array', function () {
                 ];
                 let beforeArr = [1, 2, 3, 4, 5];
                 let afterArr = [1, 4, 2, 3, 5];
-                expect(applyOps(beforeArr, moveOps)).to.deep.equal(afterArr);
+                expect(applyDeltaArrOps(beforeArr, moveOps)).to.deep.equal(afterArr);
             });
 
             it('should swap two elements', function () {
@@ -149,7 +149,7 @@ describe('Diff Key Array', function () {
                 ];
                 let beforeArr = [1, 2, 3, 4];
                 let afterArr = [1, 4, 3, 2];
-                expect(applyOps(beforeArr, moveOps)).to.deep.equal(afterArr);
+                expect(applyDeltaArrOps(beforeArr, moveOps)).to.deep.equal(afterArr);
             });
         });
     });
