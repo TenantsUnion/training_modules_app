@@ -8,7 +8,7 @@ import {isDeltaStatic} from './delta/typeguards_delta';
  */
 
 export interface QuillEditorData {
-    id?: string;
+    id: string;
     version?: string,
     editorJson: DeltaStatic;
     lastModified?: Moment | string;

@@ -2,60 +2,71 @@
     <div class="row">
         <div class="columns small-12 large-10">
             <h1>Edit Section</h1>
-            <loading v-if="loading"></loading>
+            <loading v-if="loading || saving"></loading>
         </div>
     </div>
-    <vue-form :state="formstate" @submit.prevent="saveSection">
-        <validate v-if="!loading">
-            <div class="row">
-                <div class="columns small-12 large-10">
-                    <field-messages name="title"
-                                    show="$submitted || $dirty">
-                        <small class="error" slot="required">
-                            A title is need to create a section
+    <template v-if="currentSection && section">
+        <vue-form :state="formstate" @submit.prevent="saveSection">
+            <validate>
+                <div class="row">
+                    <div class="columns small-12 large-10">
+                        <field-messages name="title"
+                                        show="$submitted || $dirty">
+                            <small class="error" slot="required">
+                                A title is need to create a section
+                            </small>
+                        </field-messages>
+                        <small class="error"
+                               v-if="errorMessages && errorMessages.title">
+                            {{errorMessages.title}}
                         </small>
-                    </field-messages>
-                    <small class="error"
-                           v-if="errorMessages && errorMessages.title">
-                        {{errorMessages.title}}
-                    </small>
-                    <div>
-                        <label for="section-title">Title
-                            <input v-model="section.title" type="text"
-                                   name="title"
-                                   required
-                                   placeholder="Section Title"
-                                   id="section-title"/>
-                        </label>
+                        <div>
+                            <label for="section-title">Title
+                                <input v-model="section.title" type="text"
+                                       name="title"
+                                       required
+                                       placeholder="Section Title"
+                                       id="section-title"/>
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </validate>
+            <validate>
+                <div class="row">
+                    <div class="columns small-12 large-10">
+                        <time-estimate :isInput="true"
+                                       :timeEstimate="section.timeEstimate"
+                                       :updated="timeEstimateUpdated"></time-estimate>
+                    </div>
+                </div>
+            </validate>
+            <validate>
+                <div class="row">
+                    <div class="columns small-12 large-10">
+                        <label for="section-description">Description</label>
+                        <textarea v-model="section.description" type="text"
+                                  name="description"
+                                  placeholder="Section description"
+                                  id="section-description"></textarea>
+                    </div>
+                </div>
+            </validate>
             <div class="row">
-                <div class="columns small-12 large-10">
-                    <time-estimate :isInput="true"
-                                   :timeEstimate="section.timeEstimate"
-                                   :updated="timeEstimateUpdated"></time-estimate>
+                <div class="small-12 large-10 columns">
+                    <segment-viewer :segments="quillContent" ref="segmentViewer"></segment-viewer>
                 </div>
             </div>
             <div class="row">
                 <div class="columns small-12 large-10">
-                    <label for="section-description">Description</label>
-                    <textarea v-model="section.description" type="text"
-                              placeholder="Section description"
-                              id="section-description"></textarea>
+                    <add-content-component :callback="addContentCallback"></add-content-component>
                 </div>
             </div>
-        </validate>
-        <div class="row">
-            <div class="small-12 large-10 columns" v-show="!loading">
-                <label>Content</label>
-                <quill-editor ref="editor" :editor-json="section.content && section.content[0].editorJson"></quill-editor>
+            <div class="row">
+                <div class="columns small-2">
+                    <button v-bind:disabled="saving || loading" @click="saveSection" class="button" type="button">Save</button>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="columns small-2">
-                <button @click="saveSection" class="button" type="button">Save</button>
-            </div>
-        </div>
-    </vue-form>
+        </vue-form>
+    </template>
 </div>

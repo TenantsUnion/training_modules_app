@@ -31,7 +31,10 @@ export class TransformTransferViewService {
             });
 
             let content: QuillEditorData[] = await Promise.all(quillAsync);
-            return _.extend({}, {content}, course);
+            let contentSegments:ContentSegment[] = content.map((quillEditor) => {
+                return _.extend({}, quillEditor, {type: 'CONTENT'});
+            });
+            return _.extend({}, {content: contentSegments}, course);
         } catch (e) {
             console.log(`Error populating TrainingEntity ${course.id}\n${e}`);
             throw e;

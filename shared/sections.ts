@@ -1,6 +1,6 @@
 import {Moment} from 'moment';
 import {
-    CreateTrainingEntityPayload, TrainingEntity, TrainingEntityDiffDelta,
+    CreateTrainingEntityPayload, TrainingEntityDiffDelta,
     TrainingEntityPayload
 } from './training_entity';
 import {QuillEditorData} from 'quill_editor.ts';
@@ -22,7 +22,7 @@ interface ViewSectionData {
     timeEstimate: string;
 }
 
-export interface ViewSectionQuillData extends ViewSectionData {
+export interface ViewSectionQuillData extends TrainingEntityPayload {
     createdAt: Moment;
     lastModifiedAt: Moment;
     content: QuillEditorData[];

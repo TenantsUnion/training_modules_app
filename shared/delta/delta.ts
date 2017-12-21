@@ -10,26 +10,6 @@ export interface DeltaObj {
     // [index: string]: Quill.DeltaStatic | Quill.DeltaStatic[] | string[] | number | boolean | string;
 }
 
-export type IdsArr = string[];
-
-export const isIdsArr = (obj: any): obj is IdsArr => {
-    return obj instanceof Array && obj.every((el) => {
-        return el instanceof String;
-    });
-};
-
-
-export const isDeltaArrDiff = (arr: any): arr is DeltaArrDiff => {
-    return _.isArray(arr) && arr.every((obj) => isDeltaArrOp(obj));
-};
-
-export const isDeltaArrOp = (obj: any): obj is DeltaArrayOp => {
-    return _.isObject(obj) && !_.isArray(obj)
-        && (obj.op === 'MOVE' || obj.op === 'ADD' || obj.op === 'DELETE')
-        && (!obj.beforeIndex || _.isString(obj.beforeIndex) || _.isNumber(obj.beforeIndex))
-        && (!obj.index || _.isString(obj.index) || _.isNumber(obj.index))
-        && (obj.val || (_.isString(obj.index) || _.isNumber(obj.index)));
-};
 
 export type DeltaDiff = number | boolean | string | DeltaArrDiff | QuillContentObj;
 

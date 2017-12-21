@@ -8,6 +8,7 @@
     "target": "es6",
     "moduleResolution": "node",
     "allowJs": true,
+    "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": "..",

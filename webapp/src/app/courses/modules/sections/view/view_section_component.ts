@@ -11,7 +11,7 @@ import {MODULE_ACTIONS} from '../../../store/module/module_actions';
 import {mapGetters, mapState} from 'vuex';
 import {COURSE_ACTIONS} from '../../../store/course/course_actions';
 
-const currentSectionRouteGuard: NavigationGuard = async (to, from, next) => {
+export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) => {
     let moduleSlug = to.params.moduleSlug;
     let sectionSlug = to.params.sectionSlug;
     if (!moduleSlug || moduleSlug === 'undefined' || !sectionSlug || sectionSlug === 'undefined') {

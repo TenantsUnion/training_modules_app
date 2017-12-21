@@ -5,7 +5,10 @@ import {
     ViewCourseQuillData, SaveCourseEntityCommand, ViewCourseTransferData, CourseEntity,
     CreateCourseEntityCommand, CreateCourseResponse
 } from 'courses';
-import {ViewSectionQuillData, SaveSectionData, CreateSectionEntityPayload, CreateSectionResponse} from 'sections';
+import {
+    ViewSectionQuillData, CreateSectionEntityPayload, CreateSectionResponse,
+    SaveSectionEntityPayload, SaveSectionResponse
+} from 'sections';
 import {appRouter} from "../router";
 import {userQueryService} from '../account/user_query_service';
 import {transformTransferViewService} from '../global/quill/transform_transfer_view_service';
@@ -205,11 +208,11 @@ export class CoursesService {
         // this.router.push({params: {moduleTitle: module.title}});
     }
 
-    async saveSection(section: SaveSectionData): Promise<void> {
-        let response = await axios.post(`course/${section.courseId}/module/${section.moduleId}/section/${section.id}/save`, section);
-        // todo move to state action
-        // todo slug handling
-        // this.router.push({params: {sectionTitle: section.title}});
+    async saveSection(section: SaveSectionEntityPayload): Promise<SaveSectionResponse> {
+        let response = await axios.post(`course/${section.courseId}/module/${section.moduleId}/section/${section.id}/save`, {
+            payload: section
+        });
+        return response.data;
     }
 
     // async refresh(): Promise<void> {

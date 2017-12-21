@@ -123,8 +123,8 @@ export class QuillComponent extends Vue {
                 };
                 console.log(`quill changed calling on change: ${JSON.stringify(changeObj, null, 2)}`);
                 this.onChange(changeObj);
-                this.userChanges = this.userChanges.compose(delta);
             }
+            this.userChanges = this.userChanges.compose(delta);
         });
 
         this.editorJson && this.quill.setContents(new Delta(this.editorJson.ops), 'api');

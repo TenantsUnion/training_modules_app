@@ -1,6 +1,9 @@
 import {applyDeltaArrOps, deltaArrayDiff, DeltaArrayOp, DeltaArrDiff} from '../../../../shared/delta/diff_key_array';
 import {expect} from "chai";
 
+describe('Key Array type guards', function(){
+
+});
 describe('Diff Key Array', function () {
     describe('apply operations', function () {
         describe('insert', function () {

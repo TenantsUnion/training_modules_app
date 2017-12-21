@@ -1,7 +1,6 @@
 import {SectionEntity, ViewSectionTransferData} from "sections.ts";
 import {
-    CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, TrainingEntity,
-    TrainingEntityDiffDelta, TrainingEntityPayload, ViewTrainingEntityQuillData, ViewTrainingEntityTransferData
+    CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, TrainingEntityDiffDelta, TrainingEntityPayload, ViewTrainingEntityQuillData, ViewTrainingEntityTransferData
 } from './training_entity';
 import {DeltaArrDiff} from './delta/diff_key_array';
 import {ViewCourseTransferData} from './courses';

@@ -2,8 +2,10 @@ import Vue from "vue";
 import Component from 'vue-class-component';
 import {isDeltaStatic} from '../../../../../shared/delta/typeguards_delta';
 import {QuillDeltaMap, QuillEditorData} from "quill_editor.ts";
-import {QuillComponent} from '../quill/quill_component';
-import {ContentSegment, Segment} from '../../../../../shared/segment';
+import {QuillChangeObj, QuillComponent} from '../quill/quill_component';
+import {ContentSegment, isContentSegment, Segment} from '../../../../../shared/segment';
+import {QuillContentObj} from '../../../../../shared/delta/delta';
+import {diffQuillContentObj} from '../../../../../shared/delta/diff_delta';
 
 
 @Component({
@@ -46,11 +48,18 @@ export class SegmentViewerComponent extends Vue {
     }
 
     getContentChanges(): QuillDeltaMap {
-        let contentData = (<QuillComponent[]> this.$refs.contentEditor).reduce((acc, editor) => {
-            acc[editor.editorId] = editor.getChanges();
+        let userChangedEditor: QuillComponent[] = this.$refs.contentEditor ? <QuillComponent[]> this.$refs.contentEditor : [];
+        let userChangedContent: QuillContentObj = userChangedEditor.reduce((acc, editor) => {
+            acc[editor.editorId] = editor.getQuillEditorContents();
             return acc;
         }, {});
-        return contentData;
+        let storedContent: ContentSegment[] = <ContentSegment[]> this.segments
+            .filter((segment) => isContentSegment(segment));
+        let storedContentObj: QuillContentObj = storedContent.reduce((acc, content) => {
+            acc[content.id] = content.editorJson;
+            return acc;
+        }, {});
+        return diffQuillContentObj(storedContentObj, userChangedContent);
     }
 
     isContent(obj: any): boolean {

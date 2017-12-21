@@ -5,7 +5,10 @@ import {coursesService} from '../../courses_service';
 import {RootGetters, RootState} from '../../../state_store';
 import {SectionState} from './section_state';
 import {Action, ActionTree} from 'vuex';
-import {CreateSectionEntityPayload, SectionEntity} from '../../../../../../shared/sections';
+import {
+    CreateSectionEntityPayload, SaveSectionEntityPayload, SaveSectionResponse,
+    SectionEntity
+} from '../../../../../../shared/sections';
 import {Constant} from '../../../../../../shared/typings/util_typings';
 import {MODULE_ACTIONS} from '../module/module_actions';
 
@@ -21,6 +24,8 @@ export interface SectionActions {
     SET_CURRENT_SECTION_FROM_SLUG: SetCurrentSectionFromSlugAction;
     NEXT_SECTION: SectionAction<void>;
     PREVIOUS_SECTION: SectionAction<void>;
+    SAVE_SECTION: SectionAction<SaveSectionEntityPayload>;
+    LOAD_SECTION_ENTITY: SectionAction<{sectionId: string, moduleId: string}>
 }
 
 /**
@@ -32,6 +37,8 @@ export const SECTION_ACTIONS: Constant<SectionActions> = {
     SET_CURRENT_SECTION_FROM_SLUG: 'SET_CURRENT_SECTION_FROM_SLUG',
     NEXT_SECTION: 'NEXT_SECTION',
     PREVIOUS_SECTION: 'PREVIOUS_SECTION',
+    SAVE_SECTION: 'SAVE_SECTION',
+    LOAD_SECTION_ENTITY: 'LOAD_SECTION_ENTITY'
 };
 
 export const CREATE_ID = 'CREATING';
@@ -100,6 +107,19 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
             sectionId: previousId,
             moduleId: rootState.module.currentModuleId
         });
-
+    },
+    async SAVE_SECTION({commit, getters, dispatch, rootState}, saveSectionEntity: SaveSectionEntityPayload) {
+        commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: saveSectionEntity.id, requesting: true});
+        let response: SaveSectionResponse = await coursesService.saveSection(saveSectionEntity);
+        commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: saveSectionEntity.id, requesting: false});
+        commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
+        await dispatch(SECTION_ACTIONS.LOAD_SECTION_ENTITY, response);
+    },
+    async LOAD_SECTION_ENTITY({commit, getters}, ids: {sectionId: string, moduleId: string}) {
+       let sectionTransferData = getters.getSectionTransferData(ids.moduleId, ids.sectionId);
+        commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: ids.sectionId, requesting: true});
+        let moduleEntity = await transformTransferViewService.populateTrainingEntityQuillData(sectionTransferData);
+        commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: ids.sectionId, requesting: false});
+        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, moduleEntity);
     }
 };

@@ -1,4 +1,5 @@
 import * as _ from 'underscore';
+import * as Delta from 'quill-delta';
 import {DeltaObj, DeltaObjDiff, QuillContentObj} from './delta';
 import {isDeltaObj, isDeltaStatic, isKeyArr} from './typeguards_delta';
 import {deltaArrayDiff} from './diff_key_array';
@@ -47,7 +48,7 @@ export const diffDeltaObj = (before: DeltaObj, after: DeltaObj): DeltaObjDiff =>
 
 export const diffQuillContentObj = (before: QuillContentObj, after: QuillContentObj): QuillContentObj => {
     return Object.keys(after).reduce((acc, key) => {
-        acc[key] = before[key] ? before[key].diff(after[key]) : after[key];
+        acc[key] = before[key] ? new Delta(before[key].ops).diff(after[key]) : after[key];
         return acc;
     }, {});
 };

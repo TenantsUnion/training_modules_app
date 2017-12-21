@@ -2,7 +2,7 @@ import {Question} from 'questions';
 import {Moment} from 'moment';
 import {QuillEditorData} from 'quill_editor.ts';
 import {Entity, EntityCommand, SaveEntityCommand} from 'entity';
-import {DeltaObjDiff, QuillContentDiff} from './delta/delta';
+import {DeltaObjDiff, QuillContentObj} from './delta/delta';
 import {DeltaArrDiff} from './delta/diff_key_array';
 import {ContentSegment} from './segment';
 
@@ -39,7 +39,6 @@ export interface TrainingEntityPayload {
     content?: QuillEditorData[];
     questions?: Question[];
     lastModifiedAt: Moment;
-    fieldDeltas: TrainingEntityDiffDelta
 }
 
 export type TrainingEntity<T> = Entity<T, TrainingEntityPayload>;
@@ -48,7 +47,7 @@ export interface TrainingEntityDiffDelta extends DeltaObjDiff {
     title?: string;
     description?: string;
     timeEstimateMinutes?: string;
-    changeQuillContent?: QuillContentDiff,
+    changeQuillContent?: QuillContentObj,
     orderedContentIds?: DeltaArrDiff
     orderedQuestionIds?: DeltaArrDiff;
     orderedContentQuestionIds?: DeltaArrDiff;

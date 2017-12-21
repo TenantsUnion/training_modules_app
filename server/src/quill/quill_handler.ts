@@ -7,7 +7,7 @@ import {LoggerInstance} from 'winston';
 import {getLogger} from '../log';
 import {QuillChangeObj} from '../../../webapp/src/app/global/quill/quill_component';
 import {QuillContentObj} from '../../../shared/delta/delta';
-import * as Delta from 'quill-delta';
+import Delta from 'quill-delta';
 
 
 export class QuillHandler {
@@ -51,7 +51,7 @@ export class QuillHandler {
             .map((content: QuillEditorData) => {
                 return _.extend({}, content, {
                     version: content.version + 1,
-                    editorJson: new Delta(content.editorJson),
+                    editorJson: new Delta(content.editorJson).compose(quillChanges[content.id]),
                     lastModifiedAt: new Date()
                 });
             })

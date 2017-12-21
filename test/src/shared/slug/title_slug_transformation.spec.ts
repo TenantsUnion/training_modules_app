@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {slugToId, slugToTitle, titleToSlug} from '../../../shared/slug/title_slug_transformations';
+import {slugToId, slugToTitle, titleToSlug} from '../../../../shared/slug/title_slug_transformations';
 
 describe('title slug transformation', function () {
 

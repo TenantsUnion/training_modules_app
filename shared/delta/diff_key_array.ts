@@ -7,6 +7,18 @@ export interface DeltaArrayOp {
     beforeIndex?: number
 }
 
+export const isDeltaArrDiff = (arr: any): arr is DeltaArrDiff => {
+    return _.isArray(arr) && arr.every((obj) => isDeltaArrOp(obj));
+};
+
+export const isDeltaArrOp = (obj: any): obj is DeltaArrayOp => {
+    return _.isObject(obj) && !_.isArray(obj)
+        && (obj.op === 'MOVE' || obj.op === 'ADD' || obj.op === 'DELETE')
+        && (!obj.beforeIndex || _.isString(obj.beforeIndex) || _.isNumber(obj.beforeIndex))
+        && (!obj.index || _.isString(obj.index) || _.isNumber(obj.index))
+        && (obj.val || (_.isString(obj.index) || _.isNumber(obj.index)));
+};
+
 /**
  * Array of string or number elements where ever element is unique (not enforced through type)
  */
@@ -52,9 +64,7 @@ export const deltaArrayDiff = (beforeArr: (string | number)[], afterArr: (string
     }, changeOps);
 
     // additions -- iterate through after arr to have insertions op indexes be updated in correct order
-    console.log('Calculate add ops');
     changeOps = afterArr.reduce((acc, key, index) => {
-        console.log(`key: ${key}, index: ${index}`);
         if ((_.isNumber(key) || _.isString(key)) && !_.isNumber(beforeMap[key])) {
             acc.push({
                 val: key,
@@ -72,9 +82,7 @@ export const deltaArrayDiff = (beforeArr: (string | number)[], afterArr: (string
     // loop through after array and when the key differs from the opsApplied array create/ push a move operation
     // then update the opsApplied array to determine the next operation from the most recent version of the array
     afterArr.reduce((accOps, key, index) => {
-        console.log(`key ${key}. index: ${index}. applied ops: ${JSON.stringify(opsApplied)}`);
         let currentIndex = toIndexMap(opsApplied)[key];
-        console.log(`current index: ${currentIndex}`);
         if (currentIndex !== index) {
             let moveOp: DeltaArrayOp = {
                 beforeIndex: currentIndex,
