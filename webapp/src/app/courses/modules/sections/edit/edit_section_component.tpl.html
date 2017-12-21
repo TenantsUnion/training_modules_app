@@ -8,29 +8,25 @@
     <template v-if="currentSection && section">
         <vue-form :state="formstate" @submit.prevent="saveSection">
             <validate>
-                <small class="error"
-                       v-if="errorMessages && errorMessages.title">
-                    {{errorMessages.title}}
+                <small class="error" v-if="errorMessages">
+                    {{errorMessages}}
                 </small>
             </validate>
             <validate>
                 <div class="row">
                     <div class="columns small-12 large-10">
-                        <field-messages name="title"
-                                        show="$submitted || $dirty">
+                        <field-messages name="title" show="$submitted || $dirty">
                             <small class="error" slot="required">
                                 A title is need to create a section
                             </small>
                         </field-messages>
-                        <div>
-                            <label for="section-title">Title
-                                <input v-model="section.title" type="text"
-                                       name="title"
-                                       required
-                                       placeholder="Section Title"
-                                       id="section-title"/>
-                            </label>
-                        </div>
+                        <label for="section-title">Title
+                            <input v-model="section.title" type="text"
+                                   name="title"
+                                   required
+                                   placeholder="Section Title"
+                                   id="section-title"/>
+                        </label>
                     </div>
                 </div>
             </validate>
@@ -66,7 +62,8 @@
             </div>
             <div class="row">
                 <div class="columns small-2">
-                    <button v-bind:disabled="saving || loading" @click="saveSection" class="button" type="button">Save
+                    <button v-bind:disabled="saving || loading" @click="saveSection" class="button" type="button">
+                        Save
                     </button>
                 </div>
             </div>
