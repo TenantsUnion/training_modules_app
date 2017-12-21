@@ -17,16 +17,21 @@ export class QuillRepository extends AbstractRepository {
     }
 
     async loadEditorJson(id: string): Promise<QuillEditorData> {
-        try {
-            let result = await this.sqlTemplate.query({
-                text: `SELECT id, editor_json FROM tu.quill_data WHERE
+        let result = await this.sqlTemplate.query({
+            text: `SELECT id, editor_json FROM tu.quill_data WHERE
                           id = $1`,
-                values: [id]
-            });
-            return result[0];
-        } catch (e) {
-            this.logger.error('Failed to execute ')
-        }
+            values: [id]
+        });
+        return result[0];
+    }
+
+    async loadQuillData(ids: string[]): Promise<QuillEditorData[]> {
+        let result = await this.sqlTemplate.query({
+            text: `SELECT id, version, editor_json FROM tu.quill_data WHERE
+                          id = ANY ($1)`,
+            values: [ids]
+        });
+        return result;
     }
 
     async insertEditorJson(quillId: string, editorJson: Quill.DeltaStatic): Promise<void> {
@@ -37,13 +42,11 @@ export class QuillRepository extends AbstractRepository {
         });
     }
 
-    async updateEditorJson(id: string, editorJson: Quill.DeltaStatic): Promise<void> {
+    async updateEditorJson(quillData: QuillEditorData): Promise<void> {
         await this.sqlTemplate.query({
-            text: `UPDATE tu.quill_data SET
-                          editor_json = $1,
-                           last_modified_at = $2 WHERE
-                          id = $3`,
-            values: [editorJson, new Date(), id]
+            text: `UPDATE tu.quill_data SET editor_json = $1, last_modified_at = $2, version = $3
+                          WHERE id = $4`,
+            values: [quillData.editorJson, new Date(), quillData.version, quillData.id]
         });
     }
 

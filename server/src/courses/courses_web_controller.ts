@@ -8,13 +8,12 @@ import {getLogger} from '../log';
 import {CreateModuleEntityCommand, SaveModuleData} from "../../../shared/modules";
 import {CoursesRepository} from './courses_repository';
 import {ModuleOperations} from '../module/module_routes';
-import {CreateSectionEntityPayload, SaveSectionData} from '../../../shared/sections';
+import {CreateSectionEntityPayload, SaveSectionEntityPayload} from '../../../shared/sections';
 import {coursesHandler} from '../config/handler_config';
 import {SectionOperations} from '../section/section_routes';
 import {validateCreateCourse, validateSaveCourse} from './courses_validation';
 import {logHandleServerError, logHandleValidationError} from '../util/handle_validation_error';
 import {CoursesViewHandler} from './courses_view_handler';
-import {courseQueryService} from '../config/query_service_config';
 
 export class CourseCommandController implements ModuleOperations, SectionOperations {
     private logger = getLogger('CoursesController', 'info');
@@ -108,7 +107,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     }
 
     async saveSection(request: express.Request, response: express.Response) {
-        let saveSectionData: SaveSectionData = request.body;
+        let saveSectionData: SaveSectionEntityPayload = request.body.payload;
         try {
             let course = await this.coursesHandler.saveSection(saveSectionData);
             response.status(200).send(course);

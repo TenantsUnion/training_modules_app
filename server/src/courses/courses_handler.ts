@@ -4,7 +4,7 @@ import {CoursesRepository} from "./courses_repository";
 import {getLogger} from '../log';
 import {CreateModuleEntityCommand, CreateModuleResponse, SaveModuleData} from "../../../shared/modules";
 import {
-    CreateSectionEntityPayload, CreateSectionResponse, SaveSectionData,
+    CreateSectionEntityPayload, CreateSectionResponse, SaveSectionEntityPayload, SaveSectionResponse,
     ViewSectionTransferData
 } from '../../../shared/sections';
 import {SectionHandler} from '../section/section_handler';
@@ -101,7 +101,7 @@ export class CoursesHandler {
             this.coursesRepository.updateLastModified(moduleData.courseId),
             this.moduleRepo.saveModule(sectionsRemoved),
             this.moduleRepo.updateLastModified(moduleData.id),
-            this.quillRepository.updateEditorJson(moduleData.headerContentId, moduleData.headerContent),
+            // this.quillRepository.updateEditorJson(moduleData.headerContentId, moduleData.headerContent),
         ]);
 
         //remove sections from module
@@ -128,13 +128,18 @@ export class CoursesHandler {
         return this.coursesRepository.loadAdminCourse(moduleData.courseId);
     }
 
-    async saveSection(sectionData: SaveSectionData): Promise<ViewCourseTransferData> {
+    async saveSection(sectionData: SaveSectionEntityPayload): Promise<SaveSectionResponse> {
+        let {id, moduleId, courseId} = sectionData;
         try {
-            await this.coursesRepository.updateLastModified(sectionData.courseId);
-            await this.moduleRepo.updateLastModified(sectionData.moduleId);
+            await this.coursesRepository.updateLastModified(courseId);
+            await this.moduleRepo.updateLastModified(moduleId);
             await this.sectionHandler.saveSection(sectionData);
 
-            return this.coursesRepository.loadAdminCourse(sectionData.courseId);
+            let course = await this.coursesRepository.loadAdminCourse(courseId);
+            return {
+                sectionId: id,
+                moduleId, course
+            };
         } catch (e) {
             this.logger.error(e);
             this.logger.error(e.stack);

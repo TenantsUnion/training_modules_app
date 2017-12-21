@@ -1,6 +1,6 @@
 import {AbstractRepository} from '../repository';
 import {Datasource} from '../datasource';
-import {CreateSectionEntityPayload, SaveSectionData} from '../../../shared/sections';
+import {CreateSectionEntityPayload, SaveSectionEntityPayload, SectionEntity} from '../../../shared/sections';
 import {getLogger} from '../log';
 
 export class SectionRepository extends AbstractRepository {
@@ -10,22 +10,32 @@ export class SectionRepository extends AbstractRepository {
         super('section_id_seq', sqlTemplate);
     }
 
-    async createSection(data: CreateSectionEntityPayload, quillId: string): Promise<string> {
+    async createSection(data: CreateSectionEntityPayload, quillIds: string[]): Promise<string> {
         let sectionId = await this.getNextId();
         await this.sqlTemplate.query({
-            text: ` INSERT INTO tu.section (id, title, description, ordered_content_ids, time_estimate)
-                             VALUES ($1, $2, $3, ARRAY[$4::bigint], $5)`,
-            values: [sectionId, data.title, data.description, quillId, data.timeEstimate]
+            text: ` INSERT INTO tu.section (id, title, description, time_estimate, ordered_content_ids, ordered_content_question_ids)
+                             VALUES ($1, $2, $3, $4, $5, $5)`,
+            values: [sectionId, data.title, data.description, data.timeEstimate, quillIds]
         });
         return sectionId;
     }
 
-    async updateSection(data: SaveSectionData): Promise<void> {
+    async updateSection(data: SectionEntity): Promise<void> {
         await this.sqlTemplate.query({
-            text: `UPDATE tu.section s SET title = $1, description = $2, time_estimate = $3, last_modified_at = $4
-                        WHERE s.id = $5`,
-            values: [data.title, data.description, data.timeEstimate, new Date(), data.id]
+            text: `UPDATE tu.section s SET title = $1, description = $2, time_estimate = $3, last_modified_at = $4,
+                        ordered_content_ids = $5, ordered_content_question_ids = $5
+                   WHERE s.id = $6`,
+            values: [data.title, data.description, data.timeEstimate, new Date(), data.orderedContentIds, data.id]
         });
+    }
+
+    async loadSection(id): Promise<SectionEntity> {
+        let results = await this.sqlTemplate.query({
+            text: `SELECT * from tu.section s WHERE s.id = $1`,
+            values: [id]
+        });
+
+        return results[0];
     }
 
     async remove(sectionId: string): Promise<void> {

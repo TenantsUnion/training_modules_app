@@ -43,8 +43,8 @@ export class UserContentHandler {
             (async () => {
                 try {
                     await this.contentRepository.saveContent(updateUserContentCommand);
-                    await this.quillRepository.updateEditorJson(updateUserContentCommand.quillDataId,
-                        updateUserContentCommand.quillData);
+                    // await this.quillRepository.updateEditorJson(updateUserContentCommand.quillDataId,
+                    //     updateUserContentCommand.quillData);
                     resolve();
                 } catch (e) {
                     reject(e);

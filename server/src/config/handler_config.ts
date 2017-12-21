@@ -14,7 +14,7 @@ import {quillHandler} from '../quill/quill_handler';
 
 export const userHandler = new UserHandler(userRepository);
 export const accountHandler = new AccountHandler(accountRepository, userHandler);
-const sectionHandler = new SectionHandler(sectionRepository, quillRepository);
+const sectionHandler = new SectionHandler(sectionRepository, quillHandler);
 export const coursesHandler = new CoursesHandler(coursesRepository, quillHandler, quillRepository, userHandler,
         moduleRepository, sectionHandler, courseQueryService);
 export const coursesViewHandler = new CoursesViewHandler(coursesRepository, courseQueryService);
