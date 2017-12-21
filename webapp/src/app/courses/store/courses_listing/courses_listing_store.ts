@@ -28,19 +28,21 @@ export const userCoursesListingState: UserCoursesListingState = {
 /**
  * Getters
  */
-
 export interface UserCoursesListingGetters {
     getCourseIdFromSlug: (slug) => string;
     getSlugFromCourseId: (courseId) => string;
 }
 
+export type getCourseIdFromSlugFn = (slug: string) => string;
+export type getCourseSlugFromIdFn = (id: string) => string;
+
 export const userCoursesListingGetters: {[index in keyof UserCoursesListingGetters]: AppGetter<UserCoursesListingState>} = {
-    getCourseIdFromSlug(state, getters, rootState, rootGetters) {
+    getCourseIdFromSlug(state, getters, rootState, rootGetters): getCourseIdFromSlugFn {
         return function (slug) {
             return state.courseSlugIdMap[slug];
         }
     },
-    getSlugFromCourseId({courseSlugIdMap}, getters: RootGetters) {
+    getSlugFromCourseId({courseSlugIdMap}, getters: RootGetters): getCourseSlugFromIdFn {
         let courseIdSlugMap = Object.keys(courseSlugIdMap).reduce((acc, slug) => {
             acc[courseSlugIdMap[slug]] = slug;
             return acc;
@@ -124,10 +126,10 @@ export const userCoursesListingActions: UserCoursesListingActions & ActionTree<U
             return;
         }
 
-        let courseListinsLoaded = userCoursesHttpService.getUserAdminCourses(rootState.user.username);
+        let courseListingLoaded = userCoursesHttpService.getUserAdminCourses(rootState.user.username);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS_LOADING, true);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, courseListinsLoaded);
+        commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, courseListingLoaded);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS_LOADING, false);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, await courseListinsLoaded);
+        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, await courseListingLoaded);
     }
 };
