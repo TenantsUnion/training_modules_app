@@ -1,6 +1,6 @@
 import {Moment} from 'moment';
 import {
-    CreateTrainingEntityPayload, TrainingEntityDiffDelta,
+    CreateTrainingEntityPayload, SaveTrainingEntityPayload, TrainingEntityDiffDelta,
     TrainingEntityPayload
 } from './training_entity';
 import {QuillEditorData} from 'quill_editor.ts';
@@ -20,9 +20,12 @@ interface ViewSectionData {
     title: string;
     description: string;
     timeEstimate: string;
+    orderedContentIds: string[];
+    orderedQuestionIds: string[];
+    orderedContentQuestionIds: string[];
 }
 
-export interface ViewSectionQuillData extends TrainingEntityPayload {
+export interface ViewSectionQuillData extends ViewSectionData {
     createdAt: Moment;
     lastModifiedAt: Moment;
     content: QuillEditorData[];
@@ -34,11 +37,9 @@ export interface ViewSectionTransferData extends ViewSectionData {
     orderedContentIds: string[];
 }
 
-export interface SaveSectionEntityPayload {
-    id: string;
+export interface SaveSectionEntityPayload extends SaveTrainingEntityPayload<TrainingEntityDiffDelta> {
     courseId: string;
     moduleId: string;
-    changes: TrainingEntityDiffDelta;
 }
 
 export interface SaveSectionResponse {

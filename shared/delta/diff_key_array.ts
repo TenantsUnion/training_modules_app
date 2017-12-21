@@ -7,7 +7,7 @@ export interface DeltaArrayOp {
     beforeIndex?: number
 }
 
-export const isDeltaArrDiff = (arr: any): arr is DeltaArrDiff => {
+export const isDeltaArrDiff = (arr: any): arr is DeltaArrOps => {
     return _.isArray(arr) && arr.every((obj) => isDeltaArrOp(obj));
 };
 
@@ -24,7 +24,7 @@ export const isDeltaArrOp = (obj: any): obj is DeltaArrayOp => {
  */
 type KeyArray = (number | string)[]
 
-export type DeltaArrDiff = DeltaArrayOp[];
+export type DeltaArrOps = DeltaArrayOp[];
 
 /**
  * Expects each Delta Object array to hash to a unique key when called with the key function.
@@ -34,7 +34,7 @@ export type DeltaArrDiff = DeltaArrayOp[];
  * @param {(delta: DeltaObj) => string} keyFn
  * @returns {delta.DeltaArrDiff}
  */
-export const deltaArrayDiff = (beforeArr: (string | number)[], afterArr: (string | number)[]): DeltaArrDiff => {
+export const deltaArrayDiff = (beforeArr: (string | number)[], afterArr: (string | number)[]): DeltaArrOps => {
     // cases -- no change, elements moved (how to identify unique elements?), elements deleted, elements added,
     // think of as array of ids -- title and description is part of the view/ changes handled differently
     // each element is unique
@@ -133,4 +133,19 @@ export const applyDeltaArrOps = (keyArray: KeyArray, ops: DeltaArrayOp[]): KeyAr
         }
         return intermediateArr;
     }, _.extend([], keyArray));
+};
+
+/**
+ * Updates each {@link DeltaArrayOp#val} in the provided DeltaArrOps with the corresponding property value in the
+ * provided valReplaceMap. If there is no corresponding key the original value is used.
+ *
+ * @param {DeltaArrOps} deltaArr
+ * @param valReplaceMap
+ * @returns {DeltaArrOps}
+ */
+export const updateArrOpsValues = (deltaArr: DeltaArrOps, valReplaceMap: { [p: string]: string }): DeltaArrOps => {
+    return deltaArr.map((quillArrOp: DeltaArrayOp) => {
+        let quillId = valReplaceMap[quillArrOp.val];
+        return quillId ? _.extend({}, quillArrOp, {val: quillId}) : quillArrOp;
+    });
 };

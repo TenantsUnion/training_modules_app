@@ -3,7 +3,7 @@ import {Moment} from 'moment';
 import {QuillEditorData} from 'quill_editor.ts';
 import {Entity, EntityCommand, SaveEntityCommand} from 'entity';
 import {DeltaObjDiff, QuillContentObj} from './delta/delta';
-import {DeltaArrDiff} from './delta/diff_key_array';
+import {DeltaArrOps} from './delta/diff_key_array';
 import {ContentSegment} from './segment';
 
 export interface ViewTrainingEntity {
@@ -15,7 +15,6 @@ export interface ViewTrainingEntity {
 }
 
 export interface ViewTrainingEntityTransferData extends ViewTrainingEntity {
-    slug: string;
     lastModifiedAt: string;
     orderedContentIds: string[],
     orderedQuestionIds: string[],
@@ -48,9 +47,9 @@ export interface TrainingEntityDiffDelta extends DeltaObjDiff {
     description?: string;
     timeEstimateMinutes?: string;
     changeQuillContent?: QuillContentObj,
-    orderedContentIds?: DeltaArrDiff
-    orderedQuestionIds?: DeltaArrDiff;
-    orderedContentQuestionIds?: DeltaArrDiff;
+    orderedContentIds?: DeltaArrOps
+    orderedQuestionIds?: DeltaArrOps;
+    orderedContentQuestionIds?: DeltaArrOps;
 }
 
 export type OrderedContentQuestions = (QuillEditorData | Question)[];
@@ -60,6 +59,11 @@ export interface CreateTrainingEntityPayload {
     description?: string;
     timeEstimate?: string;
     orderedContentQuestions: OrderedContentQuestions;
+}
+
+export interface SaveTrainingEntityPayload<T extends TrainingEntityDiffDelta> {
+    id: string;
+    changes: T;
 }
 
 export type CreateTrainingEntityCommand<T, P extends CreateTrainingEntityPayload> = EntityCommand<T, P>;

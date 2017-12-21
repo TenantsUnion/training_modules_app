@@ -1,6 +1,6 @@
 import * as _ from "underscore";
 import {isDeltaStatic} from './typeguards_delta';
-import {DeltaArrayOp, DeltaArrDiff} from './diff_key_array';
+import {DeltaArrayOp, DeltaArrOps} from './diff_key_array';
 
 export interface Delta extends Quill.DeltaStatic {
 }
@@ -11,9 +11,9 @@ export interface DeltaObj {
 }
 
 
-export type DeltaDiff = number | boolean | string | DeltaArrDiff | QuillContentObj;
+export type DeltaDiff = number | boolean | string | DeltaArrOps | QuillContentObj;
 
-export interface DeltaObjDiff {
+export type DeltaObjDiff = {
     [index: string]: DeltaDiff;
 }
 

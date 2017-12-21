@@ -1,12 +1,15 @@
+import * as _ from 'underscore';
 import {Moment} from "moment";
 import {ModuleEntity, ViewModuleTransferData} from 'modules.ts';
 import {ContentSegment} from './segment';
 import {
-    CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, TrainingEntityDiffDelta,
+    CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, SaveTrainingEntityPayload,
+    TrainingEntityDiffDelta,
     TrainingEntityPayload
 } from './training_entity';
 import {EntityCommandMetaData} from './entity';
-import {DeltaArrDiff} from './delta/diff_key_array';
+import {DeltaArrOps} from './delta/diff_key_array';
+import {diffPropsDeltaObj, TRAINING_ENTITY_BASIC_PROPS} from './delta/diff_delta';
 
 export type CourseEntityType = 'CourseEntity';
 export type CreateCourseEntityCommand = CreateTrainingEntityCommand<CourseEntityType, CreateCourseEntityPayload>;
@@ -17,6 +20,7 @@ export interface CreateCourseEntityPayload extends CreateTrainingEntityPayload {
     openEnrollment: boolean;
 }
 
+export type SaveCourseEntityPayload = SaveTrainingEntityPayload<CourseEntityDiffDelta>;
 export type CourseEntityCommandMetadata = EntityCommandMetaData<CourseEntity>;
 
 export interface CourseEntity extends TrainingEntityPayload {
@@ -30,7 +34,7 @@ export interface CourseEntity extends TrainingEntityPayload {
 export interface CourseEntityDeltas extends TrainingEntityDiffDelta {
     active?: boolean;
     openEnrollment?: boolean;
-    orderedModuleIds?: DeltaArrDiff;
+    orderedModuleIds?: DeltaArrOps;
 }
 
 export interface ViewCourseData {
@@ -42,6 +46,11 @@ export interface ViewCourseData {
     description: string,
     timeEstimate: string,
     createdBy: string,
+
+    orderedModuleIds: string[],
+    orderedContentIds: string[],
+    orderedQuestionIds: string[],
+    orderedContentQuestionIds: string[]
 }
 
 export interface ViewCourseQuillData extends ViewCourseData {
@@ -55,7 +64,6 @@ export interface ViewCourseQuillData extends ViewCourseData {
  * the corresponding ids and timestamps are in string form.
  */
 export interface ViewCourseTransferData extends ViewCourseData {
-    slug?: string;
     lastModifiedAt: string;
     modules: ViewModuleTransferData[],
     orderedModuleIds: string[],
@@ -67,9 +75,7 @@ export interface ViewCourseTransferData extends ViewCourseData {
 export interface UserEnrolledCourseData extends ViewCourseQuillData {
     //todo maybe user description?
     //todo module and section progress
-}
-
-export interface CourseDescription {
+} export interface CourseDescription {
     id: string;
     slug?: string;
     title: string;
@@ -87,5 +93,20 @@ export interface CreateCourseResponse {
     id: string,
     title: string,
     slug: string
+}
+
+export interface CourseEntityDiffDelta extends TrainingEntityDiffDelta {
+    active?: boolean;
+    openEnrollment?: boolean;
+    modules?: DeltaArrOps;
+}
+
+export interface SaveCourseResponse {
+    course: ViewCourseTransferData;
+}
+
+export const diffBasicPropsCourseProps = (before: ViewCourseQuillData, after: ViewCourseQuillData): CourseEntityDiffDelta => {
+    return diffPropsDeltaObj(_.extend(['active', 'openEnrollment'], TRAINING_ENTITY_BASIC_PROPS), before, after);
 };
+
 

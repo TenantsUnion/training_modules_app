@@ -2,7 +2,7 @@ import {SectionEntity, ViewSectionTransferData} from "sections.ts";
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, TrainingEntityDiffDelta, TrainingEntityPayload, ViewTrainingEntityQuillData, ViewTrainingEntityTransferData
 } from './training_entity';
-import {DeltaArrDiff} from './delta/diff_key_array';
+import {DeltaArrOps} from './delta/diff_key_array';
 import {ViewCourseTransferData} from './courses';
 
 export type ModuleEntityType = 'ModuleEntity';
@@ -22,7 +22,7 @@ export interface ModuleEntity extends TrainingEntityPayload {
 }
 
 export interface ModuleEntityDeltas extends TrainingEntityDiffDelta {
-    orderedSectionIds?: DeltaArrDiff;
+    orderedSectionIds?: DeltaArrOps;
 }
 
 export interface CreateModuleEntityPayload extends CreateTrainingEntityPayload {
