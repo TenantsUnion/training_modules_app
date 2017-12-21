@@ -25,7 +25,7 @@ export interface SectionActions {
     NEXT_SECTION: SectionAction<void>;
     PREVIOUS_SECTION: SectionAction<void>;
     SAVE_SECTION: SectionAction<SaveSectionEntityPayload>;
-    LOAD_SECTION_ENTITY: SectionAction<{sectionId: string, moduleId: string}>
+    LOAD_SECTION_ENTITY: SectionAction<{ sectionId: string, moduleId: string }>
 }
 
 /**
@@ -115,8 +115,8 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
         commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
         await dispatch(SECTION_ACTIONS.LOAD_SECTION_ENTITY, response);
     },
-    async LOAD_SECTION_ENTITY({commit, getters}, ids: {sectionId: string, moduleId: string}) {
-       let sectionTransferData = getters.getSectionTransferData(ids.moduleId, ids.sectionId);
+    async LOAD_SECTION_ENTITY({commit, getters}, ids: { sectionId: string, moduleId: string }) {
+        let sectionTransferData = getters.getSectionTransferData(ids.moduleId, ids.sectionId);
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: ids.sectionId, requesting: true});
         let moduleEntity = await transformTransferViewService.populateTrainingEntityQuillData(sectionTransferData);
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: ids.sectionId, requesting: false});
