@@ -16,7 +16,7 @@ export interface SectionGetters {
     currentSectionLoading: boolean;
     currentSectionLoaded: boolean;
     getSectionIdFromSlug: (slugs: { moduleId: string, sectionSlug: string }) => string;
-    getSectionSlugFromId: (id: string) => string;
+    getSectionSlugFromId: (slugInfo: {moduleId: string, sectionId: string}) => string;
 }
 
 export const sectionGetters: {[index in keyof SectionGetters]: SectionGetterFn} = {

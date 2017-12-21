@@ -10,7 +10,7 @@ import {currentSectionRouteGuard} from '../view/view_section_component';
 import {Segment} from '../../../../../../../shared/segment';
 import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
 import {Watch} from 'vue-property-decorator';
-import {diffPropsDeltaObj} from '../../../../../../../shared/delta/diff_delta';
+import {diffBasicPropsTrainingEntity} from '../../../../../../../shared/delta/diff_delta';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {SegmentViewerComponent} from '../../../../global/segment_viewer/segment_viewer_component';
 import {deltaArrayDiff} from '../../../../../../../shared/delta/diff_key_array';
@@ -41,7 +41,7 @@ import {TrainingEntityDiffDelta} from '../../../../../../../shared/training_enti
 })
 export class EditSectionComponent extends Vue {
     saving: boolean;
-    errorMessages: { [index: string]: string };
+    errorMessages: {};
     quillContent: Segment[] = [];
     formstate: VueForm.FormState;
     section: ViewSectionQuillData;
@@ -71,17 +71,15 @@ export class EditSectionComponent extends Vue {
         this.errorMessages = null;
 
         // primitive keys diff
-        let changes: TrainingEntityDiffDelta = diffPropsDeltaObj(['title', 'description', 'timeEstimate'], this.currentSection, this.section);
+        let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.currentSection, this.section);
 
         // quill content diff
-        let quillContentChanges =(<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
-        changes.changeQuillContent = quillContentChanges;
+        changes.changeQuillContent = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
 
         // ordered content ids diff
         let userChangedContent = this.quillContent.map(({id}) => id);
-        let orderedContentDiff = deltaArrayDiff(this.currentSection.orderedContentIds, userChangedContent);
-        changes.orderedContentIds = orderedContentDiff;
-        changes.orderedContentQuestionIds = orderedContentDiff;
+        changes.orderedContentIds = deltaArrayDiff(this.currentSection.orderedContentIds, userChangedContent);
+        changes.orderedContentQuestionIds = deltaArrayDiff(this.currentSection.orderedContentIds, userChangedContent);
 
         let saveSectionPayload: SaveSectionEntityPayload = {
             id: this.section.id,
@@ -95,6 +93,12 @@ export class EditSectionComponent extends Vue {
             await this.$store.dispatch(SECTION_ACTIONS.SAVE_SECTION, saveSectionPayload);
             this.$router.push({
                 name: COURSES_ROUTE_NAMES.viewSection,
+                params: {
+                    sectionSlug: this.$store.getters.getSectionSlugFromId({
+                        sectionId: this.$store.state.section.currentSectionId,
+                        moduleId: this.$store.state.module.currentModuleId
+                    })
+                }
             });
 
         } catch (errorMessages) {

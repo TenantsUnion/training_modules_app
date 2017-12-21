@@ -8,6 +8,12 @@
     <template v-if="currentSection && section">
         <vue-form :state="formstate" @submit.prevent="saveSection">
             <validate>
+                <small class="error"
+                       v-if="errorMessages && errorMessages.title">
+                    {{errorMessages.title}}
+                </small>
+            </validate>
+            <validate>
                 <div class="row">
                     <div class="columns small-12 large-10">
                         <field-messages name="title"
@@ -16,10 +22,6 @@
                                 A title is need to create a section
                             </small>
                         </field-messages>
-                        <small class="error"
-                               v-if="errorMessages && errorMessages.title">
-                            {{errorMessages.title}}
-                        </small>
                         <div>
                             <label for="section-title">Title
                                 <input v-model="section.title" type="text"
@@ -64,7 +66,8 @@
             </div>
             <div class="row">
                 <div class="columns small-2">
-                    <button v-bind:disabled="saving || loading" @click="saveSection" class="button" type="button">Save</button>
+                    <button v-bind:disabled="saving || loading" @click="saveSection" class="button" type="button">Save
+                    </button>
                 </div>
             </div>
         </vue-form>
