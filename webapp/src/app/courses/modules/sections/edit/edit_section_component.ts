@@ -15,6 +15,7 @@ import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {SegmentViewerComponent} from '../../../../global/segment_viewer/segment_viewer_component';
 import {deltaArrayDiff} from '../../../../../../../shared/delta/diff_key_array';
 import {TrainingEntityDiffDelta} from '../../../../../../../shared/training_entity';
+import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
 
 @Component({
     data: () => {
@@ -26,12 +27,14 @@ import {TrainingEntityDiffDelta} from '../../../../../../../shared/training_enti
         };
     },
     computed: {
-        ...mapGetters(['currentSection']),
+        ...mapGetters(['currentSection', 'getSectionSlugFromId']),
         ...mapState({
             loading: (state: RootState, getters: RootGetters) => {
                 return !getters.currentSection || getters.currentSectionLoading
                     || getters.currentCourseLoading || getters.currentModuleLoading;
-            }
+            },
+            currentCourseId: ({course: {currentCourseId}}) => currentCourseId,
+            currentModuleId: ({module: {currentModuleId}}) => currentModuleId,
         })
     },
     beforeRouteUpdate: currentSectionRouteGuard,
@@ -46,12 +49,16 @@ export class EditSectionComponent extends Vue {
     formstate: VueForm.FormState;
     section: ViewSectionQuillData;
     currentSection: ViewSectionQuillData;
+    currentCourseId: string;
+    currentModuleId: string;
+    getSectionSlugFromId: getSectionSlugFromIdFn;
 
     @Watch('currentSection', {immediate: true})
     updateSection(currentSection: ViewSectionQuillData, oldCurrentSection) {
         let section = currentSection ? _.extend({}, currentSection) : this.section;
         let quillContent = currentSection ? _.map(currentSection.content, (content) => {
             return _.extend({}, content, {
+                // add callback that removes content element from component array before passing to segment viewer
                 removeCallback: () => {
                     let rmIndex = this.quillContent.findIndex((el) => el.id === content.id);
                     this.quillContent.splice(rmIndex, 1);
@@ -77,14 +84,16 @@ export class EditSectionComponent extends Vue {
         changes.changeQuillContent = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
 
         // ordered content ids diff
-        let userChangedContent = this.quillContent.map(({id}) => id);
-        changes.orderedContentIds = deltaArrayDiff(this.currentSection.orderedContentIds, userChangedContent);
-        changes.orderedContentQuestionIds = deltaArrayDiff(this.currentSection.orderedContentIds, userChangedContent);
+        let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);
+        let {orderedContentIds} = this.currentSection;
+        changes.orderedContentIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
+        // todo question handling
+        changes.orderedContentQuestionIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
 
         let saveSectionPayload: SaveSectionEntityPayload = {
             id: this.section.id,
-            courseId: this.$store.state.course.currentCourseId,
-            moduleId: this.$store.state.module.currentModuleId,
+            courseId: this.currentCourseId,
+            moduleId: this.currentModuleId,
             changes
         };
 
@@ -94,13 +103,12 @@ export class EditSectionComponent extends Vue {
             this.$router.push({
                 name: COURSES_ROUTE_NAMES.viewSection,
                 params: {
-                    sectionSlug: this.$store.getters.getSectionSlugFromId({
-                        sectionId: this.$store.state.section.currentSectionId,
-                        moduleId: this.$store.state.module.currentModuleId
+                    sectionSlug: this.getSectionSlugFromId({
+                        sectionId: this.currentSection.id,
+                        moduleId: this.currentModuleId
                     })
                 }
             });
-
         } catch (errorMessages) {
             console.error(errorMessages);
             this.errorMessages = errorMessages;
