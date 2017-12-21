@@ -1,4 +1,4 @@
-import Vuex, {Getter, Store} from 'vuex';
+import Vuex, {Action, ActionContext, Getter, Store} from 'vuex';
 import Vue from 'vue';
 import {CourseGetters, courseGetters, CourseState, courseState} from './courses/store/course/course_state';
 import {ModuleGetters, moduleGetters, ModuleState, moduleState} from './courses/store/module/module_state';
@@ -18,6 +18,15 @@ import {sectionMutations} from './courses/store/section/section_mutations';
 
 Vue.use(Vuex);
 
+/**
+ * Type for vuex action that generically types the payload (default definition has payload typed to 'any')
+ */
+export type TypedAction<S, P> = (context: ActionContext<S, RootState>, payload: P) => Promise<any> | Action<S, RootState>;
+/**
+ * Stronger typing than vuex ActionTree that only enforces string keys and Action properties.
+ * This goes one step further by being able to enforce an interface I with each property an action with a typed payload
+ */
+export type TypedActionTree<I extends {}, S> = {[index in keyof I]: TypedAction<S, any>} & I;
 export const store: Store<RootState> = new Vuex.Store({
     strict: process.env.NODE_ENV !== 'production',
     modules: {
