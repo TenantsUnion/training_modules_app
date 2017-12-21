@@ -1,8 +1,7 @@
 import Vue from "vue";
 import Component from 'vue-class-component';
-import {isDeltaStatic} from '../../../../../shared/delta/typeguards_delta';
 import {QuillDeltaMap, QuillEditorData} from "quill_editor.ts";
-import {QuillChangeObj, QuillComponent} from '../quill/quill_component';
+import {QuillComponent} from '../quill/quill_component';
 import {ContentSegment, isContentSegment, Segment} from '../../../../../shared/segment';
 import {QuillContentObj} from '../../../../../shared/delta/delta';
 import {diffQuillContentObj} from '../../../../../shared/delta/diff_delta';
@@ -21,7 +20,7 @@ import {diffQuillContentObj} from '../../../../../shared/delta/diff_delta';
     },
     template: `
         <div>
-            <div v-for="(segment, index) in segments">
+            <div v-for="(segment, index) in segments" :key="segment.id">
                 <quill-editor v-if="isContent(segment)" ref="contentEditor"
                               :editor-json="segment.editorJson"
                               :editor-id="segment.id"
