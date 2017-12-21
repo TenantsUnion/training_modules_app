@@ -16,7 +16,6 @@ Quill.register(ColorClass);
 Quill.register(SizeClass);
 
 let Delta: Quill.DeltaStatic = Quill.import('delta');
-let counter = 0;
 const BLANK_QUILL_OP: Quill.DeltaOperation = {
     insert: '\n'
 };
@@ -96,7 +95,6 @@ export class QuillComponent extends Vue {
     created() {
         this.editorSelector = `editor-${this.editorId}`;
         this.toolbarSelector = `toolbar-${this.editorId}`;
-        counter++;
     }
 
     mounted() {
@@ -121,7 +119,6 @@ export class QuillComponent extends Vue {
                     editorId: this.editorId,
                     delta, oldContents, source
                 };
-                console.log(`quill changed calling on change: ${JSON.stringify(changeObj, null, 2)}`);
                 this.onChange(changeObj);
             }
             this.userChanges = this.userChanges.compose(delta);
