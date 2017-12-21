@@ -1,7 +1,7 @@
 import * as express from "express";
 import {Request, Response} from "express";
 import {
-    AdminCourseDescription, SaveCourseEntityCommand, CreateCourseEntityCommand
+    AdminCourseDescription, SaveCourseEntityCommand, CreateCourseEntityCommand, SaveCourseEntityPayload
 } from "courses.ts";
 import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
@@ -42,7 +42,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     }
 
     async saveCourse(request: express.Request, response: express.Response) {
-        let course: SaveCourseEntityCommand = request.body;
+        let course: SaveCourseEntityPayload = request.body.payload;
         try {
             let errMsgs = validateSaveCourse(course);
             if (errMsgs) {

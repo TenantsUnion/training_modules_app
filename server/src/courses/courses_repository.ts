@@ -1,7 +1,7 @@
 import {Datasource} from "../datasource";
 import {
-    AdminCourseDescription, UserEnrolledCourseData,
-    EnrolledCourseDescription, SaveCourseEntityCommand, ViewCourseTransferData, CreateCourseEntityPayload
+    AdminCourseDescription, UserEnrolledCourseData, EnrolledCourseDescription,
+    ViewCourseTransferData, CreateCourseEntityPayload
 } from "courses.ts";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
@@ -19,7 +19,6 @@ export class CoursesRepository extends AbstractRepository implements CoursesRepo
 
     async loadUserAdminCourses(username: string): Promise<AdminCourseDescription[]> {
         let result = await this.datasource.query({
-            // language=PostgreSQL
             text: `
                           SELECT c.id, c.title, c.time_estimate FROM tu.course c JOIN
                             (SELECT unnest(
@@ -41,38 +40,24 @@ export class CoursesRepository extends AbstractRepository implements CoursesRepo
     async loadUserEnrolledCourses(username: string): Promise<EnrolledCourseDescription[]> {
         this.logger.log('info', 'Retrieving courses for user: %s', username);
 
-        return new Promise<AdminCourseDescription[]>((resolve, reject) => {
-            if (!username) {
-                reject(`No username provided to load enrolled courses`);
-            }
-
-            (async () => {
-                try {
-                    let result = await this.datasource.query({
-                        // language=PostgreSQL
-                        text: `
-                          SELECT id, title FROM tu.course c JOIN
+        let result = await this.datasource.query({
+            text: ` SELECT id, title FROM tu.course c JOIN
                             (SELECT unnest(
                                      u.enrolled_in_course_ids) AS enrolled_course_id FROM
                                tu.user u WHERE u.username = $1) u
                               ON c.id = u.enrolled_course_id
                         `,
-                        values: [username]
-                    });
-
-                    let enrolled: EnrolledCourseDescription[] = result.map((row) => {
-                        return <EnrolledCourseDescription> {
-                            id: row.id,
-                            title: row.title
-                        };
-                    });
-
-                    resolve(enrolled);
-                } catch (e) {
-                    reject(e);
-                }
-            })();
+            values: [username]
         });
+
+        let enrolled: EnrolledCourseDescription[] = result.map((row) => {
+            return <EnrolledCourseDescription> {
+                id: row.id,
+                title: row.title
+            };
+        });
+
+        return enrolled;
     }
 
 
@@ -148,17 +133,15 @@ export class CoursesRepository extends AbstractRepository implements CoursesRepo
         });
     }
 
-    async saveCourse(course: SaveCourseEntityCommand): Promise<void> {
-
-        const lastModified = new Date();
-        // return this.sqlTemplate.query({
-        //     text: `UPDATE tu.course SET title = $1, description = $2, time_estimate = $3,
-        //             active = $4, ordered_module_ids = $5, last_modified_at = $6 where id = $7`,
-        //     values: [course.title, course.description, course.timeEstimate, course.active, course.modules, lastModified, course.id]
-        // }).then(() => {
-        // });
+    async saveCourse(course: ViewCourseTransferData): Promise<void> {
+        let {id, active, title, description, timeEstimate, orderedModuleIds, orderedContentIds} = course;
+        await this.sqlTemplate.query({
+            text: `UPDATE tu.course SET title = $1, description = $2, time_estimate = $3,
+                    active = $4, ordered_module_ids = $5, ordered_content_ids = $6, ordered_content_question_ids = $6,
+                    last_modified_at = $7 where id = $8`,
+            values: [title, description, timeEstimate, active, orderedModuleIds, orderedContentIds, new Date(), id]
+        })
     }
-
 }
 
 

@@ -1,18 +1,21 @@
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import VueRouter from "vue-router";
-import {CreateModuleEntityCommand, CreateModuleEntityPayload, CreateModuleResponse, SaveModuleData} from "modules.ts";
+import {CreateModuleEntityPayload, CreateModuleResponse, SaveModuleData} from "modules.ts";
 import {
-    ViewCourseQuillData, SaveCourseEntityCommand, ViewCourseTransferData, CourseEntity,
-    CreateCourseEntityCommand, CreateCourseResponse
+    ViewCourseQuillData, ViewCourseTransferData, CourseEntity,
+    CreateCourseEntityCommand, SaveCourseEntityPayload, SaveCourseResponse
 } from 'courses';
 import {
     ViewSectionQuillData, CreateSectionEntityPayload, CreateSectionResponse,
     SaveSectionEntityPayload, SaveSectionResponse
 } from 'sections';
 import {appRouter} from "../router";
-import {userQueryService} from '../account/user_query_service';
 import {transformTransferViewService} from '../global/quill/transform_transfer_view_service';
 
+export const isAxiosResponse = (obj: any): obj is AxiosResponse => {
+    let {data, status, statusText, headers, config} = <AxiosResponse> obj;
+    return !!(data && status && statusText && headers && config);
+};
 export class CoursesService {
     currentCourse: Promise<ViewCourseQuillData>;
     currentSection: Promise<ViewSectionQuillData>;
@@ -33,7 +36,7 @@ export class CoursesService {
         }
     }
 
-    loadEnrolledCourse(username: string, courseTitle: string): Promise<ViewCourseTransferData> {
+    loadEnrolledCourse(courseInfo: {userId: string, courseId: string}): Promise<ViewCourseTransferData> {
         return null;
     }
 
@@ -47,103 +50,6 @@ export class CoursesService {
         }
     }
 
-    // /**
-    //  * The provided callback function is called as an observer of the current course whenever it updates
-    //  * via a call to
-    //  * @param {(courseData: courses.ViewCourseQuillData) => any} courseObs
-    //  * @returns {() => any}
-    //  */
-    // subscribeCurrentCourse(courseObs: ObserveCourse) {
-    //
-    //     // don't differentiate between admin and enrolled courses subscribers for now
-    //     this.courseObservers.push(courseObs);
-    //     this.getCurrentCourse().then((course) => {
-    //         courseObs(course);
-    //     });
-    //     return () => {
-    //         let unsubIndex = this.courseObservers.indexOf(courseObs);
-    //         if (unsubIndex === -1) {
-    //             throw 'Observer not found to unsubscribe';
-    //         }
-    //         this.courseObservers.splice(unsubIndex, 1);
-    //     };
-    // }
-
-    // subscribeCurrentModule(moduleObs: ObserveModule) {
-    //     this.moduleObservers.push(moduleObs);
-    //     // this.getCurrentModule().then((module) => {
-    //     //     moduleObs(module);
-    //     // });
-    //     return () => {
-    //         this.moduleObservers.splice(this.moduleObservers.indexOf(moduleObs), 1);
-    //     };
-    // }
-
-    // async getCurrentCourse(): Promise<ViewCourseQuillData> {
-    //     let username = coursesRoutesService.getCurrentUser();
-    //     let routeCourseTitle = coursesRoutesService.getCurrentCourse();
-    //
-    //     if (!routeCourseTitle) {
-    //         this.currentCourseTransfer = Promise.resolve(null);
-    //         this.currentCourse = Promise.resolve(null);
-    //     } else if (routeCourseTitle !== this.currentCourseTitle) {
-    //         // use route to check if admin/ load appropriate course
-    //         this.currentCourseTransfer = coursesRoutesService.isCourseAdmin() ?
-    //             this.loadAdminCourse(username, routeCourseTitle) :
-    //             this.loadEnrolledCourse(username, routeCourseTitle);
-    //         this.currentCourse = transformTransferViewService.transformTransferCourseView(await this.currentCourseTransfer);
-    //         setCourseSubscription((await this.currentCourseTransfer).id);
-    //     } else {
-    //         this.currentCourse = transformTransferViewService.transformTransferCourseView(await this.currentCourseTransfer);
-    //     }
-    //
-    //     this.currentCourseTitle = routeCourseTitle;
-    //     return this.currentCourse;
-    // }
-
-
-    // async getCurrentModule(): Promise<ViewModuleQuillData> {
-    //     let incomingModuleTitle = coursesRoutesService.getCurrentModuleTitle();
-    //
-    //     if (!incomingModuleTitle) {
-    //         this.currentModule = Promise.resolve(null);
-    //         this.currentModuleTransfer = Promise.resolve(null);
-    //     } else {
-    //         // recompute current module
-    //         this.currentModuleTransfer = this.getCurrentCourse().then((currentCourse) => {
-    //             return _.find(currentCourse.modules, (module) => module.title === incomingModuleTitle);
-    //         });
-    //         this.currentModule =
-    //             transformTransferViewService.transformTransferModuleView(await this.currentModuleTransfer);
-    //     }
-    //     return this.currentModule;
-    // }
-
-    // async notifyCourseUpdate(course: ViewCourseTransferData): Promise<void> {
-    //     this.currentCourseTransfer = Promise.resolve(course);
-    //     this.currentCourse = transformTransferViewService.transformTransferCourseView(course);
-    //
-    //     // notifies subscribers even if null
-    //     let courseView = await this.currentCourse;
-    //     this.courseObservers.forEach((obs: ObserveCourse) => {
-    //         obs(courseView);
-    //     });
-    //
-    //     let module = await this.getCurrentModule();
-    //     if (module) {
-    //         this.currentModule = Promise.resolve(module);
-    //         this.moduleObservers.forEach((obs: ObserveModule) => {
-    //             obs(module);
-    //         });
-    //     }
-    //
-    //     let section = await this.getCurrentSection();
-    //     if (section) {
-    //         this.sectionObservers.forEach((sectionObs) => {
-    //             sectionObs(section);
-    //         });
-    //     }
-    // }
     async createModule(createModule: CreateModuleEntityPayload): Promise<CreateModuleResponse> {
         let response = await axios.post(`course/${createModule.courseId}/module/create`, {
             payload: createModule
@@ -169,36 +75,11 @@ export class CoursesService {
         }
     }
 
-    // async getCurrentSection(): Promise<ViewSectionQuillData> {
-    //     let incomingSectionTitle = coursesRoutesService.getCurrentSectionTitle();
-    //
-    //     if (!incomingSectionTitle) {
-    //         // current route state does not have a current section
-    //         this.currentSection = Promise.resolve(null);
-    //         this.currentSectionTransfer = Promise.resolve(null);
-    //     } else {
-    //         this.currentSectionTransfer = this.getCurrentModule().then((module) => {
-    //             return _.find(module.sections, (section) => section.title === incomingSectionTitle);
-    //         });
-    //         this.currentSection = transformTransferViewService.transformTransferSectionView(await this.currentSectionTransfer);
-    //     }
-    //     return this.currentSection;
-    // }
-
-    // subscribeCurrentSection(obsSection: (section) => any) {
-    //     this.sectionObservers.push(obsSection);
-    //     this.getCurrentSection().then((section) => {
-    //         obsSection(section);
-    //     });
-    //
-    //     return () => {
-    //         this.sectionObservers.splice(this.sectionObservers.indexOf(obsSection), 1);
-    //     };
-    // }
-
-
-    async saveCourse(course: SaveCourseEntityCommand): Promise<void> {
-        await axios.post(`command/course/save/${course.metadata.id}`, course);
+    async saveCourse(course: SaveCourseEntityPayload): Promise<SaveCourseResponse> {
+        let response = await axios.post(`course/save/${course.id}`, {
+            payload: course
+        });
+        return response.data;
     }
 
     async saveModule(module: SaveModuleData): Promise<void> {
@@ -214,11 +95,6 @@ export class CoursesService {
         });
         return response.data;
     }
-
-    // async refresh(): Promise<void> {
-    //     await this.getCurrentCourse();
-    //     await this.notifyCourseUpdate(await this.currentCourseTransfer);
-    // }
 
     /**
      *
