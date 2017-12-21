@@ -3,6 +3,11 @@ import * as Delta from 'quill-delta';
 import {DeltaObj, DeltaObjDiff, QuillContentObj} from './delta';
 import {isDeltaObj, isDeltaStatic, isKeyArr} from './typeguards_delta';
 import {deltaArrayDiff} from './diff_key_array';
+import {TrainingEntityPayload} from '../training_entity';
+
+export const diffBasicPropsTrainingEntity = (before: TrainingEntityPayload, after: TrainingEntityPayload) => {
+    return diffPropsDeltaObj(['title', 'description', 'timeEstimate'], before, after);
+};
 
 export const diffPropsDeltaObj = (props: string[], before: DeltaObj, after: DeltaObj): DeltaObjDiff => {
     return diffDeltaObj(_.pick(before, props), _.pick(after, props));
