@@ -20,7 +20,7 @@
             <li class="menu-section__item" v-for="module in course.modules">
                 <div class="row menu-section__row">
                         <span class="menu-section__module-title" v-bind:class="{'is-active': activeNavigation.module === module.title}">
-                            <router-link :to="moduleDetailsRoute(module.title)">{{module.title}}</router-link>
+                            <router-link :to="moduleDetailsRoute(module.slug)">{{module.title}}</router-link>
                         </span>
                     <div class="buttons">
                         <button title="Edit Module" v-if="isCourseAdmin" class="button button__icon"
