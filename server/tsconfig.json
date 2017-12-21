@@ -1,15 +1,15 @@
 {
-  "lib": [
-    "dom",
-    "es5",
-    "ES2015",
-    "ES2015.promise",
-    "ES2016"
-  ],
   "includes": [
     "src/**/*.ts"
   ],
   "compilerOptions": {
+    "lib": [
+      "dom",
+      "es5",
+      "es6",
+      "es7",
+      "ES2015.promise",
+    ],
     "module": "es6",
     "target": "es6",
     "moduleResolution": "node",
