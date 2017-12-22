@@ -1,11 +1,11 @@
-import config from 'config';
 import {tuLocalDevClient, postgresClient, getSqlFileAsyncExecutor} from './sql_file_executor';
 import {getLogger} from './script_logger';
+import config from 'config';
 
 const logger = getLogger("init_test_db");
 const sqlDirectory = '/resources/test_postgres_db/';
 
-export const run = async () => {
+module.exports = async () => {
     const tuDevClient = tuLocalDevClient();
     const pgClient = postgresClient();
     try {
@@ -16,11 +16,10 @@ export const run = async () => {
         logger.log('info', 'Initializing database %s', config.get('database.db'));
 
         logger.log('info', 'Executing sql statements');
-        // await pgExecutor('00__drop_test_database_pg.sql');
         await pgExecutor('01__create_roles_pg.sql');
 
         let testDbExists = await pgClient.query(
-            `SELECT count(*) from pg_database where datname = ${config.get("database.db")};`
+            `SELECT count(*) from pg_database where datname = '${config.get("database.db")}';`
         );
         if (testDbExists.rows[0].count === "0") {
             await pgExecutor('02__create_database_pg.sql', true);

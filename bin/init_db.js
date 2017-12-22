@@ -5,7 +5,7 @@ const logger = getLogger("init_db");
 
 const sqlDirectory = '/resources/init_postgres_db/';
 
-export const run = async () => {
+module.exports = async () => {
     let tuDevClient = tuLocalDevClient();
     let pgClient = postgresClient();
     try {

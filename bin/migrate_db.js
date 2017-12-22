@@ -5,7 +5,7 @@ import {getLogger} from "./script_logger";
 
 let logger = getLogger('migrate_db');
 
-export const run = async () => {
+module.exports = async () => {
     let postgrator = new Postgrator({
         migrationDirectory: __dirname + '/../database/migrations',
         driver: 'pg',
