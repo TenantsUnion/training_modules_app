@@ -1,7 +1,7 @@
-import {AbstractRepository} from "../repository";
+import {AbstractRepository} from "../../repository";
 import {LoggerInstance} from "winston";
-import {getLogger} from "../log";
-import {Datasource} from "../datasource";
+import {getLogger} from "../../log";
+import {Datasource} from "../../datasource";
 import {CreateModuleEntityPayload} from 'modules.ts';
 import {SaveModuleData} from 'modules.ts';
 import * as moment from "moment";

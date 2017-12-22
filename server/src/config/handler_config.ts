@@ -7,7 +7,7 @@ import {UserHandler} from "../user/user_handler";
 import {AccountHandler} from "../account/account_handler";
 import {CoursesHandler} from "../courses/courses_handler";
 import {UserContentHandler} from "../content/user/user_content_handler";
-import {SectionHandler} from '../section/section_handler';
+import {SectionHandler} from '../courses/section/section_handler';
 import {CoursesViewHandler} from '../courses/courses_view_handler';
 import {courseQueryService} from './query_service_config';
 import {quillHandler} from '../quill/quill_handler';

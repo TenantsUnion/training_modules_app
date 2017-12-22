@@ -3,10 +3,10 @@ import {
     CreateSectionEntityPayload, SaveSectionEntityPayload, ViewSectionTransferData
 } from 'sections.ts';
 import {LoggerInstance} from 'winston';
-import {getLogger} from '../log';
-import {QuillHandler} from '../quill/quill_handler';
-import {updateArrOpsValues} from '../../../shared/delta/diff_key_array';
-import {applyDeltaDiff} from '../../../shared/delta/apply_delta';
+import {getLogger} from '../../log';
+import {QuillHandler} from '../../quill/quill_handler';
+import {updateArrOpsValues} from '../../../../shared/delta/diff_key_array';
+import {applyDeltaDiff} from '../../../../shared/delta/apply_delta';
 
 export class SectionHandler {
     logger: LoggerInstance = getLogger('SectionHandler', 'info');

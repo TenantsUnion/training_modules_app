@@ -7,9 +7,9 @@ import {
     CreateSectionEntityPayload, CreateSectionResponse, SaveSectionEntityPayload, SaveSectionResponse,
     ViewSectionTransferData
 } from '../../../shared/sections';
-import {SectionHandler} from '../section/section_handler';
+import {SectionHandler} from './section/section_handler';
 import {QuillRepository} from '../quill/quill_repository';
-import {ModuleRepository} from '../module/module_repository';
+import {ModuleRepository} from './module/module_repository';
 import {quillRepository} from '../config/repository_config';
 import {isQuillEditorData, QuillEditorData} from '../../../shared/quill_editor';
 import {

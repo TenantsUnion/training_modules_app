@@ -1,7 +1,7 @@
-import {AbstractRepository} from '../repository';
-import {Datasource} from '../datasource';
-import {CreateSectionEntityPayload, SaveSectionEntityPayload, SectionEntity} from '../../../shared/sections';
-import {getLogger} from '../log';
+import {AbstractRepository} from '../../repository';
+import {Datasource} from '../../datasource';
+import {CreateSectionEntityPayload, SaveSectionEntityPayload, SectionEntity} from '../../../../shared/sections';
+import {getLogger} from '../../log';
 
 export class SectionRepository extends AbstractRepository {
     logger = getLogger('SectionRepository', 'info');

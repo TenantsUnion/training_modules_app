@@ -4,8 +4,8 @@ import {UserRepository} from "../user/users_repository";
 import {AccountRepository} from "../account/account_repository";
 import {ContentRepository} from "../content/content_repository";
 import {QuillRepository} from "../quill/quill_repository";
-import {ModuleRepository} from "../module/module_repository";
-import {SectionRepository} from '../section/section_repository';
+import {ModuleRepository} from "../courses/module/module_repository";
+import {SectionRepository} from '../courses/section/section_repository';
 
 import {Pool} from 'pg';
 import {DatabaseConfig} from './normalize_config';

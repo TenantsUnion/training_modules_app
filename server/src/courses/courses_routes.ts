@@ -1,7 +1,7 @@
 import * as express from "express";
 import {coursesController} from "../config/web_controller_config";
-import {ModuleRoutes} from '../module/module_routes';
-import {SectionRoutes} from '../section/section_routes';
+import {ModuleRoutes} from './module/module_routes';
+import {SectionRoutes} from './section/section_routes';
 
 let router = express.Router();
 //http://localhost:8080/user/1/admin/course/course-1
