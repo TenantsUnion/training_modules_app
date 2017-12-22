@@ -7,16 +7,10 @@ import {QuillRepository} from "../quill/quill_repository";
 import {ModuleRepository} from "../module/module_repository";
 import {SectionRepository} from '../section/section_repository';
 
-import config from 'config';
 import {Pool} from 'pg';
+import {DatabaseConfig} from './normalize_config';
 
-const pool = new Pool({
-    user: config.get("database.db_user"),
-    password: config.get("database.db_password"),
-    host: config.get("database.db_host"),
-    port: config.get("database.db_port"),
-    database: config.get("database.db")
-});
+const pool = new Pool(DatabaseConfig);
 
 pool.on('error', (err, client) => {
     console.log('Unexpected error on idle client: ', err);

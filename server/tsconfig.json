@@ -8,7 +8,7 @@
       "es5",
       "es6",
       "es7",
-      "ES2015.promise",
+      "ES2015.promise"
     ],
     "module": "es6",
     "target": "es6",

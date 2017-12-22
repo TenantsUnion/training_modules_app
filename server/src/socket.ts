@@ -1,4 +1,4 @@
-import socket from 'socket.io';
+import * as socket from 'socket.io';
 import socketWildcard from 'socketio-wildcard';
 import {getLogger} from './log';
 import {ADMIN_COURSE_NSP, SUBSCRIBE} from '../../shared/socket';

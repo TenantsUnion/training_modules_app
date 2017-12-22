@@ -1,4 +1,4 @@
-import {applyDeltaArrOps, deltaArrayDiff, DeltaArrayOp, DeltaArrDiff} from '../../../../shared/delta/diff_key_array';
+import {applyDeltaArrOps, deltaArrayDiff, DeltaArrayOp} from '../../../../shared/delta/diff_key_array';
 import {expect} from "chai";
 
 describe('Key Array type guards', function(){

@@ -17,10 +17,10 @@
     "watch": "concurrently -k -p \"[{name}]\" -n \"Server-Build,Server,Webpack\" -c \"cyan.bold,green.bold,yellow.bold\"  \"npm run watch-server\" \"npm run nodemon-start\" \"npm run webpack-dev\"",
     "watch-server": "tsc --watch --project server/tsconfig.json --outDir server/dist",
     "nodemon-start": "export NODE_CONFIG_DIR=./config && nodemon --watch server/dist/ --signal SIGHUP --delay 1500ms --exec npm run start",
-    "test_init_db": "export NODE_ENV=test && export SCRIPT_NAME=init_test_db && npm run test_migrate_db",
-    "test_drop_db": "export NODE_ENV=test && npm run drop_db",
+    "test_init_db": "export NODE_ENV=test && export SCRIPT_NAME=init_test_db && npm run esm_entry && npm run test_migrate_db",
+    "test_drop_db": "export NODE_ENV=test && export SCRIPT_NAME=drop_db && npm run esm_entry",
     "test_migrate_db": "export NODE_ENV=test && npm run migrate_db",
-    "test": "export NODE_ENV=test export NODE_CONFIG_DIR=./config && npm run test_init_db && mocha $NODE_DEBUG_OPTION test/**/*.spec.ts",
+    "test": "export NODE_ENV=test && export NODE_CONFIG_DIR=./config && npm run test_init_db && mocha test/**/*.spec.ts",
     "rm_ide_compiled_ts": "./bin/rm_ide_compiled_ts.sh"
 
   },
@@ -41,7 +41,7 @@
     "@types/pg": "7.1.5",
     "axios": "0.16.2",
     "body-parser": "1.18.2",
-    "config": "1.26.2",
+    "config": "1.28.1",
     "cookie-parser": "1.4.3",
     "debug": "2.6.9",
     "express": "4.16.2",

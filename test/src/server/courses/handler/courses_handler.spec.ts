@@ -6,7 +6,6 @@ import {CreateModuleEntityCommand, ModuleEntityType, ViewModuleTransferData} fro
 import {CreateSectionEntityPayload} from 'sections.ts';
 import {IUserInfo} from 'user';
 import {AdminCourseDescription, CourseEntityType, CreateCourseEntityCommand} from 'courses.ts';
-import {DeltaStatic} from 'quill';
 import * as moment from "moment";
 import * as Delta from 'quill-delta';
 import {QuillEditorData} from '../../../../../shared/quill_editor';
@@ -117,16 +116,16 @@ describe('courses handler', function () {
         title: 'second section'
     });
 
-    beforeEach(async function () {
-        logger.info('executing clear database');
-        await clearData();
-
-        logger.info('signing up user');
-        userId = await accountHandler.signup({
-            username: username,
-        });
-        logger.info('completed before hook');
-    });
+    // beforeEach(async function () {
+    //     logger.info('executing clear database');
+    //     // await clearData();
+    //
+    //     logger.info('signing up user');
+    //     userId = await accountHandler.signup({
+    //         username: username,
+    //     });
+    //     logger.info('completed before hook');
+    // });
 
 
     it('should create 2 courses and load the matching admin course descriptions', async function () {
