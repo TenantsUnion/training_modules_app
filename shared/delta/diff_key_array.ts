@@ -90,7 +90,6 @@ export const deltaArrayDiff = (beforeArr: (string | number)[], afterArr: (string
                 // val: key,
                 op: 'MOVE'
             };
-            console.log(`Pushing move operation: ${JSON.stringify(moveOp, null, 2)}`);
             accOps.push(moveOp);
 
             opsApplied = applyDeltaArrOps(opsApplied, [moveOp]);

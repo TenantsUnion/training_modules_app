@@ -61,10 +61,10 @@ const basicTransportOptions = {
 };
 
 export const getLogger = (loggerName: string, level?: string & keyof LogLevels, loggerFile?: string): LoggerInstance => {
-    let transport = LogConfig.directory ? new winston.transports.File({
+    let transport = LogConfig.fileLogging ? new winston.transports.File({
             label: loggerName,
-            level: level ? level : LOG_LEVELS.info,
-            filename: LogConfig.directory + '/' + loggerFile ? loggerFile : 'server.log',
+            level: LogConfig.useConfigLevel ? LogConfig.level : level,
+            filename: LogConfig.directory + '/' + (loggerFile ? loggerFile : 'server.log'),
             maxsize: 1024 * 1024 * 1024,
             maxFiles: 5,
             zippedArchive: true,
@@ -73,7 +73,7 @@ export const getLogger = (loggerName: string, level?: string & keyof LogLevels, 
         }) :
         new winston.transports.Console({
             label: loggerName,
-            level: level ? level : LOG_LEVELS.info,
+            level: LogConfig.useConfigLevel || !level ? LogConfig.level : level,
             ...basicTransportOptions
         });
 

@@ -8,6 +8,10 @@
     "webpack_context": "webapp/"
   },
   "log": {
+    "fileLogging": true,
+    "directory": "logs",
+    "level": "info",
+    "useConfigLevel": false
   },
   "database": {
     "schemaVersion": "tu_schema_version"

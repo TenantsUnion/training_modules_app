@@ -13,23 +13,18 @@ var customColors = {
 };
 
 
-const DEFAULT_LOG_NAME = "run_script.log";
-
-const fileConfig = config.has("log.directory") ? config.get("logDirectory") : "";
-const defaultLogNameConfig = config.has("log.default_name") ? config.get("log.default_name") : "";
-
 export const getLogger = (loggerName, fileName) => {
-let basicTransportOptions = {
-    colorize: true,
-    level: 'info',
-    timestamp: true,
-    prettyPrint: true,
-    showLevel: true
-};
-    let transport = fileConfig ? new winston.transports.File({
+    let basicTransportOptions = {
+        colorize: true,
+        level: 'info',
+        timestamp: true,
+        prettyPrint: true,
+        showLevel: true
+    };
+    fileName = fileName ? fileName : process.env.SCRIPT_NAME;
+    let transport = config.get("log.fileLogging") ? new winston.transports.File({
             label: loggerName,
-            filename: fileConfig + '/' + fileName ? fileName :
-                defaultLogNameConfig ? defaultLogNameConfig : DEFAULT_LOG_NAME,
+            filename: `${new Date().toISOString()}-${fileName}`,
             maxsize: 1024 * 1024 * 1024,
             maxFiles: 5,
             zippedArchive: true,

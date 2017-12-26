@@ -9,5 +9,10 @@
     "db_port": 5432,
     "db": "test_tu_training",
     "schemaVersion": "test_tu_schema_version"
+  },
+  "log": {
+    "level": "error",
+    "useConfigLevel": true,
+    "fileLogging": false
   }
 }
