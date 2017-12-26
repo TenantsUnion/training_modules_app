@@ -22,6 +22,7 @@ export const getLogger = (loggerName, fileName) => {
         showLevel: true
     };
     fileName = fileName ? fileName : process.env.SCRIPT_NAME;
+    loggerName = loggerName ? loggerName : process.env.SCRIPT_NAME;
     let transport = config.get("log.fileLogging") ? new winston.transports.File({
             label: loggerName,
             filename: `${new Date().toISOString()}-${fileName}`,
