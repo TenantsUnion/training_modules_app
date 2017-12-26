@@ -21,7 +21,7 @@ export interface CreateCourseEntityPayload extends CreateTrainingEntityPayload {
 }
 
 export type SaveCourseEntityPayload = SaveTrainingEntityPayload<CourseEntityDiffDelta>;
-export type CourseEntityCommandMetadata = EntityCommandMetaData<CourseEntity>;
+export type CourseEntityCommandMetadata = EntityCommandMetaData<CourseEntityType>;
 
 export interface CourseEntity extends TrainingEntityPayload {
     active: boolean;
@@ -79,6 +79,7 @@ export interface UserEnrolledCourseData extends ViewCourseQuillData {
     id: string;
     slug?: string;
     title: string;
+    description: string;
     timeEstimate?: string;
 }
 

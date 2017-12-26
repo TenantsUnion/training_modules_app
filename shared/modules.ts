@@ -8,10 +8,12 @@ import {ViewCourseTransferData} from './courses';
 export type ModuleEntityType = 'ModuleEntity';
 
 export interface ViewModuleQuillData extends ViewTrainingEntityQuillData {
+    orderedSectionIds: string[]
     sections: ViewSectionTransferData[]
 }
 
 export interface ViewModuleTransferData extends ViewTrainingEntityTransferData {
+    orderedSectionIds: string[]
     sections: ViewSectionTransferData[],
 }
 
@@ -27,7 +29,7 @@ export interface ModuleEntityDeltas extends TrainingEntityDiffDelta {
 
 export interface CreateModuleEntityPayload extends CreateTrainingEntityPayload {
     courseId: string;
-    active?: boolean;
+    active: boolean;
 }
 
 export interface CreateModuleResponse {

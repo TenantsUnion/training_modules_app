@@ -18,7 +18,7 @@ export interface EntityMetadata<T> {
 export interface EntityCommandMetaData<T> extends EntityMetadata<T> {
     timestamp: string;
     correlationId: string; // random id for logging and tracing save command
-    userId: string;
+    userId?: string;
 }
 
 export interface EntityCommand<T, P> {
