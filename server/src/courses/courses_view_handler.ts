@@ -21,11 +21,11 @@ export class CoursesViewHandler {
         }
     }
 
-    async getUserAdminCourses(username: string): Promise<AdminCourseDescription[]> {
+    async getUserAdminCourses(userId: string): Promise<AdminCourseDescription[]> {
         try {
-            this.logger.info(`Retrieving admin courses for user ${username}`);
-            let userAdminCourses = await this.coursesRepository.loadUserAdminCourses(username);
-            this.logger.log('trace', `Found ${userAdminCourses.length} for user ${username}: ${JSON.stringify(userAdminCourses, null, 2)}`);
+            this.logger.info(`Retrieving admin courses for user ${userId}`);
+            let userAdminCourses = await this.coursesRepository.loadUserAdminCourses(userId);
+            this.logger.log('trace', `Found ${userAdminCourses.length} for user ${userId}: ${JSON.stringify(userAdminCourses, null, 2)}`);
             return userAdminCourses;
         } catch (e) {
             this.logger.error(e);

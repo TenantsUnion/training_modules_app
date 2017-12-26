@@ -14,31 +14,31 @@ export class ModuleRepository extends AbstractRepository {
     }
 
     async addModule(moduleData: CreateModuleEntityPayload, quillIds: string[]): Promise<string> {
-                try {
-
-                    let moduleId = await this.getNextId();
-                    await this.sqlTemplate.query({
-                        text: `INSERT INTO tu.module (id, title, description, time_estimate, ordered_content_ids, ordered_content_question_ids)
-                                    VALUES ($1, $2, $3, $4, $5, $5)`,
-                        values: [moduleId, moduleData.title, moduleData.description, moduleData.timeEstimate, quillIds]
-                    });
-                    return moduleId;
-                } catch (e) {
-                    this.logger.log(`Error creating module: ${moduleData.title}`, 'error');
-                    this.logger.log('error', e);
-                this.logger.log('error', `moduleData`);
-                throw e;
-                }
+        let {active, title, description, timeEstimate} = moduleData;
+        try {
+            let moduleId = await this.getNextId();
+            await this.sqlTemplate.query({
+                text: `INSERT INTO tu.module (id, title, description, time_estimate, active, ordered_content_ids, ordered_content_question_ids)
+                                    VALUES ($1, $2, $3, $4, $5, $6, $6)`,
+                values: [moduleId, title, description, timeEstimate, active, quillIds]
+            });
+            return moduleId;
+        } catch (e) {
+            this.logger.log(`Error creating module: ${moduleData.title}`, 'error');
+            this.logger.log('error', e);
+            throw e;
+        }
     }
 
     async saveModule(moduleData: SaveModuleData): Promise<void> {
-            return this.sqlTemplate.query({
-                text: `UPDATE tu.module m SET title = $1, description = $2, time_estimate = $3,
+        return this.sqlTemplate.query({
+            text: `UPDATE tu.module m SET title = $1, description = $2, time_estimate = $3,
                                 active = $4, ordered_section_ids = $5
                                     where m.id = $6`,
-                values: [moduleData.title, moduleData.description, moduleData.timeEstimate, moduleData.active,
-                    moduleData.orderedSectionIds, moduleData.id]
-            }).then(() => {});
+            values: [moduleData.title, moduleData.description, moduleData.timeEstimate, moduleData.active,
+                moduleData.orderedSectionIds, moduleData.id]
+        }).then(() => {
+        });
     }
 
     updateLastModified(moduleId: string): Promise<string> {

@@ -1,6 +1,5 @@
 import * as _ from "underscore";
 import {Datasource} from '../datasource';
-import {AdminCourseDescription} from '../../../shared/courses';
 import {slugToId, slugToTitle, titleToSlug} from '../../../shared/slug/title_slug_transformations';
 
 /**

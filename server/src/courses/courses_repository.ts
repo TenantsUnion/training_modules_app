@@ -17,16 +17,16 @@ export class CoursesRepository extends AbstractRepository implements CoursesRepo
         super('course_id_seq', datasource);
     }
 
-    async loadUserAdminCourses(username: string): Promise<AdminCourseDescription[]> {
+    async loadUserAdminCourses(userId: string): Promise<AdminCourseDescription[]> {
         let result = await this.datasource.query({
             text: `
-                          SELECT c.id, c.title, c.time_estimate FROM tu.course c JOIN
+                          SELECT c.id, c.title, c.description, c.time_estimate FROM tu.course c JOIN
                             (SELECT unnest(
                                      u.admin_of_course_ids) AS admin_course_id FROM
-                               tu.user u WHERE u.username = $1) u
+                               tu.user u WHERE u.id = $1) u
                               ON c.id = u.admin_course_id
                         `,
-            values: [username]
+            values: [userId]
         });
         let processedCourses = result.map((course) => {
             return _.extend({}, course, {

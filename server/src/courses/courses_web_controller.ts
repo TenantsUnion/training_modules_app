@@ -67,9 +67,9 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     }
 
     async getUserAdminCourses(request: Request, response: Response) {
-        let username: string = request.params.username;
+        let userId: string = request.params.userId;
         try {
-            let userCourses: AdminCourseDescription[] = await this.coursesViewHandler.getUserAdminCourses(username);
+            let userCourses: AdminCourseDescription[] = await this.coursesViewHandler.getUserAdminCourses(userId);
             response.status(200).send(userCourses);
         } catch (e) {
             this.handleServerErr(e, request, response);
@@ -79,7 +79,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         let courseId: string = request.params.courseId;
         let createModuleData: CreateModuleEntityCommand = request.body;
         try {
-            let course = await this.coursesHandler.createModule(createModuleData);
+            let course = await this.coursesHandler.createModule(createModuleData.payload);
             response.status(200).send(course);
         } catch (e) {
             this.handleServerErr(e, request, response);
