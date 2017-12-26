@@ -14,7 +14,7 @@ import {
     CourseEntityDiffDelta, diffBasicPropsCourseProps, SaveCourseEntityPayload,
     ViewCourseQuillData
 } from '../../../../../shared/courses';
-import {getCourseSlugFromIdFn} from '../store/courses_listing/courses_listing_store';
+import {getSlugFromCourseIdFn} from '../store/courses_listing/courses_listing_store';
 
 let Delta = Quill.import('delta');
 
@@ -30,13 +30,12 @@ let Delta = Quill.import('delta');
         };
     },
     computed: {
-        ...mapGetters(['currentCourse', 'getCourseSlugFromId']),
+        ...mapGetters(['currentCourse', 'getSlugFromCourseId']),
         ...mapState({
             loading: (state: RootState, getters: RootGetters) => {
                 return !getters.currentCourse || getters.currentCourseLoading;
             }
         }),
-        ...mapState(['currentCourseId'])
 
     },
     template: require('./edit_course_component.tpl.html'),
@@ -48,8 +47,7 @@ export class EditCourseComponent extends Vue {
     formstate: VueForm.FormState;
     course: ViewCourseQuillData;
     currentCourse: ViewCourseQuillData;
-    getCourseSlugFromId: getCourseSlugFromIdFn;
-    currentCourseId: string;
+    getSlugFromCourseId: getSlugFromCourseIdFn;
 
     @Watch('currentCourse', {immediate: true})
     updateCourse(currentCourse: ViewCourseQuillData) {
@@ -106,7 +104,7 @@ export class EditCourseComponent extends Vue {
         this.$router.push({
             name: COURSES_ROUTE_NAMES.adminCourseDetails,
             params: {
-                courseSlug: this.getCourseSlugFromId(this.currentCourseId)
+                courseSlug: this.getSlugFromCourseId(this.currentCourse.id)
             }
         });
     }

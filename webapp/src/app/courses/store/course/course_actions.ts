@@ -97,6 +97,7 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
             commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, course);
             if (saveCourseEntityPayload.changes.title) {
                 // title change means slug changed -- reload admin courses to recalculate slug
+                commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, false);
                 await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
             }
         } finally {
