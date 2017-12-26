@@ -4,6 +4,7 @@ CREATE TABLE tu.section (
   header_data_id               BIGINT REFERENCES tu.quill_data (id),
   title                        VARCHAR(100),
   description                  VARCHAR(300),
+  active                       BOOLEAN   NOT NULL DEFAULT FALSE,
   time_estimate                INTEGER,
   --references id pk column of tu.quill_data
   ordered_content_ids          BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],

@@ -5,15 +5,15 @@ CREATE TABLE tu.module (
   title                        VARCHAR(100),
   description                  VARCHAR(300),
   time_estimate                INTEGER,
-  active                       BOOLEAN,
+  active                       BOOLEAN   NOT NULL DEFAULT FALSE,
   --references id pk column of tu.section
   ordered_section_ids          BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
   --references id pk column of tu.quill_data
-  ordered_content_ids          BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  ordered_content_ids          BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
   --references id pk column of tu.question
-  ordered_question_ids         BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  ordered_question_ids         BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
   --ordering of content and questions together -- ids from ordered_module_ids and ordered_content_ids
-  ordered_content_question_ids BIGINT []           NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  ordered_content_question_ids BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
   last_modified_at             TIMESTAMP NOT NULL DEFAULT now(),
   created_at                   TIMESTAMP NOT NULL DEFAULT now()
 );
