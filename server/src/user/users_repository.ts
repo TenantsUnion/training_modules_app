@@ -77,18 +77,16 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         }
     }
 
-    async addToAdminOfCourseIds(username: string, courseId: string): Promise<void> {
+    async addToAdminOfCourseIds(userId: string | number, courseId: string): Promise<void> {
         try {
             await this.datasource.query({
-                // language=PostgreSQL
                 text: `UPDATE tu.user SET admin_of_course_ids =
                             admin_of_course_ids || $1::BIGINT WHERE id = $2`,
-                values: [courseId, username]
+                values: [courseId, userId]
             });
         } catch (e) {
             this.logger.error('Failed to add admin of course ids for username: %s, course: %s',
-                username, courseId);
-            this.logger.error('Error:\n');
+                userId, courseId);
             this.logger.error(e);
             throw e;
         }
