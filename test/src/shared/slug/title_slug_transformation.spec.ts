@@ -17,35 +17,35 @@ describe('title slug transformation', function () {
         expect(slugToTitle(slug)).to.equal(title.toLowerCase());
     });
 
-    it('should encode and decode\'/\' as \'fs\'', function () {
+    it('should encode and decode \'/\' as \'fs\'', function () {
         let title = 'A/Course/Title';
         let slug = 'a(fs)course(fs)title';
         expect(titleToSlug(title)).to.equal(slug);
         expect(slugToTitle(slug)).to.equal(title.toLowerCase());
     });
 
-    it('should encode and decode\'?\' as \'qm\'', function () {
+    it('should encode and decode \'?\' as \'qm\'', function () {
         let title = 'A?Course?Title';
         let slug = 'a(qm)course(qm)title';
         expect(titleToSlug(title)).to.equal(slug);
         expect(slugToTitle(slug)).to.equal(title.toLowerCase());
     });
 
-    it('should encode and decode\'@\' as \'at\'', function () {
+    it('should encode and decode \'@\' as \'at\'', function () {
         let title = 'A@Course@Title';
         let slug = 'a(at)course(at)title';
         expect(titleToSlug(title)).to.equal(slug);
         expect(slugToTitle(slug)).to.equal(title.toLowerCase());
     });
 
-    it('should encode and decode\'&\' as \'as\'', function () {
+    it('should encode and decode \'&\' as \'as\'', function () {
         let title = 'A&Course&Title';
         let slug = 'a(as)course(as)title';
         expect(titleToSlug(title)).to.equal(slug);
         expect(slugToTitle(slug)).to.equal(title.toLowerCase());
     });
 
-    it('should encode and decode\'#\' as \'hs\'', function () {
+    it('should encode and decode \'#\' as \'hs\'', function () {
         let title = 'A#Course#Title';
         let slug = 'a(hs)course(hs)title';
         expect(titleToSlug(title)).to.equal(slug);

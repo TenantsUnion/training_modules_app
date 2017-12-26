@@ -1,7 +1,7 @@
 import {LoggerInstance} from "winston";
 import {getLogger} from "../../../server/src/log";
-import {postgresClient} from "../../../bin/sql_file_executor.js";
 import {DatabaseConfig} from '../../../server/src/config/normalize_config';
+import {postgresDb} from '../../../server/src/config/repository_config';
 
 /**
  * Helper class for tests to check if the test db has been setup, initialized the test db, and clear the test db
@@ -17,21 +17,27 @@ if (!database.includes("test")) {
 }
 
 export const databaseInitialized: () => Promise<boolean> = async () => {
-    let pgClient = postgresClient();
-    await pgClient.connect();
-    let results = await pgClient.query(`EXISTS (select datname from pg_catalog.pg_database where datname = ${database})`);
+    let results = await postgresDb.query(`EXISTS (select datname from pg_catalog.pg_database where datname = ${database})`);
     // testDb.query()
     logger.info(`Database initialized check results: ${JSON.stringify(results)}`);
-    pgClient.end();
     return results[0].rows;
 };
 
 export const clearData: () => Promise<void> = async () => {
-    let pgClient = postgresClient();
-    await pgClient.connect();
-    let dropIfExists = `DROP DATABASE IF EXISTS ${database}`;
     logger.log('info', 'truncating tables');
-    await pgClient.query(dropIfExists);
+    await postgresDb.query(`
+        truncate table tu.account CASCADE;
+        truncate table tu.user_content CASCADE;
+        truncate table tu.course CASCADE;
+        truncate table tu.module CASCADE;
+        truncate table tu.permission CASCADE;
+        truncate table tu.question CASCADE;
+        truncate table tu.question_option CASCADE;
+        truncate table tu.quill_data CASCADE;
+        truncate table tu.section CASCADE;
+        truncate table tu.user CASCADE;
+        truncate table tu.user_course_progress CASCADE;
+        truncate table tu.user_permissions CASCADE;
+    `);
     logger.log('successfully', 'truncated tables');
-    pgClient.end();
 };
