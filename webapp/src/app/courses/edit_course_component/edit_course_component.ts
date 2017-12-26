@@ -14,6 +14,7 @@ import {
     CourseEntityDiffDelta, diffBasicPropsCourseProps, SaveCourseEntityPayload,
     ViewCourseQuillData
 } from '../../../../../shared/courses';
+import {getCourseSlugFromIdFn} from '../store/courses_listing/courses_listing_store';
 
 let Delta = Quill.import('delta');
 
@@ -34,7 +35,8 @@ let Delta = Quill.import('delta');
             loading: (state: RootState, getters: RootGetters) => {
                 return !getters.currentCourse || getters.currentCourseLoading;
             }
-        })
+        }),
+        ...mapState(['currentCourseId'])
 
     },
     template: require('./edit_course_component.tpl.html'),
@@ -46,6 +48,8 @@ export class EditCourseComponent extends Vue {
     formstate: VueForm.FormState;
     course: ViewCourseQuillData;
     currentCourse: ViewCourseQuillData;
+    getCourseSlugFromId: getCourseSlugFromIdFn;
+    currentCourseId: string;
 
     @Watch('currentCourse', {immediate: true})
     updateCourse(currentCourse: ViewCourseQuillData) {
@@ -99,25 +103,12 @@ export class EditCourseComponent extends Vue {
             this.saving = false;
         }
 
-        // this.$router.push({
-        //     name: COURSES_ROUTE_NAMES.adminCourseDetails
-        //
-        // });
-        // rewrite with store
-        // get registered course module store
-        // trigger action of saving course diff
-        // pass in current user updates as payload  -- get delta diff from segment viewer and pass in current field values
-        // coursesService.saveCourse({
-        //     id: this.courseVm.id,
-        //     version: this.courseVm.version,
-        //     fieldDeltas: {
-        //         changeQuillContent: contentChanges
-        //     },
-        //     updatedByUserId: userQueryService.getUserId(),
-        // }).then(() => {
-        // }).catch((msg) => {
-        //     this.errorMessages = msg;
-        // })
+        this.$router.push({
+            name: COURSES_ROUTE_NAMES.adminCourseDetails,
+            params: {
+                courseSlug: this.getCourseSlugFromId(this.currentCourseId)
+            }
+        });
     }
 
     cancel() {

@@ -126,7 +126,7 @@ export const userCoursesListingActions: UserCoursesListingActions & ActionTree<U
             return;
         }
 
-        let courseListingLoaded = userCoursesHttpService.getUserAdminCourses(rootState.user.username);
+        let courseListingLoaded = userCoursesHttpService.getUserAdminCourses(rootState.user.userId);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS_LOADING, true);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, courseListingLoaded);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS_LOADING, false);

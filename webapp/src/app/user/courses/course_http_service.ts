@@ -7,13 +7,13 @@ class UserCoursesService {
         await axios.post('courses/create', createCourseData);
     }
 
-    async getUserEnrolledCourses(username: string): Promise<AdminCourseDescription[]> {
-        let response = await axios.get(`courses/user/enrolled/${username}`);
+    async getUserEnrolledCourses(userId: string): Promise<AdminCourseDescription[]> {
+        let response = await axios.get(`courses/user/enrolled/${userId}`);
         return response.data;
     }
 
-    async getUserAdminCourses(username: string): Promise<AdminCourseDescription[]> {
-        let response = await axios.get(`courses/user/admin/${username}`);
+    async getUserAdminCourses(userId: string): Promise<AdminCourseDescription[]> {
+        let response = await axios.get(`courses/user/admin/${userId}`);
         return response.data;
     }
 }
