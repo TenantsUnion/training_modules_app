@@ -1,9 +1,10 @@
 import {expect} from 'chai';
 import {clearData} from '../../test_db_util';
-import {addModule, createCourse, createUser, DEFAULT_MODULE, EMPTY_CHANGES_OBJ} from './test_course_util';
+import {addModule, addSection, createCourse, createUser, DEFAULT_MODULE, EMPTY_CHANGES_OBJ} from './test_course_util';
 import {moduleRepository, sectionRepository} from '../../../../../server/src/config/repository_config';
 import {coursesHandler} from '../../../../../server/src/config/handler_config';
 import {ModuleEntityDiffDelta, SaveModuleEntityPayload} from '../../../../../shared/modules';
+import {deltaArrayDiff, DeltaArrOps} from '../../../../../shared/delta/diff_key_array';
 
 describe('Save module', function () {
     let courseId;
@@ -75,21 +76,74 @@ describe('Save module', function () {
         });
     });
 
-    xdescribe('sections', function () {
-        it('should add two sections and swap their order', function () {
-            expect.fail("not implemented");
+    describe('sections', function () {
+        it('should add two sections and swap their order', async function () {
+            let section1Id = await addSection();
+            let section2Id = await addSection();
+
+            const swappedArr = [section2Id, section1Id];
+            let swapOrder: DeltaArrOps = deltaArrayDiff([section1Id, section2Id], swappedArr);
+            let currentModule = await moduleRepository.loadModule(moduleId);
+            expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id]);
+
+            await coursesHandler.saveModule({
+                id: moduleId,
+                courseId: courseId,
+                changes: {
+                    ...EMPTY_CHANGES_OBJ,
+                    orderedSectionIds: swapOrder
+                }
+            });
+
+            let updatedModule = await moduleRepository.loadModule(moduleId);
+            expect(updatedModule.orderedSectionIds).to.deep.eq(swappedArr);
         });
 
-        it('should add two sections and remove the first one', function () {
-            expect.fail("not implemented");
+        it('should add two sections and remove the first one', async function () {
+            let section1Id = await addSection();
+            let section2Id = await addSection();
+
+            const updatedArr = [section2Id];
+            let updateOps: DeltaArrOps = deltaArrayDiff([section1Id, section2Id], updatedArr);
+            let currentModule = await moduleRepository.loadModule(moduleId);
+            expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id]);
+
+            await coursesHandler.saveModule({
+                id: moduleId,
+                courseId: courseId,
+                changes: {
+                    ...EMPTY_CHANGES_OBJ,
+                    orderedSectionIds: updateOps
+                }
+            });
+
+            let updatedModule = await moduleRepository.loadModule(moduleId);
+            expect(updatedModule.orderedSectionIds).to.deep.eq(updatedArr);
         });
 
-        it('should add two sections and remove the first one', function () {
-            expect.fail("not implemented");
-        });
 
-        it('should add three sections, make the third section first, and delete the section that was created second', function () {
-            expect.fail("not implemented");
+        it('should add three sections, make the third section first, and delete the section that was created second', async function () {
+            let section1Id = await addSection();
+            let section2Id = await addSection();
+            let section3Id = await addSection();
+
+            const updatedArr = [section3Id, section1Id];
+            let updateOps: DeltaArrOps = deltaArrayDiff([section1Id, section2Id, section3Id], updatedArr);
+            // assert current module state
+            let currentModule = await moduleRepository.loadModule(moduleId);
+            expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id, section3Id]);
+
+            await coursesHandler.saveModule({
+                id: moduleId,
+                courseId: courseId,
+                changes: {
+                    ...EMPTY_CHANGES_OBJ,
+                    orderedSectionIds: updateOps
+                }
+            });
+
+            let updatedModule = await moduleRepository.loadModule(moduleId);
+            expect(updatedModule.orderedSectionIds).to.deep.eq(updatedArr);
         });
     });
 
