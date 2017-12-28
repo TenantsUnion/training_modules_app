@@ -15,13 +15,13 @@ export interface ViewTrainingEntity {
 }
 
 export interface ViewTrainingEntityTransferData extends ViewTrainingEntity {
-    lastModifiedAt: string;
+    lastModifiedAt: string | any;
     orderedContentIds: string[],
     orderedQuestionIds: string[],
     orderedContentQuestionIds: string[],
 }
 
-export interface ViewTrainingEntityQuillData extends ViewTrainingEntity {
+export interface ViewTrainingEntityQuillData extends ViewTrainingEntityTransferData {
     lastModifiedAt: Moment;
     content: ContentSegment[];
     // todo handle questions
@@ -32,6 +32,7 @@ export interface TrainingEntityPayload {
     title: string;
     description?: string;
     timeEstimate?: string;
+    active?: boolean;
     orderedContentIds: string[];
     orderedQuestionIds: string[];
     orderedContentQuestionIds: string[];
@@ -46,10 +47,10 @@ export interface TrainingEntityDiffDelta extends DeltaObjDiff {
     title?: string;
     description?: string;
     timeEstimateMinutes?: string;
-    changeQuillContent?: QuillContentObj,
-    orderedContentIds?: DeltaArrOps
-    orderedQuestionIds?: DeltaArrOps;
-    orderedContentQuestionIds?: DeltaArrOps;
+    changeQuillContent: QuillContentObj,
+    orderedContentIds: DeltaArrOps
+    orderedQuestionIds: DeltaArrOps;
+    orderedContentQuestionIds: DeltaArrOps;
 }
 
 export type OrderedContentQuestions = (QuillEditorData | Question)[];
@@ -57,7 +58,7 @@ export type OrderedContentQuestions = (QuillEditorData | Question)[];
 export interface CreateTrainingEntityPayload {
     title: string;
     description?: string;
-    timeEstimate?: string;
+    timeEstimate?: string | number;
     orderedContentQuestions: OrderedContentQuestions;
 }
 

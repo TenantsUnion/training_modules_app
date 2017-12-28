@@ -7,7 +7,7 @@ import {TrainingEntityDiffDelta, TrainingEntityPayload} from '../training_entity
 
 export const TRAINING_ENTITY_BASIC_PROPS = ['title', 'description', 'timeEstimate'];
 export const diffBasicPropsTrainingEntity = (before: TrainingEntityPayload, after: TrainingEntityPayload): TrainingEntityDiffDelta => {
-    return diffPropsDeltaObj(TRAINING_ENTITY_BASIC_PROPS, before, after);
+    return <TrainingEntityDiffDelta> diffPropsDeltaObj(TRAINING_ENTITY_BASIC_PROPS, before, after);
 };
 
 export const diffPropsDeltaObj = (props: string[], before: DeltaObj, after: DeltaObj): DeltaObjDiff => {

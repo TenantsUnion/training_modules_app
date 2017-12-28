@@ -5,7 +5,7 @@ import {
 } from "courses.ts";
 import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
-import {CreateModuleEntityCommand, SaveModuleData} from "../../../shared/modules";
+import {CreateModuleEntityCommand, SaveModuleEntityPayload} from "../../../shared/modules";
 import {CoursesRepository} from './courses_repository';
 import {ModuleOperations} from './module/module_routes';
 import {CreateSectionEntityPayload, SaveSectionEntityPayload} from '../../../shared/sections';
@@ -87,7 +87,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     }
 
     async saveModule(request: express.Request, response: express.Response) {
-        let saveModuleData: SaveModuleData = request.body;
+        let saveModuleData: SaveModuleEntityPayload = request.body;
         try {
             let course = await this.coursesHandler.saveModule(saveModuleData);
             response.status(200).send(course);

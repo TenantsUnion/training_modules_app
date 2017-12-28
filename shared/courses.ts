@@ -80,7 +80,7 @@ export interface UserEnrolledCourseData extends ViewCourseQuillData {
     slug?: string;
     title: string;
     description: string;
-    timeEstimate?: string;
+    timeEstimate?: number | string;
 }
 
 export interface AdminCourseDescription extends CourseDescription {
@@ -107,7 +107,7 @@ export interface SaveCourseResponse {
 }
 
 export const diffBasicPropsCourseProps = (before: ViewCourseQuillData, after: ViewCourseQuillData): CourseEntityDiffDelta => {
-    return diffPropsDeltaObj(_.extend(['active', 'openEnrollment'], TRAINING_ENTITY_BASIC_PROPS), before, after);
+    return <CourseEntityDiffDelta> diffPropsDeltaObj(_.extend(['active', 'openEnrollment'], TRAINING_ENTITY_BASIC_PROPS), before, after);
 };
 
 

@@ -1,8 +1,10 @@
 import {accountHandler, coursesHandler} from '../../../../../server/src/config/handler_config';
 import {
-    CourseEntityCommandMetadata, CreateCourseEntityPayload} from '../../../../../shared/courses';
+    CourseEntityCommandMetadata, CreateCourseEntityPayload
+} from '../../../../../shared/courses';
 import {IUserInfo} from '../../../../../shared/user';
 import {CreateModuleEntityPayload} from '../../../../../shared/modules';
+import {CreateSectionEntityPayload} from '../../../../../shared/sections';
 
 let latestUser;
 export const createUser = async (username = 'user1'): Promise<IUserInfo> => {
@@ -10,7 +12,7 @@ export const createUser = async (username = 'user1'): Promise<IUserInfo> => {
     return latestUser;
 };
 
-var commandMetadata = (userId = latestUser.id): CourseEntityCommandMetadata => {
+let commandMetadata = (userId = latestUser.id): CourseEntityCommandMetadata => {
     return {
         type: 'CourseEntity',
         userId: userId,
@@ -40,21 +42,17 @@ export const createCourse = async (userId = latestUser.id, course: CreateCourseE
     return id;
 };
 
-let defaultModule = {
-    description: 'Module 1 description blerg',
-    timeEstimate: '60',
-    title: 'first module',
-    orderedContentQuestions: [],
+export const DEFAULT_MODULE = {
+    description: 'Module description blerg',
+    timeEstimate: 60,
+    title: 'A Module',
     active: true
 };
-let moduleEntity = (module = defaultModule, courseId = latestCourse): CreateModuleEntityPayload => {
+export const moduleEntity = (module = DEFAULT_MODULE, courseId = latestCourse): CreateModuleEntityPayload => {
     return {
         courseId,
-        description: 'Module 1 description blerg',
-        timeEstimate: '60',
-        title: 'first module',
         orderedContentQuestions: [],
-        active: true
+        ...DEFAULT_MODULE
     };
 };
 let latestModule;
@@ -62,4 +60,31 @@ export const addModule = async (module: CreateModuleEntityPayload = moduleEntity
     let {moduleId} = await coursesHandler.createModule(module);
     latestModule = moduleId;
     return moduleId;
+};
+
+export const DEFAULT_SECTION = {
+    description: 'this is a section description',
+    timeEstimate: 60,
+    title: 'Awesome Section',
+    orderedContentQuestions: []
+};
+export const sectionEntity = (section = DEFAULT_SECTION, courseId = latestCourse, moduleId = latestModule): CreateSectionEntityPayload => {
+    return {
+        courseId, moduleId,
+        ...DEFAULT_SECTION
+    };
+};
+let latestSection;
+export const addSection = async (section: CreateSectionEntityPayload = sectionEntity()): Promise<string> => {
+    let {sectionId} = await coursesHandler.createSection(section);
+    latestSection = sectionId;
+    return sectionId;
+};
+
+export const EMPTY_CHANGES_OBJ = {
+    changeQuillContent: {},
+    orderedSectionIds: [],
+    orderedContentIds: [],
+    orderedQuestionIds: [],
+    orderedContentQuestionIds: []
 };

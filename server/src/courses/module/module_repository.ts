@@ -2,8 +2,8 @@ import {AbstractRepository} from "../../repository";
 import {LoggerInstance} from "winston";
 import {getLogger} from "../../log";
 import {Datasource} from "../../datasource";
-import {CreateModuleEntityPayload} from 'modules.ts';
-import {SaveModuleData} from 'modules.ts';
+import {CreateModuleEntityPayload, ModuleEntity} from 'modules.ts';
+import {SaveModuleEntityPayload} from 'modules.ts';
 import * as moment from "moment";
 
 export class ModuleRepository extends AbstractRepository {
@@ -30,14 +30,15 @@ export class ModuleRepository extends AbstractRepository {
         }
     }
 
-    async saveModule(moduleData: SaveModuleData): Promise<void> {
-        return this.sqlTemplate.query({
-            text: `UPDATE tu.module m SET title = $1, description = $2, time_estimate = $3,
-                                active = $4, ordered_section_ids = $5
-                                    where m.id = $6`,
-            values: [moduleData.title, moduleData.description, moduleData.timeEstimate, moduleData.active,
-                moduleData.orderedSectionIds, moduleData.id]
-        }).then(() => {
+    async saveModule(moduleData: ModuleEntity): Promise<void> {
+        let {title, description, timeEstimate, active, orderedSectionIds, orderedContentIds, orderedContentQuestionIds, id} = moduleData;
+        await this.sqlTemplate.query({
+            text: `
+                UPDATE tu.module m SET title = $1, description = $2, time_estimate = $3, active = $4,
+                    ordered_section_ids = $5, ordered_content_ids = $6, ordered_content_question_ids = $6,
+                    last_modified_at = $7
+                        where m.id = $8`,
+            values: [title, description, timeEstimate, active, orderedSectionIds, orderedContentIds, new Date(), id]
         });
     }
 
@@ -52,16 +53,20 @@ export class ModuleRepository extends AbstractRepository {
         });
     }
 
-    addSection(moduleId: string, sectionId: string) {
-        return (async () => {
-            await this.sqlTemplate.query({
-                text: `UPDATE tu.module SET ordered_section_ids =
+    async addSection(moduleId: string, sectionId: string) {
+        await this.sqlTemplate.query({
+            text: `UPDATE tu.module SET ordered_section_ids =
                             ordered_section_ids || $1 :: BIGINT WHERE id = $2`,
-                values: [sectionId, moduleId]
-            });
-        })().catch((e) => {
-            this.logger.error(`Failed to add section for moduleId: ${moduleId}, sectionId: ${sectionId}`);
-            this.logger.error(`Exception:\n${e}`);
+            values: [sectionId, moduleId]
         });
+    }
+
+    async loadModule(moduleId: string): Promise<ModuleEntity> {
+        let results = await this.sqlTemplate.query({
+            text: `SELECT * from tu.module m where m.id = $1`,
+            values: [moduleId]
+        });
+
+        return results[0];
     }
 }

@@ -24,27 +24,33 @@ export interface ModuleGetters {
     currentModuleSlug: string;
 }
 
+export type getModuleSlugFromIdFn = (string) => string;
+
 export const moduleGetters: { [index in keyof ModuleGetters]: ModuleGetterFn } = {
     currentModule: ({modules, currentModuleId}): ViewModuleQuillData => modules[currentModuleId],
     currentModuleLoaded: ({modules, currentModuleId}) => !!modules[currentModuleId],
     currentModuleLoading: ({currentModuleId, moduleRequests}) => !!(currentModuleId && moduleRequests[currentModuleId]),
-    getModuleIdFromSlug(state: ModuleState, {courseNavigationDescription}) {
+    getModuleIdFromSlug(state: ModuleState, {courseNavigationDescription}): (string) => string {
         if (!courseNavigationDescription) {
-            return function () {
-            }; // noop
+            return function (string) {
+                // noop
+                return null;
+            };
         }
         let moduleSlugIdMap = courseNavigationDescription.modules.reduce((acc, {slug, id}) => {
             acc[slug] = id;
             return acc;
         }, {});
-        return function (slug) {
-            return moduleSlugIdMap[slug];
+        return function (id) {
+            return moduleSlugIdMap[id];
         }
     },
-    getModuleSlugFromId(state, {courseNavigationDescription}) {
+    getModuleSlugFromId(state, {courseNavigationDescription}): getModuleSlugFromIdFn {
         if (!courseNavigationDescription) {
-            return function () {
-            }; // noop
+            return function (x: string) {
+                // noop
+                return null;
+            };
         }
         let moduleIdSlugMap = courseNavigationDescription.modules.reduce((acc, {slug, id}) => {
             acc[id] = slug;

@@ -1,4 +1,7 @@
-import {CreateModuleEntityPayload, ModuleEntity, ViewModuleTransferData} from '../../../../../../shared/modules';
+import {
+    CreateModuleEntityPayload, ModuleEntity, SaveModuleEntityPayload, SaveModuleResponse,
+    ViewModuleTransferData
+} from '../../../../../../shared/modules';
 import {MODULE_MUTATIONS} from './module_mutations';
 import {ModuleState} from './module_state';
 import {Action, ActionTree} from 'vuex';
@@ -19,6 +22,7 @@ export interface ModuleActions {
     SET_CURRENT_MODULE: SetCurrentModuleAction;
     SET_CURRENT_MODULE_FROM_SLUG: SetCurrentModuleFromSlugAction;
     LOAD_MODULE_ENTITY: ModuleAction<ViewModuleTransferData>;
+    SAVE_MODULE: ModuleAction<SaveModuleEntityPayload>;
 }
 
 /**
@@ -28,7 +32,8 @@ export const MODULE_ACTIONS: Constant<ModuleActions> = {
     CREATE_MODULE: 'CREATE_MODULE',
     SET_CURRENT_MODULE: 'SET_CURRENT_MODULE',
     SET_CURRENT_MODULE_FROM_SLUG: 'SET_CURRENT_MODULE_FROM_SLUG',
-    LOAD_MODULE_ENTITY: 'LOAD_MODULE_ENTITY'
+    LOAD_MODULE_ENTITY: 'LOAD_MODULE_ENTITY',
+    SAVE_MODULE: 'SAVE_MODULE'
 };
 
 export const CREATE_ID = 'CREATING';
@@ -72,5 +77,13 @@ export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions =
         let moduleEntity = await transformTransferViewService.populateTrainingEntityQuillData(moduleTransferData);
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id, requesting: false});
         commit(MODULE_MUTATIONS.SET_MODULE_ENTITY, moduleEntity);
+    },
+    async SAVE_MODULE({commit, dispatch}, saveModuleEntity: SaveModuleEntityPayload){
+        commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: saveModuleEntity.id, requesting: true});
+        let response: SaveModuleResponse = await coursesService.saveModule(saveModuleEntity);
+        commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: saveModuleEntity.id, requesting: false});
+        commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
+        await dispatch(MODULE_ACTIONS.LOAD_MODULE_ENTITY, response);
+
     }
 };

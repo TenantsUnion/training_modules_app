@@ -4,12 +4,10 @@ import {CoursesRepository} from "./courses_repository";
 import {getLogger} from '../log';
 import {
     CreateModuleEntityCommand, CreateModuleEntityPayload, CreateModuleResponse,
-    SaveModuleData
+    SaveModuleEntityPayload, SaveModuleResponse
 } from "../../../shared/modules";
 import {
-    CreateSectionEntityPayload, CreateSectionResponse, SaveSectionEntityPayload, SaveSectionResponse,
-    ViewSectionTransferData
-} from '../../../shared/sections';
+    CreateSectionEntityPayload, CreateSectionResponse, SaveSectionEntityPayload, SaveSectionResponse} from '../../../shared/sections';
 import {SectionHandler} from './section/section_handler';
 import {QuillRepository} from '../quill/quill_repository';
 import {ModuleRepository} from './module/module_repository';
@@ -19,10 +17,10 @@ import {
     CreateCourseEntityCommand, CreateCourseEntityPayload, SaveCourseEntityPayload, SaveCourseResponse,
     ViewCourseTransferData
 } from '../../../shared/courses';
-import {CoursesQueryService} from './courses_query_service';
 import {QuillHandler} from '../quill/quill_handler';
 import {applyDeltaDiff} from '../../../shared/delta/apply_delta';
 import {updateArrOpsValues} from '../../../shared/delta/diff_key_array';
+import {ModuleHandler} from './module/module_handler';
 
 export interface LoadAdminCourseParameters {
     username: string;
@@ -39,7 +37,7 @@ export class CoursesHandler {
                 private userHandler: IUserHandler,
                 private moduleRepo: ModuleRepository,
                 private sectionHandler: SectionHandler,
-                private courseQueryService: CoursesQueryService) {
+                private moduleHandler: ModuleHandler) {
     }
 
     async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<ViewCourseTransferData> {
@@ -74,6 +72,7 @@ export class CoursesHandler {
         const {courseId, orderedContentQuestions} = createModuleCommand;
         try {
 
+            // todo move to module handler
             // let moduleHeaderQuillId = await this.quillRepository.getNextId();
             // await this.quillRepository.insertEditorJson(moduleHeaderQuillId, createModuleCommand);
             let quillIds = await this.quillHandler.createTrainingEntityContent(orderedContentQuestions);
@@ -94,42 +93,22 @@ export class CoursesHandler {
         }
     }
 
-    async saveModule(moduleData: SaveModuleData): Promise<ViewCourseTransferData> {
-        let course = await this.coursesRepository.loadAdminCourse(moduleData.courseId);
-        let sectionsRemoved = _.extend({}, moduleData, {
-            orderedSectionIds: moduleData.orderedSectionIds.filter((sectionId) => {
-                return moduleData.removeSectionIds.indexOf(sectionId) === -1;
-            })
-        });
-        await Promise.all([
-            this.coursesRepository.updateLastModified(moduleData.courseId),
-            this.moduleRepo.saveModule(sectionsRemoved),
-            this.moduleRepo.updateLastModified(moduleData.id),
-            // this.quillRepository.updateEditorJson(moduleData.headerContentId, moduleData.headerContent),
-        ]);
+    async saveModule(moduleData: SaveModuleEntityPayload): Promise<SaveModuleResponse> {
+        let {id, courseId} = moduleData;
+        try {
+            await this.coursesRepository.updateLastModified(courseId);
+            await this.moduleHandler.saveModule(moduleData);
 
-        //remove sections from module
-
-        let sectionLookup: { [index: string]: ViewSectionTransferData } = _.find(course.modules, (module) => {
-            return module.id === moduleData.id;
-        })
-            .sections.reduce((acc, section) => {
-                acc[section.id] = section;
-                return acc;
-            }, {});
-
-        let asyncRemoveSections = _.chain(moduleData.removeSectionIds)
-            .map((sectionId) => {
-                return sectionLookup[sectionId];
-            })
-            .map((section) => {
-                return this.sectionHandler.removeSection(section);
-            }).value();
-        await Promise.all(asyncRemoveSections);
-
-        this.logger.log('info', 'saved module id: %s, title: %s', moduleData.id, moduleData.title);
-
-        return this.coursesRepository.loadAdminCourse(moduleData.courseId);
+            let course = await this.coursesRepository.loadAdminCourse(courseId);
+            return {
+                moduleId: id,
+                course
+            };
+        } catch (e) {
+            this.logger.error(e);
+            this.logger.error(e.stack);
+            throw e;
+        }
     }
 
     async saveSection(sectionData: SaveSectionEntityPayload): Promise<SaveSectionResponse> {

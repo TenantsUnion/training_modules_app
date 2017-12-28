@@ -1,6 +1,6 @@
 import axios, {AxiosResponse} from "axios";
 import VueRouter from "vue-router";
-import {CreateModuleEntityPayload, CreateModuleResponse, SaveModuleData} from "modules.ts";
+import {CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload, SaveModuleResponse} from "modules.ts";
 import {
     ViewCourseQuillData, ViewCourseTransferData, CourseEntity,
     CreateCourseEntityCommand, SaveCourseEntityPayload, SaveCourseResponse
@@ -82,11 +82,11 @@ export class CoursesService {
         return response.data;
     }
 
-    async saveModule(module: SaveModuleData): Promise<void> {
-        await axios.post(`course/${module.courseId}/module/${module.id}/save`, module);
-        // todo move to state action
-        // todo slug handling
-        // this.router.push({params: {moduleTitle: module.title}});
+    async saveModule(module: SaveModuleEntityPayload): Promise<SaveModuleResponse> {
+        let response = await axios.post(`course/${module.courseId}/module/${module.id}/save`, {
+            payload: module
+        });
+        return response.data;
     }
 
     async saveSection(section: SaveSectionEntityPayload): Promise<SaveSectionResponse> {

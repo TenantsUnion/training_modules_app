@@ -111,7 +111,7 @@ export class EditSectionComponent extends Vue {
             });
         } catch (errorMessages) {
             console.error(errorMessages);
-            this.errorMessages = errorMessages;
+            Vue.set(this, 'errorMessages', errorMessages);
         } finally {
             this.saving = false;
         }
