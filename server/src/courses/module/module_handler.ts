@@ -27,10 +27,11 @@ export class ModuleHandler {
         let quillIdMap = await this.quillHandler.handleQuillChanges(changeQuillContent);
 
         let module = await this.moduleRepo.loadModule(id);
+        let updatedArr = updateArrOpsValues(orderedContentIds, quillIdMap);
         let updatedModule: ModuleEntity = applyDeltaDiff(module, <ModuleEntityDiffDelta>{
             ...changes,
             // replace placeholder ids with ones return by quill handler
-            orderedContentIds: updateArrOpsValues(orderedContentIds, quillIdMap)
+            orderedContentIds: updatedArr
         });
         await this.moduleRepo.saveModule(updatedModule);
     }

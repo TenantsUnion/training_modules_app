@@ -1,10 +1,11 @@
 import {expect} from 'chai';
 import {clearData} from '../../test_db_util';
 import {addModule, addSection, createCourse, createUser, DEFAULT_MODULE, EMPTY_CHANGES_OBJ} from './test_course_util';
-import {moduleRepository, sectionRepository} from '../../../../../server/src/config/repository_config';
+import {moduleRepository, quillRepository} from '../../../../../server/src/config/repository_config';
 import {coursesHandler} from '../../../../../server/src/config/handler_config';
 import {ModuleEntityDiffDelta, SaveModuleEntityPayload} from '../../../../../shared/modules';
 import {deltaArrayDiff, DeltaArrOps} from '../../../../../shared/delta/diff_key_array';
+import * as Delta from "quill-delta";
 
 describe('Save module', function () {
     let courseId;
@@ -147,9 +148,59 @@ describe('Save module', function () {
         });
     });
 
-    xdescribe('content', function () {
-        it('should add a content segment', function () {
-            expect.fail("not implemented");
+    describe('content', function () {
+        it('should add two content segments', async function () {
+            const content1: Delta.DeltaStatic = new Delta().insert('some content');
+            const content2: Delta.DeltaStatic = new Delta().insert('some other content');
+            let saveModulePayload: SaveModuleEntityPayload = {
+                courseId,
+                id: moduleId,
+                changes: {
+                    ...EMPTY_CHANGES_OBJ,
+                    changeQuillContent: {
+                        "CREATED-0": content1,
+                        "CREATED-1": content2
+                    },
+                    orderedContentIds: [
+                        {
+                            val: "CREATED-0",
+                            op: "ADD",
+                            index: 0
+                        },
+                        {
+                            val: "CREATED-1",
+                            op: "ADD",
+                            index: 1
+                        }
+                    ],
+                    orderedContentQuestionIds: [
+                        {
+                            val: "CREATED-0",
+                            op: "ADD",
+                            index: 0
+                        },
+                        {
+                            val: "CREATED-1",
+                            op: "ADD",
+                            index: 1
+                        }
+                    ]
+                }
+            };
+
+            // assert current module does not have any content
+            let currentModule = await moduleRepository.loadModule(moduleId);
+            expect(currentModule.orderedContentIds).deep.equal([]);
+            expect(currentModule.orderedContentQuestionIds).deep.equal([]);
+
+            await coursesHandler.saveModule(saveModulePayload);
+            let updatedModule = await moduleRepository.loadModule(moduleId);
+            expect(updatedModule.orderedContentIds.length).to.eq(2);
+            expect(updatedModule.orderedContentQuestionIds.length).to.eq(2);
+            let quillContent = await quillRepository.loadQuillData(updatedModule.orderedContentIds);
+            expect(parseInt(quillContent[0].id)).to.be.lt(parseInt(quillContent[1].id));
+            expect(parseInt(quillContent[0].id)).to.equal(parseInt(updatedModule.orderedContentIds[0]));
+            expect(quillContent.map(({editorJson: {ops}}) => ops)).to.deep.eq([content1.ops, content2.ops]);
         });
 
         it('should add and update a content segment', function () {

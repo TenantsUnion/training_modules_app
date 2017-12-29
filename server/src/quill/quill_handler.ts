@@ -22,7 +22,6 @@ export class QuillHandler {
 
         // create quill content
         let quillIds = await this.quillRepository.getNextIds(quillContent.length);
-        this.logger.info(`Using quill ids ${JSON.stringify(quillIds, null, 2)}`);
         let insertContentAsync = quillContent.map(async (content, index) => {
             return quillRepository.insertEditorJson(quillIds[index], content.editorJson);
         });
@@ -35,6 +34,7 @@ export class QuillHandler {
     async handleQuillChanges(changeQuillContent: QuillContentObj): Promise<{[index: string]: string}> {
         await this.updateQuillContent(changeQuillContent);
         let insertQuillIds = await this.insertQuillContentFromUpdate(changeQuillContent);
+
         let quillIdMap = insertQuillIds.reduce((acc, quillIdObj) => {
             acc[quillIdObj.placeholderId] = quillIdObj.quillId;
             return acc;
@@ -93,7 +93,6 @@ export class QuillHandler {
     async insertQuillContent(quillContent: Quill.DeltaStatic[]): Promise<string[]> {
         // create quill content
         let quillIds = await this.quillRepository.getNextIds(quillContent.length);
-        this.logger.info(`Using quill ids ${JSON.stringify(quillIds, null, 2)}`);
         let insertContentAsync = quillContent.map(async (content, index) => {
             return quillRepository.insertEditorJson(quillIds[index], content);
         });

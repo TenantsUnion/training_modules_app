@@ -20,9 +20,10 @@ export abstract class AbstractRepository {
     async getNextIds(count: number): Promise<string[]> {
         let ids = [];
         while(count && count > 0) {
-            ids.push(this.getNextId());
+            let id = await this.getNextId();
+            ids.push(id);
             count--;
         }
-        return Promise.all(ids);
+        return ids;
     }
 }

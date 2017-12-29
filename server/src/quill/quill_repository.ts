@@ -27,8 +27,8 @@ export class QuillRepository extends AbstractRepository {
 
     async loadQuillData(ids: string[]): Promise<QuillEditorData[]> {
         let result = await this.sqlTemplate.query({
-            text: `SELECT id, version, editor_json FROM tu.quill_data WHERE
-                          id = ANY ($1)`,
+            text: `SELECT id, version, editor_json FROM tu.quill_data q WHERE
+                          q.id = ANY ($1) order by q.id asc`,
             values: [ids]
         });
         return result;

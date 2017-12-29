@@ -50,7 +50,6 @@ export class CoursesHandler {
 
             // create quill content
             let quillIds = await this.quillRepository.getNextIds(quillContent.length);
-            this.logger.info(`Using quill ids ${JSON.stringify(quillIds, null, 2)}`);
             let insertContentAsync = quillContent.map((content, index) => {
                 return quillRepository.insertEditorJson(quillIds[index], content.editorJson);
             });
