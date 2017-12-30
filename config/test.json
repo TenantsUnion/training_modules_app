@@ -11,7 +11,7 @@
     "schemaVersion": "test_tu_schema_version"
   },
   "log": {
-    "level": "info",
+    "level": "error",
     "useConfigLevel": true,
     "fileLogging": false
   }
