@@ -3,9 +3,10 @@ import {clearData} from '../../test_db_util';
 import {addModule, addSection, createCourse, createUser, DEFAULT_MODULE, EMPTY_CHANGES_OBJ} from './test_course_util';
 import {moduleRepository, quillRepository} from '../../../../../server/src/config/repository_config';
 import {coursesHandler} from '../../../../../server/src/config/handler_config';
-import {ModuleEntityDiffDelta, SaveModuleEntityPayload} from '../../../../../shared/modules';
+import {ModuleEntity, SaveModuleEntityPayload} from '../../../../../shared/modules';
 import {deltaArrayDiff, DeltaArrOps} from '../../../../../shared/delta/diff_key_array';
-import * as Delta from "quill-delta";
+import {DeltaStatic} from 'quill';
+import {Delta} from '../../../../../shared/normalize_imports';
 
 describe('Save module', function () {
     let courseId;
@@ -149,9 +150,27 @@ describe('Save module', function () {
     });
 
     describe('content', function () {
+        beforeEach(async function () {
+            // assert current module does not have any content
+            let currentModule = await moduleRepository.loadModule(moduleId);
+            expect(currentModule.orderedContentIds).deep.equal([]);
+            expect(currentModule.orderedContentQuestionIds).deep.equal([]);
+        });
         it('should add two content segments', async function () {
-            const content1: Delta.DeltaStatic = new Delta().insert('some content');
-            const content2: Delta.DeltaStatic = new Delta().insert('some other content');
+            const content1: DeltaStatic = new Delta().insert('some content');
+            const content2: DeltaStatic = new Delta().insert('some other content');
+            const orderedContentIds: DeltaArrOps = [
+                {
+                    val: "CREATED-0",
+                    op: "ADD",
+                    index: 0
+                },
+                {
+                    val: "CREATED-1",
+                    op: "ADD",
+                    index: 1
+                }
+            ];
             let saveModulePayload: SaveModuleEntityPayload = {
                 courseId,
                 id: moduleId,
@@ -161,54 +180,122 @@ describe('Save module', function () {
                         "CREATED-0": content1,
                         "CREATED-1": content2
                     },
-                    orderedContentIds: [
-                        {
-                            val: "CREATED-0",
-                            op: "ADD",
-                            index: 0
-                        },
-                        {
-                            val: "CREATED-1",
-                            op: "ADD",
-                            index: 1
-                        }
-                    ],
-                    orderedContentQuestionIds: [
-                        {
-                            val: "CREATED-0",
-                            op: "ADD",
-                            index: 0
-                        },
-                        {
-                            val: "CREATED-1",
-                            op: "ADD",
-                            index: 1
-                        }
-                    ]
+                    orderedContentIds: orderedContentIds,
+                    orderedContentQuestionIds: orderedContentIds
                 }
             };
-
-            // assert current module does not have any content
-            let currentModule = await moduleRepository.loadModule(moduleId);
-            expect(currentModule.orderedContentIds).deep.equal([]);
-            expect(currentModule.orderedContentQuestionIds).deep.equal([]);
 
             await coursesHandler.saveModule(saveModulePayload);
             let updatedModule = await moduleRepository.loadModule(moduleId);
             expect(updatedModule.orderedContentIds.length).to.eq(2);
             expect(updatedModule.orderedContentQuestionIds.length).to.eq(2);
+
             let quillContent = await quillRepository.loadQuillData(updatedModule.orderedContentIds);
-            expect(parseInt(quillContent[0].id)).to.be.lt(parseInt(quillContent[1].id));
             expect(parseInt(quillContent[0].id)).to.equal(parseInt(updatedModule.orderedContentIds[0]));
+            expect(parseInt(quillContent[1].id)).to.equal(parseInt(updatedModule.orderedContentIds[1]));
             expect(quillContent.map(({editorJson: {ops}}) => ops)).to.deep.eq([content1.ops, content2.ops]);
         });
 
-        it('should add and update a content segment', function () {
-            expect.fail("not implemented");
+        it('should add and update a content segment', async function () {
+            const initialContent: DeltaStatic = new Delta().insert('some content');
+            const orderedContentIds: DeltaArrOps = [
+                {
+                    val: "CREATED-0",
+                    op: "ADD",
+                    index: 0
+                }
+            ];
+            let saveAddedContentPayload: SaveModuleEntityPayload = {
+                courseId, id: moduleId,
+                changes: {
+                    ...EMPTY_CHANGES_OBJ,
+                    changeQuillContent: {
+                        "CREATED-0": initialContent
+                    },
+                    orderedContentIds: orderedContentIds,
+                    orderedContentQuestionIds: orderedContentIds
+                }
+            };
+
+            await coursesHandler.saveModule(saveAddedContentPayload);
+            let moduleEntity: ModuleEntity = await moduleRepository.loadModule(moduleId);
+
+            let updatedContent: DeltaStatic = new Delta().insert('some updated content');
+            let updatedContentDiff: DeltaStatic = initialContent.diff(updatedContent);
+
+            let saveUpdateContent: SaveModuleEntityPayload = {
+                courseId, id: moduleId,
+                changes: {
+                    ...EMPTY_CHANGES_OBJ,
+                    changeQuillContent: {
+                        [moduleEntity.orderedContentIds[0]]: updatedContentDiff
+                    }
+                }
+            };
+
+            await coursesHandler.saveModule(saveUpdateContent);
+
+            let updatedModule = await moduleRepository.loadModule(moduleId);
+
+            let quillContent = await quillRepository.loadQuillData(updatedModule.orderedContentIds);
+            expect(updatedModule.orderedContentIds.length).to.equal(1);
+            // quill content matches updated content from applying updatedContentDiff
+            expect(quillContent[0].editorJson.ops).to.deep.eq(updatedContent.ops);
         });
 
-        it('should add two content segments, update the second one, and remove the first one', function () {
-            expect.fail("not implemented");
+        it('should add two content segments, update the second one, and remove the first one', async function () {
+            const content1: DeltaStatic = new Delta().insert('some content');
+            const content2: DeltaStatic = new Delta().insert('some other content');
+            const orderedContentIds: DeltaArrOps = [
+                {
+                    val: "CREATED-0",
+                    op: "ADD",
+                    index: 0
+                },
+                {
+                    val: "CREATED-1",
+                    op: "ADD",
+                    index: 1
+                }
+            ];
+            let addContentSave: SaveModuleEntityPayload = {
+                courseId, id: moduleId,
+                changes: {
+                    ...EMPTY_CHANGES_OBJ,
+                    changeQuillContent: {
+                        "CREATED-0": content1,
+                        "CREATED-1": content2
+                    },
+                    orderedContentIds: orderedContentIds,
+                    orderedContentQuestionIds: orderedContentIds
+                }
+            };
+
+            await coursesHandler.saveModule(addContentSave);
+            let moduleEntity: ModuleEntity = await moduleRepository.loadModule(moduleId);
+
+            let updatedContent: DeltaStatic = new Delta().insert('some updated content');
+            let updatedContentDiff: DeltaStatic = content2.diff(updatedContent);
+
+            let removeFirstContentOp = deltaArrayDiff(moduleEntity.orderedContentIds, [moduleEntity.orderedContentIds[1]]);
+            let saveUpdateContent: SaveModuleEntityPayload = {
+                courseId, id: moduleId,
+                changes: {
+                    ...EMPTY_CHANGES_OBJ,
+                    changeQuillContent: {
+                        [moduleEntity.orderedContentIds[1]]: updatedContentDiff
+                    },
+                    orderedContentIds: removeFirstContentOp,
+                    orderedContentQuestionIds: removeFirstContentOp
+                }
+            };
+
+            await coursesHandler.saveModule(saveUpdateContent);
+            let updatedModule = await moduleRepository.loadModule(moduleId);
+
+            let quillContent = await quillRepository.loadQuillData(updatedModule.orderedContentIds);
+            expect(updatedModule.orderedContentIds.length).to.equal(1);
+            expect(quillContent[0].editorJson.ops).to.deep.eq(updatedContent.ops);
         });
     });
 });
