@@ -87,7 +87,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     }
 
     async saveModule(request: express.Request, response: express.Response) {
-        let saveModuleData: SaveModuleEntityPayload = request.body;
+        let saveModuleData: SaveModuleEntityPayload = request.body.payload;
         try {
             let course = await this.coursesHandler.saveModule(saveModuleData);
             response.status(200).send(course);
