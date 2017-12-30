@@ -24,7 +24,7 @@ export interface ModuleGetters {
     currentModuleSlug: string;
 }
 
-export type getModuleSlugFromIdFn = (string) => string;
+export type getModuleSlugFromIdFn = (id:string) => string;
 
 export const moduleGetters: { [index in keyof ModuleGetters]: ModuleGetterFn } = {
     currentModule: ({modules, currentModuleId}): ViewModuleQuillData => modules[currentModuleId],

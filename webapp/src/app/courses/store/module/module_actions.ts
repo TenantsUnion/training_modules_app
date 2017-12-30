@@ -83,7 +83,7 @@ export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions =
         let response: SaveModuleResponse = await coursesService.saveModule(saveModuleEntity);
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: saveModuleEntity.id, requesting: false});
         commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
-        await dispatch(MODULE_ACTIONS.LOAD_MODULE_ENTITY, response);
+        await dispatch(MODULE_ACTIONS.LOAD_MODULE_ENTITY, response.moduleId);
 
     }
 };
