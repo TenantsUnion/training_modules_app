@@ -1,11 +1,4 @@
-import config from 'config';
-
-// ts-node environment doesn't yet support integration with @std/esm es6 modules node functionality so sythenticDefaultImports are not
-// supported. The above import statement has config as undefined when run with ts-node
-
-if (!config) {
-    var config = require('config');
-}
+import {config} from '../../../shared/normalize_imports';
 
 export const DatabaseConfig = {
     user: config.get("database.db_user"),

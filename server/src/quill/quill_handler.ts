@@ -6,7 +6,7 @@ import {OrderedContentQuestions} from '../../../shared/training_entity';
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../log';
 import {QuillContentObj} from '../../../shared/delta/delta';
-import Delta from 'quill-delta';
+import {Delta} from '../../../shared/normalize_imports';
 
 
 export class QuillHandler {
