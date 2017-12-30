@@ -1,6 +1,7 @@
 {
   "include": [
-    "./src/app/**/*.ts"
+    "./src/app/**/*.ts",
+    "../shared/**/*.ts"
   ],
   "compilerOptions": {
     "lib": [

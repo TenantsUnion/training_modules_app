@@ -1,7 +1,8 @@
 {
   "includes": [
     "server/**/*.ts",
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "../shared/*.ts"
   ],
   "compilerOptions": {
     "lib": [
