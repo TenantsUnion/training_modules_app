@@ -1,10 +1,10 @@
-import {accountHandler, coursesHandler} from '../../../../../server/src/config/handler_config';
+import {accountHandler, coursesHandler} from '../../../../server/src/config/handler_config';
 import {
     CourseEntityCommandMetadata, CreateCourseEntityPayload
-} from '../../../../../shared/courses';
-import {IUserInfo} from '../../../../../shared/user';
-import {CreateModuleEntityPayload} from '../../../../../shared/modules';
-import {CreateSectionEntityPayload} from '../../../../../shared/sections';
+} from '../../../../shared/courses';
+import {IUserInfo} from '../../../../shared/user';
+import {CreateModuleEntityPayload} from '../../../../shared/modules';
+import {CreateSectionEntityPayload} from '../../../../shared/sections';
 
 let latestUser;
 export const createUser = async (username = 'user1'): Promise<IUserInfo> => {

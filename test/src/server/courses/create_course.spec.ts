@@ -1,12 +1,12 @@
 import {expect} from 'chai';
 import {
     AdminCourseDescription, CourseEntityCommandMetadata, CreateCourseEntityCommand
-} from '../../../../../shared/courses';
-import {coursesHandler, coursesViewHandler} from '../../../../../server/src/config/handler_config';
-import {QuillEditorData} from '../../../../../shared/quill_editor';
+} from '../../../../shared/courses';
+import {coursesHandler, coursesViewHandler} from '../../../../server/src/config/handler_config';
+import {QuillEditorData} from '../../../../shared/quill_editor';
 import * as Delta from 'quill-delta';
-import {clearData} from '../../test_db_util';
-import {IUserInfo} from '../../../../../shared/user';
+import {clearData} from '../test_db_util';
+import {IUserInfo} from '../../../../shared/user';
 import {createUser} from './test_course_util';
 
 describe('Course Handler: Create Course', function () {

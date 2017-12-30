@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {clearData} from '../../test_db_util';
-import {addModule, createCourse, createUser} from './test_course_util';
+import {addModule, createCourse, createUser} from '../test_course_util';
 import {coursesHandler} from '../../../../../server/src/config/handler_config';
 
 describe('Create section', function () {

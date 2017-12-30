@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import {coursesHandler} from '../../../../../server/src/config/handler_config';
 import {CreateModuleEntityPayload} from '../../../../../shared/modules';
 import {clearData} from '../../test_db_util';
-import {createCourse, createUser} from './test_course_util';
+import {createCourse, createUser} from '../test_course_util';
 import {Delta} from '../../../../../shared/normalize_imports';
 import {moduleRepository, quillRepository} from '../../../../../server/src/config/repository_config';
 
