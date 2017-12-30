@@ -9,6 +9,8 @@ import {SectionRepository} from '../courses/section/section_repository';
 
 import {Pool} from 'pg';
 import {DatabaseConfig} from './normalize_config';
+import {QuestionRepository} from '../question/question_repository';
+import {QuestionOptionRepository} from '../question/question_option_repository';
 
 const pool = new Pool(DatabaseConfig);
 
@@ -24,6 +26,8 @@ export const contentRepository = new ContentRepository(postgresDb);
 export const quillRepository = new QuillRepository(postgresDb);
 export const moduleRepository = new ModuleRepository(postgresDb);
 export const sectionRepository = new SectionRepository(postgresDb);
+export const questionRepository = new QuestionRepository(postgresDb);
+export const questionOptionRepository = new QuestionOptionRepository(postgresDb);
 
 process.on('exit', function () {
     (async () => {

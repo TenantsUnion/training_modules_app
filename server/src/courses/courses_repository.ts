@@ -2,7 +2,7 @@ import {Datasource} from "../datasource";
 import {
     AdminCourseDescription, UserEnrolledCourseData, EnrolledCourseDescription,
     ViewCourseTransferData, CreateCourseEntityPayload
-} from "courses.ts";
+} from "courses";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
 import {LoggerInstance} from 'winston';
@@ -10,7 +10,7 @@ import * as _ from "underscore";
 import * as moment from "moment";
 import {processRow} from './course_row_processor';
 
-export class CoursesRepository extends AbstractRepository implements CoursesRepository {
+export class CoursesRepository extends AbstractRepository {
     logger: LoggerInstance = getLogger('CourseRepository', 'info');
 
     constructor(private datasource: Datasource) {

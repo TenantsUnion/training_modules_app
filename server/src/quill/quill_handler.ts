@@ -60,7 +60,7 @@ export class QuillHandler {
             .map((content: QuillEditorData) => {
                 return _.extend({}, content, {
                     version: content.version + 1,
-                    editorJson: new Delta(content.editorJson).compose(quillChanges[content.id]),
+                    editorJson: new Delta(content.editorJson.ops).compose(quillChanges[content.id]),
                     lastModifiedAt: new Date()
                 });
             })

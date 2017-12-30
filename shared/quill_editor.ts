@@ -28,7 +28,8 @@ export const isQuillEditorData = (obj: any): obj is QuillEditorData => {
 export type QuillDeltaMap = { [index: string]: DeltaStatic; };
 
 let contentPlaceholderIdCounter = 0;
-const CREATED_PREFIX = 'CREATED';
+export const CREATED_PREFIX = 'CREATED';
+
 export const createdContentPlaceholderId = () => {
     return `${CREATED_PREFIX}-${contentPlaceholderIdCounter++}`;
 };

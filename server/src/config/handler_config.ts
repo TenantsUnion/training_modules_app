@@ -1,5 +1,7 @@
 import {
-    accountRepository, contentRepository, coursesRepository, moduleRepository, postgresDb, quillRepository,
+    accountRepository, contentRepository, coursesRepository, moduleRepository, postgresDb, questionOptionRepository,
+    questionRepository,
+    quillRepository,
     sectionRepository,
     userRepository
 } from "./repository_config";
@@ -12,6 +14,7 @@ import {CoursesViewHandler} from '../courses/courses_view_handler';
 import {courseQueryService} from './query_service_config';
 import {quillHandler} from '../quill/quill_handler';
 import {ModuleHandler} from '../courses/module/module_handler';
+import {QuestionHandler} from '../question/question_handler';
 
 export const userHandler = new UserHandler(userRepository);
 export const accountHandler = new AccountHandler(accountRepository, userHandler);
@@ -21,4 +24,5 @@ export const coursesHandler = new CoursesHandler(coursesRepository, quillHandler
         moduleRepository, sectionHandler, moduleHandler);
 export const coursesViewHandler = new CoursesViewHandler(coursesRepository, courseQueryService);
 export const userContentHandler = new UserContentHandler(contentRepository, quillRepository, userRepository);
+export const questionHandler = new QuestionHandler(questionRepository, questionOptionRepository, quillHandler);
 
