@@ -71,11 +71,7 @@ export class CoursesHandler {
         const {courseId, orderedContentQuestions} = createModuleCommand;
         try {
 
-            // todo move to module handler
-            // let moduleHeaderQuillId = await this.quillRepository.getNextId();
-            // await this.quillRepository.insertEditorJson(moduleHeaderQuillId, createModuleCommand);
-            let quillIds = await this.quillHandler.createTrainingEntityContent(orderedContentQuestions);
-            let moduleId = await this.moduleRepo.addModule(createModuleCommand, quillIds);
+            let moduleId = await this.moduleHandler.createModule(createModuleCommand);
             let addCoursesModule = this.coursesRepository.addModule(courseId, moduleId);
             let updateLastActive = this.coursesRepository.updateLastModified(courseId);
             await Promise.all([addCoursesModule, updateLastActive]);

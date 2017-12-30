@@ -2,20 +2,21 @@ import * as _ from 'underscore';
 import {expect} from 'chai';
 import {coursesHandler} from '../../../../../server/src/config/handler_config';
 import {CreateModuleEntityPayload} from '../../../../../shared/modules';
-import {getLogger} from '../../../../../server/src/log';
 import {clearData} from '../../test_db_util';
 import {createCourse, createUser} from './test_course_util';
+import {Delta} from '../../../../../shared/normalize_imports';
+import {moduleRepository, quillRepository} from '../../../../../server/src/config/repository_config';
 
 describe('Create module', function () {
-    let logger = getLogger('CoursesHandlerTest', 'debug');
     let courseId: string;
 
     beforeEach(async function () {
         await clearData();
-        await createUser('user1');
+        await createUser();
         courseId = await createCourse();
     });
-    it('should create a module in a course', async function () {
+
+    it('should create two modules in a course', async function () {
         let module1: CreateModuleEntityPayload = {
             courseId,
             description: 'Module 1 description blerg',
@@ -71,5 +72,29 @@ describe('Create module', function () {
             version: 0
         };
         expect(_.pick(modules[1], Object.keys(expectedModule2))).to.deep.eq(expectedModule2);
+    });
+
+    it('should create a module with one quill content element', async function () {
+        const content = new Delta().insert('Some content');
+        let createModulePayload: CreateModuleEntityPayload = {
+            courseId,
+            description: 'Module 1 description blerg',
+            timeEstimate: '60',
+            title: 'first module',
+            orderedContentQuestions: [{
+                id: 'CREATED-0',
+                editorJson: content
+            }],
+            active: true
+        };
+
+        let {course: {orderedModuleIds}, moduleId} = await coursesHandler.createModule(createModulePayload);
+
+        let module = await moduleRepository.loadModule(moduleId);
+        let quillContent = await quillRepository.loadEditorJson(module.orderedContentIds[0]);
+
+        expect(orderedModuleIds.length).to.equal(1);
+        expect(module.orderedContentIds.length).to.equal(1);
+        expect(quillContent.editorJson.ops).to.deep.equal(content.ops);
     });
 });
