@@ -130,9 +130,7 @@ export class EditModuleComponent extends Vue {
             this.$router.push({
                 name: COURSES_ROUTE_NAMES.moduleDetails,
                 params: {
-                    moduleSlug: this.getModuleSlugFromId({
-                        moduleId: this.currentModuleId
-                    })
+                    moduleSlug: this.getModuleSlugFromId(this.currentModuleId)
                 }
             });
         } catch (errorMessages) {
