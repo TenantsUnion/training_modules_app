@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "export SCRIPT_NAME=start && npm run esm_entry",
-    "esm_entry": "export NODE_CONFIG_DIR=./config && node $NODE_DEBUG_OPTION ./bin/esm_script_runner",
+    "esm_entry": "export NODE_CONFIG_DIR=./config && node ./bin/esm_script_runner",
     "init_db": "export SCRIPT_NAME=init_db && npm run esm_entry && npm run migrate_db",
     "old_init_db": "export NODE_CONFIG_DIR=./config && node ./bin/drop_db && node ./bin/init_db && npm run migrate_db",
     "drop_db": "export SCRIPT_NAME=drop_db && npm run esm_entry",
@@ -22,7 +22,6 @@
     "test_migrate_db": "export NODE_ENV=test && npm run migrate_db",
     "test": "export NODE_ENV=test && export NODE_CONFIG_DIR=./config && npm run test_init_db && mocha test/**/*.spec.ts",
     "rm_ide_compiled_ts": "./bin/rm_ide_compiled_ts.sh"
-
   },
   "repository": {
     "type": "git",
