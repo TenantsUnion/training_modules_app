@@ -1,6 +1,8 @@
 export const traverseActionOnProperties = (action: (par: any) => any) => {
     let recurseAction =  (obj) => {
-        if (obj instanceof Array) {
+        if (obj instanceof Date || obj instanceof Function) {
+            return obj;
+        } else if (obj instanceof Array) {
             return obj.map((el) => {
                 return recurseAction(el);
             });
@@ -11,6 +13,7 @@ export const traverseActionOnProperties = (action: (par: any) => any) => {
                 return acc;
             }, {});
         } else {
+            // primitive values
             return obj;
         }
     };

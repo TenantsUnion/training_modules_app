@@ -2,25 +2,23 @@ import * as _ from "underscore";
 import {IUserHandler} from "../user/user_handler";
 import {CoursesRepository} from "./courses_repository";
 import {getLogger} from '../log';
+import {CreateModuleEntityPayload, SaveModuleEntityPayload} from "../../../shared/modules";
 import {
-    CreateModuleEntityCommand, CreateModuleEntityPayload, CreateModuleResponse,
-    SaveModuleEntityPayload, SaveModuleResponse
-} from "../../../shared/modules";
-import {
-    CreateSectionEntityPayload, CreateSectionResponse, SaveSectionEntityPayload, SaveSectionResponse} from '../../../shared/sections';
+    CreateSectionEntityPayload, SaveSectionEntityPayload
+} from '../../../shared/sections';
 import {SectionHandler} from './section/section_handler';
-import {QuillRepository} from '../quill/quill_repository';
-import {ModuleRepository} from './module/module_repository';
-import {quillRepository} from '../config/repository_config';
 import {isQuillEditorData, QuillEditorData} from '../../../shared/quill_editor';
 import {
-    CreateCourseEntityCommand, CreateCourseEntityPayload, SaveCourseEntityPayload, SaveCourseResponse,
-    ViewCourseTransferData
+    CourseEntity,
+    CreateCourseEntityCommand, CreateCourseEntityPayload, SaveCourseEntityPayload
 } from '../../../shared/courses';
-import {QuillHandler} from '../quill/quill_handler';
+import {QuillHandler} from '../training_entity/quill/quill_handler';
 import {applyDeltaDiff} from '../../../shared/delta/apply_delta';
-import {updateArrOpsValues} from '../../../shared/delta/diff_key_array';
 import {ModuleHandler} from './module/module_handler';
+import {TrainingEntityHandler} from '../training_entity/training_entity_handler';
+import {ContentQuestionEntity} from '../../../shared/training_entity';
+import {applyDeltaArrOps, updateArrOpsValues} from '../../../shared/delta/diff_key_array';
+import {updateObjPlaceholderIds} from '../../../shared/delta/update_placeholder_ids';
 
 export interface LoadAdminCourseParameters {
     username: string;
@@ -33,42 +31,40 @@ export class CoursesHandler {
 
     constructor(private coursesRepository: CoursesRepository,
                 private quillHandler: QuillHandler,
-                private quillRepository: QuillRepository,
+                private trainingEntityHandler: TrainingEntityHandler,
                 private userHandler: IUserHandler,
-                private moduleRepo: ModuleRepository,
                 private sectionHandler: SectionHandler,
                 private moduleHandler: ModuleHandler) {
     }
 
-    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<ViewCourseTransferData> {
+    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<string> {
         try {
             let {userId} = createCourseCommand.metadata;
             let courseInfo: CreateCourseEntityPayload = createCourseCommand.payload;
-            let quillContent: QuillEditorData[] = courseInfo.orderedContentQuestions
-                .map((el) => isQuillEditorData(el) && el);
-            this.logger.log('trace', `Content and questions: ${JSON.stringify(quillContent, null, 2)}`);
-
             // create quill content
-            let quillIds = await this.quillRepository.getNextIds(quillContent.length);
-            let insertContentAsync = quillContent.map((content, index) => {
-                return quillRepository.insertEditorJson(quillIds[index], content.editorJson);
-            });
+            let {contentQuestions: {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds}} = courseInfo;
+            let placeholderIdMap =
+                await this.trainingEntityHandler.handleContentQuestionDelta(courseInfo.contentQuestions);
 
-            await insertContentAsync;
-            let courseId = await this.coursesRepository.createCourse(courseInfo, quillIds);
+            let contentQuestions: ContentQuestionEntity = {
+                orderedContentIds: applyDeltaArrOps([], updateArrOpsValues(orderedContentIds, placeholderIdMap)),
+                orderedQuestionIds: applyDeltaArrOps([], updateArrOpsValues(orderedQuestionIds, placeholderIdMap)),
+                orderedContentQuestionIds: applyDeltaArrOps([], updateArrOpsValues(orderedContentQuestionIds, placeholderIdMap))
+            };
+
+            let courseId = await this.coursesRepository.createCourse(courseInfo, contentQuestions);
             await this.userHandler.userCreatedCourse(userId, courseId);
             this.logger.info(`Successfully created course: ${courseId}`);
-            let course = await this.coursesRepository.loadAdminCourse(courseId);
 
-            return course;
+            return courseId;
         } catch (e) {
             this.logger.error('Exception creating course\n%s', e);
             throw e;
         }
     }
 
-    async createModule(createModuleCommand: CreateModuleEntityPayload): Promise<CreateModuleResponse> {
-        const {courseId, orderedContentQuestions} = createModuleCommand;
+    async createModule(createModuleCommand: CreateModuleEntityPayload): Promise<string> {
+        const {courseId} = createModuleCommand;
         try {
 
             let moduleId = await this.moduleHandler.createModule(createModuleCommand);
@@ -77,47 +73,23 @@ export class CoursesHandler {
             await Promise.all([addCoursesModule, updateLastActive]);
             this.logger.info('Adding module to course finished');
 
-            let loadedCourse = await this.coursesRepository.loadAdminCourse(courseId);
-            return {
-                moduleId,
-                course: loadedCourse
-            };
+            return moduleId;
         } catch (e) {
             this.logger.log('error', 'Failed to add module to course %s', courseId);
             throw e;
         }
     }
 
-    async saveModule(moduleData: SaveModuleEntityPayload): Promise<SaveModuleResponse> {
-        let {id, courseId} = moduleData;
-        try {
-            await this.coursesRepository.updateLastModified(courseId);
-            await this.moduleHandler.saveModule(moduleData);
-
-            let course = await this.coursesRepository.loadAdminCourse(courseId);
-            return {
-                moduleId: id,
-                course
-            };
-        } catch (e) {
-            this.logger.error(e);
-            this.logger.error(e.stack);
-            throw e;
-        }
+    async saveModule(moduleData: SaveModuleEntityPayload): Promise<void> {
+        await this.coursesRepository.updateLastModified(moduleData.courseId);
+        await this.moduleHandler.saveModule(moduleData);
     }
 
-    async saveSection(sectionData: SaveSectionEntityPayload): Promise<SaveSectionResponse> {
-        let {id, moduleId, courseId} = sectionData;
+    async saveSection(sectionData: SaveSectionEntityPayload): Promise<void> {
         try {
-            await this.coursesRepository.updateLastModified(courseId);
-            await this.moduleRepo.updateLastModified(moduleId);
+            await this.coursesRepository.updateLastModified(sectionData.courseId);
+            await this.moduleHandler.saveModule(sectionData);
             await this.sectionHandler.saveSection(sectionData);
-
-            let course = await this.coursesRepository.loadAdminCourse(courseId);
-            return {
-                sectionId: id,
-                moduleId, course
-            };
         } catch (e) {
             this.logger.error(e);
             this.logger.error(e.stack);
@@ -125,35 +97,26 @@ export class CoursesHandler {
         }
     }
 
-    async createSection(sectionData: CreateSectionEntityPayload): Promise<CreateSectionResponse> {
+    async createSection(sectionData: CreateSectionEntityPayload): Promise<string> {
         let sectionId = await this.sectionHandler.createSection(sectionData);
         this.logger.info('Created new section with id: %s', sectionId);
         await this.coursesRepository.updateLastModified(sectionData.courseId);
         this.logger.info('Updated course last modified: %s', sectionData.courseId);
 
-        await this.moduleRepo.addSection(sectionData.moduleId, sectionId);
-        this.logger.info('Added section to module: %s', sectionData.moduleId);
-
-        let loadedCourse = await this.coursesRepository.loadAdminCourse(sectionData.courseId);
-        return {
-            sectionId,
-            course: loadedCourse
-        };
+        await this.moduleHandler.addSection({sectionId, ...sectionData});
+        return sectionId;
     }
 
-    async saveCourse(saveCourse: SaveCourseEntityPayload): Promise<SaveCourseResponse> {
-        let {id, changes, changes: {changeQuillContent, orderedContentIds}} = saveCourse;
-        let quillIdMap = await this.quillHandler.handleQuillChanges(changeQuillContent);
+    async saveCourse(saveCourse: SaveCourseEntityPayload): Promise<void> {
+        let {id, changes, changes: {quillChanges, orderedContentIds}} = saveCourse;
 
-        let course: ViewCourseTransferData = await this.coursesRepository.loadAdminCourse(id);
+        let course: CourseEntity = await this.coursesRepository.loadAdminCourseEntity(id);
+        await this.trainingEntityHandler.handleContentQuestionDelta(changes);
         let updatedCourse = applyDeltaDiff(course, {
-            ...changes, orderedContentIds: updateArrOpsValues(orderedContentIds, quillIdMap)
+            ...changes, orderedContentIdsOps: orderedContentIds
         });
 
         await this.coursesRepository.saveCourse(updatedCourse);
-        return {
-            course: await this.coursesRepository.loadAdminCourse(id)
-        };
     }
 }
 

@@ -2,6 +2,8 @@ import {AbstractRepository} from '../../repository';
 import {Datasource} from '../../datasource';
 import {CreateSectionEntityPayload, SaveSectionEntityPayload, SectionEntity} from '../../../../shared/sections';
 import {getLogger} from '../../log';
+import {ContentQuestionIdsObj} from '../../training_entity/training_entity_handler';
+import {ContentQuestionEntity} from '../../../../shared/training_entity';
 
 export class SectionRepository extends AbstractRepository {
     logger = getLogger('SectionRepository', 'info');
@@ -10,12 +12,16 @@ export class SectionRepository extends AbstractRepository {
         super('section_id_seq', sqlTemplate);
     }
 
-    async createSection(data: CreateSectionEntityPayload, quillIds: string[]): Promise<string> {
+    async createSection(data: CreateSectionEntityPayload, contentQuestionIds: ContentQuestionEntity): Promise<string> {
         let sectionId = await this.getNextId();
+        let {title, description, timeEstimate} = data;
+        let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = contentQuestionIds;
         await this.sqlTemplate.query({
-            text: ` INSERT INTO tu.section (id, title, description, time_estimate, ordered_content_ids, ordered_content_question_ids)
-                             VALUES ($1, $2, $3, $4, $5, $5)`,
-            values: [sectionId, data.title, data.description, data.timeEstimate, quillIds]
+            text: ` INSERT INTO tu.section (id, title, description, time_estimate,
+                        ordered_content_ids, ordered_question_ids, ordered_content_question_ids)
+                             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+            values: [sectionId, title, description, timeEstimate,
+                        orderedContentIds, orderedQuestionIds, orderedContentQuestionIds]
         });
         return sectionId;
     }

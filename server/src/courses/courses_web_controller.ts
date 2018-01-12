@@ -1,15 +1,21 @@
 import * as express from "express";
 import {Request, Response} from "express";
 import {
-    AdminCourseDescription, SaveCourseEntityCommand, CreateCourseEntityCommand, SaveCourseEntityPayload
-} from "courses.ts";
+    AdminCourseDescription, CreateCourseEntityCommand, SaveCourseEntityPayload,
+    CreateCourseResponse, SaveCourseResponse
+} from "courses";
 import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
-import {CreateModuleEntityCommand, SaveModuleEntityPayload} from "../../../shared/modules";
-import {CoursesRepository} from './courses_repository';
+import {
+    CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload,
+    SaveModuleResponse
+} from "../../../shared/modules";
 import {ModuleOperations} from './module/module_routes';
-import {CreateSectionEntityPayload, SaveSectionEntityPayload} from '../../../shared/sections';
-import {coursesHandler} from '../config/handler_config';
+import {
+    CreateSectionEntityPayload, CreateSectionResponse, SaveSectionEntityPayload,
+    SaveSectionResponse
+} from '../../../shared/sections';
+import {coursesHandler, coursesViewHandler} from '../config/handler_config';
 import {SectionOperations} from './section/section_routes';
 import {validateCreateCourse, validateSaveCourse} from './courses_validation';
 import {logHandleServerError, logHandleValidationError} from '../util/handle_validation_error';
@@ -21,7 +27,6 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     private handleServerErr = logHandleServerError(this.logger);
 
     constructor(private coursesHandler: CoursesHandler,
-                private coursesRepo: CoursesRepository,
                 private coursesViewHandler: CoursesViewHandler) {
     }
 
@@ -32,9 +37,10 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
             if (errMsgs) {
                 this.handleValidationErr(errMsgs, request, response);
             } else {
-                let result = await this.coursesHandler.createCourse(createCourseCommand);
+                let courseId = await this.coursesHandler.createCourse(createCourseCommand);
+                let createdCourse: CreateCourseResponse = await this.coursesViewHandler.loadAdminCourse(courseId);
                 // todo handle room creation for course
-                response.status(200).send(result);
+                response.status(200).send(createdCourse);
             }
         } catch (e) {
             this.handleServerErr(e, request, response);
@@ -48,7 +54,10 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
             if (errMsgs) {
                 this.handleValidationErr(errMsgs, request, response);
             } else {
-                let result = await coursesHandler.saveCourse(course);
+                    await coursesHandler.saveCourse(course);
+                let result: SaveCourseResponse = {
+                    course: await coursesViewHandler.loadAdminCourse(course.id)
+                };
                 response.status(200).send(result);
             }
         } catch (e) {
@@ -75,12 +84,16 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
             this.handleServerErr(e, request, response);
         }
     }
+
     async createModule(request: express.Request, response: express.Response) {
-        let courseId: string = request.params.courseId;
-        let createModuleData: CreateModuleEntityCommand = request.body;
+        let createModuleData: CreateModuleEntityPayload = request.body.payload;
         try {
-            let course = await this.coursesHandler.createModule(createModuleData.payload);
-            response.status(200).send(course);
+            let moduleId = await this.coursesHandler.createModule(createModuleData);
+            let result: CreateModuleResponse = {
+                moduleId,
+                course: await this.coursesViewHandler.loadAdminCourse(createModuleData.courseId)
+            };
+            response.status(200).send(result);
         } catch (e) {
             this.handleServerErr(e, request, response);
         }
@@ -89,8 +102,12 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     async saveModule(request: express.Request, response: express.Response) {
         let saveModuleData: SaveModuleEntityPayload = request.body.payload;
         try {
-            let course = await this.coursesHandler.saveModule(saveModuleData);
-            response.status(200).send(course);
+            await this.coursesHandler.saveModule(saveModuleData);
+            let result: SaveModuleResponse = {
+                moduleId: saveModuleData.id,
+                course: await this.coursesViewHandler.loadAdminCourse(saveModuleData.courseId)
+            };
+            response.status(200).send(result);
         } catch (e) {
             this.handleServerErr(e, request, response);
         }
@@ -99,8 +116,12 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     async createSection(request: express.Request, response: express.Response) {
         let createSectionData: CreateSectionEntityPayload = request.body;
         try {
-            let course = await this.coursesHandler.createSection(createSectionData);
-            response.status(200).send(course);
+            let sectionId = await this.coursesHandler.createSection(createSectionData);
+            let result: CreateSectionResponse = {
+                sectionId,
+                course: await this.coursesViewHandler.loadAdminCourse(createSectionData.courseId)
+            };
+            response.status(200).send(result);
         } catch (e) {
             this.handleServerErr(e, request, response);
         }
@@ -109,8 +130,13 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     async saveSection(request: express.Request, response: express.Response) {
         let saveSectionData: SaveSectionEntityPayload = request.body.payload;
         try {
-            let course = await this.coursesHandler.saveSection(saveSectionData);
-            response.status(200).send(course);
+            await this.coursesHandler.saveSection(saveSectionData);
+            let result: SaveSectionResponse = {
+                sectionId: saveSectionData.id,
+                moduleId: saveSectionData.moduleId,
+                course: await this.coursesViewHandler.loadAdminCourse(saveSectionData.courseId)
+            };
+            response.status(200).send(result);
         } catch (e) {
             this.handleServerErr(e, request, response);
         }
@@ -119,7 +145,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     async loadUserAdminCourseWebView(request: Request, response: Response) {
         let {courseId} = request.params;
         try {
-            let course = await this.coursesRepo.loadAdminCourse(courseId);
+            let course = await this.coursesViewHandler.loadAdminCourse(courseId);
             response.status(200).send(course);
         } catch (e) {
             this.handleServerErr(e, request, response);

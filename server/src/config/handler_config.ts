@@ -1,5 +1,5 @@
 import {
-    accountRepository, contentRepository, coursesRepository, moduleRepository, postgresDb, questionOptionRepository,
+    accountRepository, contentRepository, coursesRepository, moduleRepository, questionOptionRepository,
     questionRepository,
     quillRepository,
     sectionRepository,
@@ -11,18 +11,22 @@ import {CoursesHandler} from "../courses/courses_handler";
 import {UserContentHandler} from "../content/user/user_content_handler";
 import {SectionHandler} from '../courses/section/section_handler';
 import {CoursesViewHandler} from '../courses/courses_view_handler';
-import {courseQueryService} from './query_service_config';
-import {quillHandler} from '../quill/quill_handler';
+import {QuillHandler} from '../training_entity/quill/quill_handler';
 import {ModuleHandler} from '../courses/module/module_handler';
-import {QuestionHandler} from '../question/question_handler';
+import {QuestionHandler} from '../training_entity/question/question_handler';
+import {courseViewQuery} from './query_service_config';
+import {TrainingEntityHandler} from '../training_entity/training_entity_handler';
+
+export const quillHandler = new QuillHandler(quillRepository);
+export const questionHandler = new QuestionHandler(questionRepository, questionOptionRepository);
+export const trainingEntityHandler = new TrainingEntityHandler(quillHandler, questionHandler);
 
 export const userHandler = new UserHandler(userRepository);
 export const accountHandler = new AccountHandler(accountRepository, userHandler);
-const sectionHandler = new SectionHandler(sectionRepository, quillHandler);
-const moduleHandler = new ModuleHandler(moduleRepository, quillHandler);
-export const coursesHandler = new CoursesHandler(coursesRepository, quillHandler, quillRepository, userHandler,
-        moduleRepository, sectionHandler, moduleHandler);
-export const coursesViewHandler = new CoursesViewHandler(coursesRepository, courseQueryService);
+const sectionHandler = new SectionHandler(sectionRepository, trainingEntityHandler);
+const moduleHandler = new ModuleHandler(moduleRepository, trainingEntityHandler);
+export const coursesHandler = new CoursesHandler(coursesRepository, quillHandler, trainingEntityHandler, userHandler,
+        sectionHandler, moduleHandler);
+export const coursesViewHandler = new CoursesViewHandler(courseViewQuery);
 export const userContentHandler = new UserContentHandler(contentRepository, quillRepository, userRepository);
-export const questionHandler = new QuestionHandler(questionRepository, questionOptionRepository, quillHandler);
 

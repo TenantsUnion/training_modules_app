@@ -7,6 +7,6 @@ import {userContentValidator} from "../content/user/user_content_validator";
 import {contentRepository, coursesRepository} from "./repository_config";
 
 export const accountController = new AccountController(accountHandler, userHandler, accountRequestValidator);
-export const coursesController = new CourseCommandController(coursesHandler, coursesRepository, coursesViewHandler);
+export const coursesController = new CourseCommandController(coursesHandler, coursesViewHandler);
 export const userContentController = new UserContentController(userContentHandler, userContentValidator, contentRepository);
 

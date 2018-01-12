@@ -1,3 +1,7 @@
+import {traverseSnakeToCamelCase} from './util/snake_to_camel_case_util';
+import {Moment} from 'moment';
+import {getLogger} from './log';
+
 /**
  * Interface for parameterized queries using node-postgres apis.
  * @see https://node-postgres.com/features/queries
@@ -7,13 +11,9 @@
  *      values: ['brianc', 'brian.m.carlson@gmail.com'],
  *  }
  */
-import {traverseSnakeToCamelCase} from './util/snake_to_camel_case_util';
-import {Moment} from 'moment';
-import {getLogger} from './log';
-
 export interface IQueryConfig {
     text: string,
-    values: (string | number | boolean | number | string[] | number[] | Quill.DeltaStatic | Date | Moment)[]
+    values: (string | number | boolean | number | (number | string)[] | string[] | number[] | Quill.DeltaStatic | Date | Moment)[]
 }
 
 declare type ParameterizedSql = string | IQueryConfig;

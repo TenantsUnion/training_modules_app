@@ -1,11 +1,11 @@
-import {Datasource} from '../datasource';
-import {getLogger} from "../log";
-import {AbstractRepository} from "../repository";
+import {Datasource} from '../../datasource';
+import {getLogger} from "../../log";
+import {AbstractRepository} from "../../repository";
 import {LoggerInstance} from 'winston';
 import * as moment from 'moment';
 import * as _ from 'underscore';
 import {Moment} from 'moment';
-import {QuillEditorData} from '../../../shared/quill_editor';
+import {QuillEditorData} from '../../../../shared/quill_editor';
 
 
 export class QuillRepository extends AbstractRepository {
@@ -16,7 +16,7 @@ export class QuillRepository extends AbstractRepository {
         this.logger = getLogger('dbLog', 'error');
     }
 
-    async loadEditorJson(id: string): Promise<QuillEditorData> {
+    async loadEditorJson(id: string | number): Promise<QuillEditorData> {
         let result = await this.sqlTemplate.query({
             text: `SELECT id, editor_json FROM tu.quill_data WHERE
                           id = $1`,
@@ -25,10 +25,10 @@ export class QuillRepository extends AbstractRepository {
         return result[0];
     }
 
-    async loadQuillData(ids: string[]): Promise<QuillEditorData[]> {
+    async loadQuillData(ids: (string | number)[]): Promise<QuillEditorData[]> {
         let result = await this.sqlTemplate.query({
-            text: `SELECT id, version, editor_json FROM tu.quill_data q WHERE
-                          q.id = ANY ($1) order by q.id asc`,
+            text: `SELECT * FROM tu.quill_data q WHERE
+                          q.id = ANY ($1)`,
             values: [ids]
         });
         return result;
@@ -36,9 +36,9 @@ export class QuillRepository extends AbstractRepository {
 
     async insertEditorJson(quillId: string, editorJson: Quill.DeltaStatic): Promise<void> {
         await this.sqlTemplate.query({
-            text: `INSERT INTO tu.quill_data (id, editor_json)
-                        VALUES ($1, $2)`,
-            values: [quillId, editorJson]
+            text: `INSERT INTO tu.quill_data (id, editor_json, last_modified_at, created_at)
+                        VALUES ($1, $2, $3, $3)`,
+            values: [quillId, editorJson, new Date()]
         });
     }
 

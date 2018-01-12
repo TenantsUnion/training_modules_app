@@ -5,6 +5,8 @@ import {Datasource} from "../../datasource";
 import {CreateModuleEntityPayload, ModuleEntity} from 'modules.ts';
 import {SaveModuleEntityPayload} from 'modules.ts';
 import * as moment from "moment";
+import {ContentQuestionIdsObj} from '../../training_entity/training_entity_handler';
+import {ContentQuestionEntity} from '../../../../shared/training_entity';
 
 export class ModuleRepository extends AbstractRepository {
     logger: LoggerInstance = getLogger('ModuleRepository', 'debug');
@@ -13,21 +15,18 @@ export class ModuleRepository extends AbstractRepository {
         super('module_id_seq', sqlTemplate);
     }
 
-    async addModule(moduleData: CreateModuleEntityPayload, quillIds: string[]): Promise<string> {
+    async addModule(moduleData: CreateModuleEntityPayload, createdContentQuestions: ContentQuestionEntity): Promise<string> {
         let {active, title, description, timeEstimate} = moduleData;
-        try {
-            let moduleId = await this.getNextId();
-            await this.sqlTemplate.query({
-                text: `INSERT INTO tu.module (id, title, description, time_estimate, active, ordered_content_ids, ordered_content_question_ids)
-                                    VALUES ($1, $2, $3, $4, $5, $6, $6)`,
-                values: [moduleId, title, description, timeEstimate, active, quillIds]
-            });
-            return moduleId;
-        } catch (e) {
-            this.logger.log(`Error creating module: ${moduleData.title}`, 'error');
-            this.logger.log('error', e);
-            throw e;
-        }
+        let {orderedQuestionIds, orderedContentIds, orderedContentQuestionIds} = createdContentQuestions;
+        let moduleId = await this.getNextId();
+        await this.sqlTemplate.query({
+            text: `INSERT INTO tu.module (id, title, description, time_estimate, active, ordered_content_ids,
+                        ordered_question_ids, ordered_content_question_ids, last_modified_at, created_at)
+                                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $9)`,
+            values: [moduleId, title, description, timeEstimate, active,
+                orderedContentIds, orderedQuestionIds, orderedContentQuestionIds, new Date()]
+        });
+        return moduleId;
     }
 
     async saveModule(moduleData: ModuleEntity): Promise<void> {

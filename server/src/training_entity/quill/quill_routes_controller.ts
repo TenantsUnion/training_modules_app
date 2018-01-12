@@ -1,6 +1,6 @@
 import * as express from 'express';
-import {quillHandler} from './quill_handler';
-import {getLogger} from '../log';
+import {getLogger} from '../../log';
+import {quillHandler} from '../../config/handler_config';
 
 let router = express.Router();
 const logger = getLogger('QuillRoutes', 'info');

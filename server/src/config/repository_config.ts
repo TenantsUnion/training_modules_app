@@ -3,14 +3,14 @@ import {CoursesRepository} from "../courses/courses_repository";
 import {UserRepository} from "../user/users_repository";
 import {AccountRepository} from "../account/account_repository";
 import {ContentRepository} from "../content/content_repository";
-import {QuillRepository} from "../quill/quill_repository";
+import {QuillRepository} from "../training_entity/quill/quill_repository";
 import {ModuleRepository} from "../courses/module/module_repository";
 import {SectionRepository} from '../courses/section/section_repository';
 
 import {Pool} from 'pg';
 import {DatabaseConfig} from './normalize_config';
-import {QuestionRepository} from '../question/question_repository';
-import {QuestionOptionRepository} from '../question/question_option_repository';
+import {QuestionRepository} from '../training_entity/question/question_repository';
+import {QuestionOptionRepository} from '../training_entity/question/question_option_repository';
 
 const pool = new Pool(DatabaseConfig);
 
