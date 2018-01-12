@@ -81,7 +81,7 @@ export class EditSectionComponent extends Vue {
         let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.currentSection, this.section);
 
         // quill content diff
-        changes.changeQuillContent = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
+        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
 
         // ordered content ids diff
         let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);

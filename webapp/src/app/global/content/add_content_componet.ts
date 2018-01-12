@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {quillService} from '../quill/quill_service';
-import {createdContentPlaceholderId} from '../../../../../shared/quill_editor';
+import {createdQuillPlaceholderId} from '../../../../../shared/quill_editor';
 
 @Component({
     props: {
@@ -23,6 +23,6 @@ export class AddContentComponent extends Vue {
     callback: (addContentId: string) => any;
 
     addContent() {
-        this.callback(createdContentPlaceholderId());
+        this.callback(createdQuillPlaceholderId());
     }
 }

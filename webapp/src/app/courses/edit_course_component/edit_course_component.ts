@@ -77,7 +77,7 @@ export class EditCourseComponent extends Vue {
         let changes: CourseEntityDiffDelta = diffBasicPropsCourseProps(this.currentCourse, this.course);
 
         // quill content diff
-        changes.changeQuillContent = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
+        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
 
         // ordered content ids diff
         let userChangedOrderedContentIds: string[] = this.quillContent.map(({id}) => id);

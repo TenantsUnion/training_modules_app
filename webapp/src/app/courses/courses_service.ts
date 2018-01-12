@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import {CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload, SaveModuleResponse} from "modules.ts";
 import {
     ViewCourseQuillData, ViewCourseTransferData, CourseEntity,
-    CreateCourseEntityCommand, SaveCourseEntityPayload, SaveCourseResponse
+    CreateCourseEntityCommand, SaveCourseEntityPayload, SaveCourseResponse, CreateCourseResponse
 } from 'courses';
 import {
     ViewSectionQuillData, CreateSectionEntityPayload, CreateSectionResponse,
@@ -25,13 +25,13 @@ export class CoursesService {
         this.router = router;
     }
 
-    async loadAdminCourse(courseId: string): Promise<CourseEntity> {
+    async loadAdminCourse(courseId: string): Promise<ViewCourseQuillData> {
         try {
             let response = await axios.get(`view/course/admin/${courseId}`);
             let course = await transformTransferViewService.populateTrainingEntityQuillData(response.data);
-            return <CourseEntity> course;
+            return <ViewCourseQuillData> course;
         } catch (e) {
-            console.error(`Error creating course data ${e}`);
+            console.error(`Error loading course data for course: ${courseId}${e}`);
             throw e.data;
         }
     }
@@ -101,10 +101,10 @@ export class CoursesService {
      * @param {CreateCourseEntityCommand} createCourseCommand
      * @returns {Promise<string>}
      */
-    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<CourseEntity> {
-        let request = await axios.post('courses/create', createCourseCommand);
-        let viewCourseQuillData = await transformTransferViewService.populateTrainingEntityQuillData(request.data);
-        return <CourseEntity> viewCourseQuillData;
+    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<ViewCourseQuillData> {
+        let createdCourse: CreateCourseResponse = (await axios.post('courses/create', createCourseCommand)).data;
+        let viewCourseQuillData = await transformTransferViewService.populateTrainingEntityQuillData(createdCourse);
+        return <ViewCourseQuillData> viewCourseQuillData;
     }
 }
 

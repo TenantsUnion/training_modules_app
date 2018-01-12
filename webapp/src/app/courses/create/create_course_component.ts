@@ -13,14 +13,14 @@ import {COURSES_ROUTE_NAMES} from '../courses_routes';
         return {
             loading: false,
             errorMessages: null,
-            course: <CreateCourseEntityPayload> {
+            course: {
                 active: true,
                 openEnrollment: true,
                 title: '',
                 description: '',
                 timeEstimate: '',
                 createdBy: '',
-                orderedContentQuestions: []
+                contentQuestions: null
             },
             formstate: {},
             quillContent: []
@@ -47,7 +47,7 @@ export class CreateCourseComponent extends Vue {
             timeEstimate: this.course.timeEstimate,
             active: this.course.active,
             openEnrollment: this.course.openEnrollment,
-            orderedContentQuestions: (<SegmentViewerComponent> this.$refs.segmentViewer).getContents(),
+            contentQuestions: (<SegmentViewerComponent> this.$refs.segmentViewer).getContentQuestionsDelta(),
             description: this.course.description
         };
         try {

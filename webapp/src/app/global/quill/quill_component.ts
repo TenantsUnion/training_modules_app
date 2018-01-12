@@ -16,20 +16,17 @@ Quill.register(ColorClass);
 Quill.register(SizeClass);
 
 let Delta: Quill.DeltaStatic = Quill.import('delta');
-const BLANK_QUILL_OP: Quill.DeltaOperation = {
-    insert: '\n'
-};
 
 // no sources prop like Quill type definition for TextChangeHandler
 // since changes from the api start out in parent components and wouldn't needed to be broadcasted
-export type QuillChangeObj = {
+export type QuillChangeEvent = {
     editorId: string;
     delta: DeltaStatic;
     oldContents: DeltaStatic;
     source: Sources
 }
 
-export type QuillChangeFn = (QuillChangeObj) => any;
+export type QuillChangeFn = (change: QuillChangeEvent) => any;
 
 type EditorState = 'NEW' | 'CHANGED' | 'PRISTINE';
 

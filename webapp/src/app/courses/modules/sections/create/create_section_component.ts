@@ -51,7 +51,7 @@ export class CreateSectionComponent extends Vue {
                 timeEstimate: this.timeEstimate,
                 courseId: this.$store.state.course.currentCourseId,
                 moduleId: currentModuleId,
-                orderedContentQuestions: (<SegmentViewerComponent> this.$refs.segmentViewer).getContents(),
+                contentQuestions: (<SegmentViewerComponent> this.$refs.segmentViewer).getContentQuestionsDelta(),
             };
             await this.$store.dispatch(SECTION_ACTIONS.CREATE_SECTION, createSectionPayload);
 

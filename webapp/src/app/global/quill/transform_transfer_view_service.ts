@@ -6,7 +6,10 @@ import moment from 'moment';
 import * as _ from 'underscore';
 import {QuillEditorData} from 'quill_editor.ts';
 import {ContentSegment} from '../../../../../shared/segment';
-import {TrainingEntityPayload, ViewTrainingEntityTransferData} from '../../../../../shared/training_entity';
+import {
+    TrainingEntity, ViewTrainingEntityQuillData,
+    ViewTrainingEntityTransferData
+} from '../../../../../shared/training_entity';
 
 function isViewCourseQuillData(arg: any): arg is ViewCourseQuillData {
     return arg.content;
@@ -24,7 +27,7 @@ function isViewSectionQuillData(arg: any): arg is ViewModuleQuillData {
  * Transforms transfer data views to their quill data view format for display
  */
 export class TransformTransferViewService {
-    async populateTrainingEntityQuillData<T extends ViewTrainingEntityTransferData>(course: T): Promise<T> {
+    async populateTrainingEntityQuillData<T extends ViewTrainingEntityTransferData>(course: T): Promise<ViewTrainingEntityQuillData> {
         try {
             let quillAsync = _.map(course.orderedContentIds, (contentId) => {
                 return quillService.loadQuillData(contentId, moment(course.lastModifiedAt));

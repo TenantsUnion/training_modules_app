@@ -99,7 +99,7 @@ export class EditModuleComponent extends Vue {
         let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.currentModule, this.module);
 
         // quill content diff
-        changes.changeQuillContent = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
+        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
 
         // ordered content ids diff
         let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);
