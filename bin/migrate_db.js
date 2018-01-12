@@ -32,5 +32,6 @@ module.exports = async () => {
         })
         .catch((err) => {
             logger.log('error', err);
+            throw err;
         });
 };
