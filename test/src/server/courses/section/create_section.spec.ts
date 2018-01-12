@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {clearData} from '../../test_db_util';
-import {addModule, createCourse, createUser} from '../test_course_util';
-import {coursesHandler} from '../../../../../server/src/config/handler_config';
+import {addModule, createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../test_course_util';
+import {coursesHandler, coursesViewHandler} from '../../../../../server/src/config/handler_config';
 
 describe('Create section', function () {
     let courseId: string;
@@ -19,7 +19,7 @@ describe('Create section', function () {
             description: 'section 1 description',
             timeEstimate: '60',
             title: 'first section',
-            orderedContentQuestions: [],
+            contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             courseId, moduleId
         };
 
@@ -27,15 +27,15 @@ describe('Create section', function () {
             description: 'section 2 description',
             timeEstimate: '120',
             title: 'second section',
-            orderedContentQuestions: [],
+            contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             courseId, moduleId
         };
-        let {course: {modules: [{orderedSectionIds: sectionIds1}]}, sectionId: sectionId1} =
-            await coursesHandler.createSection(section1);
+        let sectionId1 = await coursesHandler.createSection(section1);
+        let {modules: [{orderedSectionIds: sectionIds1}]} = await coursesViewHandler.loadAdminCourse(courseId);
         expect(sectionIds1.length).to.eq(1);
         expect(sectionIds1[0]).to.eq(sectionId1);
-        let {course: {modules: [{orderedSectionIds: sectionIds2}]}, sectionId: sectionId2} =
-            await coursesHandler.createSection(section2);
+        let sectionId2 = await coursesHandler.createSection(section2);
+        let {modules: [{orderedSectionIds: sectionIds2}]} = await coursesViewHandler.loadAdminCourse(courseId);
         expect(sectionIds2.length).to.eq(2);
         expect(sectionIds2[1]).to.eq(sectionId2);
 

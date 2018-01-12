@@ -91,14 +91,14 @@ describe('Update placeholder ids', function () {
 
         const expected = {
             nested: {
-                [placeholder1]: 'something',
-                noReplace: placeholder1,
+                [actual1]: 'something',
+                noReplace: actual1,
                 anotherObj: {
-                    [placeholder2]: 1111,
-                    [placeholder3]: [1, 2, 3, 4]
+                    [actual2]: 1111,
+                    [actual3]: [1, 2, 3, 4]
                 }
             },
-            [placeholder4]: placeholder4,
+            [actual4]: actual4,
         };
 
         expect(updateObjPlaceholderIds(placeholder, PLACEHOLDER_ID_MAP)).to.deep.eq(expected);

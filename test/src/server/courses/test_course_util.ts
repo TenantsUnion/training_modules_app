@@ -5,14 +5,15 @@ import {
 import {IUserInfo} from '../../../../shared/user';
 import {CreateModuleEntityPayload} from '../../../../shared/modules';
 import {CreateSectionEntityPayload} from '../../../../shared/sections';
+import {ContentQuestionsDelta} from '../../../../shared/training_entity';
 
-let latestUser;
+export let latestUser;
 export const createUser = async (username = 'user1'): Promise<IUserInfo> => {
     latestUser = await accountHandler.signup({username});
     return latestUser;
 };
 
-let commandMetadata = (userId = latestUser.id): CourseEntityCommandMetadata => {
+export const DEFAULT_COMMAND_METADATA = (userId = latestUser.id): CourseEntityCommandMetadata => {
     return {
         type: 'CourseEntity',
         userId: userId,
@@ -23,66 +24,74 @@ let commandMetadata = (userId = latestUser.id): CourseEntityCommandMetadata => {
     };
 };
 
-let courseEntity = {
+export const EMPTY_CONTENT_QUESTIONS_DELTA: ContentQuestionsDelta = {
+    quillChanges: {},
+    questionChanges: {},
+    orderedContentQuestionIds: [],
+    orderedContentIds: [],
+    orderedQuestionIds: []
+};
+
+export const DEFAULT_COURSE_ENTITY = {
     title: 'created course',
     timeEstimate: '60',
     description: 'Course description',
     openEnrollment: true,
     active: true,
-    orderedContentQuestions: []
+    contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
-let latestCourse;
-export const createCourse = async (userId = latestUser.id, course: CreateCourseEntityPayload = courseEntity): Promise<string> => {
+
+let latestCourseId;
+export const createCourse = async (userId = latestUser.id, course: CreateCourseEntityPayload = DEFAULT_COURSE_ENTITY): Promise<string> => {
     let createCourseCommand = {
-        metadata: commandMetadata(userId),
+        metadata: DEFAULT_COMMAND_METADATA(userId),
         payload: course
     };
-    let {id} = await coursesHandler.createCourse(createCourseCommand);
-    latestCourse = id;
-    return id;
+    latestCourseId = await coursesHandler.createCourse(createCourseCommand);
+    return latestCourseId;
 };
 
 export const DEFAULT_MODULE = {
     description: 'Module description blerg',
     timeEstimate: 60,
     title: 'A Module',
-    active: true
+    active: true,
+    contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
-export const moduleEntity = (module = DEFAULT_MODULE, courseId = latestCourse): CreateModuleEntityPayload => {
+export const moduleEntity = (module = DEFAULT_MODULE, courseId = latestCourseId): CreateModuleEntityPayload => {
     return {
         courseId,
-        orderedContentQuestions: [],
         ...DEFAULT_MODULE
     };
 };
-let latestModule;
+let latestModuleId;
 export const addModule = async (module: CreateModuleEntityPayload = moduleEntity()): Promise<string> => {
-    let {moduleId} = await coursesHandler.createModule(module);
-    latestModule = moduleId;
-    return moduleId;
+    latestModuleId = await coursesHandler.createModule(module);
+    return latestModuleId;
 };
 
 export const DEFAULT_SECTION = {
     description: 'this is a section description',
     timeEstimate: 60,
     title: 'Awesome Section',
-    orderedContentQuestions: []
+    contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
-export const sectionEntity = (section = DEFAULT_SECTION, courseId = latestCourse, moduleId = latestModule): CreateSectionEntityPayload => {
+
+export const sectionEntity = (section = DEFAULT_SECTION, courseId = latestCourseId, moduleId = latestModuleId): CreateSectionEntityPayload => {
     return {
         courseId, moduleId,
         ...DEFAULT_SECTION
     };
 };
-let latestSection;
+let latestSectionId;
 export const addSection = async (section: CreateSectionEntityPayload = sectionEntity()): Promise<string> => {
-    let {sectionId} = await coursesHandler.createSection(section);
-    latestSection = sectionId;
-    return sectionId;
+    latestSectionId = await coursesHandler.createSection(section);
+    return latestSectionId;
 };
 
 export const EMPTY_CHANGES_OBJ = {
-    changeQuillContent: {},
+    quillChanges: {},
+    questionChanges: {},
     orderedSectionIds: [],
     orderedContentIds: [],
     orderedQuestionIds: [],

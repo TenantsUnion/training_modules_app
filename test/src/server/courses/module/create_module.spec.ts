@@ -1,11 +1,13 @@
 import * as _ from 'underscore';
 import {expect} from 'chai';
-import {coursesHandler} from '../../../../../server/src/config/handler_config';
+import {coursesHandler, coursesViewHandler} from '../../../../../server/src/config/handler_config';
 import {CreateModuleEntityPayload} from '../../../../../shared/modules';
 import {clearData} from '../../test_db_util';
-import {createCourse, createUser} from '../test_course_util';
+import {createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../test_course_util';
 import {Delta} from '../../../../../shared/normalize_imports';
 import {moduleRepository, quillRepository} from '../../../../../server/src/config/repository_config';
+import {createdQuillPlaceholderId} from '../../../../../shared/quill_editor';
+import {addDeltaArrOp} from '../../../../../shared/delta/diff_key_array';
 
 describe('Create module', function () {
     let courseId: string;
@@ -22,7 +24,7 @@ describe('Create module', function () {
             description: 'Module 1 description blerg',
             timeEstimate: '60',
             title: 'first module',
-            orderedContentQuestions: [],
+            contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             active: true
         };
 
@@ -31,13 +33,15 @@ describe('Create module', function () {
             description: 'Module 2 description',
             timeEstimate: '120',
             title: 'second module',
-            orderedContentQuestions: [],
+            contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             active: false
         };
-        let {course: {orderedModuleIds: moduleIds1}, moduleId: moduleId1} = await coursesHandler.createModule(module1);
+        let moduleId1 = await coursesHandler.createModule(module1);
+        let {orderedModuleIds: moduleIds1} = await coursesViewHandler.loadAdminCourse(courseId);
         expect(moduleIds1.length).to.eq(1);
         expect(moduleIds1[0]).to.eq(moduleId1);
-        let {course: {modules, orderedModuleIds: moduleIds2}, moduleId: moduleId2} = await coursesHandler.createModule(module2);
+        let moduleId2 = await coursesHandler.createModule(module2);
+        let {modules, orderedModuleIds: moduleIds2} = await coursesViewHandler.loadAdminCourse(courseId);
         expect(moduleIds2.length).to.eq(2);
         expect(moduleIds2[1]).to.eq(moduleId2);
 
@@ -75,20 +79,26 @@ describe('Create module', function () {
     });
 
     it('should create a module with one quill content element', async function () {
+        const placeholderQuillId = createdQuillPlaceholderId();
         const content = new Delta().insert('Some content');
         let createModulePayload: CreateModuleEntityPayload = {
             courseId,
             description: 'Module 1 description blerg',
             timeEstimate: '60',
             title: 'first module',
-            orderedContentQuestions: [{
-                id: 'CREATED-0',
-                editorJson: content
-            }],
+            contentQuestions: {
+                ...EMPTY_CONTENT_QUESTIONS_DELTA,
+                orderedContentQuestionIds: [addDeltaArrOp(placeholderQuillId, 0)],
+                orderedContentIds: [addDeltaArrOp(placeholderQuillId, 0)],
+                quillChanges: {
+                    [placeholderQuillId]: content
+                }
+            },
             active: true
         };
 
-        let {course: {orderedModuleIds}, moduleId} = await coursesHandler.createModule(createModulePayload);
+        let moduleId = await coursesHandler.createModule(createModulePayload);
+        let {orderedModuleIds} = await coursesViewHandler.loadAdminCourse(courseId);
 
         let module = await moduleRepository.loadModule(moduleId);
         let quillContent = await quillRepository.loadEditorJson(module.orderedContentIds[0]);

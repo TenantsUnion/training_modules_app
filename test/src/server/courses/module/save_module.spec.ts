@@ -4,13 +4,24 @@ import {addModule, addSection, createCourse, createUser, DEFAULT_MODULE, EMPTY_C
 import {moduleRepository, quillRepository} from '../../../../../server/src/config/repository_config';
 import {coursesHandler} from '../../../../../server/src/config/handler_config';
 import {ModuleEntity, SaveModuleEntityPayload} from '../../../../../shared/modules';
-import {deltaArrayDiff, DeltaArrOps} from '../../../../../shared/delta/diff_key_array';
+import {deltaArrayDiff, DeltaArrOp, DeltaArrOps} from '../../../../../shared/delta/diff_key_array';
 import {DeltaStatic} from 'quill';
 import {Delta} from '../../../../../shared/normalize_imports';
+import {createdQuillPlaceholderId, QuillEditorData} from '../../../../../shared/quill_editor';
+import * as MockDate from 'mockdate';
 
 describe('Save module', function () {
     let courseId;
     let moduleId;
+
+    let now = new Date();
+    before(function () {
+        MockDate.set(now);
+    });
+
+    after(function () {
+        MockDate.reset();
+    });
 
     beforeEach(async function () {
         await clearData();
@@ -22,10 +33,21 @@ describe('Save module', function () {
     describe('basic property changes', function () {
         beforeEach(async function () {
             // assert that the modules properties are set to the DEFAULT_MODULE property values
+            let {active, title, timeEstimate, description} = DEFAULT_MODULE;
+            let defaultModule: ModuleEntity = {
+                id: moduleId,
+                headerDataId: null,
+                version: "0",
+                active, title, timeEstimate, description,
+                orderedContentQuestionIds: [],
+                orderedContentIds: [],
+                orderedQuestionIds: [],
+                orderedSectionIds: [],
+                lastModifiedAt: new Date(),
+                createdAt: new Date(),
+            };
             let currentModule = await moduleRepository.loadModule(moduleId);
-            Object.keys(DEFAULT_MODULE).map((key) => {
-                expect(currentModule[key]).to.deep.equal(DEFAULT_MODULE[key]);
-            });
+            expect(currentModule).to.deep.eq(defaultModule);
         });
 
         let basicModuleChange = (propChange): SaveModuleEntityPayload => {
@@ -84,7 +106,7 @@ describe('Save module', function () {
             let section2Id = await addSection();
 
             const swappedArr = [section2Id, section1Id];
-            let swapOrder: DeltaArrOps = deltaArrayDiff([section1Id, section2Id], swappedArr);
+            let swapOrder: DeltaArrOp[] = deltaArrayDiff([section1Id, section2Id], swappedArr);
             let currentModule = await moduleRepository.loadModule(moduleId);
             expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id]);
 
@@ -159,14 +181,16 @@ describe('Save module', function () {
         it('should add two content segments', async function () {
             const content1: DeltaStatic = new Delta().insert('some content');
             const content2: DeltaStatic = new Delta().insert('some other content');
+            const placeholderId1 = createdQuillPlaceholderId();
+            const placeholderId2 = createdQuillPlaceholderId();
             const orderedContentIds: DeltaArrOps = [
                 {
-                    val: "CREATED-0",
+                    val: placeholderId1,
                     op: "ADD",
                     index: 0
                 },
                 {
-                    val: "CREATED-1",
+                    val: placeholderId2,
                     op: "ADD",
                     index: 1
                 }
@@ -176,14 +200,15 @@ describe('Save module', function () {
                 id: moduleId,
                 changes: {
                     ...EMPTY_CHANGES_OBJ,
-                    changeQuillContent: {
-                        "CREATED-0": content1,
-                        "CREATED-1": content2
+                    quillChanges: {
+                        [placeholderId1]: content1,
+                        [placeholderId2]: content2
                     },
                     orderedContentIds: orderedContentIds,
                     orderedContentQuestionIds: orderedContentIds
                 }
             };
+
 
             await coursesHandler.saveModule(saveModulePayload);
             let updatedModule = await moduleRepository.loadModule(moduleId);
@@ -191,16 +216,37 @@ describe('Save module', function () {
             expect(updatedModule.orderedContentQuestionIds.length).to.eq(2);
 
             let quillContent = await quillRepository.loadQuillData(updatedModule.orderedContentIds);
-            expect(parseInt(quillContent[0].id)).to.equal(parseInt(updatedModule.orderedContentIds[0]));
-            expect(parseInt(quillContent[1].id)).to.equal(parseInt(updatedModule.orderedContentIds[1]));
-            expect(quillContent.map(({editorJson: {ops}}) => ops)).to.deep.eq([content1.ops, content2.ops]);
+            let populatedQuillContent = quillContent.map((data) => {
+                return {
+                    ...data,
+                    editorJson: new Delta(data.editorJson.ops)
+                }
+            });
+            let expectedQuillContent: QuillEditorData[] = [
+                {
+                    id: updatedModule.orderedContentIds[0],
+                    version: "0",
+                    lastModifiedAt: now,
+                    createdAt: now,
+                    editorJson: content1
+                }, {
+                    id: updatedModule.orderedContentIds[1],
+                    version: "0",
+                    lastModifiedAt: now,
+                    createdAt: now,
+                    editorJson: content2
+                }
+
+            ];
+            expect(populatedQuillContent).to.have.deep.members(expectedQuillContent);
         });
 
         it('should add and update a content segment', async function () {
             const initialContent: DeltaStatic = new Delta().insert('some content');
+            const contentPlaceholderId = createdQuillPlaceholderId();
             const orderedContentIds: DeltaArrOps = [
                 {
-                    val: "CREATED-0",
+                    val: contentPlaceholderId,
                     op: "ADD",
                     index: 0
                 }
@@ -209,8 +255,8 @@ describe('Save module', function () {
                 courseId, id: moduleId,
                 changes: {
                     ...EMPTY_CHANGES_OBJ,
-                    changeQuillContent: {
-                        "CREATED-0": initialContent
+                    quillChanges: {
+                        [contentPlaceholderId]: initialContent
                     },
                     orderedContentIds: orderedContentIds,
                     orderedContentQuestionIds: orderedContentIds
@@ -227,7 +273,7 @@ describe('Save module', function () {
                 courseId, id: moduleId,
                 changes: {
                     ...EMPTY_CHANGES_OBJ,
-                    changeQuillContent: {
+                    quillChanges: {
                         [moduleEntity.orderedContentIds[0]]: updatedContentDiff
                     }
                 }
@@ -246,14 +292,16 @@ describe('Save module', function () {
         it('should add two content segments, update the second one, and remove the first one', async function () {
             const content1: DeltaStatic = new Delta().insert('some content');
             const content2: DeltaStatic = new Delta().insert('some other content');
+            const contentPlaceholderId1 = createdQuillPlaceholderId();
+            const contentPlaceholderId2 = createdQuillPlaceholderId();
             const orderedContentIds: DeltaArrOps = [
                 {
-                    val: "CREATED-0",
+                    val: contentPlaceholderId1,
                     op: "ADD",
                     index: 0
                 },
                 {
-                    val: "CREATED-1",
+                    val: contentPlaceholderId2,
                     op: "ADD",
                     index: 1
                 }
@@ -262,9 +310,9 @@ describe('Save module', function () {
                 courseId, id: moduleId,
                 changes: {
                     ...EMPTY_CHANGES_OBJ,
-                    changeQuillContent: {
-                        "CREATED-0": content1,
-                        "CREATED-1": content2
+                    quillChanges: {
+                        [contentPlaceholderId1]: content1,
+                        [contentPlaceholderId2]: content2
                     },
                     orderedContentIds: orderedContentIds,
                     orderedContentQuestionIds: orderedContentIds
@@ -282,7 +330,7 @@ describe('Save module', function () {
                 courseId, id: moduleId,
                 changes: {
                     ...EMPTY_CHANGES_OBJ,
-                    changeQuillContent: {
+                    quillChanges: {
                         [moduleEntity.orderedContentIds[1]]: updatedContentDiff
                     },
                     orderedContentIds: removeFirstContentOp,

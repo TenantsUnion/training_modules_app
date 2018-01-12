@@ -7,7 +7,7 @@ import {QuillEditorData} from '../../../../shared/quill_editor';
 import * as Delta from 'quill-delta';
 import {clearData} from '../test_db_util';
 import {IUserInfo} from '../../../../shared/user';
-import {createUser} from './test_course_util';
+import {createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from './test_course_util';
 
 describe('Course Handler: Create Course', function () {
     let timestamp = new Date().toUTCString();
@@ -45,7 +45,7 @@ describe('Course Handler: Create Course', function () {
                 description: 'Course description',
                 openEnrollment: true,
                 active: true,
-                orderedContentQuestions: [editorJson1]
+                contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
             }
         };
         courseInfo2 = {
@@ -56,13 +56,13 @@ describe('Course Handler: Create Course', function () {
                 description: 'Course description 2',
                 openEnrollment: false,
                 active: false,
-                orderedContentQuestions: [editorJson2]
+                contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
             }
         };
     });
     it('should create 2 courses and load the matching admin course descriptions', async function () {
-        let {id: courseId1} = await coursesHandler.createCourse(courseInfo1);
-        let {id: courseId2} = await coursesHandler.createCourse(courseInfo2);
+        let courseId1 = await coursesHandler.createCourse(courseInfo1);
+        let courseId2 = await coursesHandler.createCourse(courseInfo2);
 
         let expectedDescriptions: AdminCourseDescription[] = [
             {

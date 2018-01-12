@@ -1,4 +1,4 @@
-import {applyDeltaArrOps, deltaArrayDiff, DeltaArrayOp} from '../../../../shared/delta/diff_key_array';
+import {applyDeltaArrOps, deltaArrayDiff, DeltaArrOp} from '../../../../shared/delta/diff_key_array';
 import {expect} from "chai";
 
 describe('Key Array type guards', function(){
@@ -8,7 +8,7 @@ describe('Diff Key Array', function () {
     describe('apply operations', function () {
         describe('insert', function () {
             it('should insert an element', function () {
-                let addOp: DeltaArrayOp = {
+                let addOp: DeltaArrOp = {
                     val: 'i',
                     op: 'ADD',
                     index: 2
@@ -19,7 +19,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should insert two consecutive elements', function () {
-                let addOps: DeltaArrayOp[] = [
+                let addOps: DeltaArrOp[] = [
                     {
                         val: 'i',
                         op: 'ADD',
@@ -37,7 +37,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should insert two non consecutive elements', function () {
-                let addOps: DeltaArrayOp[] = [
+                let addOps: DeltaArrOp[] = [
                     {
                         val: 'i',
                         op: 'ADD',
@@ -56,7 +56,7 @@ describe('Diff Key Array', function () {
         });
         describe('delete', function () {
             it('should delete a single element', function () {
-                let deleteOps: DeltaArrayOp[] = [
+                let deleteOps: DeltaArrOp[] = [
                     {
                         val: 3,
                         op: 'DELETE',
@@ -69,7 +69,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should delete two consecutive elements', function () {
-                let deleteOps: DeltaArrayOp[] = [
+                let deleteOps: DeltaArrOp[] = [
                     {
                         val: 2,
                         op: 'DELETE',
@@ -87,7 +87,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should delete two non consecutive elements', function () {
-                let deleteOps: DeltaArrayOp[] = [
+                let deleteOps: DeltaArrOp[] = [
                     {
                         val: 1,
                         op: 'DELETE',
@@ -107,7 +107,7 @@ describe('Diff Key Array', function () {
 
         describe('move', function () {
             it('should move a single element', function () {
-                let moveOps: DeltaArrayOp[] = [
+                let moveOps: DeltaArrOp[] = [
                     {
                         op: 'MOVE',
                         beforeIndex: 0,
@@ -120,7 +120,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should move two consecutive elements', function () {
-                let moveOps: DeltaArrayOp[] = [
+                let moveOps: DeltaArrOp[] = [
                     {
                         op: 'MOVE',
                         beforeIndex: 1,
@@ -138,7 +138,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should swap two elements', function () {
-                let moveOps: DeltaArrayOp[] = [
+                let moveOps: DeltaArrOp[] = [
                     {
                         op: 'MOVE',
                         beforeIndex: 1,
@@ -327,7 +327,7 @@ describe('Diff Key Array', function () {
             it('should determine one delete operation, one add operation, and move operations', function(){
                 let beforeArr = [1, 2, 3];
                 let afterArr = ['add', 3, 2];
-                let ops: DeltaArrayOp[] = [
+                let ops: DeltaArrOp[] = [
                     {
                         index: 0,
                         val: 1,
