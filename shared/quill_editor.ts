@@ -8,10 +8,11 @@ import {isDeltaStatic} from './delta/typeguards_delta';
  */
 
 export interface QuillEditorData {
-    id: string;
-    version?: string,
+    id: number | string;
+    version?: number | string,
     editorJson: DeltaStatic;
-    lastModified?: Moment | string;
+    lastModifiedAt?: Date;
+    createdAt?: Date;
 }
 
 /**
@@ -27,14 +28,38 @@ export const isQuillEditorData = (obj: any): obj is QuillEditorData => {
 
 export type QuillDeltaMap = { [index: string]: DeltaStatic; };
 
+/* Quill Placeholder Id */
 let contentPlaceholderIdCounter = 0;
-export const CREATED_PREFIX = 'CREATED';
+export const CREATED_QUILL_PREFIX = 'CREATED-QUILL';
 
-export const createdContentPlaceholderId = () => {
-    return `${CREATED_PREFIX}-${contentPlaceholderIdCounter++}`;
+export const createdQuillPlaceholderId = () => {
+    return `${CREATED_QUILL_PREFIX}-${contentPlaceholderIdCounter++}`;
 };
 
-export const isCreatedPlaceholderId = (id: string) => {
-  return id.indexOf(CREATED_PREFIX) === 0;
+export const isCreatedQuillPlaceholderId = (id: string) => {
+  return id.indexOf(CREATED_QUILL_PREFIX) === 0;
 };
 
+/* Question Placeholder Id */
+let questionPlaceholderIdCounter = 0;
+export const CREATED_QUESTION_PREFIX = 'CREATED-QUESTION';
+
+export const createdQuestionPlaceholderId = () => {
+    return `${CREATED_QUESTION_PREFIX}-${questionPlaceholderIdCounter++}`;
+};
+
+export const isCreatedQuestionPlaceholderId = (id: string) => {
+    return id.indexOf(CREATED_QUESTION_PREFIX) === 0;
+};
+
+/* Question Option Placeholder Id */
+let questionOptionPlaceholderIdCounter = 0;
+export const CREATED_QUESTION_OPTION_PREFIX = 'CREATED-QUESTION-OPTION';
+
+export const createdQuestionOptionPlaceholderId = () => {
+    return `${CREATED_QUESTION_OPTION_PREFIX}-${questionOptionPlaceholderIdCounter++}`;
+};
+
+export const isCreatedQuestionOptionPlaceholderId = (id: string) => {
+    return id.indexOf(CREATED_QUESTION_OPTION_PREFIX) === 0;
+};

@@ -3,6 +3,15 @@ import {DeltaDiff, DeltaObjDiff} from './delta';
 import {isDeltaStatic, isKeyArr} from './typeguards_delta';
 import {applyDeltaArrOps, isDeltaArrDiff} from './diff_key_array';
 
+/**
+ * Applies the provided {@link DeltaObjDiff} to the provided object. A diff is only applied to the objects values if there
+ * is corresponding diff value. Otherwise the original value is copied over. Properties that are on the diff object but
+ * not found on the provided object are ignored.
+ *
+ * @param {T} obj
+ * @param {DeltaObjDiff} diff
+ * @returns {T}
+ */
 export const applyDeltaDiff = <T>(obj: T, diff: DeltaObjDiff): T => {
     return _.reduce(Object.keys(obj), (acc, key) => {
         let diffVal: DeltaDiff = diff[key];

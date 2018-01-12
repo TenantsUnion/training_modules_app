@@ -1,14 +1,14 @@
 import * as _ from 'underscore';
 import {Moment} from "moment";
-import {ModuleEntity, ViewModuleTransferData} from 'modules.ts';
+import {ViewModuleTransferData} from 'modules.ts';
 import {ContentSegment} from './segment';
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, SaveTrainingEntityPayload,
     TrainingEntityDiffDelta,
-    TrainingEntityPayload
+    TrainingEntity
 } from './training_entity';
 import {EntityCommandMetaData} from './entity';
-import {DeltaArrOps} from './delta/diff_key_array';
+import {DeltaArrOp, DeltaArrOps} from './delta/diff_key_array';
 import {diffPropsDeltaObj, TRAINING_ENTITY_BASIC_PROPS} from './delta/diff_delta';
 
 export type CourseEntityType = 'CourseEntity';
@@ -23,18 +23,16 @@ export interface CreateCourseEntityPayload extends CreateTrainingEntityPayload {
 export type SaveCourseEntityPayload = SaveTrainingEntityPayload<CourseEntityDiffDelta>;
 export type CourseEntityCommandMetadata = EntityCommandMetaData<CourseEntityType>;
 
-export interface CourseEntity extends TrainingEntityPayload {
+export interface CourseEntity extends TrainingEntity {
     active: boolean;
     openEnrollment: boolean;
     orderedModuleIds: string[];
-    modules: ModuleEntity[];
-    fieldDeltas: CourseEntityDeltas;
 }
 
 export interface CourseEntityDeltas extends TrainingEntityDiffDelta {
     active?: boolean;
     openEnrollment?: boolean;
-    orderedModuleIds?: DeltaArrOps;
+    orderedModuleIds?: DeltaArrOp[];
 }
 
 export interface ViewCourseData {
@@ -90,16 +88,12 @@ export interface AdminCourseDescription extends CourseDescription {
 export interface EnrolledCourseDescription extends CourseDescription {
 }
 
-export interface CreateCourseResponse {
-    id: string,
-    title: string,
-    slug: string
-}
+export interface CreateCourseResponse extends ViewCourseTransferData {}
 
 export interface CourseEntityDiffDelta extends TrainingEntityDiffDelta {
     active?: boolean;
     openEnrollment?: boolean;
-    modules?: DeltaArrOps;
+    modules?: DeltaArrOp[];
 }
 
 export interface SaveCourseResponse {

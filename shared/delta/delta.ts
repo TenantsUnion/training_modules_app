@@ -1,6 +1,6 @@
-import * as _ from "underscore";
-import {isDeltaStatic} from './typeguards_delta';
-import {DeltaArrayOp, DeltaArrOps} from './diff_key_array';
+import {DeltaArrOp} from './diff_key_array';
+import {QuillChangesObj} from '../training_entity';
+import {OptionChangesObj, QuestionChangesObj} from '../questions';
 
 export interface Delta extends Quill.DeltaStatic {
 }
@@ -11,26 +11,11 @@ export interface DeltaObj {
 }
 
 
-export type DeltaDiff = number | boolean | string | DeltaArrOps | QuillContentObj;
+export type DeltaDiff = number | boolean | string | DeltaArrOp[] | QuillChangesObj | QuestionChangesObj | OptionChangesObj;
 
 export type DeltaObjDiff = {
     [index: string]: DeltaDiff;
 }
 
-/**
- * Represents a change to quill delta as a diff with the key as the unique primary key identifying the quill data
- * and the property is the diff as a Quill.DeltaStatic object between the old and new quill data.
- * The new version of the quill data can then be reconstructed with
- *
- */
-export interface QuillContentObj {
-    [index: string]: Quill.DeltaStatic
-}
-
-export const isQuillContentDiff = (obj: any): obj is QuillContentObj => {
-    return _.isObject(obj) && !_.isArray(obj) && Object.keys(obj).every((key) => {
-        return _.isString(key) && isDeltaStatic(obj[key]);
-    });
-};
 
 
