@@ -1,13 +1,11 @@
-import {accountHttpService} from '../account_http_service';
 import {appRouter} from '../../router';
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {IUserId} from "user";
 import {AccountFormState} from '../login/login_component';
 import {Watch} from 'vue-property-decorator';
-import {AccountSignupFieldErrors} from '../../../../../shared/account';
+import {AccountSignupFieldErrors} from '@shared/account';
 import {$} from "../../globals";
-import {USER_ACTIONS, USER_MUTATIONS} from '../../courses/store/user/user_store';
+import {USER_ACTIONS} from '../../courses/store/user/user_store';
 
 @Component({
     data: () => {

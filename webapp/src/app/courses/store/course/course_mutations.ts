@@ -1,8 +1,7 @@
 import Vue from "vue";
 import {CourseState} from './course_state';
-import {CourseEntity, ViewCourseQuillData} from 'courses.ts';
+import {CourseEntity} from '@shared/courses';
 import {Mutation, MutationTree} from 'vuex';
-import {RequestStage} from '../../../../../../shared/requests';
 
 export type CourseMutation<P> = (state: CourseState, payload: P) => any | Mutation<CourseState>;
 

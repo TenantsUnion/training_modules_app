@@ -1,7 +1,6 @@
 {
-  "includes": [
-    "src/**/*.ts",
-    "../shared/**/*.ts"
+  "include": [
+    "src/**/*.ts"
   ],
   "compilerOptions": {
     "lib": [
@@ -20,10 +19,8 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "*": [
-        "*",
-        "../shared/*"
-      ]
+      "@shared/*": ["../shared/*"],
+      "*": ["*"]
     }
   }
 }

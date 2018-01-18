@@ -2,11 +2,9 @@ import {AbstractRepository} from "../../repository";
 import {LoggerInstance} from "winston";
 import {getLogger} from "../../log";
 import {Datasource} from "../../datasource";
-import {CreateModuleEntityPayload, ModuleEntity} from 'modules.ts';
-import {SaveModuleEntityPayload} from 'modules.ts';
+import {CreateModuleEntityPayload, ModuleEntity} from '@shared/modules';
 import * as moment from "moment";
-import {ContentQuestionIdsObj} from '../../training_entity/training_entity_handler';
-import {ContentQuestionEntity} from '../../../../shared/training_entity';
+import {ContentQuestionEntity} from '@shared/training_entity';
 
 export class ModuleRepository extends AbstractRepository {
     logger: LoggerInstance = getLogger('ModuleRepository', 'debug');

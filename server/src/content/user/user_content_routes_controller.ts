@@ -1,9 +1,9 @@
 import {Request, Response} from 'express';
-import {CreateUserContentCommand} from "content.ts";
 import {UserContentHandler} from "./user_content_handler";
 import {getLogger} from '../../log';
-import {ContentEntity, ContentRepository} from "../content_repository";
+import {ContentRepository} from "../content_repository";
 import {UserContentValidator} from "./user_content_validator";
+import {ContentEntity, CreateUserContentCommand} from "@shared/content";
 
 let logger = getLogger('userContentController', 'info');
 

@@ -1,11 +1,10 @@
 import axios from "axios";
-import {ContentData, CreateUserContentCommand} from "content.ts";
+import {ContentData, ContentEntity, CreateUserContentCommand} from "@shared/content";
 import {
     UserQueryService,
     userQueryService
 } from "../../account/user_query_service";
 import {appRouter} from "../../router";
-import {ContentEntity} from "../../../../../server/src/content/content_repository";
 
 class CreateContentHttpService {
     constructor (private userQueryService: UserQueryService) {

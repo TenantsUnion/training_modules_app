@@ -1,5 +1,5 @@
 import axios from "axios";
-import {AdminCourseDescription, CreateCourseEntityPayload} from 'courses';
+import {AdminCourseDescription, CreateCourseEntityPayload} from '@shared/courses';
 
 class UserCoursesService {
 

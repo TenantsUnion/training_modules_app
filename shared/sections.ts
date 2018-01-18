@@ -3,7 +3,7 @@ import {
     CreateTrainingEntityPayload, SaveTrainingEntityPayload, TrainingEntityDiffDelta,
     TrainingEntity, ViewTrainingEntity
 } from './training_entity';
-import {QuillEditorData} from 'quill_editor.ts';
+import {QuillEditorData} from './quill_editor';
 import {ViewCourseTransferData} from './courses';
 
 export type SectionEntityType = 'SectionEntity';

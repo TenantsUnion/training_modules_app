@@ -1,6 +1,6 @@
 import * as socketIOClient from 'socket.io-client';
-import {ADMIN_COURSE_NSP, SUBSCRIBE} from '../../../../shared/socket';
-import {CourseEntity} from '../../../../shared/courses';
+import {ADMIN_COURSE_NSP, SUBSCRIBE} from '@shared/socket';
+import {CourseEntity} from '@shared/courses';
 
 export const adminCourseSocket = socketIOClient.connect(ADMIN_COURSE_NSP);
 

@@ -1,9 +1,9 @@
-import {SectionEntity, ViewSectionTransferData} from "sections.ts";
+import {ViewSectionTransferData} from "./sections";
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, SaveTrainingEntityPayload,
     TrainingEntityDiffDelta, TrainingEntity, ViewTrainingEntityQuillData, ViewTrainingEntityTransferData
 } from './training_entity';
-import {DeltaArrOp, DeltaArrOps} from './delta/diff_key_array';
+import {DeltaArrOp} from './delta/diff_key_array';
 import {ViewCourseTransferData} from './courses';
 
 export type ModuleEntityType = 'ModuleEntity';

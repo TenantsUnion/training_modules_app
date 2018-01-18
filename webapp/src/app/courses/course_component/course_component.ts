@@ -2,7 +2,6 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {CourseNavigationComponent} from '../course_navigation_component/course_navigation_component';
 import {$} from '../../globals';
-import {CourseEntity} from 'courses.ts';
 import {CourseDetailsComponent} from "../course_details_component/course_details_component";
 import {mapGetters, mapState} from 'vuex';
 import {COURSE_ACTIONS} from '../store/course/course_actions';

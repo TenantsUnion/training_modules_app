@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import {Moment} from "moment";
-import {ViewModuleTransferData} from 'modules.ts';
+import {ViewModuleTransferData} from './modules';
 import {ContentSegment} from './segment';
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, SaveTrainingEntityPayload,

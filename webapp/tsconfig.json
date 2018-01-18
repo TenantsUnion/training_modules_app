@@ -23,7 +23,9 @@
     "outDir": "dist",
     "paths": {
       "*": [
-        "*",
+        "*"
+      ],
+      "@shared/*": [
         "../shared/*"
       ]
     }

@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import * as VueForm from "../../../vue-form";
-import {ViewCourseQuillData} from "courses.ts";
 import {MODULE_ACTIONS, ModuleActions} from '../../store/module/module_actions';
 import {Segment} from '../../../../../../shared/segment';
 import {COURSES_ROUTE_NAMES} from '../../courses_routes';

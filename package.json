@@ -38,6 +38,9 @@
     "await": true,
     "cjs": true
   },
+  "_moduleAliases": {
+    "@shared": "./server/dist/shared"
+  },
   "dependencies": {
     "@std/esm": "0.16.0",
     "@types/pg": "7.1.5",
@@ -52,6 +55,7 @@
     "font-awesome-sass": "4.7.0",
     "foundation-sites": "6.4.3",
     "hbs": "4.0.1",
+    "module-alias": "^2.0.3",
     "moment": "2.19.1",
     "morgan": "1.9.0",
     "node-cache": "4.1.1",

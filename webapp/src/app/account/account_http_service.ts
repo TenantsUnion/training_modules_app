@@ -1,7 +1,7 @@
 import * as _ from "underscore";
 import axios from "axios";
-import {LoginCredentials, LoginResponse, AccountSignupRequest} from 'account.ts';
-import {IUserInfo} from "user";
+import {LoginCredentials, LoginResponse, AccountSignupRequest} from '@shared/account';
+import {IUserInfo} from "@shared/user";
 import {userQueryService} from "./user_query_service";
 
 class AccountHttpService {

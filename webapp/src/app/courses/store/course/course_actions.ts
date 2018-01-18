@@ -3,12 +3,12 @@ import {COURSE_MUTATIONS} from './course_mutations';
 import {
     AdminCourseDescription, CourseEntity, CreateCourseEntityCommand, CreateCourseEntityPayload,
     SaveCourseEntityPayload, SaveCourseResponse, ViewCourseQuillData
-} from 'courses';
-import {getCorrelationId} from '../../../../../../shared/correlation_id_generator';
+} from '@shared/courses';
+import {getCorrelationId} from '@shared/correlation_id_generator';
 import {coursesService} from '../../courses_service';
 import {subscribeCourse} from '../../subscribe_course';
 import {RootGetters, TypedAction, TypedActionTree} from '../../../state_store';
-import {Constant} from '../../../../../../shared/typings/util_typings';
+import {Constant} from '@shared/typings/util_typings';
 import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../courses_listing/courses_listing_store';
 import {transformTransferViewService} from '../../../global/quill/transform_transfer_view_service';
 

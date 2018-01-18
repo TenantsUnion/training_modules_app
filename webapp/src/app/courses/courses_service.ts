@@ -1,14 +1,14 @@
 import axios, {AxiosResponse} from "axios";
 import VueRouter from "vue-router";
-import {CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload, SaveModuleResponse} from "modules.ts";
+import {CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload, SaveModuleResponse} from "@shared/modules";
 import {
     ViewCourseQuillData, ViewCourseTransferData, CourseEntity,
     CreateCourseEntityCommand, SaveCourseEntityPayload, SaveCourseResponse, CreateCourseResponse
-} from 'courses';
+} from '@shared/courses';
 import {
     ViewSectionQuillData, CreateSectionEntityPayload, CreateSectionResponse,
     SaveSectionEntityPayload, SaveSectionResponse
-} from 'sections';
+} from '@shared/sections';
 import {appRouter} from "../router";
 import {transformTransferViewService} from '../global/quill/transform_transfer_view_service';
 

@@ -4,7 +4,7 @@ import {IUserHandler} from "../user/user_handler";
 import {Response, Request} from "express";
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../log';
-import {LoginCredentials, SignupData} from 'account';
+import {LoginCredentials, SignupData} from '@shared/account';
 import {IUserInfo} from '../../../shared/user';
 
 export class AccountController {

@@ -1,8 +1,6 @@
 {
   "includes": [
-    "server/**/*.ts",
-    "src/**/*.ts",
-    "../shared/*.ts"
+    "src/**/*.ts"
   ],
   "compilerOptions": {
     "lib": [
@@ -12,7 +10,8 @@
       "es7",
       "dom"
     ],
-    "module": "commonjs", // mocha test environment ts-node doesn't support es6 modules yet.
+    "module": "commonjs",
+    // mocha test environment ts-node doesn't support es6 modules yet.
     "target": "es6",
     "moduleResolution": "node",
     "allowJs": true,
@@ -22,9 +21,11 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
+      "@shared/*": [
+        "../shared/*"
+      ],
       "*": [
         "*",
-        "../shared/*",
         "../server/src/"
       ]
     }

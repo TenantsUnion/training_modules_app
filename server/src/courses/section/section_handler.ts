@@ -1,14 +1,13 @@
 import {SectionRepository} from './section_repository';
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload, ViewSectionTransferData
-} from 'sections.ts';
+} from '@shared/sections';
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
-import {QuillHandler} from '../../training_entity/quill/quill_handler';
-import {applyDeltaArrOps, updateArrOpsValues} from '../../../../shared/delta/diff_key_array';
-import {applyDeltaDiff} from '../../../../shared/delta/apply_delta';
+import {applyDeltaArrOps, updateArrOpsValues} from '@shared/delta/diff_key_array';
+import {applyDeltaDiff} from '@shared/delta/apply_delta';
 import {TrainingEntityHandler} from '../../training_entity/training_entity_handler';
-import {ContentQuestionEntity, convertContentQuestionsDeltaToEntity} from '../../../../shared/training_entity';
+import {ContentQuestionEntity} from '@shared/training_entity';
 
 export class SectionHandler {
     logger: LoggerInstance = getLogger('SectionHandler', 'info');

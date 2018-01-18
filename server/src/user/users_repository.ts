@@ -1,5 +1,5 @@
 import {Datasource} from "../datasource";
-import {IUserInfo} from "user";
+import {IUserInfo} from "@shared/user";
 import {AccountInfo} from "./user_handler";
 import {AbstractRepository} from "../repository";
 import {getLogger} from '../log';

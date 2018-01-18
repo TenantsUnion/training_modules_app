@@ -1,8 +1,8 @@
 import * as _ from 'underscore';
-import {CreateQuestionData, QuestionChanges, QuestionChangesObj} from 'questions';
+import {CreateQuestionData, QuestionChangesObj} from './questions';
 import {Moment} from 'moment';
-import {QuillEditorData} from 'quill_editor.ts';
-import {EntityCommand, SaveEntityCommand} from 'entity';
+import {QuillEditorData} from './quill_editor';
+import {EntityCommand, SaveEntityCommand} from './entity';
 import {DeltaObjDiff} from './delta/delta';
 import {applyDeltaArrOps, DeltaArrOp} from './delta/diff_key_array';
 import {ContentSegment} from './segment';

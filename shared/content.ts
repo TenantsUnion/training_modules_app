@@ -14,3 +14,12 @@ export interface ContentData {
     createdAt?: string
 }
 
+export interface ContentEntity {
+    id: string,
+    quillDataId: string,
+    quillData: Quill.DeltaStatic,
+    title: string,
+    tags?: string[],
+    lastModifiedAt?: string,
+    createdAt?: string
+}

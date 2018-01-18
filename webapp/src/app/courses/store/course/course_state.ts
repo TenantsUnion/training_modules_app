@@ -1,9 +1,9 @@
 import * as _ from 'underscore';
-import {CourseEntity} from 'courses.ts';
-import {AppGetter, RootGetters, RootState} from '../../../state_store';
-import {ViewModuleTransferData} from '../../../../../../shared/modules';
-import {titleToSlug} from '../../../../../../shared/slug/title_slug_transformations';
-import {ViewSectionTransferData} from '../../../../../../shared/sections';
+import {CourseEntity} from '@shared/courses';
+import {AppGetter, RootGetters} from '../../../state_store';
+import {ViewModuleTransferData} from '@shared/modules';
+import {titleToSlug} from '@shared/slug/title_slug_transformations';
+import {ViewSectionTransferData} from '@shared/sections';
 
 export interface NavigationDescription {
     id: string,

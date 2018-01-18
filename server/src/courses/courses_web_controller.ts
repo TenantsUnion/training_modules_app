@@ -3,18 +3,18 @@ import {Request, Response} from "express";
 import {
     AdminCourseDescription, CreateCourseEntityCommand, SaveCourseEntityPayload,
     CreateCourseResponse, SaveCourseResponse
-} from "courses";
+} from "@shared/courses";
 import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
 import {
     CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload,
     SaveModuleResponse
-} from "../../../shared/modules";
+} from "@shared/modules";
 import {ModuleOperations} from './module/module_routes';
 import {
     CreateSectionEntityPayload, CreateSectionResponse, SaveSectionEntityPayload,
     SaveSectionResponse
-} from '../../../shared/sections';
+} from '@shared/sections';
 import {coursesHandler, coursesViewHandler} from '../config/handler_config';
 import {SectionOperations} from './section/section_routes';
 import {validateCreateCourse, validateSaveCourse} from './courses_validation';

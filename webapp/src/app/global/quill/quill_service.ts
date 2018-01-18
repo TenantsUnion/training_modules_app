@@ -2,7 +2,7 @@ import {Moment} from 'moment';
 import * as moment from 'moment';
 import * as _ from 'underscore';
 import axios from 'axios';
-import {QuillEditorData} from 'quill_editor';
+import {QuillEditorData} from '@shared/quill_editor';
 import {DeltaStatic} from 'quill';
 
 let Delta: DeltaStatic = Quill.import('delta');

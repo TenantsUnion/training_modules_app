@@ -1,8 +1,8 @@
-import {CreateUserContentCommand} from "content.ts";
+import {ContentEntity, CreateUserContentCommand} from "@shared/content";
 import {QuillRepository} from "../../training_entity/quill/quill_repository";
-import {ContentEntity, ContentRepository} from "../content_repository";
 import {UserRepository} from "../../user/users_repository";
 import {getLogger} from "../../log";
+import {ContentRepository} from "../content_repository";
 
 export class UserContentHandler {
     private logger;

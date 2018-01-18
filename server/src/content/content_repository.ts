@@ -1,17 +1,6 @@
 import {Datasource} from "../datasource";
 import {AbstractRepository} from "../repository";
-import {ContentData} from "content.ts";
-
-export interface ContentEntity {
-    id: string,
-    quillDataId: string,
-    quillData: Quill.DeltaStatic,
-    title: string,
-    tags?: string[],
-    lastModifiedAt?: string,
-    createdAt?: string
-}
-
+import {ContentData, ContentEntity} from "@shared/content";
 
 export class ContentRepository extends AbstractRepository {
     constructor (sqlTemplate: Datasource) {

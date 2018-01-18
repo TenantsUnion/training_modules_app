@@ -1,15 +1,14 @@
-import {ViewCourseTransferData, ViewCourseQuillData, CourseEntity} from '../../../../../shared/courses';
+import {ViewCourseQuillData} from '@shared/courses';
 import {quillService} from './quill_service';
-import {ViewModuleTransferData, ViewModuleQuillData} from 'modules.ts';
-import {ViewSectionQuillData, ViewSectionTransferData} from 'sections.ts';
+import {ViewModuleQuillData} from '@shared/modules';
 import moment from 'moment';
 import * as _ from 'underscore';
-import {QuillEditorData} from 'quill_editor.ts';
-import {ContentSegment} from '../../../../../shared/segment';
+import {QuillEditorData} from '@shared/quill_editor';
+import {ContentSegment} from '@shared/segment';
 import {
-    TrainingEntity, ViewTrainingEntityQuillData,
+    ViewTrainingEntityQuillData,
     ViewTrainingEntityTransferData
-} from '../../../../../shared/training_entity';
+} from '@shared/training_entity';
 
 function isViewCourseQuillData(arg: any): arg is ViewCourseQuillData {
     return arg.content;

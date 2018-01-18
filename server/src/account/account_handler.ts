@@ -1,7 +1,7 @@
-import {LoginCredentials, AccountSignupRequest} from "account.ts";
+import {LoginCredentials, AccountSignupRequest} from "@shared/account";
 import {IAccountRepository} from "./account_repository";
 import {IUserHandler} from "../user/user_handler";
-import {IUserInfo} from "../../../shared/user";
+import {IUserInfo} from "@shared/user";
 import {getLogger} from '../log';
 
 export interface IAccountHandler {

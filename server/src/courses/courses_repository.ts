@@ -1,15 +1,10 @@
 import {Datasource} from "../datasource";
-import {
-    AdminCourseDescription, UserEnrolledCourseData, EnrolledCourseDescription,
-    ViewCourseTransferData, CreateCourseEntityPayload, CourseEntity
-} from "courses";
+import {CreateCourseEntityPayload, CourseEntity} from "@shared/courses";
 import {AbstractRepository} from "../repository";
 import {getLogger} from "../log";
 import {LoggerInstance} from 'winston';
-import * as _ from "underscore";
 import * as moment from "moment";
-import {processRow} from './course_row_processor';
-import {ContentQuestionEntity} from '../../../shared/training_entity';
+import {ContentQuestionEntity} from '@shared/training_entity';
 
 export class CoursesRepository extends AbstractRepository {
     logger: LoggerInstance = getLogger('CourseRepository', 'info');

@@ -1,5 +1,5 @@
 import {Datasource} from "../datasource";
-import {AccountSignupRequest} from "account.ts";
+import {AccountSignupRequest} from "@shared/account";
 import {AbstractRepository} from "../repository";
 import {AccountInfo} from "../user/user_handler";
 import {getLogger} from '../log';

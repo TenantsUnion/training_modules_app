@@ -1,4 +1,4 @@
-import {IUserInfo} from "user";
+import {IUserInfo} from "@shared/user";
 
 export class UserQueryService {
     currentUser: IUserInfo;

@@ -1,4 +1,4 @@
-import {CreateUserContentCommand} from "content.ts";
+import {CreateUserContentCommand} from "@shared/content";
 
 export class UserContentValidator {
     async create (createUserContentCommand: CreateUserContentCommand): Promise<string> {

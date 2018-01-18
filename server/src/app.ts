@@ -3,14 +3,14 @@ import path from "path";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
-import {config} from "normalize_imports";
+import {config} from "@shared/normalize_imports";
 import session from "express-session";
-import {HttpResponse} from '../../shared/http_responses';
+import {HttpResponse} from '@shared/http_responses';
 import {AccountRoutes} from "./account/account_routes";
 import {UserContentRoutes} from "./content/content_routes";
 import {CoursesRoutes} from "./courses/courses_routes";
 import {QuillRoutes} from './training_entity/quill/quill_routes_controller';
-import {getLogger, LOG_LEVEL_VALUES, LOG_LEVELS} from './log';
+import {getLogger, LOG_LEVELS} from './log';
 import {Express} from 'express';
 
 /**

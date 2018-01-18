@@ -96,12 +96,12 @@ module.exports = {
             extensions: ['.ts', '.js', '.html', '.json', '.scss'],
             alias:
                 {
-                    'vue$':
-                        'vue/dist/vue.esm.js'
+                    'vue$': 'vue/dist/vue.esm.js',
+                    '@shared': path.resolve(__dirname, '../../shared')
                 }
         }
     ,
     performance: {
         hints: false
     }
-}
+};

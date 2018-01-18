@@ -1,14 +1,11 @@
-import {accountHttpService} from '../account_http_service';
 import {appRouter} from '../../router';
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {IUserId} from "user";
 import * as VueForm from "../../vue-form";
 import {FormField} from "../../vue-form";
 import {Watch} from "vue-property-decorator";
-import {AccountLoginFieldErrors} from "../../../../../shared/account";
+import {AccountLoginFieldErrors} from "@shared/account";
 import {$} from "../../globals";
-import {USER_COURSES_LISTING_ACTIONS} from '../../courses/store/courses_listing/courses_listing_store';
 import {USER_ACTIONS} from '../../courses/store/user/user_store';
 
 export interface AccountFormState extends VueForm.FormState {
