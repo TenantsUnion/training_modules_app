@@ -1,24 +1,21 @@
-import * as _ from "underscore";
 import {IUserHandler} from "../user/user_handler";
 import {CoursesRepository} from "./courses_repository";
 import {getLogger} from '../log';
-import {CreateModuleEntityPayload, SaveModuleEntityPayload} from "../../../shared/modules";
+import {CreateModuleEntityPayload, SaveModuleEntityPayload} from "@shared/modules";
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload
-} from '../../../shared/sections';
+} from '@shared/sections';
 import {SectionHandler} from './section/section_handler';
-import {isQuillEditorData, QuillEditorData} from '../../../shared/quill_editor';
 import {
     CourseEntity,
     CreateCourseEntityCommand, CreateCourseEntityPayload, SaveCourseEntityPayload
-} from '../../../shared/courses';
+} from '@shared/courses';
 import {QuillHandler} from '../training_entity/quill/quill_handler';
-import {applyDeltaDiff} from '../../../shared/delta/apply_delta';
+import {applyDeltaDiff} from '@shared/delta/apply_delta';
 import {ModuleHandler} from './module/module_handler';
 import {TrainingEntityHandler} from '../training_entity/training_entity_handler';
-import {ContentQuestionEntity} from '../../../shared/training_entity';
-import {applyDeltaArrOps, updateArrOpsValues} from '../../../shared/delta/diff_key_array';
-import {updateObjPlaceholderIds} from '../../../shared/delta/update_placeholder_ids';
+import {ContentQuestionEntity} from '@shared/training_entity';
+import {applyDeltaArrOps, updateArrOpsValues} from '@shared/delta/diff_key_array';
 
 export interface LoadAdminCourseParameters {
     username: string;
