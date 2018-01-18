@@ -68,6 +68,7 @@ export class CourseViewQuery {
 
     async loadAdminCourse(courseId: string): Promise<ViewCourseTransferData> {
         let query = {
+            // language=PostgreSQL
             text: `
                 SELECT c.*, m.modules FROM tu.course c
                     INNER JOIN LATERAL
