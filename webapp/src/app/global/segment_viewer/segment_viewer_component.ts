@@ -5,7 +5,10 @@ import {QuillComponent} from '../quill/quill_component';
 import {ContentSegment, isContentSegment, isQuestionSegment} from '@shared/segment';
 import {ContentQuestionsDelta} from '@shared/training_entity';
 import {QuestionChangesObj} from '@shared/questions';
-import {isCreatedQuillPlaceholderId, QuillDeltaMap, QuillEditorData} from "@shared/quill_editor";
+import {
+    createdQuillPlaceholderId, isCreatedQuillPlaceholderId, QuillDeltaMap,
+    QuillEditorData
+} from "@shared/quill_editor";
 import {deltaArrayDiff, DeltaArrOp, deltaMapArrayDiff} from "@shared/delta/diff_key_array";
 import {Watch} from "vue-property-decorator";
 
@@ -36,7 +39,12 @@ const Delta = Quill.import('delta');
             </div>
             <div class="row">
                 <div class="columns small-12 large-10">
-                    <add-content-component :callback="addContentCallback"></add-content-component>
+                    <div>
+                        <button title="Add Content" type="button" class="button" v-on:click="addContent">
+                            Add Content
+                            <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -47,9 +55,10 @@ export class SegmentViewerComponent extends Vue {
     currentSegments: ContentSegment[] = [];
 
     @Watch('segments', {immediate: true})
-    syncCurrentSegments(incomingSegments: ContentSegment[]){
+    syncCurrentSegments (incomingSegments: ContentSegment[]) {
         this.currentSegments = [...incomingSegments];
     }
+
     getContents (): ContentSegment[] {
         let contentEditor = this.$refs.contentEditor ? (<QuillComponent[]> this.$refs.contentEditor) : [];
         let contentData = contentEditor.map((editor) => {
@@ -149,7 +158,8 @@ export class SegmentViewerComponent extends Vue {
         return this.getContents();
     }
 
-    addContentCallback (addContentId: string) {
+    addContent () {
+        let addContentId = createdQuillPlaceholderId();
         this.currentSegments.push({
             id: addContentId,
             type: 'CONTENT',

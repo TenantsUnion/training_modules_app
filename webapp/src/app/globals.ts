@@ -6,7 +6,6 @@ import axios, {AxiosRequestConfig} from "axios";
 import {LoadingComponent} from './global/loading';
 import {TimeEstimateComponent} from './global/time_estimate/time_estimate_component';
 import {QuillComponent} from './global/quill/quill_component';
-import {AddContentComponent} from './global/content/add_content_componet';
 import {SegmentViewerComponent} from './global/segment_viewer/segment_viewer_component';
 
 //put jquery on global window for debugging,
@@ -21,7 +20,6 @@ unTypedWindow.Quill = Quill;
 Vue.component('loading', LoadingComponent);
 Vue.component('time-estimate', TimeEstimateComponent);
 Vue.component('quill-editor', QuillComponent);
-Vue.component('add-content-component', AddContentComponent);
 Vue.component('segment-viewer', SegmentViewerComponent);
 
 
