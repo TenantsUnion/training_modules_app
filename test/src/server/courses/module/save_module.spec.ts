@@ -3,11 +3,11 @@ import {clearData} from '../../test_db_util';
 import {addModule, addSection, createCourse, createUser, DEFAULT_MODULE, EMPTY_CHANGES_OBJ} from '../test_course_util';
 import {moduleRepository, quillRepository} from '../../../../../server/src/config/repository_config';
 import {coursesHandler} from '../../../../../server/src/config/handler_config';
-import {ModuleEntity, SaveModuleEntityPayload} from '../../../../../shared/modules';
-import {deltaArrayDiff, DeltaArrOp, DeltaArrOps} from '../../../../../shared/delta/diff_key_array';
+import {ModuleEntity, SaveModuleEntityPayload} from '@shared/modules';
+import {deltaArrayDiff, DeltaArrOp} from '@shared/delta/diff_key_array';
 import {DeltaStatic} from 'quill';
-import {Delta} from '../../../../../shared/normalize_imports';
-import {createdQuillPlaceholderId, QuillEditorData} from '../../../../../shared/quill_editor';
+import {Delta} from '@shared/normalize_imports';
+import {createdQuillPlaceholderId, QuillEditorData} from '@shared/quill_editor';
 import * as MockDate from 'mockdate';
 
 describe('Save module', function () {
@@ -128,7 +128,7 @@ describe('Save module', function () {
             let section2Id = await addSection();
 
             const updatedArr = [section2Id];
-            let updateOps: DeltaArrOps = deltaArrayDiff([section1Id, section2Id], updatedArr);
+            let updateOps: DeltaArrOp[] = deltaArrayDiff([section1Id, section2Id], updatedArr);
             let currentModule = await moduleRepository.loadModule(moduleId);
             expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id]);
 
@@ -152,7 +152,7 @@ describe('Save module', function () {
             let section3Id = await addSection();
 
             const updatedArr = [section3Id, section1Id];
-            let updateOps: DeltaArrOps = deltaArrayDiff([section1Id, section2Id, section3Id], updatedArr);
+            let updateOps: DeltaArrOp[] = deltaArrayDiff([section1Id, section2Id, section3Id], updatedArr);
             // assert current module state
             let currentModule = await moduleRepository.loadModule(moduleId);
             expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id, section3Id]);
@@ -183,7 +183,7 @@ describe('Save module', function () {
             const content2: DeltaStatic = new Delta().insert('some other content');
             const placeholderId1 = createdQuillPlaceholderId();
             const placeholderId2 = createdQuillPlaceholderId();
-            const orderedContentIds: DeltaArrOps = [
+            const orderedContentIds: DeltaArrOp[] = [
                 {
                     val: placeholderId1,
                     op: "ADD",
@@ -244,7 +244,7 @@ describe('Save module', function () {
         it('should add and update a content segment', async function () {
             const initialContent: DeltaStatic = new Delta().insert('some content');
             const contentPlaceholderId = createdQuillPlaceholderId();
-            const orderedContentIds: DeltaArrOps = [
+            const orderedContentIds: DeltaArrOp[] = [
                 {
                     val: contentPlaceholderId,
                     op: "ADD",
@@ -294,7 +294,7 @@ describe('Save module', function () {
             const content2: DeltaStatic = new Delta().insert('some other content');
             const contentPlaceholderId1 = createdQuillPlaceholderId();
             const contentPlaceholderId2 = createdQuillPlaceholderId();
-            const orderedContentIds: DeltaArrOps = [
+            const orderedContentIds: DeltaArrOp[] = [
                 {
                     val: contentPlaceholderId1,
                     op: "ADD",
