@@ -14,12 +14,12 @@ describe('Course Handler: Create Course', function () {
     let editorJson1: QuillEditorData = {
         id: 'NEW-0',
         editorJson: new Delta(),
-        lastModified: new Date().toUTCString()
+        lastModifiedAt: new Date()
     };
     let editorJson2: QuillEditorData = {
         id: 'NEW-1',
         editorJson: new Delta().insert('editor json 2'),
-        lastModified: new Date().toUTCString()
+        lastModifiedAt: new Date()
     };
 
     let courseInfo1: CreateCourseEntityCommand;
