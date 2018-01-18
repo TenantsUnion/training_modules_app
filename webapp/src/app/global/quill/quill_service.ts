@@ -52,7 +52,7 @@ export class QuillService {
         let id = await this.getQuillId();
         return {
             editorJson: new Delta(),
-            lastModified: moment.utc(),
+            lastModifiedAt: new Date(),
             id
         };
     }

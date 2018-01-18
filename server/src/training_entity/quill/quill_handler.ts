@@ -11,10 +11,10 @@ import {QuillChangesObj} from '../../../../shared/training_entity';
 export class QuillHandler {
     logger: LoggerInstance = getLogger('QuillHandler', 'info');
 
-    constructor(private quillRepository: QuillRepository) {
+    constructor (private quillRepository: QuillRepository) {
     }
 
-    async handleQuillChanges(changeQuillContent: QuillChangesObj): Promise<{ [index: string]: string }> {
+    async handleQuillChanges (changeQuillContent: QuillChangesObj): Promise<{ [index: string]: string }> {
         await this.updateQuillContent(changeQuillContent);
         return await this.insertQuillContentFromUpdate(changeQuillContent);
     }
@@ -25,7 +25,7 @@ export class QuillHandler {
      * @param {QuillContentObj} quillChanges
      * @returns {Promise<void>}
      */
-    async updateQuillContent(quillChanges: QuillChangesObj) {
+    async updateQuillContent (quillChanges: QuillChangesObj) {
         let ids = Object.keys(quillChanges);
         let updateChanges = ids.filter((id) => !isCreatedQuillPlaceholderId(id));
         if (!updateChanges.length) {
@@ -35,8 +35,9 @@ export class QuillHandler {
         let quillData = await this.quillRepository.loadQuillData(updateChanges);
         let asyncUpdate = quillData
             .map((content: QuillEditorData) => {
+                let {version} = content;
                 return _.extend({}, content, {
-                    version: content.version + 1,
+                    version: version instanceof String ? parseInt(version) + 1 : version + 1,
                     editorJson: new Delta(content.editorJson.ops).compose(quillChanges[content.id]),
                     lastModifiedAt: new Date()
                 });
@@ -46,7 +47,7 @@ export class QuillHandler {
         await asyncUpdate;
     }
 
-    async insertQuillContentFromUpdate(quillChanges: QuillChangesObj): Promise<{ [p: string]: string }> {
+    async insertQuillContentFromUpdate (quillChanges: QuillChangesObj): Promise<{ [p: string]: string }> {
         let insertIds = Object.keys(quillChanges).filter((id) => isCreatedQuillPlaceholderId(id));
         if (!insertIds.length) {
             return {};
@@ -65,14 +66,14 @@ export class QuillHandler {
         return placeholderIdMap;
     }
 
-    async insertQuillContent(quillContent: Quill.DeltaStatic): Promise<string> {
+    async insertQuillContent (quillContent: Quill.DeltaStatic): Promise<string> {
         // create quill content
         let quillId = await this.quillRepository.getNextId();
         await quillRepository.insertEditorJson(quillId, quillContent);
         return quillId;
     }
 
-    loadQuillData(quillId: string): Promise<QuillEditorData> {
+    loadQuillData (quillId: string): Promise<QuillEditorData> {
         return this.quillRepository.loadEditorJson(quillId);
     }
 }

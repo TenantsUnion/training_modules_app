@@ -1,10 +1,10 @@
 import Vue from "vue";
 import Component from 'vue-class-component';
-import {isCreatedQuillPlaceholderId, QuillDeltaMap, QuillEditorData} from "quill_editor.ts";
 import {QuillComponent} from '../quill/quill_component';
 import {ContentSegment, isContentSegment, Segment} from '../../../../../shared/segment';
 import {ContentQuestionsDelta} from '../../../../../shared/training_entity';
 import {QuestionChangesObj} from '../../../../../shared/questions';
+import {isCreatedQuillPlaceholderId, QuillDeltaMap, QuillEditorData} from "../../../../../shared/quill_editor";
 
 
 @Component({

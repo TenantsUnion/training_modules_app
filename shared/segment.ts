@@ -1,10 +1,8 @@
-import {Moment} from 'moment';
-
 export interface Segment {
     id: string,
     type: 'CONTENT' | 'QUESTION',
     version?: string,
-    lastModifiedAt?: Moment,
+    lastModifiedAt?: Date,
     removeCallback?: () => any;
     onChangeCallback?: (QuillChangeObj) => any;
 }

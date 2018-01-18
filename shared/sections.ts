@@ -1,7 +1,7 @@
 import {Moment} from 'moment';
 import {
     CreateTrainingEntityPayload, SaveTrainingEntityPayload, TrainingEntityDiffDelta,
-    TrainingEntity
+    TrainingEntity, ViewTrainingEntity
 } from './training_entity';
 import {QuillEditorData} from 'quill_editor.ts';
 import {ViewCourseTransferData} from './courses';
@@ -15,7 +15,7 @@ export interface SectionDetails {
     description?: string;
 }
 
-interface ViewSectionData {
+interface ViewSectionData extends ViewTrainingEntity{
     id: string;
     title: string;
     description: string;

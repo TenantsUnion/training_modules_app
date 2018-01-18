@@ -11,6 +11,7 @@ import {isDeltaStatic} from './delta/typeguards_delta';
 export interface ViewTrainingEntity {
     id: string;
     title: string;
+    version: string | number;
     description?: string;
     timeEstimate?: string;
     active: boolean;

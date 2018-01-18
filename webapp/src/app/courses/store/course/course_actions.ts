@@ -2,7 +2,7 @@ import {CourseState} from './course_state';
 import {COURSE_MUTATIONS} from './course_mutations';
 import {
     AdminCourseDescription, CourseEntity, CreateCourseEntityCommand, CreateCourseEntityPayload,
-    SaveCourseEntityPayload, SaveCourseResponse
+    SaveCourseEntityPayload, SaveCourseResponse, ViewCourseQuillData
 } from 'courses';
 import {getCorrelationId} from '../../../../../../shared/correlation_id_generator';
 import {coursesService} from '../../courses_service';
@@ -49,7 +49,7 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
                 payload: course
             };
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
-            let courseEntity: CourseEntity = await coursesService.createCourse(createCourseCommand);
+            let courseEntity: ViewCourseQuillData = await coursesService.createCourse(createCourseCommand);
             let updateAdminDescriptions: AdminCourseDescription[] = [courseEntity, ...rootState.userCourses.adminCourseDescriptions];
             commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, updateAdminDescriptions);
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
