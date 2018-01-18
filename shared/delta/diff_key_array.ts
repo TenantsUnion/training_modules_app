@@ -31,8 +31,9 @@ export const isDeltaArrOp = (obj: any): obj is DeltaArrOp => {
  */
 type KeyArray = (number | string)[]
 
-export type DeltaArrOps = DeltaArrOp[];
-
+export const deltaMapArrayDiff = <T> (before: T[], after: T[], mapFn: (diffObj: T[]) => KeyArray): DeltaArrOp[] => {
+  return deltaArrayDiff(mapFn(before), mapFn(after));
+};
 /**
  * Expects each Delta Object array to hash to a unique key when called with the key function.
  *
@@ -145,11 +146,11 @@ export const applyDeltaArrOps = (keyArray: KeyArray, ops: DeltaArrOp[]): KeyArra
  * Updates each {@link DeltaArrOp#val} in the provided DeltaArrOps with the corresponding property value in the
  * provided valReplaceMap. If there is no corresponding key the original value is used.
  *
- * @param {DeltaArrOps} deltaArr
+ * @param {DeltaArrOp[]} deltaArr
  * @param valReplaceMap
- * @returns {DeltaArrOps}
+ * @returns {DeltaArrOp[]}
  */
-export const updateArrOpsValues = (deltaArr: DeltaArrOp[], valReplaceMap: { [p: string]: string }): DeltaArrOps => {
+export const updateArrOpsValues = (deltaArr: DeltaArrOp[], valReplaceMap: { [p: string]: string }): DeltaArrOp[] => {
     return deltaArr.map((quillArrOp: DeltaArrOp) => {
         let quillId = valReplaceMap[quillArrOp.val];
         return quillId ? _.extend({}, quillArrOp, {val: quillId}) : quillArrOp;

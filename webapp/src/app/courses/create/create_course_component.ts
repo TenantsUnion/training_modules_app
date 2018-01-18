@@ -70,14 +70,4 @@ export class CreateCourseComponent extends Vue {
         this.course.timeEstimate = time;
     }
 
-    addContentCallback(addContentId: string) {
-        this.quillContent.push({
-            id: addContentId,
-            type: 'CONTENT',
-            removeCallback: () => {
-                let rmIndex = this.quillContent.findIndex((el) => el.id === addContentId);
-                this.quillContent.splice(rmIndex, 1);
-            }
-        });
-    }
 }
