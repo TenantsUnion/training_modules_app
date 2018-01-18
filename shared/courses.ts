@@ -8,7 +8,7 @@ import {
     TrainingEntity
 } from './training_entity';
 import {EntityCommandMetaData} from './entity';
-import {DeltaArrOp, DeltaArrOps} from './delta/diff_key_array';
+import {DeltaArrOp} from './delta/diff_key_array';
 import {diffPropsDeltaObj, TRAINING_ENTITY_BASIC_PROPS} from './delta/diff_delta';
 
 export type CourseEntityType = 'CourseEntity';
