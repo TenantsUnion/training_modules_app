@@ -75,7 +75,6 @@ type EditorState = 'NEW' | 'CHANGED' | 'PRISTINE';
             type: Function
         }
     },
-    template: require('./quill_component.tpl.html')
 })
 export class QuillComponent extends Vue {
 
