@@ -4,7 +4,6 @@
  * foundation.zurb.com
  * Licensed under MIT Open Source
  */
-
 // Dependencies
 @import 'normalize-scss/sass/normalize';
 @import 'sassy-lists/stylesheets/helpers/missing-dependencies';
@@ -14,18 +13,14 @@
 @import 'sassy-lists/stylesheets/functions/remove';
 @import 'sassy-lists/stylesheets/functions/replace';
 @import 'sassy-lists/stylesheets/functions/to-list';
-
 // Settings
 // import your own `settings` here or
 // import and modify the default settings through
- @import 'settings';
-
+@import 'settings';
 // Sass utilities
 //@import 'util/util';
-
 // Global variables and styles
 @import 'global';
-
 // Components
 @import 'grid/grid';
 @import 'xy-grid/xy-grid';
@@ -67,6 +62,7 @@
 @import 'components/tooltip';
 @import 'prototype/prototype';
 
+@include foundation-xy-grid-classes;
 @mixin foundation-everything(
   $flex: true,
   $prototype: false
@@ -78,12 +74,10 @@
   @include foundation-global-styles;
   @if not $flex {
     @include foundation-grid;
-  }
-  @else {
+  } @else {
     @if $xy-grid {
       @include foundation-xy-grid-classes;
-    }
-    @else {
+    } @else {
       @include foundation-flex-grid;
     }
   }
