@@ -1,14 +1,22 @@
+const path = require('path');
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 const baseConfig = require('./default.webpack.config');
 
 module.exports = merge(baseConfig, {
-    devtool: 'eval-source-map',
+    devtool: 'cheap-module-eval-source-map',
 
     devServer: {
+        clientLogLevel: 'warning',
+        // serve index.html page instead of 404 error to not break html5 history api
+        historyApiFallback: true,
+        hot: true,
         host: 'localhost', //replace with comp ip to have server be available on local network
         port: 8080,
+        open: true,
+        progress: true,
         inline: true,
-        historyApiFallback: true,
+        overlay: true,
         // noInfo: true,
         stats:
             {
@@ -27,9 +35,13 @@ module.exports = merge(baseConfig, {
             }
         }
     },
-    entry: [
-        'webpack-dev-server/client?http://localhost:8080'
+    plugins: [
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.NamedModulesPlugin(),
     ],
+    // entry: [
+    //     'webpack-dev-server/client?http://localhost:8080'
+    // ],
 });
 
 

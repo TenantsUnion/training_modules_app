@@ -1,7 +1,7 @@
 import {RouteConfig, default as VueRouter} from "vue-router";
 import {UserEnrolledCoursesComponent} from "../user/courses/enrolled/user_enrolled_courses_component";
 import {UserAdminCourseComponent} from "../user/courses/admin/user_admin_courses_component";
-import {CreateCourseComponent} from "./create/create_course_component";
+import CreateCourseComponent from "./create/create_course_component.vue";
 import {CourseComponent} from './course_component/course_component';
 import {CourseDetailsComponent} from './course_details_component/course_details_component';
 import {CreateModuleComponent} from "./modules/create_module_component/create_module_component";
@@ -12,8 +12,6 @@ import {ViewSectionComponent} from './modules/sections/view/view_section_compone
 import {EditSectionComponent} from './modules/sections/edit/edit_section_component';
 import {EditCourseComponent} from './edit_course_component/edit_course_component';
 import {EditModuleComponent} from './modules/edit_modules_component/edit_module_component';
-import {store} from '../state_store';
-import {COURSE_ACTIONS, CourseActions} from './store/course/course_actions';
 
 export const COURSES_ROUTE_NAMES = {
     enrolledCourses: 'enrolledCourses',
