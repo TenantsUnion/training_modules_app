@@ -6,7 +6,7 @@ import axios, {AxiosRequestConfig} from "axios";
 import {LoadingComponent} from './global/loading';
 import {TimeEstimateComponent} from './global/time_estimate/time_estimate_component';
 import {QuillComponent} from './global/quill/quill_component';
-import {SegmentViewerComponent} from './global/segment_viewer/segment_viewer_component';
+import SegmentViewerComponent from './global/segment_viewer/segment_viewer_component.vue';
 import {QuestionComponent} from "./global/question/question_component";
 import SwitchCheckBoxComponent from './global/switch_checkbox.vue';
 

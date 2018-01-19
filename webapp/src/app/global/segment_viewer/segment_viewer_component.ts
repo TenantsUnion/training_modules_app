@@ -18,7 +18,6 @@ import {Watch} from "vue-property-decorator";
 
 const Delta = Quill.import('delta');
 
-
 @Component({
     props: {
         storedSegments: {
@@ -29,47 +28,18 @@ const Delta = Quill.import('delta');
             type: Boolean,
             default: false
         },
-    },
-    // language=HTML
-    template: `
-        <div>
-            <div v-for="(segment, index) in currentSegments" :key="segment.id">
-                <quill-editor v-if="isContent(segment)" ref="contentEditor"
-                              :editor-json="segment.editorJson"
-                              :editor-id="segment.id"
-                              :on-change="segment.onChangeCallback"
-                              :on-remove="segment.removeCallback"></quill-editor>
-                <div>
-                    <question :remove-callback="segment.removeCallback" :question="segment.question"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="columns small-12 medium-6">
-                    <button title="Add Content" type="button" class="button" v-on:click="addContent">
-                        Add Content
-                        <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <div class="columns small-12 medium-6">
-                    <button title="Add Question" type="button" class="button" v-on:click="addQuestion">
-                        Add Question
-                        <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    `
+    }
 })
 export class SegmentViewerComponent extends Vue {
     storedSegments: (ContentSegment | QuestionSegment)[];
     currentSegments: ((ContentSegment | QuestionSegment) & SegmentArrayElement)[] = [];
 
     @Watch('storedSegments', {immediate: true})
-    syncCurrentSegments (incomingSegments: ContentSegment[]) {
+    syncCurrentSegments(incomingSegments: ContentSegment[]) {
         this.currentSegments = [...incomingSegments];
     }
 
-    getContents (): ContentSegment[] {
+    getContents(): ContentSegment[] {
         let contentEditor = this.$refs.contentEditor ? (<QuillComponent[]> this.$refs.contentEditor) : [];
         let contentData = contentEditor.map((editor) => {
             return <ContentSegment> {
@@ -81,7 +51,7 @@ export class SegmentViewerComponent extends Vue {
         return contentData;
     }
 
-    getContentQuestionsDelta (): ContentQuestionsDelta {
+    getContentQuestionsDelta(): ContentQuestionsDelta {
         let contentQuestionIds = deltaMapArrayDiff(this.storedSegments, this.currentSegments, (segments: ContentSegment[]) => {
             return segments.map(({id}) => id);
         });
@@ -106,11 +76,11 @@ export class SegmentViewerComponent extends Vue {
     }
 
 // todo finish
-    getQuestionChanges (): QuestionChangesObj {
+    getQuestionChanges(): QuestionChangesObj {
         return {};
     }
 
-    getContentChanges (): QuillDeltaMap {
+    getContentChanges(): QuillDeltaMap {
         // todo make this
         let currentSegments: QuillComponent[] = this.$refs.contentEditor ? <QuillComponent[]> this.$refs.contentEditor : [];
         let storedQuillData: QuillDeltaMap = this.currentSegments
@@ -147,19 +117,19 @@ export class SegmentViewerComponent extends Vue {
         return quillDiff;
     }
 
-    isContent (segment: ContentSegment | QuestionSegment): boolean {
+    isContent(segment: ContentSegment | QuestionSegment): boolean {
         return isContentSegment(segment);
     }
 
-    isQuestion (segment: ContentSegment | QuestionSegment): boolean {
+    isQuestion(segment: ContentSegment | QuestionSegment): boolean {
         return isQuestionSegment(segment);
     }
 
-    getSegments (): QuillEditorData[] {
+    getSegments(): QuillEditorData[] {
         return this.getContents();
     }
 
-    addContent () {
+    addContent() {
         let addContentId = createdQuillPlaceholderId();
         this.currentSegments.push({
             id: addContentId,
@@ -172,7 +142,7 @@ export class SegmentViewerComponent extends Vue {
         });
     }
 
-    addQuestion () {
+    addQuestion() {
         let addContentId = createdQuestionPlaceholderId();
         let questionQuillId = createdQuillPlaceholderId();
         let createdAt = new Date();
