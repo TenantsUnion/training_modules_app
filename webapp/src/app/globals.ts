@@ -4,7 +4,7 @@ import * as _ from "underscore";
 import Quill from 'quill';
 import axios, {AxiosRequestConfig} from "axios";
 import LoadingComponent from './global/loading.vue';
-import {TimeEstimateComponent} from './global/time_estimate/time_estimate_component';
+import TimeEstimateComponent from './global/time_estimate/time_estimate_component.vue';
 import QuillComponent from './global/quill/quill_component.vue';
 import SegmentViewerComponent from './global/segment_viewer/segment_viewer_component.vue';
 import QuestionComponent from "./global/question/question_component.vue";
