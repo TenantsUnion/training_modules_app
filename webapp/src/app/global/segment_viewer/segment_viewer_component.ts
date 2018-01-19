@@ -2,10 +2,14 @@ import Quill from 'quill';
 import Vue from "vue";
 import Component from 'vue-class-component';
 import {QuillComponent} from '../quill/quill_component';
-import {ContentSegment, isContentSegment, isQuestionSegment} from '@shared/segment';
-import {ContentQuestionsDelta} from '@shared/training_entity';
-import {QuestionChangesObj} from '@shared/questions';
 import {
+    ContentSegment, isContentSegment, isQuestionSegment, QuestionSegment,
+    SegmentArrayElement
+} from '@shared/segment';
+import {ContentQuestionsDelta} from '@shared/training_entity';
+import {AnswerType, QuestionChangesObj, QuestionQuillData, QuestionType} from '@shared/questions';
+import {
+    createdQuestionPlaceholderId,
     createdQuillPlaceholderId, isCreatedQuillPlaceholderId, QuillDeltaMap,
     QuillEditorData
 } from "@shared/quill_editor";
@@ -17,7 +21,7 @@ const Delta = Quill.import('delta');
 
 @Component({
     props: {
-        segments: {
+        storedSegments: {
             type: Array,
             required: true,
         },
@@ -34,27 +38,33 @@ const Delta = Quill.import('delta');
                               :editor-json="segment.editorJson"
                               :editor-id="segment.id"
                               :on-change="segment.onChangeCallback"
-                              :on-remove="segment.removeCallback"
-                              :key="segment.id"></quill-editor>
+                              :on-remove="segment.removeCallback"></quill-editor>
+                <div>
+                    <question :remove-callback="segment.removeCallback" :question="segment.question"/>
+                </div>
             </div>
             <div class="row">
-                <div class="columns small-12 large-10">
-                    <div>
-                        <button title="Add Content" type="button" class="button" v-on:click="addContent">
-                            Add Content
-                            <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
-                        </button>
-                    </div>
+                <div class="columns small-12 medium-6">
+                    <button title="Add Content" type="button" class="button" v-on:click="addContent">
+                        Add Content
+                        <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="columns small-12 medium-6">
+                    <button title="Add Question" type="button" class="button" v-on:click="addQuestion">
+                        Add Question
+                        <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
         </div>
     `
 })
 export class SegmentViewerComponent extends Vue {
-    segments: ContentSegment[];
-    currentSegments: ContentSegment[] = [];
+    storedSegments: (ContentSegment | QuestionSegment)[];
+    currentSegments: ((ContentSegment | QuestionSegment) & SegmentArrayElement)[] = [];
 
-    @Watch('segments', {immediate: true})
+    @Watch('storedSegments', {immediate: true})
     syncCurrentSegments (incomingSegments: ContentSegment[]) {
         this.currentSegments = [...incomingSegments];
     }
@@ -72,16 +82,16 @@ export class SegmentViewerComponent extends Vue {
     }
 
     getContentQuestionsDelta (): ContentQuestionsDelta {
-        let contentQuestionIds = deltaMapArrayDiff(this.segments, this.currentSegments, (segments: ContentSegment[]) => {
+        let contentQuestionIds = deltaMapArrayDiff(this.storedSegments, this.currentSegments, (segments: ContentSegment[]) => {
             return segments.map(({id}) => id);
         });
 
-        let contentIds = deltaMapArrayDiff(this.segments, this.currentSegments, (segments: ContentSegment[]) => {
+        let contentIds = deltaMapArrayDiff(this.storedSegments, this.currentSegments, (segments: ContentSegment[]) => {
             return segments.filter((segment) => isContentSegment(segment))
                 .map(({id}) => id);
         });
 
-        let questionIds = deltaMapArrayDiff(this.segments, this.currentSegments, (segments: ContentSegment[]) => {
+        let questionIds = deltaMapArrayDiff(this.storedSegments, this.currentSegments, (segments: ContentSegment[]) => {
             return segments.filter((segment) => isQuestionSegment(segment))
                 .map(({id}) => id);
         });
@@ -95,20 +105,7 @@ export class SegmentViewerComponent extends Vue {
         };
     }
 
-    private getOrderedContentQuestionsIds (): DeltaArrOp[] {
-        return deltaArrayDiff(this.segments.map(({id}) => id), this.segments.map(({id}) => id));
-    }
-
-    private getOrderedContentIds (): DeltaArrOp[] {
-        return [];
-    }
-
-
-    private getOrderedQuestionsIds (): DeltaArrOp[] {
-        return [];
-    }
-
-    // todo finish
+// todo finish
     getQuestionChanges (): QuestionChangesObj {
         return {};
     }
@@ -150,8 +147,12 @@ export class SegmentViewerComponent extends Vue {
         return quillDiff;
     }
 
-    isContent (obj: any): boolean {
-        return obj && obj.type === 'CONTENT';
+    isContent (segment: ContentSegment | QuestionSegment): boolean {
+        return isContentSegment(segment);
+    }
+
+    isQuestion (segment: ContentSegment | QuestionSegment): boolean {
+        return isQuestionSegment(segment);
     }
 
     getSegments (): QuillEditorData[] {
@@ -171,6 +172,37 @@ export class SegmentViewerComponent extends Vue {
         });
     }
 
+    addQuestion () {
+        let addContentId = createdQuestionPlaceholderId();
+        let questionQuillId = createdQuillPlaceholderId();
+        let createdAt = new Date();
+        this.currentSegments.push(<QuestionSegment>{
+            id: addContentId,
+            type: 'QUESTION',
+            removeCallback: () => {
+                let rmIndex = this.currentSegments.findIndex((el) => el.id === addContentId);
+                this.currentSegments.splice(rmIndex, 1);
+            },
+            question: {
+                id: addContentId,
+                version: 0,
+                questionType: QuestionType.DEFAULT,
+                answerType: AnswerType.DEFAULT,
+                answerInOrder: false,
+                canPickMultiple: false,
+                randomizeOptionOrder: true,
+                questionQuill: {
+                    id: questionQuillId,
+                    editorJson: new Delta(),
+                },
+                correctOptionIds: [],
+                optionIds: [],
+                options: [],
+                createdAt: createdAt,
+                lastModifiedAt: createdAt,
+            }
+        });
+    }
 }
 
 export const isNotEmptyQuillData = (quillData: Quill.DeltaStatic): boolean => {

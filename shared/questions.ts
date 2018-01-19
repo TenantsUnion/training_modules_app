@@ -27,10 +27,28 @@ export interface QuestionEntity {
     lastModifiedAt: Date
 }
 
-export interface QuestionTransferData {
+export interface QuestionData {
     id: string;
-    queryId: string;
+    version: number | string;
+    questionType: QuestionType,
+    answerType: AnswerType,
+    randomizeOptionOrder: boolean,
+    answerInOrder: boolean,
+    canPickMultiple: boolean,
+    createdAt: Date, // date?
+    lastModifiedAt: Date
+    correctOptionIds: (string | number)[],
+    optionIds: (string | number)[],
+}
+
+export interface QuestionTransferData extends QuestionData {
+    questionQuillId: string;
     options: QuestionOptionTransferData[]
+}
+
+export interface QuestionQuillData extends QuestionData {
+    questionQuill: QuillEditorData;
+    options: QuestionOptionQuillData[];
 }
 
 export interface CreateQuestionData {
@@ -59,17 +77,16 @@ export const isCreateQuestionData = (obj: any): obj is CreateQuestionData => {
         && options.every((option) => isCreateQuestionOptionData(option));
 };
 
-export interface QuestionOptionTransferData {
+export interface QuestionOptionData {
     id: string;
-    answer: boolean;
-    optionId: string;
-    explanationId: string;
-
 }
 
-export interface QuestionOption {
-    id: string;
-    answer: boolean;
+export interface QuestionOptionTransferData extends QuestionOptionData {
+    optionId: string;
+    explanationId: string;
+}
+
+export interface QuestionOptionQuillData extends QuestionOptionData {
     option: QuillEditorData;
     explanation: QuillEditorData;
 }

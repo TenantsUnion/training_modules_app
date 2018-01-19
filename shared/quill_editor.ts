@@ -1,5 +1,4 @@
 import * as _ from "underscore";
-import {Moment} from 'moment';
 import DeltaStatic = Quill.DeltaStatic;
 import {isDeltaStatic} from './delta/typeguards_delta';
 

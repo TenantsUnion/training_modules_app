@@ -1,18 +1,25 @@
+import {QuestionQuillData} from "@shared/questions";
+
 export interface Segment {
     id: string,
     type: 'CONTENT' | 'QUESTION',
     version?: string,
     lastModifiedAt?: Date,
-    removeCallback?: () => any;
-    onChangeCallback?: (QuillChangeObj) => any;
 }
 
 export interface ContentSegment extends Segment {
+    type: 'CONTENT';
     editorJson: Quill.DeltaStatic;
 }
 
 export interface QuestionSegment extends Segment {
+    type: 'QUESTION';
+    question: QuestionQuillData
+}
 
+export interface SegmentArrayElement {
+    removeCallback?: () => any;
+    onChangeCallback?: (QuillChangeObj) => any;
 }
 
 export const isContentSegment = (obj: any): obj is ContentSegment => {

@@ -80,10 +80,6 @@ export class CreateSectionComponent extends Vue {
         this.quillContent.push({
             id: addContentId,
             type: 'CONTENT',
-            removeCallback: () => {
-                let rmIndex = this.quillContent.findIndex((el) => el.id === addContentId);
-                this.quillContent.splice(rmIndex, 1);
-            }
         });
     }
 }

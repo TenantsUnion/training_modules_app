@@ -10,8 +10,8 @@ var config = require('config');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
+    esModule: true,
     entry: [
-        // 'webpack-dev-server/client?http://localhost:8080',
         '../src/app/app.ts'
     ],
     context: path.resolve(__dirname),
@@ -91,16 +91,14 @@ module.exports = {
                 })
             }]
     },
-    resolve:
-        {
-            extensions: ['.ts', '.js', '.html', '.json', '.scss'],
-            alias:
-                {
-                    'vue$': 'vue/dist/vue.esm.js',
-                    '@shared': path.resolve(__dirname, '../../shared')
-                }
-        }
-    ,
+    resolve: {
+        extensions: ['.ts', '.js', '.html', '.json', '.scss'],
+        alias:
+            {
+                'vue$': 'vue/dist/vue.esm.js',
+                '@shared': path.resolve(__dirname, '../../shared')
+            }
+    },
     performance: {
         hints: false
     }
