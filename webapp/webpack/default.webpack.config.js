@@ -10,7 +10,6 @@ var config = require('config');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
-    esModule: true,
     entry: [
         '../src/app/app.ts'
     ],
@@ -34,12 +33,33 @@ module.exports = {
     ],
     module: {
         rules: [
-            {// match ts and tsx files from vue output
-                test: /\.tsx?$/,
+            {
+                test: /\.ts?$/,
                 loader: 'ts-loader',
                 exclude: /node_modules/,
                 options: {
                     appendTsSuffixTo: [/\.vue$/],
+                }
+            },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader',
+                options: {
+                    loaders: {
+                        css: ['vue-style-loader', 'css-loader'],
+                        scss: ['vue-style-loader', 'css-loader', 'sass-loader'],
+                        sass: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
+                    },
+                    extractCss: true,
+                    esModule: true,
+                    cssSourceMap: true,
+                    cacheBusting: true,
+                    transformToRequire: {
+                        video: ['src', 'poster'],
+                        source: 'src',
+                        img: 'src',
+                        image: 'xlink:href'
+                    }
                 }
             },
             {

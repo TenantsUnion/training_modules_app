@@ -15,6 +15,7 @@
     "module": "es6",
     "target": "es5",
     "moduleResolution": "node",
+    // needed for Vue library since Vue doesn't use ES6 default exports
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

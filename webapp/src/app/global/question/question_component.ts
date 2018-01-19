@@ -60,19 +60,7 @@ let Delta: DeltaStatic = Quill.import('delta');
                                   :editor-json="option.option.editorJson"></quill-editor>
                 </div>
                 <div class="cell small-4 large-3">
-                    <div class="grid-x grid-padding-x">
-                        <div class="cell small-3 switch success tiny">
-                            <input class="switch-input" id="exampleSwitch" type="checkbox" name="exampleSwitch">
-                            <label class="switch-paddle" for="exampleSwitch">
-                                <span class="show-for-sr">Mark Option Correct</span>
-                            </label>
-                        </div>
-                        <div class="small-9">
-                            <p class="text-center">
-                                Correct Answer
-                            </p>
-                        </div>
-                    </div>
+                    <switch-checkbox switch-text="Correct"></switch-checkbox>
                 </div>
                 <button type="button" class="close-button" title="Remove Option"
                         v-on:click="option.removeCallback" aria-label="Remove Option">
