@@ -1,13 +1,11 @@
 import Component from 'vue-class-component';
 import Vue from 'vue';
-import {coursesService} from '../../../courses_service';
 import * as VueForm from '../../../../vue-form';
 import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
-import {QuillComponent} from '../../../../global/quill/quill_component';
-import {Segment} from '../../../../../../../shared/segment';
+import {Segment} from '@shared/segment';
 import {SegmentViewerComponent} from '../../../../global/segment_viewer/segment_viewer_component';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
-import {CreateSectionEntityPayload} from '../../../../../../../shared/sections';
+import {CreateSectionEntityPayload} from '@shared/sections';
 import {currentModuleRouteGuard} from '../../module_details_component/module_details_component';
 
 @Component({

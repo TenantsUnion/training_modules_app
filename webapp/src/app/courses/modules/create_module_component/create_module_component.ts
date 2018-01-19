@@ -2,7 +2,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import * as VueForm from "../../../vue-form";
 import {MODULE_ACTIONS, ModuleActions} from '../../store/module/module_actions';
-import {Segment} from '../../../../../../shared/segment';
+import {Segment} from '@shared/segment';
 import {COURSES_ROUTE_NAMES} from '../../courses_routes';
 import {SegmentViewerComponent} from '../../../global/segment_viewer/segment_viewer_component';
 
