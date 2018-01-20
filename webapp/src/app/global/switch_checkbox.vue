@@ -1,9 +1,9 @@
 <template>
     <div class="grid-x grid-padding-x">
         <div class="cell small-3 switch success tiny">
-            <input class="switch-input" id="checkbox-switch" type="checkbox" name="checkboxSwitch"
+            <input class="switch-input" :id="id" type="checkbox" name="checkboxSwitch"
                    v-model="checked"/>
-            <label class="switch-paddle" for="checkbox-switch">
+            <label class="switch-paddle" :for="id">
                 <span class="show-for-sr">{{switchText}}</span>
             </label>
         </div>
@@ -18,6 +18,12 @@
 <script lang="ts">
     import Vue from "vue";
     import Component from "vue-class-component";
+
+    // generates unique id needed for foundation functionality
+    let switchCounter = 0;
+    const uniqueSwitchId = () => {
+        return `checkbox-switch-${switchCounter++}`;
+    };
 
     @Component({
         props: {
@@ -34,11 +40,13 @@
     export default class SwitchCheckboxComponent extends Vue {
         initChecked: boolean;
         checked: boolean = this.initChecked;
+        id: string = uniqueSwitchId();
+
     }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
+<style lang="scss" scoped>
     @import '../scss/variables';
 
     @mixin colored-switches($checked-color) {
