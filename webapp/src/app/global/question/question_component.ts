@@ -5,7 +5,7 @@ import {QuestionChanges, QuestionOptionQuillData, QuestionQuillData} from "@shar
 import {Watch} from "vue-property-decorator";
 import {
     createdQuestionOptionPlaceholderId, createdQuillPlaceholderId,
-    isCreatedQuestionPlaceholderId
+    isCreatedQuestionPlaceholderId, QuillDeltaMap
 } from "@shared/quill_editor";
 import DeltaStatic = Quill.DeltaStatic;
 import {SegmentArrayElement} from "@shared/segment";
@@ -43,6 +43,10 @@ export default class QuestionComponent extends Vue {
         return {...this.question, options: this.options};
     }
 
+    getQuestionQuillDeltaMapDiff(): QuillDeltaMap {
+        return null;
+    }
+
     addOption() {
         let id = createdQuestionOptionPlaceholderId();
         let optionQuillId = createdQuillPlaceholderId();
@@ -64,6 +68,10 @@ export default class QuestionComponent extends Vue {
         });
 
         this.question.optionIds.push(id);
+    }
+
+    optionIsAnswer(option: QuestionOptionQuillData) {
+        return this.question.correctOptionIds.indexOf(option.id) !== -1;
     }
 
     diffStoredCurrent(): QuestionChanges {

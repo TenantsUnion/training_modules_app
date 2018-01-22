@@ -77,7 +77,6 @@ type EditorState = 'NEW' | 'CHANGED' | 'PRISTINE';
     },
 })
 export class QuillComponent extends Vue {
-
     editorId: string;
     editorSelector: string;
     toolbarSelector: string;

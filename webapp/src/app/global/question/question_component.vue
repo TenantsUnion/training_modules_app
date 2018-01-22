@@ -30,7 +30,7 @@
                 </h6>
             </div>
         </div>
-        <question-option v-for="option in options" :key="option.id" :stored-option="option"></question-option>
+        <question-option v-for="option in options" :key="option.id" :stored-option="option" :is-answer="optionIsAnswer(option)"></question-option>
     </div>
 </template>
 

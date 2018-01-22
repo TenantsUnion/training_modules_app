@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="cell small-4 large-3">
-            <switch-checkbox ref="optionCorrect" switch-text="Correct" :init-checked=""/>
+            <switch-checkbox ref="correctSwitch" switch-text="Correct" :init-checked="false"/>
         </div>
         <button type="button" class="close-button" title="Remove Option"
                 v-on:click="option.removeCallback" aria-label="Remove Option">
@@ -32,7 +32,7 @@
     import {Watch} from "vue-property-decorator";
     import {QuestionOptionQuillData} from "@shared/questions";
     import {QuillComponent} from "../quill/quill_component";
-    import {QuillDeltaMap} from "../../../../../shared/quill_editor";
+    import SwitchCheckboxComponent from "../switch_checkbox/switch_checkbox";
 
 
     @Component({
@@ -70,8 +70,8 @@
             };
         }
 
-        getQuestionOptionQuillDiff(): QuillDeltaMap {
-
+        optionIsAnswer(): boolean {
+            return (<SwitchCheckboxComponent> this.$refs.correctSwitch).isChecked();
         }
 
     }
