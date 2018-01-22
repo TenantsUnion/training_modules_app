@@ -12,7 +12,7 @@ import {currentModuleRouteGuard} from '../module_details_component/module_detail
 import {Segment} from '@shared/segment';
 import {TrainingEntityDiffDelta} from '@shared/training_entity';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
-import {SegmentViewerComponent} from '../../../global/segment_viewer/segment_viewer_component';
+import SegmentViewerComponent from '../../../global/segment_viewer/segment_viewer_component';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {MODULE_ACTIONS} from '../../store/module/module_actions';
 import {COURSES_ROUTE_NAMES} from '../../courses_routes';
@@ -99,7 +99,7 @@ export class EditModuleComponent extends Vue {
         let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.currentModule, this.module);
 
         // quill content diff
-        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
+        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).calculateQuillDiff();
 
         // ordered content ids diff
         let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);

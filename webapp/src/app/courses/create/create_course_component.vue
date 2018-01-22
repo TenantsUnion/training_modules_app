@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="columns small-12 large-10">
                         <h1>Create Course</h1>
-                        <loading v-if="loading"></loading>
+                        <loading v-if="loading"/>
                     </div>
                 </div>
                 <vue-form :state="formstate" @submit.prevent="createCourse">
@@ -72,7 +72,7 @@
     import Vue from "vue";
     import Component from "vue-class-component";
     import {CreateCourseEntityPayload} from '@shared/courses';
-    import {SegmentViewerComponent} from '../../global/segment_viewer/segment_viewer_component';
+    import SegmentViewerComponent from '../../global/segment_viewer/segment_viewer_component';
     import {FormState} from '../../vue-form';
     import {Segment} from '@shared/segment';
     import {COURSE_ACTIONS} from '../store/course/course_actions';

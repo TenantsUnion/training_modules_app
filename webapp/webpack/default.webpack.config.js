@@ -81,15 +81,6 @@ module.exports = {
                 test: /\.(scss|css)$/,
                 loader: ExtractTextPlugin.extract({
                     use: [
-                        //     {
-                        //     loader: "postcss-loader", options: {
-                        //         config: {
-                        //             ctx: {
-                        //                 autoprefixer: {browsers: ['last 2 versions', 'ie >= 9', 'and_chr >= 2.3']}
-                        //             }
-                        //         }
-                        //     }
-                        // },
                         {
                             loader: "css-loader",
                             options: {

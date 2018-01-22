@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import {isQuillEditorData, QuillEditorData} from './quill_editor';
 import {DeltaStatic} from 'quill';
 import {isDeltaStatic} from './delta/typeguards_delta';
-import {applyDeltaArrOps, DeltaArrOp} from './delta/diff_key_array';
+import {applyDeltaArrOps, deltaArrayDiff, DeltaArrOp} from './delta/diff_key_array';
 
 export enum QuestionType {
     DEFAULT = 'DEFAULT'
@@ -117,16 +117,16 @@ export type OptionChangesObj = {
 
 export type QuestionChanges = {
     // updates covered by overall quill changes so need to only deal with add and remove
-    optionChangesObject: OptionChangesObj,
+    optionChangesObject?: OptionChangesObj,
 
-    questionQuillId: string,
-    questionType: QuestionType,
-    answerType: AnswerType,
-    optionIds: DeltaArrOp[],
-    correctOptionIds: DeltaArrOp[],
-    randomizeOptionOrder: boolean,
-    answerInOrder: boolean,
-    canPickMultiple: boolean,
+    questionQuillId?: string,
+    questionType?: QuestionType,
+    answerType?: AnswerType,
+    optionIds?: DeltaArrOp[],
+    correctOptionIds?: DeltaArrOp[],
+    randomizeOptionOrder?: boolean,
+    answerInOrder?: boolean,
+    canPickMultiple?: boolean,
 }
 
 export const convertQuestionChangesToEntity = (id: string, changes: QuestionChanges): QuestionEntity => {
@@ -143,5 +143,11 @@ export const convertQuestionChangesToEntity = (id: string, changes: QuestionChan
         lastModifiedAt: new Date()
     };
 };
+
+export const diffQuestionQuillData = (before: QuestionQuillData, after: QuestionQuillData): QuestionChanges => {
+
+    return null;
+};
+
 
 export type QuestionChangesObj = { [index: string]: QuestionChanges };

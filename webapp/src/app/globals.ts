@@ -8,7 +8,7 @@ import TimeEstimateComponent from './global/time_estimate/time_estimate_componen
 import QuillComponent from './global/quill/quill_component.vue';
 import SegmentViewerComponent from './global/segment_viewer/segment_viewer_component.vue';
 import QuestionComponent from "./global/question/question_component.vue";
-import SwitchCheckBoxComponent from './global/switch_checkbox.vue';
+import SwitchCheckBoxComponent from './global/switch_checkbox/switch_checkbox.vue';
 
 //put jquery on global window for debugging,
 //workaround for webpack doing this with module number prefixes

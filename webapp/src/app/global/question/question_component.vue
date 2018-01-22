@@ -19,8 +19,8 @@
                     </small>
                 </field-messages>
                 <quill-editor ref="questionQuill"
-                              :editor-json="currentQuestion.questionQuill.editorJson"
-                              :editor-id="currentQuestion.questionQuill.id"/>
+                              :editor-json="question.questionQuill.editorJson"
+                              :editor-id="question.questionQuill.id"/>
             </div>
         </div>
         <div class="grix-x">
@@ -30,24 +30,8 @@
                 </h6>
             </div>
         </div>
-        <div v-for="option in currentOptions" :key="option.id" class="grid-x callout">
-            <div class="cell small-6 large-9">
-                <quill-editor ref="optionQuill"
-                              :editor-id="option.option.id"
-                              :editor-json="option.option.editorJson"/>
-            </div>
-            <div class="cell small-4 large-3">
-                <switch-checkbox switch-text="Correct"/>
-            </div>
-            <button type="button" class="close-button" title="Remove Option"
-                    v-on:click="option.removeCallback" aria-label="Remove Option">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+        <question-option v-for="option in options" :key="option.id" :stored-option="option"></question-option>
     </div>
 </template>
 
-<script lang="ts">
-    import {QuestionComponent} from './question_component';
-    export default QuestionComponent;
-</script>
+<script lang="ts" src="./question_component.ts"></script>

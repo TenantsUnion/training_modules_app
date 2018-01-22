@@ -15,39 +15,11 @@
     </div>
 </template>
 
-<script lang="ts">
-    import Vue from "vue";
-    import Component from "vue-class-component";
-
-    // generates unique id needed for foundation functionality
-    let switchCounter = 0;
-    const uniqueSwitchId = () => {
-        return `checkbox-switch-${switchCounter++}`;
-    };
-
-    @Component({
-        props: {
-            initChecked: {
-                type: Boolean,
-                default: false
-            },
-            switchText: {
-                type: String,
-                required: true
-            }
-        }
-    })
-    export default class SwitchCheckboxComponent extends Vue {
-        initChecked: boolean;
-        checked: boolean = this.initChecked;
-        id: string = uniqueSwitchId();
-
-    }
-</script>
+<script lang="ts" src="./switch_checkbox.ts"></script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-    @import '../scss/variables';
+    @import '../../scss/variables';
 
     @mixin colored-switches($checked-color) {
         input:checked ~ .switch-paddle {

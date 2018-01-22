@@ -12,7 +12,7 @@ import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
 import {Watch} from 'vue-property-decorator';
 import {diffBasicPropsTrainingEntity} from '../../../../../../../shared/delta/diff_delta';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
-import {SegmentViewerComponent} from '../../../../global/segment_viewer/segment_viewer_component';
+import SegmentViewerComponent from '../../../../global/segment_viewer/segment_viewer_component';
 import {deltaArrayDiff} from '../../../../../../../shared/delta/diff_key_array';
 import {TrainingEntityDiffDelta} from '../../../../../../../shared/training_entity';
 import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
@@ -81,7 +81,7 @@ export class EditSectionComponent extends Vue {
         let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.currentSection, this.section);
 
         // quill content diff
-        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
+        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).calculateQuillDiff();
 
         // ordered content ids diff
         let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);

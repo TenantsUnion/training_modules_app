@@ -6,7 +6,7 @@
                           :editor-id="segment.id"
                           :on-change="segment.onChangeCallback"
                           :on-remove="segment.removeCallback"/>
-            <question v-if="isQuestion(segment)" :remove-callback="segment.removeCallback" :question="segment.question"/>
+            <question v-if="isQuestion(segment)" ref="storedQuestion" :remove-callback="segment.removeCallback" :stored-question="segment.question"/>
         </div>
         <div class="row">
             <div class="columns small-12 medium-6">
@@ -24,8 +24,4 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-    import {SegmentViewerComponent} from "./segment_viewer_component";
-
-    export default SegmentViewerComponent;
-</script>
+<script lang="ts" src="./segment_viewer_component.ts"></script>

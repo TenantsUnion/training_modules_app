@@ -3,7 +3,7 @@ import Component from "vue-class-component";
 import {COURSES_ROUTE_NAMES} from '../courses_routes';
 import * as _ from "underscore";
 import {Segment} from '../../../../../shared/segment';
-import {SegmentViewerComponent} from '../../global/segment_viewer/segment_viewer_component';
+import SegmentViewerComponent from '../../global/segment_viewer/segment_viewer_component';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '../../state_store';
 import {Watch} from 'vue-property-decorator';
@@ -77,7 +77,7 @@ export class EditCourseComponent extends Vue {
         let changes: CourseEntityDiffDelta = diffBasicPropsCourseProps(this.currentCourse, this.course);
 
         // quill content diff
-        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).getContentChanges();
+        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).calculateQuillDiff();
 
         // ordered content ids diff
         let userChangedOrderedContentIds: string[] = this.quillContent.map(({id}) => id);
