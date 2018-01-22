@@ -6,3 +6,5 @@ cache:
   - "node_modules"
 addons:
   postgresql: "9.6"
+branches:
+  only: "master"
