@@ -1,4 +1,4 @@
-import QuillComponent from '../src/app/global/quill/quill_component.vue';
+import QuillComponent from '@global/quill/quill_component.vue';
 import {createdQuillPlaceholderId} from '@shared/quill_editor';
 
 describe('Component', () => {
@@ -10,6 +10,7 @@ describe('Component', () => {
         });
         component.$mount();
 
-        // component.$el.
+        component.$el.querySelector('[ref=editor]')
+        component.$destroy();
     });
 });

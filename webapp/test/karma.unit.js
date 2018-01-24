@@ -5,7 +5,26 @@ module.exports = function (config) {
     config.set({
         basePath: '../',
         frameworks: ['mocha', 'chai'],
-        files: ['test/index.ts'],
+        files: ['test/index.ts',
+            {
+                pattern: './src/app/**/*',
+                watched: false,
+                included: false,
+                served: true
+            },
+            {
+                pattern: './test/**/*',
+                watched: false,
+                included: false,
+                served: true
+            },
+            {
+                pattern: './dist/**/*',
+                watched: false,
+                included: false,
+                served: true
+            }
+        ],
         plugins: [
             'karma-chai',
             'karma-chrome-launcher',
@@ -13,18 +32,23 @@ module.exports = function (config) {
             'karma-mocha'
         ],
         preprocessors: {
-          'test/index.ts': ['webpack']
+            'test/index.ts': ['webpack']
         },
         webpack: webpackConfig,
         webpackServer: {noInfo: true},
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
-        autoWatch: false,
+        autoWatch: true,
         browsers: ['Chrome'],
         mime: {
             'text/x-typescript': ['ts']
         },
-        singleRun: false
-    })
+        // optional middleware that blocks tests from running until code
+        // recompiles
+        beforeMiddleware: [
+            'webpackBlocker'
+        ]
+        // singleRun: false
+    });
 };
