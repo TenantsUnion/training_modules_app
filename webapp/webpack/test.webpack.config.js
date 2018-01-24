@@ -2,7 +2,8 @@ const merge = require('webpack-merge');
 const path = require('path');
 const baseConfig = require('./default.webpack.config');
 const webpackConfig = merge(baseConfig, {
-    devtool: '#inline-source-map',
+    // chrome launched by karma doesn't pick up source maps when inlined
+    devtool: 'cheap-module-eval-source-map',
     module: {
         rules: [
             {

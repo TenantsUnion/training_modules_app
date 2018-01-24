@@ -3,9 +3,9 @@ var webpackConfig = require('../webpack/test.webpack.config');
 
 module.exports = function (config) {
     config.set({
-        basePath: '',
+        basePath: '../',
         frameworks: ['mocha', 'chai'],
-        files: ['./index.js'],
+        files: ['test/index.ts'],
         plugins: [
             'karma-chai',
             'karma-chrome-launcher',
@@ -13,7 +13,7 @@ module.exports = function (config) {
             'karma-mocha'
         ],
         preprocessors: {
-          './index.js': ['webpack']
+          'test/index.ts': ['webpack']
         },
         webpack: webpackConfig,
         webpackServer: {noInfo: true},
@@ -25,6 +25,6 @@ module.exports = function (config) {
         mime: {
             'text/x-typescript': ['ts']
         },
-        singleRun: true
+        singleRun: false
     })
 };

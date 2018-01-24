@@ -12,7 +12,7 @@ require('foundation-sites');
 require('../src/app/_style.scss');
 
 // require all test files (files that ends with .spec.js)
-const testsContext = require.context('.', true, /\.spec\.ts$/);
+const testsContext = (<any>require).context('.', true, /\.spec\.ts$/);
 testsContext.keys().forEach(testsContext);
 
 // // require all src files except app entry point and d.ts (no output) for test coverage analysis
