@@ -78,7 +78,7 @@ export default class QuillComponent extends Vue {
     readOnly: boolean;
     onChange: QuillChangeFn;
     onRemove: () => {};
-    userChanges: Quill.DeltaStatic = new Delta();
+    changes: Quill.DeltaStatic = new Delta();
 
     mounted() {
         this.quill = new Quill(<Element> this.$refs.editor, {
@@ -96,15 +96,11 @@ export default class QuillComponent extends Vue {
             }
         );
 
+        // track changes that have been made in order to save later
         this.quill.on('text-change', (delta: DeltaStatic, oldContents: DeltaStatic, source: Sources) => {
-            if (source !== 'api' && this.onChange) {
-                let changeObj = {
-                    editorId: this.editorId,
-                    delta, oldContents, source
-                };
-                this.onChange(changeObj);
+            if (source === 'user') {
+                this.changes = this.changes.compose(delta);
             }
-            this.userChanges = this.userChanges.compose(delta);
         });
 
         this.editorJson && this.quill.setContents(new Delta(this.editorJson.ops), 'api');
@@ -115,13 +111,8 @@ export default class QuillComponent extends Vue {
     }
 
     getChanges(): Quill.DeltaStatic {
-        return this.userChanges;
+        return this.changes;
     }
-
-    setQuillEditorContents(quillContents: Quill.DeltaStatic) {
-        this.editorJson = quillContents;
-    }
-
     /**
      * Indicates that quill editor should be displayed if not in read only mode or the quill content is not
      * the initial blank state of an empty quill Editor

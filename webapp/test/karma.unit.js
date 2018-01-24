@@ -29,7 +29,8 @@ module.exports = function (config) {
             'karma-chai',
             'karma-chrome-launcher',
             'karma-webpack',
-            'karma-mocha'
+            'karma-mocha',
+            'karma-mocha-reporter'
         ],
         preprocessors: {
             'test/index.ts': ['webpack']
@@ -41,6 +42,7 @@ module.exports = function (config) {
         logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: ['Chrome'],
+        reporters: ['mocha'],
         mime: {
             'text/x-typescript': ['ts']
         },
