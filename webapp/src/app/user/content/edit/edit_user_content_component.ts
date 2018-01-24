@@ -3,7 +3,7 @@ import Component from "vue-class-component";
 import {contentHttpService} from "../content_http_service";
 import * as VueForm from "../../../vue-form";
 import {appRouter} from "../../../router";
-import {QuillComponent} from '../../../global/quill/quill_component';
+import QuillComponent from '../../../global/quill/quill_component';
 import {ContentEntity} from "@shared/content";
 
 //todo is this still needed?
