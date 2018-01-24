@@ -37,7 +37,7 @@ export class QuillHandler {
             .map((content: QuillEditorData) => {
                 let {version} = content;
                 return _.extend({}, content, {
-                    version: version instanceof String ? parseInt(version) + 1 : version + 1,
+                    version: (parseInt(version) + 1) + "",
                     editorJson: new Delta(content.editorJson.ops).compose(quillChanges[content.id]),
                     lastModifiedAt: new Date()
                 });
