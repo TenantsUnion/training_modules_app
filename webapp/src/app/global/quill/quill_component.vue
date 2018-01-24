@@ -1,6 +1,6 @@
 <template>
     <div v-show="displayQuillEditor" class="scrolling-container">
-        <div v-if="!readOnly" v-bind:class="toolbarSelector">
+        <div v-if="!readOnly" ref="toolbar">
             <div class="row">
                 <div class="quill-toolbar-buttons columns small-11">
                         <span v-for="formatGrp in toolbarConfig" class="ql-formats">
@@ -23,11 +23,14 @@
                 </div>
             </div>
         </div>
-        <div v-bind:class="editorSelector" class="editor-container"></div>
+        <div ref="editor" class="editor-container"></div>
     </div>
 </template>
 
-<script lang="ts">
-    import {QuillComponent} from './quill_component';
-    export default QuillComponent;
-</script>
+<script lang="ts" src="./quill_component.ts"></script>
+
+<style lang="scss">
+    //default quill theme
+    @import '~quill/dist/quill.core.css';
+    @import '~quill/dist/quill.snow.css';
+</style>

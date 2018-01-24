@@ -1,12 +1,9 @@
 import * as _ from "underscore";
-import * as Quill from "quill";
+import Quill from "quill";
 import Vue from "vue";
 import Component from "vue-class-component";
 import {DeltaStatic, Sources} from "quill";
 
-//default quill theme
-require('quill/dist/quill.core.css');
-require('quill/dist/quill.snow.css');
 
 const BackgroundClass = Quill.import('attributors/class/background');
 const ColorClass = Quill.import('attributors/class/color');
@@ -33,8 +30,6 @@ type EditorState = 'NEW' | 'CHANGED' | 'PRISTINE';
 @Component({
     data: () => {
         return {
-            editorSelector: '',
-            toolbarSelector: '',
             // same format used to specify toolbar module config programatically via Quill constructor
             toolbarConfig: [
                 ['bold', 'italic', 'underline', 'strike'],
@@ -76,10 +71,8 @@ type EditorState = 'NEW' | 'CHANGED' | 'PRISTINE';
         }
     },
 })
-export class QuillComponent extends Vue {
+export default class QuillComponent extends Vue {
     editorId: string;
-    editorSelector: string;
-    toolbarSelector: string;
     editorJson: DeltaStatic;
     quill: Quill.Quill;
     readOnly: boolean;
@@ -87,20 +80,15 @@ export class QuillComponent extends Vue {
     onRemove: () => {};
     userChanges: Quill.DeltaStatic = new Delta();
 
-    created() {
-        this.editorSelector = `editor-${this.editorId}`;
-        this.toolbarSelector = `toolbar-${this.editorId}`;
-    }
-
     mounted() {
-        this.quill = new Quill(`.${this.editorSelector}`, {
+        this.quill = new Quill(<Element> this.$refs.editor, {
                 modules: {
                     history: {
                         delay: 1000,
                         maxStack: 100,
                         userOnly: true
                     },
-                    toolbar: this.readOnly ? false : `.${this.toolbarSelector}`,
+                    toolbar: this.readOnly ? false : this.$refs.toolbar,
                 },
                 debug: process.env.NODE_ENV === 'debug' ? 'info' : undefined,
                 readOnly: this.readOnly,
