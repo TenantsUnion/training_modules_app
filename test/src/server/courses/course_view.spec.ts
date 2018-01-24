@@ -2,11 +2,11 @@ import {expect} from 'chai';
 import {clearData} from '../test_db_util';
 import {createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA, latestUser} from './test_course_util';
 import {courseViewQuery} from '../../../../server/src/config/query_service_config';
-import {CreateCourseEntityPayload} from '../../../../shared/courses';
+import {CreateCourseEntityPayload} from '@shared/courses';
 import {
     createdQuillPlaceholderId, QuillEditorData
-} from '../../../../shared/quill_editor';
-import {Delta} from '../../../../shared/normalize_imports';
+} from '@shared/quill_editor';
+import {Delta} from '@shared/normalize_imports';
 
 describe('Course view', function () {
     beforeEach(async function () {
@@ -17,6 +17,7 @@ describe('Course view', function () {
     xit('should load a course that has questions and content', async function () {
         let quillContent: QuillEditorData = {
             id: createdQuillPlaceholderId(),
+            version: "0",
             editorJson: new Delta().insert('Some content')
         };
         // let question: CreateQuestionData = {
