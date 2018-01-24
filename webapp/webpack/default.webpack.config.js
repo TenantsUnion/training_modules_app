@@ -1,13 +1,7 @@
-/**
- * Using typescript setup from from https://github.com/ducksoupdev/vue-webpack-typescript/blob/master/template/webpack.config.js
- */
+const path = require('path');
+const webpack = require('webpack');
+const vueLoaderConf = require('./vue_loader.conf');
 
-var path = require('path');
-var webpack = require('webpack');
-var config = require('config');
-
-// Extract style sheets into dedicated file in production
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: [
@@ -20,10 +14,6 @@ module.exports = {
         sourceMapFilename: '[file].map'
     },
     plugins: [
-        new ExtractTextPlugin('style.css', {
-            allChunks: true,
-            sourceMap: true
-        }),
         new webpack.NodeEnvironmentPlugin([
             'NODE_ENV'
         ]),
@@ -34,33 +24,19 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.ts?$/,
+                test: /\.ts$/,
                 loader: 'ts-loader',
                 exclude: /node_modules/,
                 options: {
                     appendTsSuffixTo: [/\.vue$/],
+                    logInfoToStdOut: true
+                    // configFile: '../tsconfig.json'
                 }
             },
             {
-                test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    loaders: {
-                        css: ['vue-style-loader', 'css-loader'],
-                        scss: ['vue-style-loader', 'css-loader', 'sass-loader'],
-                        sass: ['vue-style-loader', 'css-loader', 'sass-loader?indentedSyntax']
-                    },
-                    extractCss: true,
-                    esModule: true,
-                    cssSourceMap: true,
-                    cacheBusting: true,
-                    transformToRequire: {
-                        video: ['src', 'poster'],
-                        source: 'src',
-                        img: 'src',
-                        image: 'xlink:href'
-                    }
-                }
+              test: /\.vue$/,
+              loader: 'vue-loader',
+              options: vueLoaderConf
             },
             {
                 test: /\.tpl.html$/,
@@ -77,33 +53,10 @@ module.exports = {
                     }
                 }]
             },
-            {
-                test: /\.(scss|css)$/,
-                loader: ExtractTextPlugin.extract({
-                    use: [
-                        {
-                            loader: "css-loader",
-                            options: {
-                                sourceMap: true,
-                                minimize: true
-                            }
-                        }, {
-                            loader: "sass-loader",
-                            options: {
-                                sourceMap: true,
-                                includePaths: [
-                                    'node_modules/foundation-sites/scss',
-                                    'node_modules/foundation-sites/scss/util',
-                                    'node_modules/foundation-sites/_vendor',
-                                    'node_modules/font-awesome-sass/assets/stylesheets/font-awesome'
-                                ]
-                            }
-                        }]
-                })
-            }]
+            ]
     },
     resolve: {
-        extensions: ['.ts', '.js', '.html', '.json', '.scss'],
+        extensions: ['.js', '.ts', '.html', '.json', '.scss'],
         alias:
             {
                 'vue$': 'vue/dist/vue.esm.js',
