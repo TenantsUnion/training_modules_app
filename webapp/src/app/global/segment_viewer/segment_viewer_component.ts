@@ -1,7 +1,7 @@
 import Quill from 'quill';
 import Vue from "vue";
 import Component from 'vue-class-component';
-import {QuillComponent} from '../quill/quill_component';
+import QuillComponent from '../quill/quill_component';
 import {
     ContentSegment, isContentSegment, isQuestionSegment, QuestionSegment, Segment,
     SegmentArrayElement
@@ -169,7 +169,7 @@ export default class SegmentViewerComponent extends Vue {
             },
             question: {
                 id: addContentId,
-                version: 0,
+                version: "0",
                 questionType: QuestionType.DEFAULT,
                 answerType: AnswerType.DEFAULT,
                 answerInOrder: false,
@@ -177,6 +177,7 @@ export default class SegmentViewerComponent extends Vue {
                 randomizeOptionOrder: true,
                 questionQuill: {
                     id: questionQuillId,
+                    version: "0",
                     editorJson: new Delta(),
                 },
                 correctOptionIds: [],

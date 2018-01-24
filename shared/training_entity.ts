@@ -11,7 +11,7 @@ import {isDeltaStatic} from './delta/typeguards_delta';
 export interface ViewTrainingEntity {
     id: string;
     title: string;
-    version: string | number;
+    version: string;
     description?: string;
     timeEstimate?: string;
     active: boolean;
@@ -51,9 +51,9 @@ export const isQuillContentDiff = (obj: any): obj is QuillChangesObj => {
  * Interface denoting a entity that has content and questions in a particular order
  */
 export interface ContentQuestionEntity {
-    orderedContentIds: (string | number)[];
-    orderedQuestionIds: (string | number)[];
-    orderedContentQuestionIds: (string | number)[];
+    orderedContentIds: string[];
+    orderedQuestionIds: string[];
+    orderedContentQuestionIds: string[];
 }
 
 export interface ContentQuestionsDelta {
@@ -75,7 +75,7 @@ export const convertContentQuestionsDeltaToEntity = (delta: ContentQuestionsDelt
 
 export interface TrainingEntity extends ContentQuestionEntity {
     id: string;
-    version: string | number;
+    version: string;
     title: string;
     description?: string;
     timeEstimate?: string | number;

@@ -29,7 +29,7 @@ export const isDeltaArrOp = (obj: any): obj is DeltaArrOp => {
 /**
  * Array of string or number elements where ever element is unique (not enforced through type)
  */
-type KeyArray = (number | string)[]
+type KeyArray = string[]
 
 export const deltaMapArrayDiff = <T> (before: T[], after: T[], mapFn: (diffObj: T[]) => KeyArray): DeltaArrOp[] => {
   return deltaArrayDiff(mapFn(before), mapFn(after));
@@ -42,7 +42,7 @@ export const deltaMapArrayDiff = <T> (before: T[], after: T[], mapFn: (diffObj: 
  * @param {(delta: DeltaObj) => string} keyFn
  * @returns {delta.DeltaArrDiff}
  */
-export const deltaArrayDiff = (beforeArr: (string | number)[], afterArr: (string | number)[]): DeltaArrOp[] => {
+export const deltaArrayDiff = (beforeArr: string[], afterArr: string[]): DeltaArrOp[] => {
     // cases -- no change, elements moved (how to identify unique elements?), elements deleted, elements added,
     // think of as array of ids -- title and description is part of the view/ changes handled differently
     // each element is unique

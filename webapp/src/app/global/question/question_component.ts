@@ -55,10 +55,12 @@ export default class QuestionComponent extends Vue {
             id: id,
             option: {
                 id: optionQuillId,
+                version: "0",
                 editorJson: new Delta()
             },
             explanation: {
                 id: explanationQuillId,
+                version: "0",
                 editorJson: new Delta()
             },
             removeCallback: () => {

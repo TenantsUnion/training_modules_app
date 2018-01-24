@@ -1,7 +1,7 @@
 import {applyDeltaArrOps, deltaArrayDiff, DeltaArrOp} from '../../../../shared/delta/diff_key_array';
 import {expect} from "chai";
 
-describe('Key Array type guards', function(){
+describe('Key Array type guards', function () {
 
 });
 describe('Diff Key Array', function () {
@@ -13,8 +13,8 @@ describe('Diff Key Array', function () {
                     op: 'ADD',
                     index: 2
                 };
-                let beforeArr = [1, 2, 3];
-                let afterArr = [1, 2, 'i', 3];
+                let beforeArr = ['1', '2', '3'];
+                let afterArr = ['1', '2', 'i', '3'];
                 expect(applyDeltaArrOps(beforeArr, [addOp])).to.deep.equal(afterArr);
             });
 
@@ -31,8 +31,8 @@ describe('Diff Key Array', function () {
                         index: 3
                     }
                 ];
-                let beforeArr = [1, 2, 3];
-                let afterArr = [1, 2, 'i', 'j', 3];
+                let beforeArr = ['1', '2', '3'];
+                let afterArr = ['1', '2', 'i', 'j', '3'];
                 expect(applyDeltaArrOps(beforeArr, addOps)).to.deep.equal(afterArr);
             });
 
@@ -49,8 +49,8 @@ describe('Diff Key Array', function () {
                         index: 4
                     }
                 ];
-                let beforeArr = [1, 2, 3];
-                let afterArr = [1, 2, 'i', 3, 'j'];
+                let beforeArr = ['1', '2', '3'];
+                let afterArr = ['1', '2', 'i', '3', 'j'];
                 expect(applyDeltaArrOps(beforeArr, addOps)).to.deep.equal(afterArr);
             });
         });
@@ -58,49 +58,49 @@ describe('Diff Key Array', function () {
             it('should delete a single element', function () {
                 let deleteOps: DeltaArrOp[] = [
                     {
-                        val: 3,
+                        val: '3',
                         op: 'DELETE',
                         index: 2
                     }
                 ];
-                let beforeArr = [1, 2, 3, 4];
-                let afterArr = [1, 2, 4];
+                let beforeArr = ['1', '2', '3', '4'];
+                let afterArr = ['1', '2', '4'];
                 expect(applyDeltaArrOps(beforeArr, deleteOps)).to.deep.equal(afterArr);
             });
 
             it('should delete two consecutive elements', function () {
                 let deleteOps: DeltaArrOp[] = [
                     {
-                        val: 2,
+                        val: '2',
                         op: 'DELETE',
                         index: 1
                     },
                     {
-                        val: 3,
+                        val: '3',
                         op: 'DELETE',
                         index: 1
                     }
                 ];
-                let beforeArr = [1, 2, 3, 4];
-                let afterArr = [1, 4];
+                let beforeArr = ['1', '2', '3', '4'];
+                let afterArr = ['1', '4'];
                 expect(applyDeltaArrOps(beforeArr, deleteOps)).to.deep.equal(afterArr);
             });
 
             it('should delete two non consecutive elements', function () {
                 let deleteOps: DeltaArrOp[] = [
                     {
-                        val: 1,
+                        val: '1',
                         op: 'DELETE',
                         index: 0
                     },
                     {
-                        val: 3,
+                        val: '3',
                         op: 'DELETE',
                         index: 1
                     }
                 ];
-                let beforeArr = [1, 2, 3, 4];
-                let afterArr = [2, 4];
+                let beforeArr = ['1', '2', '3', '4'];
+                let afterArr = ['2', '4'];
                 expect(applyDeltaArrOps(beforeArr, deleteOps)).to.deep.equal(afterArr);
             });
         });
@@ -114,8 +114,8 @@ describe('Diff Key Array', function () {
                         index: 3
                     }
                 ];
-                let beforeArr = [1, 2, 3, 4];
-                let afterArr = [2, 3, 4, 1];
+                let beforeArr = ['1', '2', '3', '4'];
+                let afterArr = ['2', '3', '4', '1'];
                 expect(applyDeltaArrOps(beforeArr, moveOps)).to.deep.equal(afterArr);
             });
 
@@ -132,8 +132,8 @@ describe('Diff Key Array', function () {
                         index: 3
                     }
                 ];
-                let beforeArr = [1, 2, 3, 4, 5];
-                let afterArr = [1, 4, 2, 3, 5];
+                let beforeArr = ['1', '2', '3', '4', '5'];
+                let afterArr = ['1', '4', '2', '3', '5'];
                 expect(applyDeltaArrOps(beforeArr, moveOps)).to.deep.equal(afterArr);
             });
 
@@ -150,8 +150,8 @@ describe('Diff Key Array', function () {
                         index: 1
                     }
                 ];
-                let beforeArr = [1, 2, 3, 4];
-                let afterArr = [1, 4, 3, 2];
+                let beforeArr = ['1', '2', '3', '4'];
+                let afterArr = ['1', '4', '3', '2'];
                 expect(applyDeltaArrOps(beforeArr, moveOps)).to.deep.equal(afterArr);
             });
         });
@@ -159,11 +159,11 @@ describe('Diff Key Array', function () {
     describe('determine operations', function () {
         describe('determine insert operations diff', function () {
             it('should determine the diff and operations to add a single key element', function () {
-                let beforeArr = [0, 1, 2, 4];
-                let afterArr = [0, 1, 2, 3, 4];
+                let beforeArr = ['0', '1', '2', '4'];
+                let afterArr = ['0', '1', '2', '3', '4'];
                 let ops = [
                     {
-                        val: 3,
+                        val: '3',
                         index: 3,
                         op: 'ADD'
                     }
@@ -173,16 +173,16 @@ describe('Diff Key Array', function () {
             });
 
             it('should determine the diff and operations needed to add two non consecutive elements from the array', function () {
-                let beforeArr = [0, 2, 4];
-                let afterArr = [0, 1, 2, 3, 4];
+                let beforeArr = ['0', '2', '4'];
+                let afterArr = ['0', '1', '2', '3', '4'];
                 let ops = [
                     {
-                        val: 1,
+                        val: '1',
                         index: 1,
                         op: 'ADD'
                     },
                     {
-                        val: 3,
+                        val: '3',
                         index: 3,
                         op: 'ADD'
                     }
@@ -190,16 +190,16 @@ describe('Diff Key Array', function () {
                 expect(deltaArrayDiff(beforeArr, afterArr)).to.deep.equal(ops);
             });
             it('should determine the diff and operations needed to add two consecutive keys from the array', function () {
-                let beforeArr = [0, 1, 4];
-                let afterArr = [0, 1, 2, 3, 4];
+                let beforeArr = ['0', '1', '4'];
+                let afterArr = ['0', '1', '2', '3', '4'];
                 let ops = [
                     {
-                        val: 2,
+                        val: '2',
                         index: 2,
                         op: 'ADD'
                     },
                     {
-                        val: 3,
+                        val: '3',
                         index: 3,
                         op: 'ADD'
                     }
@@ -209,11 +209,11 @@ describe('Diff Key Array', function () {
         });
         describe('delete operations', function () {
             it('should determine the diff and operations to remove a single key element', function () {
-                let beforeArr = [0, 1, 2, 3, 4];
-                let afterArr = [0, 1, 2, 4];
+                let beforeArr = ['0', '1', '2', '3', '4'];
+                let afterArr = ['0', '1', '2', '4'];
                 let ops = [
                     {
-                        val: 3,
+                        val: '3',
                         index: 3,
                         op: 'DELETE'
                     }
@@ -222,16 +222,16 @@ describe('Diff Key Array', function () {
 
             });
             it('should determine the diff and operations needed to remove two non consecutive elements from the array', function () {
-                let beforeArr = [0, 1, 2, 3, 4];
-                let afterArr = [0, 2, 4];
+                let beforeArr = ['0', '1', '2', '3', '4'];
+                let afterArr = ['0', '2', '4'];
                 let ops = [
                     {
-                        val: 1,
+                        val: '1',
                         index: 1,
                         op: 'DELETE'
                     },
                     {
-                        val: 3,
+                        val: '3',
                         index: 2,
                         op: 'DELETE'
                     }
@@ -239,16 +239,16 @@ describe('Diff Key Array', function () {
                 expect(deltaArrayDiff(beforeArr, afterArr)).to.deep.equal(ops);
             });
             it('should determine the diff and operations needed to remove two consecutive keys from the array', function () {
-                let beforeArr = [0, 1, 2, 3, 4];
-                let afterArr = [0, 1, 4];
+                let beforeArr = ['0', '1', '2', '3', '4'];
+                let afterArr = ['0', '1', '4'];
                 let ops = [
                     {
-                        val: 2,
+                        val: '2',
                         index: 2,
                         op: 'DELETE'
                     },
                     {
-                        val: 3,
+                        val: '3',
                         index: 2,
                         op: 'DELETE'
                     }
@@ -258,8 +258,8 @@ describe('Diff Key Array', function () {
         });
         describe('move operations', function () {
             it('should determine the diff and operations to move a single key element', function () {
-                let beforeArr = [0, 1, 2, 3, 4];
-                let afterArr = [0, 1, 4, 2, 3];
+                let beforeArr = ['0', '1', '2', '3', '4'];
+                let afterArr = ['0', '1', '4', '2', '3'];
                 let ops = [
                     {
                         beforeIndex: 4,
@@ -271,9 +271,9 @@ describe('Diff Key Array', function () {
 
             });
             it('should determine the diff and operations needed to move two non consecutive elements', function () {
-                let beforeArr = [0, 1, 2, 3, 4];
+                let beforeArr = ['0', '1', '2', '3', '4'];
 
-                let afterArr = [0, 4, 2, 1, 3];
+                let afterArr = ['0', '4', '2', '1', '3'];
                 // todo log intermediate array
                 let ops = [
                     {
@@ -290,16 +290,16 @@ describe('Diff Key Array', function () {
                 expect(deltaArrayDiff(beforeArr, afterArr)).to.deep.equal(ops);
             });
             it('should determine the diff and operations needed to remove two consecutive keys from the array', function () {
-                let beforeArr = [0, 1, 2, 3, 4];
-                let afterArr = [0, 1, 4];
+                let beforeArr = ['0', '1', '2', '3', '4'];
+                let afterArr = ['0', '1', '4'];
                 let ops = [
                     {
-                        val: 2,
+                        val: '2',
                         index: 2,
                         op: 'DELETE'
                     },
                     {
-                        val: 3,
+                        val: '3',
                         index: 2,
                         op: 'DELETE'
                     }
@@ -321,16 +321,16 @@ describe('Diff Key Array', function () {
                         op: "MOVE"
                     }
                 ];
-                expect(deltaArrayDiff([1, 2, 3, 4], [2, 3, 1, 4])).to.deep.equal(ops);
+                expect(deltaArrayDiff(['1', '2', '3', '4'], ['2', '3', '1', '4'])).to.deep.equal(ops);
             });
 
-            it('should determine one delete operation, one add operation, and move operations', function(){
-                let beforeArr = [1, 2, 3];
-                let afterArr = ['add', 3, 2];
+            it('should determine one delete operation, one add operation, and move operations', function () {
+                let beforeArr = ['1', '2', '3'];
+                let afterArr = ['add', '3', '2'];
                 let ops: DeltaArrOp[] = [
                     {
                         index: 0,
-                        val: 1,
+                        val: '1',
                         op: "DELETE"
                     },
                     {

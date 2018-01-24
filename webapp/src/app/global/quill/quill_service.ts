@@ -53,7 +53,8 @@ export class QuillService {
         return {
             editorJson: new Delta(),
             lastModifiedAt: new Date(),
-            id
+            id,
+            version: "0"
         };
     }
 }

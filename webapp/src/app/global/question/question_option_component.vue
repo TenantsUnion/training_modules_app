@@ -31,7 +31,7 @@
     import Component from "vue-class-component";
     import {Watch} from "vue-property-decorator";
     import {QuestionOptionQuillData} from "@shared/questions";
-    import {QuillComponent} from "../quill/quill_component";
+    import QuillComponent from "../quill/quill_component";
     import SwitchCheckboxComponent from "../switch_checkbox/switch_checkbox";
 
 
@@ -61,10 +61,12 @@
                 id: this.option.id,
                 option: {
                     id: this.option.option.id,
+                    version: "0",
                     editorJson: (<QuillComponent> this.$refs.option).getQuillEditorContents()
                 },
                 explanation: {
                     id: this.option.explanation.id,
+                    version: "0",
                     editorJson: (<QuillComponent> this.$refs.option).getQuillEditorContents()
                 }
             };
