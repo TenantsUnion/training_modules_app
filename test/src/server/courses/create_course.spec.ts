@@ -1,23 +1,25 @@
 import {expect} from 'chai';
 import {
     AdminCourseDescription, CourseEntityCommandMetadata, CreateCourseEntityCommand
-} from '../../../../shared/courses';
+} from '@shared/courses';
 import {coursesHandler, coursesViewHandler} from '../../../../server/src/config/handler_config';
-import {QuillEditorData} from '../../../../shared/quill_editor';
+import {QuillEditorData} from '@shared/quill_editor';
 import * as Delta from 'quill-delta';
 import {clearData} from '../test_db_util';
-import {IUserInfo} from '../../../../shared/user';
+import {IUserInfo} from '@shared/user';
 import {createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from './test_course_util';
 
 describe('Course Handler: Create Course', function () {
     let timestamp = new Date().toUTCString();
     let editorJson1: QuillEditorData = {
         id: 'NEW-0',
+        version: "0",
         editorJson: new Delta(),
         lastModifiedAt: new Date()
     };
     let editorJson2: QuillEditorData = {
         id: 'NEW-1',
+        version: "0",
         editorJson: new Delta().insert('editor json 2'),
         lastModifiedAt: new Date()
     };
