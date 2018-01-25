@@ -4,7 +4,7 @@ import {Watch} from "vue-property-decorator";
 import {QuestionOptionQuillData} from "@shared/questions";
 import QuillComponent from "../quill/quill_component";
 import SwitchCheckboxComponent from "../switch_checkbox/switch_checkbox";
-import {QuillDeltaMap} from '@shared/quill_editor';
+import {isCreatedQuestionOptionPlaceholderId, QuillDeltaMap} from '@shared/quill_editor';
 
 
 @Component({
@@ -46,7 +46,6 @@ export class QuestionOptionComponent extends Vue {
     isCorrectAnswer(): boolean {
         return (<SwitchCheckboxComponent> this.$refs.correctSwitch).isChecked();
     }
-
 }
 
 export default QuestionOptionComponent;

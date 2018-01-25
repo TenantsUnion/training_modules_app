@@ -81,7 +81,7 @@ export default class SegmentViewerComponent extends Vue {
         let questionRefs: QuestionComponent[] = this.$refs.question ? <QuestionComponent[]> this.$refs.question : [];
 
         questionRefs.reduce((acc, questionComponent) => {
-            let questionChanges: QuestionChanges = questionComponent.diffStoredCurrent();
+            let questionChanges: QuestionChanges = questionComponent.diffQuestion();
             return acc;
         }, {});
 

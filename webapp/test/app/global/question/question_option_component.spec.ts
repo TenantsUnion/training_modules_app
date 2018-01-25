@@ -8,7 +8,6 @@ import {SegmentArrayElement} from '@shared/segment';
 import QuillComponent from '@global/quill/quill_component';
 import {Quill} from 'quill';
 import SwitchCheckboxComponent from '@global/switch_checkbox/switch_checkbox';
-import Vue from 'vue';
 
 let Delta: Quill.DeltaStatic = Quill.import('delta');
 

@@ -29,16 +29,16 @@ export interface QuestionEntity {
 
 export interface QuestionData {
     id: string;
-    version: number | string;
+    version: string;
     questionType: QuestionType,
     answerType: AnswerType,
     randomizeOptionOrder: boolean,
     answerInOrder: boolean,
     canPickMultiple: boolean,
-    createdAt: Date, // date?
-    lastModifiedAt: Date
-    correctOptionIds: (string | number)[],
-    optionIds: (string | number)[],
+    correctOptionIds: string[],
+    optionIds: string[],
+    createdAt?: Date, // date?
+    lastModifiedAt?: Date
 }
 
 export interface QuestionTransferData extends QuestionData {
@@ -117,13 +117,12 @@ export type OptionChangesObj = {
 
 export type QuestionChanges = {
     // updates covered by overall quill changes so need to only deal with add and remove
-    optionChangesObject?: OptionChangesObj,
-
+    optionChangesObject: OptionChangesObj,
     questionQuillId?: string,
     questionType?: QuestionType,
     answerType?: AnswerType,
-    optionIds?: DeltaArrOp[],
-    correctOptionIds?: DeltaArrOp[],
+    optionIds: DeltaArrOp[],
+    correctOptionIds: DeltaArrOp[],
     randomizeOptionOrder?: boolean,
     answerInOrder?: boolean,
     canPickMultiple?: boolean,

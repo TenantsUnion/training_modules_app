@@ -1,19 +1,32 @@
+import * as _ from 'underscore';
 import Vue from 'vue';
 import Quill from 'quill';
 import Component from "vue-class-component";
-import {QuestionChanges, QuestionOptionQuillData, QuestionQuillData} from "@shared/questions";
+import {
+    OptionChangesObj, OptionQuillIdsObj, QuestionChanges, QuestionOptionQuillData,
+    QuestionQuillData
+} from "@shared/questions";
 import {Watch} from "vue-property-decorator";
 import {
-    createdQuestionOptionPlaceholderId, createdQuillPlaceholderId,
+    createdQuestionOptionPlaceholderId, createdQuillPlaceholderId, isCreatedQuestionOptionPlaceholderId,
     isCreatedQuestionPlaceholderId, QuillDeltaMap
 } from "@shared/quill_editor";
 import DeltaStatic = Quill.DeltaStatic;
 import {SegmentArrayElement} from "@shared/segment";
-import QuestionOptionComponent from "./question_option_component.vue";
+import VueQuestionOptionComponent from "./question_option_component.vue";
+import {QuestionOptionComponent} from '@global/question/question_option_component';
+import {FormState} from '../../vue-form';
+import QuillComponent from '@global/quill/quill_component';
+import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 
 let Delta: DeltaStatic = Quill.import('delta');
 
 @Component({
+    data: () => {
+        return {
+            formstate: {}
+        };
+    },
     props: {
         storedQuestion: {
             type: Object,
@@ -25,26 +38,44 @@ let Delta: DeltaStatic = Quill.import('delta');
         }
     },
     components: {
-        'question-option': QuestionOptionComponent
+        'question-option': VueQuestionOptionComponent
     }
 })
-export default class QuestionComponent extends Vue {
+export class QuestionComponent extends Vue {
     storedQuestion: QuestionQuillData;
     question: QuestionQuillData = null;
     options: (QuestionOptionQuillData & SegmentArrayElement)[] = [];
+    formstate: FormState;
 
     @Watch('storedQuestion', {immediate: true})
     updateQuestion(incomingQuestion) {
         this.question = {...incomingQuestion};
-        this.options = this.question.options;
+        this.options = [...this.question.options];
     }
 
     getCurrentQuestion(): QuestionQuillData {
         return {...this.question, options: this.options};
     }
 
-    getQuestionQuillDeltaMapDiff(): QuillDeltaMap {
-        return null;
+    quillChanges(): QuillDeltaMap {
+        let questionQuill = (<QuillComponent> this.$refs.questionQuill);
+        let changes = {};
+
+        if (questionQuill.hasChanged()) {
+            changes[this.question.questionQuill.id] = questionQuill.getChanges();
+        }
+
+        if (_.isArray(this.$refs.optionRefs)) {
+            return (<QuestionOptionComponent[]> this.$refs.optionRefs)
+                .map((option) => option.quillChanges())
+                .reduce((acc, el) => {
+                    return {...acc, ...el};
+                }, changes);
+        } else if (_.isObject(this.$refs.optionRefs)) {
+            return {...changes, ...(<QuestionOptionComponent> this.$refs.optionRefs).quillChanges()};
+        } else {
+            return changes
+        }
     }
 
     addOption() {
@@ -68,47 +99,39 @@ export default class QuestionComponent extends Vue {
                 this.options.splice(rmIndex, 1);
             }
         });
-
-        this.question.optionIds.push(id);
     }
 
     isCorrectOption(option: QuestionOptionQuillData) {
         return this.question.correctOptionIds.indexOf(option.id) !== -1;
     }
 
-    diffStoredCurrent(): QuestionChanges {
+    diffQuestion(): QuestionChanges {
         if (isCreatedQuestionPlaceholderId(this.question.id)) {
-            // export interface QuestionQuillData extends QuestionData {
-            //     questionQuill: QuillEditorData;
-            //     options: QuestionOptionQuillData[];
-            // }
+            const {storedQuestion, options} = this;
+            const {
+                questionType, answerType, randomizeOptionOrder,
+                canPickMultiple, answerInOrder, questionQuill
+            } = this.question;
 
-            // export interface QuestionData {
-            //     id: string;
-            //     version: number | string;
-            //     questionType: QuestionType,
-            //     answerType: AnswerType,
-            //     randomizeOptionOrder: boolean,
-            //     answerInOrder: boolean,
-            //     canPickMultiple: boolean,
-            //     createdAt: Date, // date?
-            //     lastModifiedAt: Date
-            //     correctOptionIds: (string | number)[],
-            //     optionIds: (string | number)[],
-            // }
-            // let  = this.$refs.optionCorrect
-            let optionIds = this.options
+            const optionIds = deltaArrayDiff(storedQuestion.optionIds, options.map(({id}) => id));
+            const correctOptionIds = deltaArrayDiff(storedQuestion.correctOptionIds, this.optionRefs
+                .filter((option) => option.isCorrectAnswer())
+                .map((option) => option.option.id));
 
-            let {questionType, answerType, randomizeOptionOrder, canPickMultiple, answerInOrder, questionQuill} = this.question;
+            const optionChangesObject: OptionChangesObj = this.optionRefs.reduce((acc, {option}) => {
+                if (isCreatedQuestionOptionPlaceholderId(option.id)) {
+                    acc[option.id] = <OptionQuillIdsObj> {
+                        optionQuillId: option.option.id,
+                        explanationQuillId: option.explanation.id
+                    };
+                }
+                return acc;
+            }, {});
+
             let questionChanges: QuestionChanges = {
                 questionType, answerType, randomizeOptionOrder, canPickMultiple, answerInOrder,
                 questionQuillId: questionQuill.id,
-                // updates covered by overall quill changes so need to only deal with add and remove
-
-                // optionChangesObject:,
-                // optionIds: DeltaArrOp[],
-                // optionIds: deltaArrayDiff([], createdQuillQuestion.options.map(({id}) => id)),
-                // correctOptionIds: deltaArrayDiff([], createdQuillQuestion.options.filter(({}) =>).options.map(({id}) => id)),
+                optionIds, correctOptionIds, optionChangesObject
             };
 
             return questionChanges
@@ -116,4 +139,16 @@ export default class QuestionComponent extends Vue {
         }
         return null;
     }
+
+    get optionRefs(): QuestionOptionComponent[] {
+        if (_.isArray(this.$refs.optionRefs)) {
+            return (<QuestionOptionComponent[]>this.$refs.optionRefs);
+        } else if (_.isObject(this.$refs.optionRefs)) {
+            return [(<QuestionOptionComponent> this.$refs.optionRefs)];
+        } else {
+            return [];
+        }
+    }
 }
+
+export default QuestionComponent;
