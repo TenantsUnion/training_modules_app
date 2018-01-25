@@ -5,17 +5,15 @@ import {AnswerType, QuestionChanges, QuestionOptionQuillData, QuestionQuillData,
 import {createdQuestionPlaceholderId, createdQuillPlaceholderId} from '@shared/quill_editor';
 import Quill from 'quill';
 
-import DeltaStatic = Quill.DeltaStatic;
 import QuillComponent from '@global/quill/quill_component';
 import QuestionOptionComponent from '@global/question/question_option_component';
 import Vue from 'vue';
 import {addDeltaArrOp} from '@shared/delta/diff_key_array';
-import SwitchCheckboxComponent from '@global/switch_checkbox/switch_checkbox';
+import {setOptionIsCorrect} from '../../../util/test_question_util';
 
-let Delta: DeltaStatic = Quill.import('delta');
+let Delta: Quill.DeltaStatic = Quill.import('delta');
 
 describe('Question Component', function () {
-
 
     const questionQuillId = createdQuillPlaceholderId();
     const storedQuestion: QuestionQuillData = {
@@ -141,7 +139,7 @@ describe('Question Component', function () {
             await Vue.nextTick();
             const firstOption = questionComponent.options[0];
             const secondOption = questionComponent.options[1];
-            (<SwitchCheckboxComponent> questionComponent.optionRefs[1].$refs.correctSwitch).vmChecked = true;
+            setOptionIsCorrect(questionComponent, 1, true);
 
             let questionChanges: QuestionChanges = questionComponent.diffQuestion();
             expect(questionChanges).to.deep.eq(<QuestionChanges>{
