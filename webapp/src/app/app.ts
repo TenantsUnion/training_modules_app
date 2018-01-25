@@ -31,10 +31,10 @@ appRouter.addRoutes([
 //     }
 // });
 
+registerGlobalComponents();
 let app = new Vue({
     components: {},
     router: appRouter,
     store: store,
 }).$mount('#app');
 
-registerGlobalComponents();

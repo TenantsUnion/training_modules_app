@@ -31,7 +31,7 @@ const Delta = Quill.import('delta');
         },
     }
 })
-export default class SegmentViewerComponent extends Vue {
+export default class TrainingSegmentComponent extends Vue {
     storedSegments: (ContentSegment | QuestionSegment)[];
     currentSegments: ((ContentSegment | QuestionSegment) & SegmentArrayElement)[] = [];
 

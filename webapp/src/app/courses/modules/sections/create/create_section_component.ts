@@ -3,10 +3,10 @@ import Vue from 'vue';
 import * as VueForm from '../../../../vue-form';
 import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
 import {Segment} from '@shared/segment';
-import SegmentViewerComponent from '../../../../global/segment_viewer/segment_viewer_component';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {CreateSectionEntityPayload} from '@shared/sections';
 import {currentModuleRouteGuard} from '../../module_details_component/module_details_component';
+import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
 
 @Component({
     data: () => {
@@ -49,7 +49,7 @@ export class CreateSectionComponent extends Vue {
                 timeEstimate: this.timeEstimate,
                 courseId: this.$store.state.course.currentCourseId,
                 moduleId: currentModuleId,
-                contentQuestions: (<SegmentViewerComponent> this.$refs.segmentViewer).getContentQuestionsDelta(),
+                contentQuestions: (<TrainingSegmentComponent> this.$refs.trainingSegment).getContentQuestionsDelta(),
             };
             await this.$store.dispatch(SECTION_ACTIONS.CREATE_SECTION, createSectionPayload);
 

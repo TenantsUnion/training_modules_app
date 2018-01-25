@@ -6,7 +6,7 @@ import axios, {AxiosRequestConfig} from "axios";
 import LoadingComponent from './global/loading.vue';
 import TimeEstimateComponent from './global/time_estimate/time_estimate_component.vue';
 import QuillComponent from './global/quill/quill_component.vue';
-import SegmentViewerComponent from './global/segment_viewer/segment_viewer_component.vue';
+import TrainingSegmentComponent from './global/training_segments/training_segments_component.vue';
 import QuestionComponent from "./global/question/question_component.vue";
 import SwitchCheckBoxComponent from './global/switch_checkbox/switch_checkbox.vue';
 import {AppHeader} from './user/header/user_header_component';
@@ -26,7 +26,7 @@ export const registerGlobalComponents = () => {
     Vue.component('time-estimate', TimeEstimateComponent);
     Vue.component('quill-editor', QuillComponent);
     Vue.component('question', QuestionComponent);
-    Vue.component('segment-viewer', SegmentViewerComponent);
+    Vue.component('training-segments', TrainingSegmentComponent);
     Vue.component('switch-checkbox', SwitchCheckBoxComponent);
     Vue.component('app-header', AppHeader);
 

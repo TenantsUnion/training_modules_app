@@ -53,7 +53,7 @@
                         </div>
                         <div class="row">
                             <div class="columns small-12 large-10">
-                                <segment-viewer :stored-segments="quillContent" ref="segmentViewer"></segment-viewer>
+                                <training-segments :stored-segments="quillContent" ref="trainingSegment"></training-segments>
                             </div>
                         </div>
                         <div class="row">
@@ -72,12 +72,12 @@
     import Vue from "vue";
     import Component from "vue-class-component";
     import {CreateCourseEntityPayload} from '@shared/courses';
-    import SegmentViewerComponent from '../../global/segment_viewer/segment_viewer_component';
     import {FormState} from '../../vue-form';
     import {Segment} from '@shared/segment';
     import {COURSE_ACTIONS} from '../store/course/course_actions';
     import {appRouter} from '../../router';
     import {COURSES_ROUTE_NAMES} from '../courses_routes';
+    import TrainingSegmentComponent from '../../global/training_segments/training_segments_component';
 
     @Component({
         data: () => {
@@ -117,7 +117,7 @@
                 timeEstimate: this.course.timeEstimate,
                 active: this.course.active,
                 openEnrollment: this.course.openEnrollment,
-                contentQuestions: (<SegmentViewerComponent> this.$refs.segmentViewer).getContentQuestionsDelta(),
+                contentQuestions: (<TrainingSegmentComponent> this.$refs.trainingSegment).getContentQuestionsDelta(),
                 description: this.course.description
             };
             try {

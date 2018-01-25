@@ -3,8 +3,7 @@ import Quill from "quill";
 import Vue from "vue";
 import Component from "vue-class-component";
 import {DeltaStatic, Sources} from "quill";
-import {DeltaArrOp} from '@shared/delta/diff_key_array';
-import {isNotEmptyQuillData} from '@global/segment_viewer/segment_viewer_component';
+import {isNotEmptyQuillData} from '@global/training_segments/training_segments_component';
 
 
 const BackgroundClass = Quill.import('attributors/class/background');

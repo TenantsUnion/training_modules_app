@@ -24,4 +24,4 @@
         </div>
     </div>
 </template>
-<script lang="ts" src="./segment_viewer_component.ts"></script>
+<script lang="ts" src="./training_segments_component.ts"></script>

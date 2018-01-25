@@ -2,20 +2,20 @@ import * as _ from 'underscore';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import * as VueForm from '../../../../vue-form';
-import {SaveSectionEntityPayload, ViewSectionQuillData} from '../../../../../../../shared/sections';
-import {CourseRefreshComponent} from '../../../../global/refresh_route';
+import {SaveSectionEntityPayload, ViewSectionQuillData} from '@shared/sections';
+import {CourseRefreshComponent} from '@global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '../../../../state_store';
 import {currentSectionRouteGuard} from '../view/view_section_component';
-import {Segment} from '../../../../../../../shared/segment';
+import {Segment} from '@shared/segment';
 import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
 import {Watch} from 'vue-property-decorator';
-import {diffBasicPropsTrainingEntity} from '../../../../../../../shared/delta/diff_delta';
+import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
-import SegmentViewerComponent from '../../../../global/segment_viewer/segment_viewer_component';
-import {deltaArrayDiff} from '../../../../../../../shared/delta/diff_key_array';
-import {TrainingEntityDiffDelta} from '../../../../../../../shared/training_entity';
+import {deltaArrayDiff} from '@shared/delta/diff_key_array';
+import {TrainingEntityDiffDelta} from '@shared/training_entity';
 import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
+import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
 
 @Component({
     data: () => {
@@ -81,7 +81,7 @@ export class EditSectionComponent extends Vue {
         let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.currentSection, this.section);
 
         // quill content diff
-        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).calculateQuillDiff();
+        changes.quillChanges = (<TrainingSegmentComponent> this.$refs.trainingSegment).calculateQuillDiff();
 
         // ordered content ids diff
         let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);

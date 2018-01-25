@@ -2,19 +2,19 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {COURSES_ROUTE_NAMES} from '../courses_routes';
 import * as _ from "underscore";
-import {Segment} from '../../../../../shared/segment';
-import SegmentViewerComponent from '../../global/segment_viewer/segment_viewer_component';
+import {Segment} from '@shared/segment';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '../../state_store';
 import {Watch} from 'vue-property-decorator';
 import * as VueForm from '../../vue-form';
-import {deltaArrayDiff} from '../../../../../shared/delta/diff_key_array';
+import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {COURSE_ACTIONS} from '../store/course/course_actions';
 import {
     CourseEntityDiffDelta, diffBasicPropsCourseProps, SaveCourseEntityPayload,
     ViewCourseQuillData
-} from '../../../../../shared/courses';
+} from '@shared/courses';
 import {getSlugFromCourseIdFn} from '../store/courses_listing/courses_listing_store';
+import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
 
 let Delta = Quill.import('delta');
 
@@ -77,7 +77,7 @@ export class EditCourseComponent extends Vue {
         let changes: CourseEntityDiffDelta = diffBasicPropsCourseProps(this.currentCourse, this.course);
 
         // quill content diff
-        changes.quillChanges = (<SegmentViewerComponent> this.$refs.segmentViewer).calculateQuillDiff();
+        changes.quillChanges = (<TrainingSegmentComponent> this.$refs.trainingSegment).calculateQuillDiff();
 
         // ordered content ids diff
         let userChangedOrderedContentIds: string[] = this.quillContent.map(({id}) => id);

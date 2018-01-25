@@ -1,10 +1,10 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import * as VueForm from "../../../vue-form";
-import {MODULE_ACTIONS, ModuleActions} from '../../store/module/module_actions';
+import {MODULE_ACTIONS} from '../../store/module/module_actions';
 import {Segment} from '@shared/segment';
 import {COURSES_ROUTE_NAMES} from '../../courses_routes';
-import SegmentViewerComponent from '../../../global/segment_viewer/segment_viewer_component';
+import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
 
 @Component({
     data: () => {
@@ -44,7 +44,7 @@ export class CreateModuleComponent extends Vue {
                 description: this.description,
                 timeEstimate: this.timeEstimate,
                 courseId: this.$store.state.course.currentCourseId,
-                orderedContentQuestions: (<SegmentViewerComponent> this.$refs.segmentViewer).getContents(),
+                orderedContentQuestions: (<TrainingSegmentComponent> this.$refs.trainingSegment).getContents(),
             };
             await this.$store.dispatch(MODULE_ACTIONS.CREATE_MODULE, createModulePayload);
 
