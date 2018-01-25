@@ -1,11 +1,9 @@
 // karma.conf.js
-process.env.CHROME_BIN = require('puppeteer').executablePath();
+console.log(`$CHROME_BIN executable path ${process.env.CHROME_BIN}`);
+const puppeteer = require('puppeteer');
+console.log(`Puppeteer executable path ${puppeteer.executablePath()}`);
+process.env.CHROME_BIN = puppeteer.executablePath();
 
-// module.exports = function(config) {
-//   config.set({
-//     browsers: ['ChromeHeadless']
-//   })
-// }
 var webpackConfig = require('../webpack/test.webpack.config');
 // reset entry since path would be wrong and it doesn't apply
 
