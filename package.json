@@ -17,17 +17,22 @@
     "watch": "concurrently -k -p \"[{name}]\" -n \"Server-Build,Server,Webpack\" -c \"cyan.bold,green.bold,yellow.bold\"  \"npm run watch-server\" \"npm run nodemon-start\" \"npm run webpack-dev\"",
     "watch-server": "tsc --watch --project server/tsconfig.json --outDir server/dist",
     "nodemon-start": "cross-env NODE_CONFIG_DIR=./config nodemon --watch server/dist/ --signal SIGHUP --delay 1500ms --exec npm run start",
+
+    "test": "npm run test-server && npm run test-karma",
+    "test-server": "npm run test_init_db && cross-env COMMAND='mocha test/**/*.ts' npm run test-command",
+    "test-karma": "cross-env COMMAND='karma start webapp/test/karma.unit.js --singleRun' npm run test-command",
+
     "test-task": "cross-env NODE_ENV=test npm run $TASK_NAME",
     "test-command": "cross-env NODE_ENV=test $COMMAND",
+
     "test_init_db": "cross-env SCRIPT_NAME=init_test_db TASK_NAME=esm_entry npm run test-task && npm run test_migrate_db",
     "test_migrate_db": "cross-env TASK_NAME=migrate_db npm run test-task",
     "test_drop_db": "cross-env TASK_NAME=drop_db npm run test-task",
-    "test": "npm run test_init_db && cross-env COMMAND='mocha test/**/*.ts' npm run test-command",
-    "test-karma": "cross-env COMMAND='karma start webapp/test/karma.unit.js' npm run test-command",
-    "test-pupppeteer": "cross-env COMMAND='node webapp/test/puppeteer_karma.js' npm run test-command",
-    "test-watch": "npm run test_init_db && COMMAD='mocha -R min test/**/*.spec.ts' npm run test-command",
-    "rm_ide_compiled_ts": "./bin/rm_ide_compiled_ts.sh",
-    "webpack": "webpack"
+
+    "test-server-dev": "npm run test_init_db && COMMAD='mocha -R min test/**/*.spec.ts' npm run test-command",
+    "test-karma-dev": "cross-env COMMAND='karma start webapp/test/karma.unit.js' npm run test-command",
+
+    "rm_ide_compiled_ts": "./bin/rm_ide_compiled_ts.sh"
   },
   "repository": {
     "type": "git",
