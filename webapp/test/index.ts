@@ -5,12 +5,6 @@ import Vue from 'vue'
  */
 Vue.config.productionTip = false;
 
-// require global sass files that would otherwise be imported in app entry point
-// load javascript functionality for foundation
-// require('foundation-sites');
-// // entry point for loading sass files
-// require('../src/app/_style.scss');
-
 // require all test files (files that ends with .spec.js)
 const testsContext = (<any>require).context('.', true, /\.spec\.ts$/);
 testsContext.keys().forEach(testsContext);

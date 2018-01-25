@@ -1,7 +1,9 @@
-// karma.conf.js
-console.log(`$CHROME_BIN executable path ${process.env.CHROME_BIN}`);
 const puppeteer = require('puppeteer');
-console.log(`Puppeteer executable path ${puppeteer.executablePath()}`);
+console.log(`
+    CHROME_BIN executable path ${process.env.CHROME_BIN}
+    Puppeteer executable path ${puppeteer.executablePath()}
+    Setting CHROME_BIN to ${puppeteer.executablePath()}
+`);
 process.env.CHROME_BIN = puppeteer.executablePath();
 
 var webpackConfig = require('../webpack/test.webpack.config');
@@ -26,12 +28,6 @@ module.exports = function (config) {
             },
             {
                 pattern: './test/**/*',
-                watched: false,
-                included: false,
-                served: true
-            },
-            {
-                pattern: './dist/**/*',
                 watched: false,
                 included: false,
                 served: true
