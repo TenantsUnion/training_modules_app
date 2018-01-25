@@ -12,10 +12,10 @@ module.exports = function (config) {
         basePath: '../',
         frameworks: ['mocha'],
         plugins: [
-          require('karma-mocha'),
-          require('karma-webpack'),
-          require('karma-chrome-launcher'),
-          require('karma-mocha-reporter')
+            require('karma-mocha'),
+            require('karma-webpack'),
+            require('karma-chrome-launcher'),
+            require('karma-mocha-reporter')
         ],
         files: ['test/index.ts',
             {
@@ -50,7 +50,15 @@ module.exports = function (config) {
         autoWatch: true,
         colors: true,
         logLevel: config.LOG_INFO,
-        browsers: ['ChromeHeadless'],
+        browsers: ['ChromeHeadless', ''],
+        // for running in container environments like travis-ci where there is no sandbox available
+        // https://docs.travis-ci.com/user/chrome#Sandboxing
+        customLaunchers: {
+            ChromeHeadlessNoSandbox: {
+                base: 'ChromeHeadless',
+                flags: ['--no-sandbox']
+            }
+        },
         mime: {
             'text/x-typescript': ['ts']
         },
