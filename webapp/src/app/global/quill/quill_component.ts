@@ -3,6 +3,8 @@ import Quill from "quill";
 import Vue from "vue";
 import Component from "vue-class-component";
 import {DeltaStatic, Sources} from "quill";
+import {DeltaArrOp} from '@shared/delta/diff_key_array';
+import {isNotEmptyQuillData} from '@global/segment_viewer/segment_viewer_component';
 
 
 const BackgroundClass = Quill.import('attributors/class/background');
@@ -113,6 +115,15 @@ export default class QuillComponent extends Vue {
     getChanges(): Quill.DeltaStatic {
         return this.changes;
     }
+
+    /**
+     * Indicates whether any user changes have taken place
+     * @returns {boolean}
+     */
+    hasChanged(): boolean {
+        return isNotEmptyQuillData(this.changes);
+    }
+
     /**
      * Indicates that quill editor should be displayed if not in read only mode or the quill content is not
      * the initial blank state of an empty quill Editor

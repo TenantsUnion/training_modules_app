@@ -72,7 +72,7 @@ export default class QuestionComponent extends Vue {
         this.question.optionIds.push(id);
     }
 
-    optionIsAnswer(option: QuestionOptionQuillData) {
+    isCorrectOption(option: QuestionOptionQuillData) {
         return this.question.correctOptionIds.indexOf(option.id) !== -1;
     }
 

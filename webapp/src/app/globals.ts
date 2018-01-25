@@ -18,13 +18,15 @@ unTypedWindow.$ = jQuery;
 
 unTypedWindow.Quill = Quill;
 
+export const registerGlobalComponents = () => {
 //load global components
-Vue.component('loading', LoadingComponent);
-Vue.component('time-estimate', TimeEstimateComponent);
-Vue.component('quill-editor', QuillComponent);
-Vue.component('question', QuestionComponent);
-Vue.component('segment-viewer', SegmentViewerComponent);
-Vue.component('switch-checkbox', SwitchCheckBoxComponent);
+    Vue.component('loading', LoadingComponent);
+    Vue.component('time-estimate', TimeEstimateComponent);
+    Vue.component('quill-editor', QuillComponent);
+    Vue.component('question', QuestionComponent);
+    Vue.component('segment-viewer', SegmentViewerComponent);
+    Vue.component('switch-checkbox', SwitchCheckBoxComponent);
+};
 
 
 export const $ = jQuery;

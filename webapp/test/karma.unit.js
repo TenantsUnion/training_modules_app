@@ -25,13 +25,10 @@ module.exports = function (config) {
                 served: true
             }
         ],
-        plugins: [
-            'karma-chai',
-            'karma-chrome-launcher',
-            'karma-webpack',
-            'karma-mocha',
-            'karma-mocha-reporter'
-        ],
+        mochaReporter: {
+            showDiff: true,
+        },
+        reporters: ['mocha'],
         preprocessors: {
             'test/index.ts': ['webpack']
         },
@@ -42,7 +39,6 @@ module.exports = function (config) {
         logLevel: config.LOG_INFO,
         autoWatch: true,
         browsers: ['Chrome'],
-        reporters: ['mocha'],
         mime: {
             'text/x-typescript': ['ts']
         },
@@ -50,7 +46,7 @@ module.exports = function (config) {
         // recompiles
         beforeMiddleware: [
             'webpackBlocker'
-        ]
-        // singleRun: false
+        ],
+        // singleRun: true
     });
 };

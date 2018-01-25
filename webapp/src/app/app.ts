@@ -7,6 +7,7 @@ import {LOGIN_ROUTE, loginRoutes} from "./account/account_routes";
 import {userRoutes} from "./user/user_routes";
 import {store} from "./state_store";
 import {USER_ACTIONS} from './courses/store/user/user_store';
+import {registerGlobalComponents} from './globals';
 
 // load javascript functionality for foundation
 require('foundation-sites');
@@ -44,3 +45,5 @@ let app = new Vue({
     router: appRouter,
     store: store,
 }).$mount('#app');
+
+registerGlobalComponents();
