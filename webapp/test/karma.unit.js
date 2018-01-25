@@ -50,7 +50,7 @@ module.exports = function (config) {
         autoWatch: true,
         colors: true,
         logLevel: config.LOG_INFO,
-        browsers: ['ChromeHeadless', ''],
+        browsers: ['ChromeHeadless', 'Chrome', 'ChromeHeadlessNoSandbox'],
         // for running in container environments like travis-ci where there is no sandbox available
         // https://docs.travis-ci.com/user/chrome#Sandboxing
         customLaunchers: {
