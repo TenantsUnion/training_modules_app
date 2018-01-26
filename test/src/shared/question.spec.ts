@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {isEmptyQuestionChanges} from '@shared/questions';
 import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 
-describe.only('question utilities', function () {
+describe('question utilities', function () {
     describe('isEmptyQuestionChanges', function () {
         it('should return true when optionIds, correctOptionIds, optionChanges are empty objects and arrays', function () {
             expect(isEmptyQuestionChanges({
