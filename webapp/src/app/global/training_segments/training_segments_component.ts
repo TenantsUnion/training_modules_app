@@ -1,3 +1,4 @@
+import * as _ from 'underscore';
 import Quill from 'quill';
 import Vue from "vue";
 import Component from 'vue-class-component';
@@ -31,7 +32,7 @@ const Delta = Quill.import('delta');
         },
     }
 })
-export default class TrainingSegmentComponent extends Vue {
+export default class TrainingSegmentsComponent extends Vue {
     storedSegments: (ContentSegment | QuestionSegment)[];
     currentSegments: ((ContentSegment | QuestionSegment) & SegmentArrayElement)[] = [];
 
@@ -68,7 +69,7 @@ export default class TrainingSegmentComponent extends Vue {
         });
 
         return {
-            quillChanges: this.calculateQuillDiff(),
+            quillChanges: this.getQuillDiff(),
             questionChanges: this.getQuestionChanges(),
             orderedContentQuestionIds: contentQuestionIds,
             orderedContentIds: contentIds,
@@ -89,50 +90,25 @@ export default class TrainingSegmentComponent extends Vue {
         return {};
     }
 
+    getQuillDiff(): QuillDeltaMap {
+        return {...this.getContentQuillDiff(), ...this.getQuestionsQuillDiff()};
+    }
+
+    getQuestionsQuillDiff(): QuillDeltaMap {
+        return this.questionRefs.reduce((acc, question) => ({...acc, ...question.quillChanges()}), {});
+    }
+
     /**
      * Finds all the quill deltas that has changed for content
      * @returns {QuillDeltaMap}
      */
-    calculateQuillDiff(): QuillDeltaMap {
-        let storedQuillContent: QuillDeltaMap = quillMapFromSegments(this.storedSegments);
-
-        let contentRefs: QuillComponent[] = this.$refs.contentEditor ? <QuillComponent[]> this.$refs.contentEditor : [];
-        let questionRefs: QuestionComponent[] = this.$refs.question ? <QuestionComponent[]> this.$refs.question : [];
-
-        let currentContentQuill: QuillDeltaMap = contentRefs.reduce((acc, editor) => {
-            acc[editor.editorId] = editor.getQuillEditorContents();
-            return acc;
-        }, {});
-
-        let currentQuestionQuill: QuillDeltaMap = questionRefs
-            .map((component) => questionToQuillMap(component.getCurrentQuestion()))
-            .reduce((acc, questionQuillMap) => ({...acc, ...questionQuillMap}), {});
-
-        let currentQuillMap = {...currentContentQuill, ...currentQuestionQuill};
-
-        let quillDiff: QuillDeltaMap = Object.keys(storedQuillContent).reduce((acc, id) => {
-            let beforeQuill = storedQuillContent[id];
-            let afterQuill = currentQuillMap[id];
-            if (afterQuill) {
-                let diff = beforeQuill.diff(afterQuill);
-                if (diff.ops.length > 0) {
-                    acc[id] = diff;
-                }
+    getContentQuillDiff(): QuillDeltaMap {
+        return this.contentRefs.reduce((acc, contentQuill: QuillComponent) => {
+            if(contentQuill.hasChanged()){
+                acc[contentQuill.editorId] = contentQuill.getChanges();
             }
             return acc;
-        }, {});
-
-        // add created quill data content to quill diff
-        Object.keys(currentQuillMap)
-            .filter((quillId) => {
-                return isCreatedQuillPlaceholderId(quillId) && isNotEmptyQuillData(currentQuillMap[quillId]);
-            })
-            .reduce((acc, quillId) => {
-                acc[quillId] = currentQuillMap[quillId];
-                return acc;
-            }, quillDiff);
-
-        return quillDiff;
+        }, {})
     }
 
     isContent(segment: ContentSegment | QuestionSegment): boolean {
@@ -188,6 +164,30 @@ export default class TrainingSegmentComponent extends Vue {
             }
         });
     }
+
+    get questionRefs(): QuestionComponent[] {
+        if (_.isArray(this.$refs.segment)) {
+            return (<(QuestionComponent | QuillComponent)[]> this.$refs.segment).filter((segment, index) => {
+                return isQuestionSegment(this.currentSegments[index]);
+            }).map((questionComponent) => <QuestionComponent>questionComponent);
+        } else if (isQuestionSegment(this.currentSegments[0])) {
+            return [<QuestionComponent> this.$refs.segment];
+        } else {
+            return [];
+        }
+    }
+
+    get contentRefs(): QuillComponent[] {
+        if (_.isArray(this.$refs.segment)) {
+            return (<(QuestionComponent | QuillComponent)[]> this.$refs.segment).filter((segment, index) => {
+                return isContentSegment(this.currentSegments[index]);
+            }).map((questionComponent) => <QuillComponent>questionComponent);
+        } else if (isContentSegment(this.currentSegments[0])) {
+            return [<QuillComponent> this.$refs.segment];
+        } else {
+            return [];
+        }
+    }
 }
 
 export const isNotEmptyQuillData = (quillData: Quill.DeltaStatic): boolean => {
@@ -195,23 +195,6 @@ export const isNotEmptyQuillData = (quillData: Quill.DeltaStatic): boolean => {
         // newly created quill editor will default to single line insert operation
         return quillOp.insert !== '\n';
     });
-};
-
-/**
- * Creates a map of all quill data in the provided segments array of content, question, or a questions options
- * @param {Segment[]} segments
- * @returns {QuillDeltaMap}
- */
-const quillMapFromSegments = (segments: Segment[]): QuillDeltaMap => {
-    return segments
-        .map((segment): QuillDeltaMap => {
-            if (isQuestionSegment(segment)) {
-                return questionToQuillMap(segment.question);
-            } else if (isContentSegment(segment)) {
-                return {[segment.id]: segment.editorJson}
-            }
-        })
-        .reduce((acc, quillMap) => ({...acc, ...quillMap}), {});
 };
 
 /**

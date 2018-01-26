@@ -27,7 +27,7 @@
             <div class="grix-x">
                 <div class="cell small-12">
                     <h6 class="subheader">Options
-                        <button type="button" class="button" v-on:click="addOption">Add Option</button>
+                        <button type="button" class="button" v-on:click="addOption" ref="addOptionBtn">Add Option</button>
                     </h6>
                 </div>
             </div>

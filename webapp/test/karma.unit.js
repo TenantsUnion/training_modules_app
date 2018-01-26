@@ -34,7 +34,8 @@ module.exports = function (config) {
             }
         ],
         mochaReporter: {
-            showDiff: true,
+            showDiff: true
+
         },
         reporters: ['mocha'],
         preprocessors: {

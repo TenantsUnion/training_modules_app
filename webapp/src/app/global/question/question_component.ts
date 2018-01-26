@@ -6,7 +6,7 @@ import {
     OptionChangesObj, OptionQuillIdsObj, QuestionChanges, QuestionOptionQuillData,
     QuestionQuillData
 } from "@shared/questions";
-import {Watch} from "vue-property-decorator";
+import {Prop, Watch} from "vue-property-decorator";
 import {
     createdQuestionOptionPlaceholderId, createdQuillPlaceholderId, isCreatedQuestionOptionPlaceholderId,
     isCreatedQuestionPlaceholderId, QuillDeltaMap
@@ -27,22 +27,17 @@ let Delta: DeltaStatic = Quill.import('delta');
             formstate: {}
         };
     },
-    props: {
-        storedQuestion: {
-            type: Object,
-            required: true
-        },
-        removeCallback: {
-            type: Function,
-            required: true
-        }
-    },
     components: {
         'question-option': VueQuestionOptionComponent
     }
 })
 export class QuestionComponent extends Vue {
+    @Prop({type: Object, required: true})
     storedQuestion: QuestionQuillData;
+
+    @Prop({type: Function, required: true})
+    removeCallback: () => void;
+
     question: QuestionQuillData = null;
     options: (QuestionOptionQuillData & SegmentArrayElement)[] = [];
     formstate: FormState;
@@ -65,17 +60,9 @@ export class QuestionComponent extends Vue {
             changes[this.question.questionQuill.id] = questionQuill.getChanges();
         }
 
-        if (_.isArray(this.$refs.optionRefs)) {
-            return (<QuestionOptionComponent[]> this.$refs.optionRefs)
-                .map((option) => option.quillChanges())
-                .reduce((acc, el) => {
-                    return {...acc, ...el};
-                }, changes);
-        } else if (_.isObject(this.$refs.optionRefs)) {
-            return {...changes, ...(<QuestionOptionComponent> this.$refs.optionRefs).quillChanges()};
-        } else {
-            return changes
-        }
+        return this.optionRefs
+            .map((option) => option.quillChanges())
+            .reduce((acc, optionQuillChanges) => ({...acc, ...optionQuillChanges}), changes);
     }
 
     addOption() {

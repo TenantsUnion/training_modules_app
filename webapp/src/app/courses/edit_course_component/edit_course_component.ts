@@ -14,6 +14,7 @@ import {
     ViewCourseQuillData
 } from '@shared/courses';
 import {getSlugFromCourseIdFn} from '../store/courses_listing/courses_listing_store';
+import VueTrainingSegmentComponent from '@global/training_segments/training_segments_component.vue';
 import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
 
 let Delta = Quill.import('delta');
@@ -77,7 +78,7 @@ export class EditCourseComponent extends Vue {
         let changes: CourseEntityDiffDelta = diffBasicPropsCourseProps(this.currentCourse, this.course);
 
         // quill content diff
-        changes.quillChanges = (<TrainingSegmentComponent> this.$refs.trainingSegment).calculateQuillDiff();
+        changes.quillChanges = (<TrainingSegmentComponent> this.$refs.trainingSegment).getContentQuillDiff();
 
         // ordered content ids diff
         let userChangedOrderedContentIds: string[] = this.quillContent.map(({id}) => id);

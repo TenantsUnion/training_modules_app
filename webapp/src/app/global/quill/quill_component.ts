@@ -4,11 +4,17 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {DeltaStatic, Sources} from "quill";
 import {isNotEmptyQuillData} from '@global/training_segments/training_segments_component';
+import {Prop} from 'vue-property-decorator';
 
+// only log quill error messages if not in debug or dev mode
+if (['debug', 'dev'].indexOf(process.env.NODE_ENV) === -1) {
+    Quill.debug('error');
+}
 
 const BackgroundClass = Quill.import('attributors/class/background');
 const ColorClass = Quill.import('attributors/class/color');
 const SizeClass = Quill.import('attributors/style/size');
+
 Quill.register(BackgroundClass);
 Quill.register(ColorClass);
 Quill.register(SizeClass);
@@ -67,9 +73,6 @@ type EditorState = 'NEW' | 'CHANGED' | 'PRISTINE';
             required: false,
             default: null
         },
-        onRemove: {
-            type: Function
-        }
     },
 })
 export default class QuillComponent extends Vue {
@@ -78,7 +81,8 @@ export default class QuillComponent extends Vue {
     quill: Quill.Quill;
     readOnly: boolean;
     onChange: QuillChangeFn;
-    onRemove: () => {};
+    @Prop({type: Function})
+    onRemove: () => void;
     changes: Quill.DeltaStatic = new Delta();
 
     mounted() {
@@ -91,7 +95,7 @@ export default class QuillComponent extends Vue {
                     },
                     toolbar: this.readOnly ? false : this.$refs.toolbar,
                 },
-                debug: process.env.NODE_ENV === 'debug' ? 'info' : undefined,
+                debug: process.env.NODE_ENV === 'debug' ? 'info' : 'error',
                 readOnly: this.readOnly,
                 theme: 'snow'
             }

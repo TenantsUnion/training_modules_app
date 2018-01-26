@@ -16,6 +16,7 @@ import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {TrainingEntityDiffDelta} from '@shared/training_entity';
 import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
 import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
+import VueTrainingSegmentComponent from '@global/training_segments/training_segments_component.vue';
 
 @Component({
     data: () => {
@@ -81,7 +82,7 @@ export class EditSectionComponent extends Vue {
         let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.currentSection, this.section);
 
         // quill content diff
-        changes.quillChanges = (<TrainingSegmentComponent> this.$refs.trainingSegment).calculateQuillDiff();
+        changes.quillChanges = (<TrainingSegmentComponent> this.$refs.trainingSegment).getContentQuillDiff();
 
         // ordered content ids diff
         let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);

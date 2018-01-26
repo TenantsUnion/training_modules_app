@@ -1,22 +1,22 @@
 <template>
     <div>
         <div v-for="(segment, index) in currentSegments" :key="segment.id">
-            <quill-editor v-if="isContent(segment)" ref="contentEditor"
+            <quill-editor v-if="isContent(segment)" ref="segment"
                           :editor-json="segment.editorJson"
                           :editor-id="segment.id"
                           :on-change="segment.onChangeCallback"
                           :on-remove="segment.removeCallback"/>
-            <question v-if="isQuestion(segment)" ref="storedQuestion" :remove-callback="segment.removeCallback" :stored-question="segment.question"/>
+            <question v-if="isQuestion(segment)" ref="segment" :remove-callback="segment.removeCallback" :stored-question="segment.question"/>
         </div>
         <div class="row">
             <div class="columns small-12 medium-6">
-                <button title="Add Content" type="button" class="button" v-on:click="addContent">
+                <button title="Add Content" type="button" class="button" v-on:click="addContent" ref="addContentBtn">
                     Add Content
                     <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
                 </button>
             </div>
             <div class="columns small-12 medium-6">
-                <button title="Add Question" type="button" class="button" v-on:click="addQuestion">
+                <button title="Add Question" type="button" class="button" v-on:click="addQuestion" ref="addQuestionBtn">
                     Add Question
                     <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
                 </button>
