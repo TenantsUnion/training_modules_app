@@ -143,10 +143,23 @@ export const convertQuestionChangesToEntity = (id: string, changes: QuestionChan
     };
 };
 
-export const diffQuestionQuillData = (before: QuestionQuillData, after: QuestionQuillData): QuestionChanges => {
+export const isEmptyQuestionChanges = (questionChanges: QuestionChanges): boolean => {
+    // ignore optionChangesObject since changes will be reflected in optionIds or correctOptionIds
+    return Object.keys(questionChanges).every((key) => {
+        let val = questionChanges[key];
+        if (val instanceof Array) {
+            return val.length === 0;
+        } else if (val instanceof Object) {
+            return Object.keys(val).length === 0;
+        } else {
+            // primitive value indicates the question has changed
+            return false;
+        }
+    });
 
-    return null;
+
 };
 
 
 export type QuestionChangesObj = { [index: string]: QuestionChanges };
+
