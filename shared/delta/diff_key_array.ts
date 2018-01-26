@@ -7,6 +7,10 @@ export const addDeltaArrOp = (val: any, index: number): DeltaArrOp => {
     };
 };
 
+export const toAddDeltaArrOps = (values: any[]): DeltaArrOp[] => {
+    return values.map((val, index) => addDeltaArrOp(val, index));
+};
+
 export interface DeltaArrOp {
     val?: any,
     op: 'ADD' | 'DELETE' | 'MOVE',

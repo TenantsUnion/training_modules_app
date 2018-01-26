@@ -8,7 +8,10 @@ import {
     SegmentArrayElement
 } from '@shared/segment';
 import {ContentQuestionsDelta} from '@shared/training_entity';
-import {AnswerType, QuestionChanges, QuestionChangesObj, QuestionQuillData, QuestionType} from '@shared/questions';
+import {
+    AnswerType, isEmptyQuestionChanges, QuestionChanges, QuestionChangesObj, QuestionQuillData,
+    QuestionType
+} from '@shared/questions';
 import {
     createdQuestionPlaceholderId,
     createdQuillPlaceholderId, isCreatedQuillPlaceholderId, QuillDeltaMap
@@ -68,48 +71,46 @@ export default class TrainingSegmentsComponent extends Vue {
                 .map(({id}) => id);
         });
 
+
+        let contentQuillDiff = this.contentRefs.reduce((acc, contentQuill: QuillComponent) => {
+            if(contentQuill.hasChanged()){
+                acc[contentQuill.editorId] = contentQuill.getChanges();
+            }
+            return acc;
+        }, {});
+
+        let questionQuillDiff =this.questionRefs
+            .reduce((acc, question) => ({...acc, ...question.quillChanges()}), {});
+
+        let questionChanges = this.questionRefs.reduce((acc, question) => {
+            let questionChanges = question.diffQuestion();
+            if(!isEmptyQuestionChanges(questionChanges)){
+                acc[question.question.id] = questionChanges;
+            }
+            return acc;
+        }, {});
+
         return {
-            quillChanges: this.getQuillDiff(),
-            questionChanges: this.getQuestionChanges(),
+            quillChanges: {...contentQuillDiff, ...questionQuillDiff},
+            questionChanges,
             orderedContentQuestionIds: contentQuestionIds,
             orderedContentIds: contentIds,
             orderedQuestionIds: questionIds,
         };
     }
 
-// todo finish
-    getQuestionChanges(): QuestionChangesObj {
-        let questionRefs: QuestionComponent[] = this.$refs.question ? <QuestionComponent[]> this.$refs.question : [];
-
-        questionRefs.reduce((acc, questionComponent) => {
-            let questionChanges: QuestionChanges = questionComponent.diffQuestion();
-            return acc;
-        }, {});
-
-
-        return {};
-    }
-
-    getQuillDiff(): QuillDeltaMap {
-        return {...this.getContentQuillDiff(), ...this.getQuestionsQuillDiff()};
-    }
-
-    private getQuestionsQuillDiff(): QuillDeltaMap {
-        return this.questionRefs.reduce((acc, question) => ({...acc, ...question.quillChanges()}), {});
-    }
-
-    /**
-     * Finds all the quill deltas that has changed for content
-     * @returns {QuillDeltaMap}
-     */
-    private getContentQuillDiff(): QuillDeltaMap {
-        return this.contentRefs.reduce((acc, contentQuill: QuillComponent) => {
-            if(contentQuill.hasChanged()){
-                acc[contentQuill.editorId] = contentQuill.getChanges();
-            }
-            return acc;
-        }, {})
-    }
+    // getQuillDiff(): QuillDeltaMap {
+    //     let contentQuillDiff = this.contentRefs.reduce((acc, contentQuill: QuillComponent) => {
+    //         if(contentQuill.hasChanged()){
+    //             acc[contentQuill.editorId] = contentQuill.getChanges();
+    //         }
+    //         return acc;
+    //     }, {});
+    //
+    //     let questionQuillDiff =this.questionRefs
+    //         .reduce((acc, question) => ({...acc, ...question.quillChanges()}), {});
+    //     return {...contentQuillDiff, ...questionQuillDiff};
+    // }
 
     isContent(segment: ContentSegment | QuestionSegment): boolean {
         return isContentSegment(segment);

@@ -1,8 +1,12 @@
 import Vue from 'vue';
+import Quill from 'quill';
 import QuestionComponent from '@global/question/question_component';
 import SwitchCheckboxComponent from '@global/switch_checkbox/switch_checkbox';
-import TrainingSegmentComponents from '@global/training_segments/training_segments_component';
 import QuillComponent from '@global/quill/quill_component';
+import {QuillDeltaMap} from '@shared/quill_editor';
+import DeltaStatic = Quill.DeltaStatic;
+
+const Delta: DeltaStatic = Quill.import('delta');
 
 export const setOptionIsCorrect = (questionComponent: QuestionComponent, optionIndex: number, val: boolean) => {
     try {
@@ -29,4 +33,36 @@ export const addQuestionText = async (questionComponent: QuestionComponent, text
         (<QuillComponent>optionRefs.explanationQuill).quill.insertText(0, explanation, 'user');
     });
     await Vue.nextTick();
+};
+
+export type QuestionIdsObj = {
+    questionQuillId: string,
+    options: { explanationQuillId: string, optionQuillId }[]
+}
+
+export const quillDeltaMapFromQuestionAndText = (question: QuestionComponent, questionText: QuestionTextObj) => {
+   return deltaMapFromQuestionQuillIdsAndText(questionQuillIdsFromComponent(question), questionText);
+};
+
+export const deltaMapFromQuestionQuillIdsAndText = (question: QuestionIdsObj, questionText: QuestionTextObj): QuillDeltaMap => {
+    let changes = {
+        [question.questionQuillId]: new Delta().insert(questionText.question)
+    };
+    return question.options.reduce((acc, optionIds, index) => {
+        acc[optionIds.optionQuillId] = new Delta().insert(questionText.options[index].option);
+        acc[optionIds.explanationQuillId] = new Delta().insert(questionText.options[index].explanation);
+        return acc;
+    }, changes);
+};
+
+export const questionQuillIdsFromComponent = (question: QuestionComponent): QuestionIdsObj => {
+    return {
+        questionQuillId: question.question.questionQuill.id,
+        options: question.options.map((option) => {
+            return {
+                optionQuillId: option.option.id,
+                explanationQuillId: option.explanation.id
+            };
+        })
+    };
 };

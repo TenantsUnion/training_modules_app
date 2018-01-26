@@ -2,11 +2,13 @@ import {expect} from 'chai';
 import VueTrainingSegmentComponent from '@global/training_segments/training_segments_component.vue';
 import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
 import {ContentSegment, QuestionSegment} from '@shared/segment';
-import {addQuestionText, QuestionTextObj} from '../../../util/test_question_util';
+import {addQuestionText, QuestionTextObj, quillDeltaMapFromQuestionAndText} from '../../../util/test_question_util';
 import QuestionComponent from '@global/question/question_component';
-import {QuillDeltaMap} from '@shared/quill_editor';
 import Quill from 'quill';
 import Vue from 'vue';
+import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';
+import {ContentQuestionsDelta} from '@shared/training_entity';
+import QuillComponent from '@global/quill/quill_component';
 
 let Delta = Quill.import('delta');
 
@@ -21,174 +23,164 @@ const getMountedTrainingSegmentsComponent = (storedSegments: (ContentSegment | Q
     return el;
 };
 
-const question1Text: QuestionTextObj = {
-    question: 'Question 1 is a question??',
-    options: [{
-        option: 'Option 1 Text',
-        explanation: 'Explanation 1 Text',
-    }, {
-        option: 'Option 2 Text',
-        explanation: 'Explanation 2 Text'
-    }]
-};
-const question2Text: QuestionTextObj = {
-    question: 'Question 2 is a question??????',
-    options: [{
-        option: 'Option 3 Text',
-        explanation: 'Explanation 3 Text'
-    }, {
-
-        option: 'Option 4 Text',
-        explanation: 'Explanation 4 Text'
-    }]
-};
-const content1Text = 'Text content 1';
-const content2Text = 'Lets get textual content 2';
-
-const initTwoQuestions = async (trainingSegments: TrainingSegmentComponent) => {
-    trainingSegments.addQuestion();
-    trainingSegments.addQuestion();
+const addQuestionAndSetText = async (trainingSegment: TrainingSegmentComponent, questionText: QuestionTextObj): Promise<QuestionComponent> => {
+    trainingSegment.addQuestion();
     await Vue.nextTick();
 
-    const {0: question1, 1: question2} = <QuestionComponent[]> trainingSegments.questionRefs;
-    question1.addOption();
-    question1.addOption();
-    question2.addOption();
-    question2.addOption();
-
+    let question = trainingSegment.questionRefs[trainingSegment.questionRefs.length - 1];
+    questionText.options.forEach(() => {
+        question.addOption();
+    });
     await Vue.nextTick();
 
-    await addQuestionText(question1, question1Text);
-    await addQuestionText(question2, question2Text);
+    await addQuestionText(question, questionText);
+    await Vue.nextTick();
+    return question;
 };
-describe('Training Segments Component', function () {
+
+const addContentAndSetText = async (trainingSegment: TrainingSegmentComponent, contentText: string): Promise<QuillComponent> => {
+    trainingSegment.addContent();
+    await Vue.nextTick();
+
+    let content = trainingSegment.contentRefs[trainingSegment.contentRefs.length - 1];
+    content.quill.insertText(0, contentText, 'user');
+    await Vue.nextTick();
+    return content;
+};
+
+describe('Training Segments Component getContentQuestionsDelta', function () {
+    const question1Text: QuestionTextObj = {
+        question: 'Question 1 is a question??',
+        options: [{
+            option: 'Option 1 Text',
+            explanation: 'Explanation 1 Text',
+        }, {
+            option: 'Option 2 Text',
+            explanation: 'Explanation 2 Text'
+        }]
+    };
+    const question2Text: QuestionTextObj = {
+        question: 'Question 2 is a question??????',
+        options: [{
+            option: 'Option 3 Text',
+            explanation: 'Explanation 3 Text'
+        }, {
+
+            option: 'Option 4 Text',
+            explanation: 'Explanation 4 Text'
+        }]
+    };
+    const content1Text = 'Text content 1';
+    const content2Text = 'Lets get textual content 2';
 
     after(function () {
         destroyComponents.forEach((c) => c.$destroy());
     });
 
-    describe('getQuillDiff', function () {
-        it('should return an empty object when there are no questions or content', function () {
-            expect(getMountedTrainingSegmentsComponent().getQuillDiff()).to.deep.eq({});
-
-        });
-        it('should have the quill content of two questions each with two options', async function () {
-            let trainingSegments = getMountedTrainingSegmentsComponent();
-            await initTwoQuestions(trainingSegments);
-
-            const {0: question1, 1: question2} = <QuestionComponent[]> trainingSegments.questionRefs;
-            let {id: questionQuillId1} = question1.question.questionQuill;
-            let {id: questionQuillId2} = question2.question.questionQuill;
-
-
-            let option1 = question1.optionRefs[0].option;
-            let option2 = question1.optionRefs[1].option;
-            let option3 = question2.optionRefs[0].option;
-            let option4 = question2.optionRefs[1].option;
-
-            expect(trainingSegments.getQuillDiff()).to.deep.eq(<QuillDeltaMap>{
-                [questionQuillId1]: new Delta().insert(question1Text.question),
-                [questionQuillId2]: new Delta().insert(question2Text.question),
-                [option1.option.id]: new Delta().insert(question1Text.options[0].option),
-                [option2.option.id]: new Delta().insert(question1Text.options[1].option),
-                [option3.option.id]: new Delta().insert(question2Text.options[0].option),
-                [option4.option.id]: new Delta().insert(question2Text.options[1].option),
-                [option1.explanation.id]: new Delta().insert(question1Text.options[0].explanation),
-                [option2.explanation.id]: new Delta().insert(question1Text.options[1].explanation),
-                [option3.explanation.id]: new Delta().insert(question2Text.options[0].explanation),
-                [option4.explanation.id]: new Delta().insert(question2Text.options[1].explanation),
-            });
-
-        });
-        it('should have the quill content of one question after two questions are added and one is removed', async function () {
-            let trainingSegments = getMountedTrainingSegmentsComponent();
-            await initTwoQuestions(trainingSegments);
-
-            const {0: question1, 1: question2} = <QuestionComponent[]> trainingSegments.questionRefs;
-            question1.removeCallback();
-            await Vue.nextTick();
-
-            let {id: questionQuillId2} = question2.question.questionQuill;
-            let option3 = question2.optionRefs[0].option;
-            let option4 = question2.optionRefs[1].option;
-
-            expect(trainingSegments.getQuillDiff()).to.deep.eq(<QuillDeltaMap>{
-                [questionQuillId2]: new Delta().insert(question2Text.question),
-                [option3.option.id]: new Delta().insert(question2Text.options[0].option),
-                [option4.option.id]: new Delta().insert(question2Text.options[1].option),
-                [option3.explanation.id]: new Delta().insert(question2Text.options[0].explanation),
-                [option4.explanation.id]: new Delta().insert(question2Text.options[1].explanation),
-            });
-        });
-        it('should have the quill content of two content segments', async function () {
-            let trainingSegment = getMountedTrainingSegmentsComponent();
-            trainingSegment.addContent();
-            trainingSegment.addContent();
-            await Vue.nextTick();
-
-            let {0: content1, 1: content2} = trainingSegment.contentRefs;
-            content1.quill.insertText(0, content1Text, 'user');
-            content2.quill.insertText(0, content2Text, 'user');
-            await Vue.nextTick();
-
-            expect(trainingSegment.getQuillDiff()).to.deep.equal({
-                [content1.editorId]: new Delta().insert(content1Text),
-                [content2.editorId]: new Delta().insert(content2Text)
-            });
-        });
-        it('should have the quill content of one content segment after two content segments are added and one is removed', async function () {
-            let trainingSegment = getMountedTrainingSegmentsComponent();
-
-            trainingSegment.addContent();
-            trainingSegment.addContent();
-            await Vue.nextTick();
-
-            let {0: content1, 1: content2} = trainingSegment.contentRefs;
-            content1.quill.insertText(0, content1Text, 'user');
-            content2.quill.insertText(0, content2Text, 'user');
-            content1.onRemove();
-            await Vue.nextTick();
-
-            expect(trainingSegment.getQuillDiff()).to.deep.equal({
-                [content2.editorId]: new Delta().insert(content2Text)
-            });
+    it('should be an empty delta when nothing is added', function () {
+        expect(getMountedTrainingSegmentsComponent().getContentQuestionsDelta()).to.deep.eq({
+            orderedContentIds: [],
+            orderedContentQuestionIds: [],
+            orderedQuestionIds: [],
+            questionChanges: {},
+            quillChanges: {}
         });
     });
-    it('should have the quill data from an added a question and a content segment', async function () {
-        let trainingSegment = getMountedTrainingSegmentsComponent();
-        trainingSegment.addContent();
-        trainingSegment.addQuestion();
-        await Vue.nextTick();
 
-        const question = trainingSegment.questionRefs[0];
-        question.addOption();
-        question.addOption();
-        await Vue.nextTick();
-
-        const content = trainingSegment.contentRefs[0];
-        content.quill.insertText(0, content1Text, 'user');
-        await addQuestionText(question, question1Text);
-        await Vue.nextTick();
-
-
-        expect(trainingSegment.getQuillDiff()).to.deep.eq(<QuillDeltaMap>{
-            [question.question.questionQuill.id]: new Delta().insert(question1Text.question),
-            [question.optionRefs[0].option.option.id]: new Delta().insert(question1Text.options[0].option),
-            [question.optionRefs[1].option.option.id]: new Delta().insert(question1Text.options[1].option),
-            [question.optionRefs[0].option.explanation.id]: new Delta().insert(question1Text.options[0].explanation),
-            [question.optionRefs[1].option.explanation.id]: new Delta().insert(question1Text.options[1].explanation),
-            [content.editorId]: new Delta().insert(content1Text)
-        });
-    })
-});
-
-describe('getQuestionChanges', function () {
-    it('should return an empty object when there are no questions', function () {
+    it('should be a delta that reflects adding two questions with two options each', async function () {
         let trainingSegments = getMountedTrainingSegmentsComponent();
-        expect(trainingSegments.getQuestionChanges()).to.deep.eq({});
+        let question1 = await addQuestionAndSetText(trainingSegments, question1Text);
+        let question2 = await addQuestionAndSetText(trainingSegments, question2Text);
+
+        let {id: question1Id} = question1.question;
+        let {id: question2Id} = question2.question;
+
+        expect(trainingSegments.getContentQuestionsDelta()).to.deep.eq({
+            orderedContentIds: [],
+            orderedQuestionIds: toAddDeltaArrOps([question1Id, question2Id]),
+            orderedContentQuestionIds: toAddDeltaArrOps([question1Id, question2Id]),
+            questionChanges: {
+                [question1Id]: question1.diffQuestion(),
+                [question2Id]: question2.diffQuestion()
+            },
+            quillChanges: {
+                ...quillDeltaMapFromQuestionAndText(question1, question1Text),
+                ...quillDeltaMapFromQuestionAndText(question2, question2Text)
+            }
+        });
     });
-});
+    it('should be a delta of adding two questions and removing the first one', async function () {
+        let trainingSegments = getMountedTrainingSegmentsComponent();
+        let question1 = await addQuestionAndSetText(trainingSegments, question1Text);
+        let question2 = await addQuestionAndSetText(trainingSegments, question2Text);
 
-describe('getContentQuestionsDelta', function () {
+        question1.removeCallback();
+        await Vue.nextTick();
 
+        let question2Id = question2.question.id;
+        expect(trainingSegments.getContentQuestionsDelta()).to.deep.eq(<ContentQuestionsDelta>{
+            orderedContentIds: [],
+            orderedQuestionIds: toAddDeltaArrOps([question2Id]),
+            orderedContentQuestionIds: toAddDeltaArrOps([question2Id]),
+            questionChanges: {
+                [question2Id]: question2.diffQuestion()
+            },
+            quillChanges: {
+                ...quillDeltaMapFromQuestionAndText(question2, question2Text)
+            }
+        });
+    });
+    it('should be a delta of two added content segments', async function () {
+        let trainingSegment = getMountedTrainingSegmentsComponent();
+        let {editorId: contentId1} = await addContentAndSetText(trainingSegment, content1Text);
+        let {editorId: contentId2} = await addContentAndSetText(trainingSegment, content2Text);
+
+
+        expect(trainingSegment.getContentQuestionsDelta()).to.deep.equal(<ContentQuestionsDelta>{
+            orderedQuestionIds: [],
+            questionChanges: {},
+            orderedContentIds: toAddDeltaArrOps([contentId1, contentId2]),
+            orderedContentQuestionIds: toAddDeltaArrOps([contentId1, contentId2]),
+            quillChanges: {
+                [contentId1]: new Delta().insert(content1Text),
+                [contentId2]: new Delta().insert(content2Text)
+            }
+        });
+    });
+    it('should be a delta of adding two content segments and remove the first one', async function () {
+        let trainingSegment = getMountedTrainingSegmentsComponent();
+        let content1 = await addContentAndSetText(trainingSegment, content1Text);
+        let {editorId: content2Id} = await addContentAndSetText(trainingSegment, content2Text);
+
+        content1.onRemove();
+        await Vue.nextTick();
+
+        expect(trainingSegment.getContentQuestionsDelta()).to.deep.equal({
+            orderedQuestionIds: [],
+            questionChanges: {},
+            orderedContentIds: toAddDeltaArrOps([content2Id]),
+            orderedContentQuestionIds: toAddDeltaArrOps([content2Id]),
+            quillChanges: {
+                [content2Id]: new Delta().insert(content2Text)
+            }
+        });
+    });
+
+    it('should be a delta of adding a content segment and then a question', async function () {
+        let trainingSegment = getMountedTrainingSegmentsComponent();
+        let {editorId: contentId} = await addContentAndSetText(trainingSegment, content1Text);
+        let question = await addQuestionAndSetText(trainingSegment, question1Text);
+
+        let questionId = question.question.id;
+        expect(trainingSegment.getContentQuestionsDelta()).to.deep.eq(<ContentQuestionsDelta>{
+            orderedContentIds: toAddDeltaArrOps([contentId]),
+            orderedQuestionIds: toAddDeltaArrOps([questionId]),
+            orderedContentQuestionIds: toAddDeltaArrOps([contentId, questionId]),
+            questionChanges: {[questionId]: question.diffQuestion()},
+            quillChanges: {
+                ...quillDeltaMapFromQuestionAndText(question, question1Text),
+                [contentId]: new Delta().insert(content1Text)
+            }
+        });
+    });
 });
