@@ -94,7 +94,7 @@ export default class TrainingSegmentsComponent extends Vue {
         return {...this.getContentQuillDiff(), ...this.getQuestionsQuillDiff()};
     }
 
-    getQuestionsQuillDiff(): QuillDeltaMap {
+    private getQuestionsQuillDiff(): QuillDeltaMap {
         return this.questionRefs.reduce((acc, question) => ({...acc, ...question.quillChanges()}), {});
     }
 
@@ -102,7 +102,7 @@ export default class TrainingSegmentsComponent extends Vue {
      * Finds all the quill deltas that has changed for content
      * @returns {QuillDeltaMap}
      */
-    getContentQuillDiff(): QuillDeltaMap {
+    private getContentQuillDiff(): QuillDeltaMap {
         return this.contentRefs.reduce((acc, contentQuill: QuillComponent) => {
             if(contentQuill.hasChanged()){
                 acc[contentQuill.editorId] = contentQuill.getChanges();

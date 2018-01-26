@@ -80,12 +80,13 @@ describe('Training Segments Component', function () {
             let {id: questionQuillId1} = question1.question.questionQuill;
             let {id: questionQuillId2} = question2.question.questionQuill;
 
+
             let option1 = question1.optionRefs[0].option;
             let option2 = question1.optionRefs[1].option;
             let option3 = question2.optionRefs[0].option;
             let option4 = question2.optionRefs[1].option;
 
-            expect(trainingSegments.getQuestionsQuillDiff()).to.deep.eq(<QuillDeltaMap>{
+            expect(trainingSegments.getQuillDiff()).to.deep.eq(<QuillDeltaMap>{
                 [questionQuillId1]: new Delta().insert(question1Text.question),
                 [questionQuillId2]: new Delta().insert(question2Text.question),
                 [option1.option.id]: new Delta().insert(question1Text.options[0].option),
@@ -111,7 +112,7 @@ describe('Training Segments Component', function () {
             let option3 = question2.optionRefs[0].option;
             let option4 = question2.optionRefs[1].option;
 
-            expect(trainingSegments.getQuestionsQuillDiff()).to.deep.eq(<QuillDeltaMap>{
+            expect(trainingSegments.getQuillDiff()).to.deep.eq(<QuillDeltaMap>{
                 [questionQuillId2]: new Delta().insert(question2Text.question),
                 [option3.option.id]: new Delta().insert(question2Text.options[0].option),
                 [option4.option.id]: new Delta().insert(question2Text.options[1].option),
@@ -130,7 +131,7 @@ describe('Training Segments Component', function () {
             content2.quill.insertText(0, content2Text, 'user');
             await Vue.nextTick();
 
-            expect(trainingSegment.getContentQuillDiff()).to.deep.equal({
+            expect(trainingSegment.getQuillDiff()).to.deep.equal({
                 [content1.editorId]: new Delta().insert(content1Text),
                 [content2.editorId]: new Delta().insert(content2Text)
             });
@@ -148,7 +149,7 @@ describe('Training Segments Component', function () {
             content1.onRemove();
             await Vue.nextTick();
 
-            expect(trainingSegment.getContentQuillDiff()).to.deep.equal({
+            expect(trainingSegment.getQuillDiff()).to.deep.equal({
                 [content2.editorId]: new Delta().insert(content2Text)
             });
         });
@@ -179,5 +180,15 @@ describe('Training Segments Component', function () {
             [content.editorId]: new Delta().insert(content1Text)
         });
     })
+});
+
+describe('getQuestionChanges', function () {
+    it('should return an empty object when there are no questions', function () {
+        let trainingSegments = getMountedTrainingSegmentsComponent();
+        expect(trainingSegments.getQuestionChanges()).to.deep.eq({});
+    });
+});
+
+describe('getContentQuestionsDelta', function () {
 
 });
