@@ -17,21 +17,17 @@
     "watch": "concurrently -k -p \"[{name}]\" -n \"Server-Build,Server,Webpack\" -c \"cyan.bold,green.bold,yellow.bold\"  \"npm run watch-server\" \"npm run nodemon-start\" \"npm run webpack-dev\"",
     "watch-server": "tsc --watch --project server/tsconfig.json --outDir server/dist",
     "nodemon-start": "cross-env NODE_CONFIG_DIR=./config nodemon --watch server/dist/ --signal SIGHUP --delay 1500ms --exec npm run start",
-
     "test": "npm run test-server && npm run test-karma",
-    "test-server": "npm run test_init_db && cross-env COMMAND='mocha test/**/*.ts' npm run test-command",
+    "test-server": "npm run test_init_db && npm run test-mocha",
+    "test-mocha": "cross-env COMMAND='mocha test/**/*.ts' npm run test-command",
     "test-karma": "cross-env COMMAND='karma start webapp/test/karma.unit.js --singleRun' npm run test-command",
-
     "test-task": "cross-env NODE_ENV=test npm run $TASK_NAME",
     "test-command": "cross-env NODE_ENV=test $COMMAND",
-
     "test_init_db": "cross-env SCRIPT_NAME=init_test_db TASK_NAME=esm_entry npm run test-task && npm run test_migrate_db",
     "test_migrate_db": "cross-env TASK_NAME=migrate_db npm run test-task",
     "test_drop_db": "cross-env TASK_NAME=drop_db npm run test-task",
-
-    "test-server-dev": "npm run test_init_db && COMMAD='mocha -R min test/**/*.spec.ts' npm run test-command",
+    "test-server-dev": "cross-env COMMAND='mocha test/**/*.spec.ts -R min --watch --watch-extensions ts' npm run test-command",
     "test-karma-dev": "cross-env COMMAND='karma start webapp/test/karma.unit.js' npm run test-command",
-
     "rm_ide_compiled_ts": "./bin/rm_ide_compiled_ts.sh"
   },
   "repository": {
@@ -51,7 +47,7 @@
   },
   "dependencies": {
     "@std/esm": "0.16.0",
-    "@types/pg": "7.1.5",
+    "@types/pg": "7.4.1",
     "axios": "0.16.2",
     "body-parser": "1.18.2",
     "config": "1.28.1",
@@ -67,7 +63,7 @@
     "moment": "2.19.1",
     "morgan": "1.9.0",
     "node-cache": "4.1.1",
-    "pg": "7.3.0",
+    "pg": "7.4.1",
     "promise": "8.0.1",
     "quill": "1.3.3",
     "quill-delta": "3.6.2",
