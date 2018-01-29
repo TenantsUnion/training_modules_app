@@ -2,28 +2,26 @@ import {Datasource} from "./datasource";
 import {LoggerInstance} from 'winston';
 
 export abstract class AbstractRepository {
-    protected logger:LoggerInstance;
+    protected logger: LoggerInstance;
 
-    constructor(private sequenceName: string,
-                protected sqlTemplate: Datasource) {
-        this.sequenceName = sequenceName;
+    constructor (private idFnName: string,
+                 protected sqlTemplate: Datasource) {
     }
 
-    async getNextId(): Promise<string> {
-        let id = await this.sqlTemplate.query({
-            text: ` SELECT nextval('tu.${this.sequenceName}')`,
-            values: []
-        });
-        return '' + id[0].nextval;
+    async getNextId (): Promise<string> {
+        const text = `SELECT tu."${this.idFnName}"(1) AS id;`;
+        let result = await this.sqlTemplate.query(text);
+        return result[0].id;
     };
 
-    async getNextIds(count: number): Promise<string[]> {
-        let ids = [];
-        while(count && count > 0) {
-            let id = await this.getNextId();
-            ids.push(id);
-            count--;
-        }
-        return ids;
+
+    async getNextIds (count: number): Promise<string[]> {
+        const text = `SELECT tu."${this.idFnName}"(${count}) AS id;`;
+        let result = await this.sqlTemplate.query(text);
+        return result.map((row) => row.id);
     }
 }
+
+export const getUTCNow = (): string => {
+    return new Date().toISOString();
+};

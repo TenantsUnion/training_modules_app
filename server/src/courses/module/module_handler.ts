@@ -1,16 +1,15 @@
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
 import {ModuleRepository} from './module_repository';
-import {QuillHandler} from '../../training_entity/quill/quill_handler';
 import {
     CreateModuleEntityPayload, ModuleEntity, ModuleEntityDiffDelta, SaveModuleEntityPayload,
     ViewModuleTransferData
-} from '../../../../shared/modules';
-import {applyDeltaDiff} from '../../../../shared/delta/apply_delta';
-import {applyDeltaArrOps, updateArrOpsValues} from '../../../../shared/delta/diff_key_array';
-import {CreateSectionEntityPayload, SaveSectionEntityPayload} from '../../../../shared/sections';
+} from '@shared/modules';
+import {applyDeltaDiff} from '@shared/delta/apply_delta';
+import {applyDeltaArrOps, updateArrOpsValues} from '@shared/delta/diff_key_array';
+import {CreateSectionEntityPayload, SaveSectionEntityPayload} from '@shared/sections';
 import {TrainingEntityHandler} from '../../training_entity/training_entity_handler';
-import {ContentQuestionEntity, convertContentQuestionsDeltaToEntity} from '../../../../shared/training_entity';
+import {ContentQuestionEntity} from '@shared/training_entity';
 
 export class ModuleHandler {
     logger: LoggerInstance = getLogger('ModuleHandler', 'info');
@@ -27,12 +26,12 @@ export class ModuleHandler {
             orderedContentIds: applyDeltaArrOps([], updateArrOpsValues(orderedContentIds, placeholderIdMap)),
             orderedQuestionIds: applyDeltaArrOps([], updateArrOpsValues(orderedQuestionIds, placeholderIdMap)),
         };
-        return await this.moduleRepo.addModule(createModuleData, contentQuestions);
+        return await this.moduleRepo.createModule({...createModuleData, ...contentQuestions});
     }
 
     async saveModule(data: SaveModuleEntityPayload): Promise<void> {
         let {id, changes} = data;
-        let module = await this.moduleRepo.loadModule(id);
+        let module = await this.moduleRepo.loadModuleEntity(id);
 
         let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = changes;
         let placeholderIdMap = await this.trainingEntityHandler.handleContentQuestionDelta(changes);

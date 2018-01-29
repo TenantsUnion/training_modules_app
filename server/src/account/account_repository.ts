@@ -1,6 +1,6 @@
 import {Datasource} from "../datasource";
 import {AccountSignupRequest} from "@shared/account";
-import {AbstractRepository} from "../repository";
+import {AbstractRepository, getUTCNow} from "../repository";
 import {AccountInfo} from "../user/user_handler";
 import {getLogger} from '../log';
 
@@ -16,7 +16,7 @@ export class AccountRepository extends AbstractRepository implements IAccountRep
     logger = getLogger('Account Repository');
 
     constructor(private datasource: Datasource) {
-        super('account_id_seq', datasource);
+        super('account_id', datasource);
     }
 
     async accountExists(username: string): Promise<boolean> {
@@ -25,7 +25,7 @@ export class AccountRepository extends AbstractRepository implements IAccountRep
         }
 
         let result = await this.datasource.query({
-            text: `SELECT COUNT(*) FROM tu.account WHERE tu.account.username = $1`,
+            text: `SELECT COUNT(*) FROM tu.account a WHERE a.username = $1`,
             values: [username]
         });
         return result[0].count !== '0';
@@ -34,8 +34,8 @@ export class AccountRepository extends AbstractRepository implements IAccountRep
     async createAccount(signupInfo: AccountSignupRequest): Promise<string> {
         let accountId = await this.getNextId();
         await this.datasource.query({
-            text: `INSERT INTO tu.account (id, username) VALUES ($1, $2)`,
-            values: [accountId, signupInfo.username]
+            text: `INSERT INTO tu.account (id, username, created_at, last_active_at) VALUES ($1, $2, $3, $3)`,
+            values: [accountId, signupInfo.username, getUTCNow()]
         });
         this.logger.info(`Inserted account id: ${accountId} for username: ${signupInfo.username}`);
         return accountId;

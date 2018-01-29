@@ -24,7 +24,7 @@ export class SectionHandler {
             orderedQuestionIds: applyDeltaArrOps([], updateArrOpsValues(orderedQuestionIds, placeholderIdMap)),
             orderedContentQuestionIds: applyDeltaArrOps([], updateArrOpsValues(orderedContentQuestionIds, placeholderIdMap)),
         };
-        return await this.sectionRepo.createSection(createSectionData, contentQuestion);
+        return await this.sectionRepo.createSection({...createSectionData, ...contentQuestion});
     }
 
     async saveSection(data: SaveSectionEntityPayload): Promise<void> {

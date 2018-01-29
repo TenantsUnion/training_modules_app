@@ -1,11 +1,11 @@
 import * as _ from 'underscore';
 import {QuillRepository} from './quill_repository';
-import {isCreatedQuillPlaceholderId, QuillEditorData} from '../../../../shared/quill_editor';
+import {isCreatedQuillPlaceholderId, QuillEditorData} from '@shared/quill_editor';
 import {quillRepository} from '../../config/repository_config';
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
-import {Delta} from '../../../../shared/normalize_imports';
-import {QuillChangesObj} from '../../../../shared/training_entity';
+import {Delta} from '@shared/normalize_imports';
+import {QuillChangesObj} from '@shared/training_entity';
 
 
 export class QuillHandler {
@@ -32,12 +32,12 @@ export class QuillHandler {
             return;
         }
 
-        let quillData = await this.quillRepository.loadQuillData(updateChanges);
+        let quillData = await this.quillRepository.loadMultipleQuillData(updateChanges);
         let asyncUpdate = quillData
             .map((content: QuillEditorData) => {
                 let {version} = content;
                 return _.extend({}, content, {
-                    version: (parseInt(version) + 1) + "",
+                    version: version + 1,
                     editorJson: new Delta(content.editorJson.ops).compose(quillChanges[content.id]),
                     lastModifiedAt: new Date()
                 });
@@ -74,7 +74,7 @@ export class QuillHandler {
     }
 
     loadQuillData (quillId: string): Promise<QuillEditorData> {
-        return this.quillRepository.loadEditorJson(quillId);
+        return this.quillRepository.loadQuillData(quillId);
     }
 }
 

@@ -8,7 +8,7 @@ import {
 import {SectionHandler} from './section/section_handler';
 import {
     CourseEntity,
-    CreateCourseEntityCommand, CreateCourseEntityPayload, SaveCourseEntityPayload
+    CreateCourseEntityCommand, CreateCourseEntityPayload, CreateCourseIdMap, SaveCourseEntityPayload
 } from '@shared/courses';
 import {QuillHandler} from '../training_entity/quill/quill_handler';
 import {applyDeltaDiff} from '@shared/delta/apply_delta';
@@ -34,7 +34,7 @@ export class CoursesHandler {
                 private moduleHandler: ModuleHandler) {
     }
 
-    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<string> {
+    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<CreateCourseIdMap> {
         try {
             let {userId} = createCourseCommand.metadata;
             let courseInfo: CreateCourseEntityPayload = createCourseCommand.payload;
@@ -49,11 +49,11 @@ export class CoursesHandler {
                 orderedContentQuestionIds: applyDeltaArrOps([], updateArrOpsValues(orderedContentQuestionIds, placeholderIdMap))
             };
 
-            let courseId = await this.coursesRepository.createCourse(courseInfo, contentQuestions);
+            let courseId = await this.coursesRepository.createCourse({...courseInfo, ...contentQuestions});
             await this.userHandler.userCreatedCourse(userId, courseId);
             this.logger.info(`Successfully created course: ${courseId}`);
 
-            return courseId;
+            return {courseId, ...placeholderIdMap};
         } catch (e) {
             this.logger.error('Exception creating course\n%s', e);
             throw e;
@@ -107,7 +107,7 @@ export class CoursesHandler {
     async saveCourse(saveCourse: SaveCourseEntityPayload): Promise<void> {
         let {id, changes, changes: {quillChanges, orderedContentIds}} = saveCourse;
 
-        let course: CourseEntity = await this.coursesRepository.loadAdminCourseEntity(id);
+        let course: CourseEntity = await this.coursesRepository.loadCourseEntity(id);
         await this.trainingEntityHandler.handleContentQuestionDelta(changes);
         let updatedCourse = applyDeltaDiff(course, {
             ...changes, orderedContentIdsOps: orderedContentIds

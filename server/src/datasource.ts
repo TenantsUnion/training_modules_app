@@ -1,6 +1,7 @@
 import {traverseSnakeToCamelCase} from './util/snake_to_camel_case_util';
 import {Moment} from 'moment';
-import {getLogger} from './log';
+import {getLogger, LOG_LEVELS} from './log';
+import {Pool, QueryResult} from 'pg';
 
 /**
  * Interface for parameterized queries using node-postgres apis.
@@ -17,22 +18,22 @@ export interface IQueryConfig {
 }
 
 declare type ParameterizedSql = string | IQueryConfig;
-declare type SqlParameters = string | string[]
+declare type SqlParameters = string[]
 
 export class Datasource {
     private logger = getLogger('Datasource', 'error');
     private transactionClient: any = null;
     private convertPropertiesToCamelCase = traverseSnakeToCamelCase;
 
-    constructor(private pool: any) {
+    constructor (private pool: Pool) {
     }
 
-    async startTransaction(): Promise<void> {
+    async startTransaction (): Promise<void> {
         this.transactionClient = await this.pool.connect();
         await this.transactionClient.query('BEGIN');
     }
 
-    async transactionQuery(sql: ParameterizedSql, parameters?: SqlParameters): Promise<void> {
+    async transactionQuery (sql: ParameterizedSql, parameters?: SqlParameters): Promise<void> {
         if (!this.isTransactionInProgress()) {
             throw new Error('No transaction in progress to add query to ');
         }
@@ -49,7 +50,7 @@ export class Datasource {
         }
     }
 
-    async commitTransaction(): Promise<void> {
+    async commitTransaction (): Promise<void> {
         if (!this.isTransactionInProgress()) {
             throw new Error('No transaction in progress to add query to ');
         }
@@ -66,20 +67,25 @@ export class Datasource {
         }
     }
 
-    isTransactionInProgress(): boolean {
+    isTransactionInProgress (): boolean {
         return !!this.transactionClient;
     }
 
-    query(sql: ParameterizedSql, parameters?: SqlParameters): Promise<any[]> {
-        let queryResult = this.isTransactionInProgress() ?
-            this.transactionQuery(sql, parameters) :
-            this.pool.query(sql, parameters);
-        return queryResult.then((result) => {
-            return result && this.processRows(result.rows);
-        });
+    async query (sql: ParameterizedSql, parameters?: SqlParameters): Promise<any> {
+        try {
+            let queryResult = await (this.isTransactionInProgress() ?
+                this.transactionQuery(sql, parameters) : this.pool.query(<string>sql, parameters));
+
+            return  queryResult && this.processRows(queryResult.rows);
+        } catch (e) {
+            let sqlString = typeof sql === 'string' ? sql : (<IQueryConfig> sql).text;
+            this.logger.error(`error executing sql statement: ${sqlString}`);
+            this.logger.error(`error: ${e}\n${e.stack}`);
+            throw e;
+        }
     }
 
-    processRows(result: any[]): any[] {
+    processRows (result: any[]): any[] {
         return this.convertPropertiesToCamelCase(result);
     }
 }

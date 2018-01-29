@@ -81,7 +81,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         try {
             await this.datasource.query({
                 text: `UPDATE tu.user SET admin_of_course_ids =
-                            admin_of_course_ids || $1::BIGINT WHERE id = $2`,
+                            admin_of_course_ids || $1::TEXT WHERE id = $2`,
                 values: [courseId, userId]
             });
         } catch (e) {
@@ -96,7 +96,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         try {
             await this.datasource.query({
                 text: `UPDATE tu.user SET created_content_ids =
-                            created_content_ids || $1 :: BIGINT WHERE id = $2`,
+                            created_content_ids || $1 :: TEXT WHERE id = $2`,
                 values: [contentId, userId]
             });
         } catch (e) {

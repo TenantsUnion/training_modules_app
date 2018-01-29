@@ -11,10 +11,11 @@ import {processRow} from '../course_row_processor';
 export class CourseViewQuery {
     logger: LoggerInstance = getLogger('CourseRepository', 'info');
 
-    constructor(private datasource: Datasource) {}
+    constructor (private datasource: Datasource) {
+    }
 
-    async loadUserAdminCourses(userId: string): Promise<AdminCourseDescription[]> {
-        let result = await this.datasource.query({
+    async loadUserAdminCourses (userId: string): Promise<AdminCourseDescription[]> {
+        return await this.datasource.query({
             text: `
                           SELECT c.id, c.title, c.description, c.time_estimate FROM tu.course c JOIN
                             (SELECT unnest(
@@ -24,16 +25,9 @@ export class CourseViewQuery {
                         `,
             values: [userId]
         });
-        let processedCourses = result.map((course) => {
-            return _.extend({}, course, {
-                timeEstimate: '' + course.timeEstimate
-            });
-        });
-
-        return processedCourses;
     }
 
-    async loadUserEnrolledCourses(username: string): Promise<EnrolledCourseDescription[]> {
+    async loadUserEnrolledCourses (username: string): Promise<EnrolledCourseDescription[]> {
         this.logger.log('info', 'Retrieving courses for user: %s', username);
 
         let result = await this.datasource.query({
@@ -56,7 +50,7 @@ export class CourseViewQuery {
         return enrolled;
     }
 
-    async loadUserEnrolledCourse(courseId: string): Promise<UserEnrolledCourseData> {
+    async loadUserEnrolledCourse (courseId: string): Promise<UserEnrolledCourseData> {
         let results = await this.datasource.query({
                 text: `SELECT * FROM tu.course c WHERE c.id = $1`,
                 values: [courseId]
@@ -66,20 +60,32 @@ export class CourseViewQuery {
         return results[0];
     }
 
-    async loadAdminCourse(courseId: string): Promise<ViewCourseTransferData> {
+
+    async loadAdminCourse (courseId: string): Promise<ViewCourseTransferData> {
         let query = {
             // language=PostgreSQL
             text: `
-                SELECT c.*, m.modules FROM tu.course c
-                    INNER JOIN LATERAL
-                    (SELECT json_agg(m.*) AS modules
-                     FROM (SELECT m.*, s.sections FROM tu.module m
-                          INNER JOIN LATERAL (SELECT json_agg(s.*) AS sections
-                                              FROM tu.section s
-                                              WHERE s.id = ANY(m.ordered_section_ids)) s
-                            ON TRUE)
-                            m where m.id = ANY(c.ordered_module_ids)) m ON TRUE
-                  WHERE c.id = $1;
+              SELECT c.*, m.modules, q.questions FROM tu.course c
+                INNER JOIN LATERAL
+                           (SELECT json_agg(m.*) AS modules
+                            FROM (SELECT m.*, s.sections
+                                  FROM tu.module m
+                                    INNER JOIN LATERAL (SELECT json_agg(s.*) AS sections
+                                                        FROM tu.section s
+                                                        WHERE s.id = ANY (m.ordered_section_ids)) s
+                                      ON TRUE)
+                                 m
+                            WHERE m.id = ANY (c.ordered_module_ids)) m ON TRUE
+                INNER JOIN LATERAL
+                           (SELECT jsonb_agg(q.*) AS questions
+                            FROM (SELECT q.*, o.options
+                                  FROM tu.question q
+                                    INNER JOIN LATERAL (SELECT jsonb_agg(o.*) AS options
+                                                        FROM tu.question_option o
+                                                        WHERE o.id = ANY (q.option_ids)) o
+                                      ON TRUE) q
+                            WHERE q.id = ANY (c.ordered_question_ids)) q ON TRUE
+              WHERE c.id = $1;
             `,
             values: [courseId]
         };

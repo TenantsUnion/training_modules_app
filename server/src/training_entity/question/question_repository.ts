@@ -1,24 +1,31 @@
-import {AbstractRepository} from '../../repository';
+import {AbstractRepository, getUTCNow} from '../../repository';
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
 import {Datasource} from '../../datasource';
-import {QuestionEntity} from '../../../../shared/questions';
+import {AnswerType, QuestionEntity, QuestionType} from '../../../../shared/questions';
 
-export interface QuestionDto {
-    id: string;
-    questionQuillId: string;
-    questionType: 'DEFAULT';
-    answerType: 'DEFAULT';
+export interface QuestionInsertDbData {
+    id: string,
+    questionQuillId: string,
+    questionType: QuestionType,
+    answerType: AnswerType,
+    correctOptionIds: string[],
+    optionIds: string[],
+    randomizeOptionOrder: boolean,
+    answerInOrder: boolean,
+    canPickMultiple: boolean,
+
+    [p: string]: any;
 }
 
 export class QuestionRepository extends AbstractRepository {
     logger: LoggerInstance = getLogger('QuestionRepository', 'info');
 
-    constructor(private datasource: Datasource) {
-        super('question_id_seq', datasource);
+    constructor (private datasource: Datasource) {
+        super('question_id', datasource);
     }
 
-    async insertQuestion(insertQuestion: QuestionEntity) {
+    async insertQuestion (insertQuestion: QuestionInsertDbData) {
         let {
             id, questionQuillId, questionType, answerType, correctOptionIds, optionIds,
             randomizeOptionOrder, answerInOrder, canPickMultiple
@@ -31,20 +38,11 @@ export class QuestionRepository extends AbstractRepository {
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $10)
             `,
             values: [id, questionQuillId, questionType, answerType, correctOptionIds, optionIds,
-                randomizeOptionOrder, answerInOrder, canPickMultiple, new Date()]
+                randomizeOptionOrder, answerInOrder, canPickMultiple, getUTCNow()]
         });
     }
 
-    async updateQuestion(updateQuestions: QuestionDto) {
-        let {id, questionQuillId, questionType, answerType} = updateQuestions;
-        await this.datasource.query({
-            text: `UPDATE tu.question SET question_quill_id = $2, question_type = $3, answer_type = $4, required = $5)
-                    WHERE id = $1`,
-            values: [id, questionQuillId, questionType, answerType]
-        });
-    }
-
-    async loadQuestionEntity(questionId: string): Promise<QuestionEntity> {
+    async loadQuestionEntity (questionId: string): Promise<QuestionEntity> {
         let results = await this.sqlTemplate.query({
             text: `SELECT * from tu.question q where q.id = $1`,
             values: [questionId]
@@ -52,10 +50,10 @@ export class QuestionRepository extends AbstractRepository {
         return results[0];
     }
 
-    async saveQuestionEntity(questionEntity: QuestionEntity) {
+    async saveQuestionEntity (questionEntity: QuestionEntity) {
         let {
             id, questionType, answerType, correctOptionIds, optionIds, randomizeOptionOrder,
-            answerInOrder, canPickMultiple
+            answerInOrder, canPickMultiple, version
         } = questionEntity;
         await this.sqlTemplate.query({
             text: `
@@ -67,10 +65,11 @@ export class QuestionRepository extends AbstractRepository {
                 randomize_option_order = $5,
                 answer_in_order = $6,
                 can_pick_multiple = $7,
-                last_modified_at = $8
-            where id = $9`,
+                last_modified_at = $8,
+                version = $9
+            where id = $10`,
             values: [questionType, answerType, correctOptionIds, optionIds,
-                randomizeOptionOrder, answerInOrder, canPickMultiple, new Date(), id]
+                randomizeOptionOrder, answerInOrder, canPickMultiple, getUTCNow(), version, id]
         });
     }
 }

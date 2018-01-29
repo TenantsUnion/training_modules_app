@@ -37,7 +37,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
             if (errMsgs) {
                 this.handleValidationErr(errMsgs, request, response);
             } else {
-                let courseId = await this.coursesHandler.createCourse(createCourseCommand);
+                let {courseId}  = await this.coursesHandler.createCourse(createCourseCommand);
                 let createdCourse: CreateCourseResponse = await this.coursesViewHandler.loadAdminCourse(courseId);
                 // todo handle room creation for course
                 response.status(200).send(createdCourse);

@@ -16,16 +16,16 @@ export class QuestionOptionRepository extends AbstractRepository {
     logger: LoggerInstance = getLogger('QuestionOptionRepository', 'info');
 
     constructor(private datasource: Datasource) {
-        super('question_option_id_seq', datasource);
+        super('question_option_id', datasource);
     }
 
     async createQuestionOption(questionOption: QuestionOptionDto): Promise<void> {
         let {id, optionQuillId, explanationQuillId} = questionOption;
 
         await this.datasource.query({
-            text: `INSERT INTO tu.question_option (id, option_quill_id, explanation_quill_id)
-                        VALUES ($1, $2, $3)`,
-            values: [id, optionQuillId, explanationQuillId]
+            text: `INSERT INTO tu.question_option (id, option_quill_id, explanation_quill_id, created_at, last_modified_at)
+                        VALUES ($1, $2, $3, $4, $4)`,
+            values: [id, optionQuillId, explanationQuillId, new Date()]
         });
     }
 
@@ -35,5 +35,12 @@ export class QuestionOptionRepository extends AbstractRepository {
             values: [id]
         });
         return results[0];
+    }
+
+    async remove (questionOptionId: string): Promise<void> {
+        await this.sqlTemplate.query({
+            text: `DELETE from tu.question_option q where q.id = $1`,
+            values: [questionOptionId]
+        });
     }
 }

@@ -5,17 +5,17 @@ import {ViewCourseTransferData} from '../../../shared/courses';
 
 export const processRow = (row): ViewCourseTransferData => {
     return _.extend({}, row, <{[index in keyof ViewCourseTransferData]}>{
-        id: '' + row.id,
+        id: row.id,
         // modules aren't pulled out in order since results are narrowed down via 'WHERE'
         // clause and then automatically joined with ON TRUE. Have to manually order according
         // to orderedModuleIds property
-        timeEstimate: '' + row.timeEstimate,
+        timeEstimate: row.timeEstimate,
         orderedModuleIds: row.orderedModuleIds.map((id) => '' + id),
         modules: _.chain(<ViewModuleTransferData[]> row.modules)
             .map((module) => {
                 // fixme better way to convert integer ids to strings
                 return _.extend({}, module, {
-                    id: module.id + '',
+                    id: module.id,
                     orderedSectionIds: module.orderedSectionIds.map((id) => '' + id),
                     timeEstimate: '' + module.timeEstimate
                })
