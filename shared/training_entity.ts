@@ -1,19 +1,19 @@
 import * as _ from 'underscore';
-import {CreateQuestionData, QuestionChangesObj} from './questions';
+import {CreateQuestionData, QuestionChangesObj, QuestionTransferData} from './questions';
 import {Moment} from 'moment';
 import {QuillEditorData} from './quill_editor';
 import {EntityCommand, SaveEntityCommand} from './entity';
 import {DeltaObjDiff} from './delta/delta';
 import {applyDeltaArrOps, DeltaArrOp} from './delta/diff_key_array';
-import {ContentSegment} from './segment';
+import {ContentSegment, QuestionSegment} from './segment';
 import {isDeltaStatic} from './delta/typeguards_delta';
 
 export interface ViewTrainingEntity {
     id: string;
     title: string;
-    version: string;
+    version: number;
     description?: string;
-    timeEstimate?: string;
+    timeEstimate?: number;
     active: boolean;
 }
 
@@ -22,11 +22,12 @@ export interface ViewTrainingEntityTransferData extends ViewTrainingEntity {
     orderedContentIds: string[],
     orderedQuestionIds: string[],
     orderedContentQuestionIds: string[],
+    questions: QuestionTransferData[]
 }
 
 export interface ViewTrainingEntityQuillData extends ViewTrainingEntityTransferData {
     lastModifiedAt: Moment;
-    content: ContentSegment[];
+    contentQuestions: (ContentSegment | QuestionSegment)[];
     // todo handle questions
 }
 
@@ -51,6 +52,7 @@ export const isQuillContentDiff = (obj: any): obj is QuillChangesObj => {
  * Interface denoting a entity that has content and questions in a particular order
  */
 export interface ContentQuestionEntity {
+    headerDataId?: string;
     orderedContentIds: string[];
     orderedQuestionIds: string[];
     orderedContentQuestionIds: string[];
@@ -75,13 +77,13 @@ export const convertContentQuestionsDeltaToEntity = (delta: ContentQuestionsDelt
 
 export interface TrainingEntity extends ContentQuestionEntity {
     id: string;
-    version: string;
+    version: number;
     title: string;
     description?: string;
-    timeEstimate?: string | number;
+    timeEstimate?: number;
     active?: boolean;
-    lastModifiedAt: Date;
-    createdAt: Date;
+    lastModifiedAt?: Date | string;
+    createdAt?: Date | string;
 }
 
 
@@ -96,7 +98,8 @@ export type CreateContentQuestion = QuillEditorData | CreateQuestionData;
 export interface CreateTrainingEntityPayload {
     title: string;
     description?: string;
-    timeEstimate?: string | number;
+    timeEstimate?: number;
+    active: boolean;
     contentQuestions: ContentQuestionsDelta;
 }
 

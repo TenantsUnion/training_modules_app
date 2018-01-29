@@ -5,11 +5,12 @@ import {ContentSegment} from './segment';
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, SaveTrainingEntityPayload,
     TrainingEntityDiffDelta,
-    TrainingEntity
+    TrainingEntity, ViewTrainingEntityTransferData, ViewTrainingEntity, ViewTrainingEntityQuillData
 } from './training_entity';
 import {EntityCommandMetaData} from './entity';
 import {DeltaArrOp} from './delta/diff_key_array';
 import {diffPropsDeltaObj, TRAINING_ENTITY_BASIC_PROPS} from './delta/diff_delta';
+import {QuestionTransferData} from '@shared/questions';
 
 export type CourseEntityType = 'CourseEntity';
 export type CreateCourseEntityCommand = CreateTrainingEntityCommand<CourseEntityType, CreateCourseEntityPayload>;
@@ -35,15 +36,8 @@ export interface CourseEntityDeltas extends TrainingEntityDiffDelta {
     orderedModuleIds?: DeltaArrOp[];
 }
 
-export interface ViewCourseData {
-    id: string,
-    title: string,
-    version: string,
-    active: boolean,
+export interface ViewCourseData extends ViewTrainingEntity {
     openEnrollment: boolean,
-    description: string,
-    timeEstimate: string,
-    createdBy: string,
 
     orderedModuleIds: string[],
     orderedContentIds: string[],
@@ -51,7 +45,7 @@ export interface ViewCourseData {
     orderedContentQuestionIds: string[]
 }
 
-export interface ViewCourseQuillData extends ViewCourseData {
+export interface ViewCourseQuillData extends ViewCourseData, ViewTrainingEntityQuillData {
     lastModifiedAt: Moment;
     modules: ViewModuleTransferData[];
     content: ContentSegment[];
@@ -61,13 +55,8 @@ export interface ViewCourseQuillData extends ViewCourseData {
  * The transfer shape of a course view where properties that refer to quill data instead of have a string of
  * the corresponding ids and timestamps are in string form.
  */
-export interface ViewCourseTransferData extends ViewCourseData {
-    lastModifiedAt: string;
+export interface ViewCourseTransferData extends ViewCourseData, ViewTrainingEntityTransferData {
     modules: ViewModuleTransferData[],
-    orderedModuleIds: string[],
-    orderedContentIds: string[],
-    orderedQuestionIds: string[],
-    orderedContentQuestionIds: string[]
 }
 
 export interface UserEnrolledCourseData extends ViewCourseQuillData {
@@ -78,7 +67,7 @@ export interface UserEnrolledCourseData extends ViewCourseQuillData {
     slug?: string;
     title: string;
     description: string;
-    timeEstimate?: number | string;
+    timeEstimate?: number;
 }
 
 export interface AdminCourseDescription extends CourseDescription {
@@ -104,4 +93,11 @@ export const diffBasicPropsCourseProps = (before: ViewCourseQuillData, after: Vi
     return <CourseEntityDiffDelta> diffPropsDeltaObj(_.extend(['active', 'openEnrollment'], TRAINING_ENTITY_BASIC_PROPS), before, after);
 };
 
-
+/**
+ * Map of the placeholder ids to their database sequence id correspondents when a course is created.
+ *
+ */
+export interface CreateCourseIdMap {
+    courseId: string,
+    [p: string]: string
+}

@@ -3,14 +3,14 @@ import {DeltaObjDiff} from './delta/delta';
 
 export interface Entity<T, P> {
     id: string,
-    version: string,
+    version: number,
     metadata: EntityMetadata<T>,
     payload: P
 }
 
 export interface EntityMetadata<T> {
     id: string,
-    version: string;
+    version: number;
     type: T;
 }
 

@@ -3,7 +3,6 @@ import {QuestionQuillData} from "@shared/questions";
 export interface Segment {
     id: string,
     type: 'CONTENT' | 'QUESTION',
-    version?: string,
     lastModifiedAt?: Date,
 }
 

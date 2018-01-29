@@ -14,22 +14,22 @@ export enum AnswerType {
 
 export interface QuestionEntity {
     id: string,
-    version: number | string,
+    version: number,
     questionQuillId: string,
     questionType: QuestionType,
     answerType: AnswerType,
-    correctOptionIds: (string | number)[],
-    optionIds: (string | number)[],
+    correctOptionIds: string[],
+    optionIds: string[],
     randomizeOptionOrder: boolean,
     answerInOrder: boolean,
     canPickMultiple: boolean,
-    createdAt: Date, // date?
-    lastModifiedAt: Date
+    createdAt?: Date,
+    lastModifiedAt?: Date
 }
 
 export interface QuestionData {
     id: string;
-    version: string;
+    version: number;
     questionType: QuestionType,
     answerType: AnswerType,
     randomizeOptionOrder: boolean,
@@ -79,11 +79,14 @@ export const isCreateQuestionData = (obj: any): obj is CreateQuestionData => {
 
 export interface QuestionOptionData {
     id: string;
+    version?: number,
+    lastModifiedAt?: Date,
+    createdAt?: Date
 }
 
 export interface QuestionOptionTransferData extends QuestionOptionData {
-    optionId: string;
-    explanationId: string;
+    optionQuillId: string;
+    explanationQuillId: string;
 }
 
 export interface QuestionOptionQuillData extends QuestionOptionData {

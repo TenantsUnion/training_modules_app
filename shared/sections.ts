@@ -17,9 +17,6 @@ export interface SectionDetails {
 
 interface ViewSectionData extends ViewTrainingEntity{
     id: string;
-    title: string;
-    description: string;
-    timeEstimate: string;
     orderedContentIds: string[];
     orderedQuestionIds: string[];
     orderedContentQuestionIds: string[];
