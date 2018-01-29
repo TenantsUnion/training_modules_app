@@ -11,11 +11,14 @@ import {Pool} from 'pg';
 import {DatabaseConfig} from './normalize_config';
 import {QuestionRepository} from '../training_entity/question/question_repository';
 import {QuestionOptionRepository} from '../training_entity/question/question_option_repository';
+import {getLogger} from "../log";
 
 const pool = new Pool(DatabaseConfig);
 
+let logger = getLogger('PgPool', 'info');
+
 pool.on('error', (err, client) => {
-    console.log('Unexpected error on idle client: ', err);
+    logger.log('error', `Unexpected error on idle client: ${err}\n${err.stack}`);
 });
 
 export const postgresDb = new Datasource(pool);
@@ -29,11 +32,16 @@ export const sectionRepository = new SectionRepository(postgresDb);
 export const questionRepository = new QuestionRepository(postgresDb);
 export const questionOptionRepository = new QuestionOptionRepository(postgresDb);
 
-process.on('exit', function () {
-    (async () => {
-        console.log('Closing database pool...');
+// keep track of whether exit handler has been added so multiple exit handlers are not leaked
+// if this module keeps being imported as part of different child processes (i.e. mocha watch)
+if (!(<any>global).addedCloseDbHandler) {
+    logger.info('Adding process exit close database handler');
+    process.on('exit', async function () {
+        logger.log('info', 'Closing database pool...');
         await pool.end();
-        console.log('Database pool closed');
-    })();
-    console.log('Ending database process exit handler');
-});
+        logger.log('info', 'Database pool closed');
+        logger.log('info', 'Ending database process exit handler');
+    });
+
+    (<any>global).addedCloseDbHandler = true;
+}
