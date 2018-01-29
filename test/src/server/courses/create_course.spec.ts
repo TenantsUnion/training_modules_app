@@ -13,13 +13,13 @@ describe('Course Handler: Create Course', function () {
     let timestamp = new Date().toUTCString();
     let editorJson1: QuillEditorData = {
         id: 'NEW-0',
-        version: "0",
+        version: 0,
         editorJson: new Delta(),
         lastModifiedAt: new Date()
     };
     let editorJson2: QuillEditorData = {
         id: 'NEW-1',
-        version: "0",
+        version: 0,
         editorJson: new Delta().insert('editor json 2'),
         lastModifiedAt: new Date()
     };
@@ -37,13 +37,13 @@ describe('Course Handler: Create Course', function () {
             timestamp: timestamp,
             correlationId: '1',
             id: 'NEW',
-            version: '0'
+            version: 0
         };
         courseInfo1 = {
             metadata,
             payload: {
                 title: 'created course',
-                timeEstimate: '60',
+                timeEstimate: 60,
                 description: 'Course description',
                 openEnrollment: true,
                 active: true,
@@ -54,7 +54,7 @@ describe('Course Handler: Create Course', function () {
             metadata,
             payload: {
                 title: 'created course 2',
-                timeEstimate: '120',
+                timeEstimate: 120,
                 description: 'Course description 2',
                 openEnrollment: false,
                 active: false,
@@ -63,8 +63,8 @@ describe('Course Handler: Create Course', function () {
         };
     });
     it('should create 2 courses and load the matching admin course descriptions', async function () {
-        let courseId1 = await coursesHandler.createCourse(courseInfo1);
-        let courseId2 = await coursesHandler.createCourse(courseInfo2);
+        let {courseId: courseId1} = await coursesHandler.createCourse(courseInfo1);
+        let {courseId: courseId2} = await coursesHandler.createCourse(courseInfo2);
 
         let expectedDescriptions: AdminCourseDescription[] = [
             {

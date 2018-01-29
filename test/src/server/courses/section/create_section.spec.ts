@@ -10,23 +10,25 @@ describe('Create section', function () {
     beforeEach(async function () {
         await clearData();
         await createUser('user1');
-        courseId = await createCourse();
+        courseId = (await createCourse()).courseId;
         moduleId = await addModule();
     });
 
     it('should create two section under a module in a course', async function () {
         let section1 = {
             description: 'section 1 description',
-            timeEstimate: '60',
+            timeEstimate: 60,
             title: 'first section',
+            active: true,
             contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             courseId, moduleId
         };
 
         let section2 = {
             description: 'section 2 description',
-            timeEstimate: '120',
+            timeEstimate: 120,
             title: 'second section',
+            active: true,
             contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             courseId, moduleId
         };

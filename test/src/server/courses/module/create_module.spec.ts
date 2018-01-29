@@ -1,13 +1,13 @@
 import * as _ from 'underscore';
 import {expect} from 'chai';
 import {coursesHandler, coursesViewHandler} from '../../../../../server/src/config/handler_config';
-import {CreateModuleEntityPayload} from '../../../../../shared/modules';
+import {CreateModuleEntityPayload} from '@shared/modules';
 import {clearData} from '../../test_db_util';
 import {createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../test_course_util';
-import {Delta} from '../../../../../shared/normalize_imports';
+import {Delta} from '@shared/normalize_imports';
 import {moduleRepository, quillRepository} from '../../../../../server/src/config/repository_config';
-import {createdQuillPlaceholderId} from '../../../../../shared/quill_editor';
-import {addDeltaArrOp} from '../../../../../shared/delta/diff_key_array';
+import {createdQuillPlaceholderId} from '@shared/quill_editor';
+import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 
 describe('Create module', function () {
     let courseId: string;
@@ -15,14 +15,15 @@ describe('Create module', function () {
     beforeEach(async function () {
         await clearData();
         await createUser();
-        courseId = await createCourse();
+        let courseIdMap = await createCourse();
+        courseId = courseIdMap.courseId;
     });
 
     it('should create two modules in a course', async function () {
         let module1: CreateModuleEntityPayload = {
             courseId,
             description: 'Module 1 description blerg',
-            timeEstimate: '60',
+            timeEstimate: 60,
             title: 'first module',
             contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             active: true
@@ -31,7 +32,7 @@ describe('Create module', function () {
         let module2: CreateModuleEntityPayload = {
             courseId,
             description: 'Module 2 description',
-            timeEstimate: '120',
+            timeEstimate: 120,
             title: 'second module',
             contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             active: false
@@ -84,7 +85,7 @@ describe('Create module', function () {
         let createModulePayload: CreateModuleEntityPayload = {
             courseId,
             description: 'Module 1 description blerg',
-            timeEstimate: '60',
+            timeEstimate: 60,
             title: 'first module',
             contentQuestions: {
                 ...EMPTY_CONTENT_QUESTIONS_DELTA,
@@ -100,8 +101,8 @@ describe('Create module', function () {
         let moduleId = await coursesHandler.createModule(createModulePayload);
         let {orderedModuleIds} = await coursesViewHandler.loadAdminCourse(courseId);
 
-        let module = await moduleRepository.loadModule(moduleId);
-        let quillContent = await quillRepository.loadEditorJson(module.orderedContentIds[0]);
+        let module = await moduleRepository.loadModuleEntity(moduleId);
+        let quillContent = await quillRepository.loadQuillData(module.orderedContentIds[0]);
 
         expect(orderedModuleIds.length).to.equal(1);
         expect(module.orderedContentIds.length).to.equal(1);

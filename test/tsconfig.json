@@ -1,6 +1,7 @@
 {
   "includes": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "../server/**/*.ts"
   ],
   "compilerOptions": {
     "lib": [
@@ -15,6 +16,7 @@
     "target": "es6",
     "moduleResolution": "node",
     "allowJs": true,
+    "noEmit": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,

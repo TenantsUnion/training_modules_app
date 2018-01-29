@@ -1,6 +1,6 @@
 import {accountHandler, coursesHandler} from '../../../../server/src/config/handler_config';
 import {
-    CourseEntityCommandMetadata, CreateCourseEntityPayload
+    CourseEntityCommandMetadata, CreateCourseEntityPayload, CreateCourseIdMap
 } from '../../../../shared/courses';
 import {IUserInfo} from '../../../../shared/user';
 import {CreateModuleEntityPayload} from '../../../../shared/modules';
@@ -20,7 +20,7 @@ export const DEFAULT_COMMAND_METADATA = (userId = latestUser.id): CourseEntityCo
         timestamp: new Date().toUTCString(),
         correlationId: '1',
         id: 'NEW',
-        version: '0'
+        version: 0
     };
 };
 
@@ -34,7 +34,7 @@ export const EMPTY_CONTENT_QUESTIONS_DELTA: ContentQuestionsDelta = {
 
 export const DEFAULT_COURSE_ENTITY = {
     title: 'created course',
-    timeEstimate: '60',
+    timeEstimate: 60,
     description: 'Course description',
     openEnrollment: true,
     active: true,
@@ -42,13 +42,14 @@ export const DEFAULT_COURSE_ENTITY = {
 };
 
 let latestCourseId;
-export const createCourse = async (userId = latestUser.id, course: CreateCourseEntityPayload = DEFAULT_COURSE_ENTITY): Promise<string> => {
+export const createCourse = async (userId = latestUser.id, course: CreateCourseEntityPayload = DEFAULT_COURSE_ENTITY): Promise<CreateCourseIdMap> => {
     let createCourseCommand = {
         metadata: DEFAULT_COMMAND_METADATA(userId),
         payload: course
     };
-    latestCourseId = await coursesHandler.createCourse(createCourseCommand);
-    return latestCourseId;
+    let createdCourseIdMap = await coursesHandler.createCourse(createCourseCommand);
+    latestCourseId = createdCourseIdMap.courseId;
+    return createdCourseIdMap;
 };
 
 export const DEFAULT_MODULE = {
@@ -74,6 +75,7 @@ export const DEFAULT_SECTION = {
     description: 'this is a section description',
     timeEstimate: 60,
     title: 'Awesome Section',
+    active: true,
     contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
 

@@ -2,11 +2,13 @@ import {LoggerInstance} from "winston";
 import {getLogger} from "../../../server/src/log";
 import {DatabaseConfig} from '../../../server/src/config/normalize_config';
 import {postgresDb} from '../../../server/src/config/repository_config';
+import {QuillDeltaMap} from '@shared/quill_editor';
+import {Delta} from '@shared/normalize_imports';
 
 /**
  * Helper class for tests to check if the test db has been setup, initialized the test db, and clear the test db
  */
-let logger: LoggerInstance = getLogger("ClearDbUtil", "info");
+let logger: LoggerInstance = getLogger("ClearDbUtil", "error");
 
 
 let {database} = DatabaseConfig;
@@ -18,12 +20,11 @@ if (!database.includes("test")) {
 
 export const databaseInitialized: () => Promise<boolean> = async () => {
     let results = await postgresDb.query(`EXISTS (select datname from pg_catalog.pg_database where datname = ${database})`);
-    // testDb.query()
     logger.info(`Database initialized check results: ${JSON.stringify(results)}`);
     return results[0].rows;
 };
 
-export const clearData: () => Promise<void> = async () => {
+export const clearData = async (): Promise<void> => {
     logger.log('info', 'truncating tables');
     await postgresDb.query(`
         truncate table tu.account CASCADE;
@@ -39,5 +40,13 @@ export const clearData: () => Promise<void> = async () => {
         truncate table tu.user_course_progress CASCADE;
         truncate table tu.user_permissions CASCADE;
     `);
-    logger.log('successfully', 'truncated tables');
+    logger.log('info', 'successfully truncated tables');
+};
+
+export const quillDBTableToQuillMap = async (): Promise<QuillDeltaMap> => {
+  let quillRows = await postgresDb.query(`select id, editor_json from tu.quill_data`);
+  return quillRows.reduce((acc, row) => {
+      acc[row.id] = new Delta(row.editorJson.ops);
+      return acc;
+  }, {});
 };

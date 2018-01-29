@@ -131,7 +131,7 @@ describe('Question handler create question', async function () {
             questionType: QuestionType.DEFAULT,
             canPickMultiple: createQuestionData[questionPlaceholderId].canPickMultiple,
             answerInOrder: createQuestionData[questionPlaceholderId].answerInOrder,
-            version: "0",
+            version: 0,
             createdAt: creationDate,
             lastModifiedAt: creationDate
         };

@@ -37,7 +37,7 @@ describe('Save module', function () {
             let defaultModule: ModuleEntity = {
                 id: moduleId,
                 headerDataId: null,
-                version: "0",
+                version: 0,
                 active, title, timeEstimate, description,
                 orderedContentQuestionIds: [],
                 orderedContentIds: [],
@@ -46,7 +46,7 @@ describe('Save module', function () {
                 lastModifiedAt: new Date(),
                 createdAt: new Date(),
             };
-            let currentModule = await moduleRepository.loadModule(moduleId);
+            let currentModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(currentModule).to.deep.eq(defaultModule);
         });
 
@@ -66,7 +66,7 @@ describe('Save module', function () {
             let updatedModule = basicModuleChange({title: updatedTitle});
 
             await coursesHandler.saveModule(updatedModule);
-            let module = await moduleRepository.loadModule(moduleId);
+            let module = await moduleRepository.loadModuleEntity(moduleId);
             expect(module.title).to.equal(updatedTitle);
         });
 
@@ -75,7 +75,7 @@ describe('Save module', function () {
             let updatedModule: SaveModuleEntityPayload = basicModuleChange({description: updatedDescription});
 
             await coursesHandler.saveModule(updatedModule);
-            let module = await moduleRepository.loadModule(moduleId);
+            let module = await moduleRepository.loadModuleEntity(moduleId);
             expect(module.description).to.equal(updatedDescription);
         });
 
@@ -84,7 +84,7 @@ describe('Save module', function () {
             let updatedModule: SaveModuleEntityPayload = basicModuleChange({timeEstimate: updatedTimeEstimate});
 
             await coursesHandler.saveModule(updatedModule);
-            let module = await moduleRepository.loadModule(moduleId);
+            let module = await moduleRepository.loadModuleEntity(moduleId);
 
             expect(module.timeEstimate).to.equal(updatedTimeEstimate);
         });
@@ -94,7 +94,7 @@ describe('Save module', function () {
             let updatedModule: SaveModuleEntityPayload = basicModuleChange({active: updatedActive});
 
             await coursesHandler.saveModule(updatedModule);
-            let module = await moduleRepository.loadModule(moduleId);
+            let module = await moduleRepository.loadModuleEntity(moduleId);
 
             expect(module.active).to.equal(updatedActive);
         });
@@ -107,7 +107,7 @@ describe('Save module', function () {
 
             const swappedArr = [section2Id, section1Id];
             let swapOrder: DeltaArrOp[] = deltaArrayDiff([section1Id, section2Id], swappedArr);
-            let currentModule = await moduleRepository.loadModule(moduleId);
+            let currentModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id]);
 
             await coursesHandler.saveModule({
@@ -119,7 +119,7 @@ describe('Save module', function () {
                 }
             });
 
-            let updatedModule = await moduleRepository.loadModule(moduleId);
+            let updatedModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(updatedModule.orderedSectionIds).to.deep.eq(swappedArr);
         });
 
@@ -129,7 +129,7 @@ describe('Save module', function () {
 
             const updatedArr = [section2Id];
             let updateOps: DeltaArrOp[] = deltaArrayDiff([section1Id, section2Id], updatedArr);
-            let currentModule = await moduleRepository.loadModule(moduleId);
+            let currentModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id]);
 
             await coursesHandler.saveModule({
@@ -141,7 +141,7 @@ describe('Save module', function () {
                 }
             });
 
-            let updatedModule = await moduleRepository.loadModule(moduleId);
+            let updatedModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(updatedModule.orderedSectionIds).to.deep.eq(updatedArr);
         });
 
@@ -154,7 +154,7 @@ describe('Save module', function () {
             const updatedArr = [section3Id, section1Id];
             let updateOps: DeltaArrOp[] = deltaArrayDiff([section1Id, section2Id, section3Id], updatedArr);
             // assert current module state
-            let currentModule = await moduleRepository.loadModule(moduleId);
+            let currentModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id, section3Id]);
 
             await coursesHandler.saveModule({
@@ -166,7 +166,7 @@ describe('Save module', function () {
                 }
             });
 
-            let updatedModule = await moduleRepository.loadModule(moduleId);
+            let updatedModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(updatedModule.orderedSectionIds).to.deep.eq(updatedArr);
         });
     });
@@ -174,7 +174,7 @@ describe('Save module', function () {
     describe('content', function () {
         beforeEach(async function () {
             // assert current module does not have any content
-            let currentModule = await moduleRepository.loadModule(moduleId);
+            let currentModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(currentModule.orderedContentIds).deep.equal([]);
             expect(currentModule.orderedContentQuestionIds).deep.equal([]);
         });
@@ -211,11 +211,11 @@ describe('Save module', function () {
 
 
             await coursesHandler.saveModule(saveModulePayload);
-            let updatedModule = await moduleRepository.loadModule(moduleId);
+            let updatedModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(updatedModule.orderedContentIds.length).to.eq(2);
             expect(updatedModule.orderedContentQuestionIds.length).to.eq(2);
 
-            let quillContent = await quillRepository.loadQuillData(updatedModule.orderedContentIds);
+            let quillContent = await quillRepository.loadMultipleQuillData(updatedModule.orderedContentIds);
             let populatedQuillContent = quillContent.map((data) => {
                 return {
                     ...data,
@@ -225,13 +225,13 @@ describe('Save module', function () {
             let expectedQuillContent: QuillEditorData[] = [
                 {
                     id: updatedModule.orderedContentIds[0],
-                    version: "0",
+                    version: 0,
                     lastModifiedAt: now,
                     createdAt: now,
                     editorJson: content1
                 }, {
                     id: updatedModule.orderedContentIds[1],
-                    version: "0",
+                    version: 0,
                     lastModifiedAt: now,
                     createdAt: now,
                     editorJson: content2
@@ -264,7 +264,7 @@ describe('Save module', function () {
             };
 
             await coursesHandler.saveModule(saveAddedContentPayload);
-            let moduleEntity: ModuleEntity = await moduleRepository.loadModule(moduleId);
+            let moduleEntity: ModuleEntity = await moduleRepository.loadModuleEntity(moduleId);
 
             let updatedContent: DeltaStatic = new Delta().insert('some updated content');
             let updatedContentDiff: DeltaStatic = initialContent.diff(updatedContent);
@@ -281,9 +281,9 @@ describe('Save module', function () {
 
             await coursesHandler.saveModule(saveUpdateContent);
 
-            let updatedModule = await moduleRepository.loadModule(moduleId);
+            let updatedModule = await moduleRepository.loadModuleEntity(moduleId);
 
-            let quillContent = await quillRepository.loadQuillData(updatedModule.orderedContentIds);
+            let quillContent = await quillRepository.loadMultipleQuillData(updatedModule.orderedContentIds);
             expect(updatedModule.orderedContentIds.length).to.equal(1);
             // quill content matches updated content from applying updatedContentDiff
             expect(quillContent[0].editorJson.ops).to.deep.eq(updatedContent.ops);
@@ -320,7 +320,7 @@ describe('Save module', function () {
             };
 
             await coursesHandler.saveModule(addContentSave);
-            let moduleEntity: ModuleEntity = await moduleRepository.loadModule(moduleId);
+            let moduleEntity: ModuleEntity = await moduleRepository.loadModuleEntity(moduleId);
 
             let updatedContent: DeltaStatic = new Delta().insert('some updated content');
             let updatedContentDiff: DeltaStatic = content2.diff(updatedContent);
@@ -339,9 +339,9 @@ describe('Save module', function () {
             };
 
             await coursesHandler.saveModule(saveUpdateContent);
-            let updatedModule = await moduleRepository.loadModule(moduleId);
+            let updatedModule = await moduleRepository.loadModuleEntity(moduleId);
 
-            let quillContent = await quillRepository.loadQuillData(updatedModule.orderedContentIds);
+            let quillContent = await quillRepository.loadMultipleQuillData(updatedModule.orderedContentIds);
             expect(updatedModule.orderedContentIds.length).to.equal(1);
             expect(quillContent[0].editorJson.ops).to.deep.eq(updatedContent.ops);
         });
