@@ -1,22 +1,27 @@
 CREATE TABLE tu.module (
-  id                           BIGINT PRIMARY KEY,
-  version                      BIGINT    NOT NULL DEFAULT 0,
-  header_data_id               BIGINT REFERENCES tu.quill_data (id),
+  id                           TEXT PRIMARY KEY,
+  version                      INT4        NOT NULL DEFAULT 0,
+  header_data_id               TEXT REFERENCES tu.quill_data (id),
   title                        VARCHAR(100),
   description                  VARCHAR(300),
   time_estimate                INTEGER,
-  active                       BOOLEAN   NOT NULL DEFAULT FALSE,
+  active                       BOOLEAN     NOT NULL DEFAULT FALSE,
   --references id pk column of tu.section
-  ordered_section_ids          BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  ordered_section_ids          TEXT []     NOT NULL DEFAULT ARRAY [] :: TEXT [],
   --references id pk column of tu.quill_data
-  ordered_content_ids          BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  ordered_content_ids          TEXT []     NOT NULL DEFAULT ARRAY [] :: TEXT [],
   --references id pk column of tu.question
-  ordered_question_ids         BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
+  ordered_question_ids         TEXT []     NOT NULL DEFAULT ARRAY [] :: TEXT [],
   --ordering of content and questions together -- ids from ordered_module_ids and ordered_content_ids
-  ordered_content_question_ids BIGINT [] NOT NULL DEFAULT ARRAY [] :: BIGINT [],
-  last_modified_at             TIMESTAMP NOT NULL DEFAULT now(),
-  created_at                   TIMESTAMP NOT NULL DEFAULT now()
+  ordered_content_question_ids TEXT []     NOT NULL DEFAULT ARRAY [] :: TEXT [],
+  last_modified_at             TIMESTAMPTZ NOT NULL,
+  created_at                   TIMESTAMPTZ NOT NULL
 );
+
+CREATE SEQUENCE tu.module_id_seq;
+CREATE OR REPLACE FUNCTION tu.module_id(how_many INTEGER) RETURNS SETOF TEXT AS $$
+SELECT ('MO' || nextval('tu.module_id_seq')) FROM generate_series(1, how_many);
+$$ LANGUAGE SQL;
 
 CREATE INDEX module_title_gin_idx
   ON tu.module USING GIN (to_tsvector('english', title));

@@ -1,14 +1,18 @@
 CREATE TABLE tu.account (
-  id             BIGINT PRIMARY KEY,
-  version        BIGINT    NOT NULL DEFAULT 0,
+  id             TEXT PRIMARY KEY,
+  version        INT4        NOT NULL DEFAULT 0,
   username       VARCHAR(30) UNIQUE,
   password       VARCHAR(20),
   password_salt  TEXT,
   email          VARCHAR(64) UNIQUE,
-  created_at     TIMESTAMP NOT NULL DEFAULT now(),
-  last_active_at TIMESTAMP NOT NULL DEFAULT now()
+  created_at     TIMESTAMPTZ NOT NULL,
+  last_active_at TIMESTAMPTZ NOT NULL
 );
 
+CREATE SEQUENCE tu.account_id_seq;
+CREATE OR REPLACE FUNCTION tu.account_id(how_many INTEGER) RETURNS SETOF TEXT AS $$
+SELECT ('A' || nextval('tu.account_id_seq')) FROM generate_series(1, how_many);
+$$ LANGUAGE SQL;
 
 CREATE INDEX account_username_idx
   ON tu.account (username);
