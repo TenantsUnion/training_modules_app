@@ -68,7 +68,7 @@ export class CreateModuleComponent extends Vue {
     addContentCallback(addContentId: string) {
         this.quillContent.push({
             id: addContentId,
-            type: 'CONTENT',
+            type: 'CONTENT'
         });
     }
 }

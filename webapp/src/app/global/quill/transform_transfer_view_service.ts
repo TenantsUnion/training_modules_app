@@ -26,11 +26,14 @@ function isViewSectionQuillData(arg: any): arg is ViewModuleQuillData {
  * Transforms transfer data views to their quill data view format for display
  */
 export class TransformTransferViewService {
-    async populateTrainingEntityQuillData<T extends ViewTrainingEntityTransferData>(course: T): Promise<ViewTrainingEntityQuillData> {
+    async populateTrainingEntityQuillData<Q extends ViewTrainingEntityQuillData>(course: ViewTrainingEntityTransferData): Promise<Q> {
         try {
             let quillAsync = _.map(course.orderedContentIds, (contentId) => {
                 return quillService.loadQuillData(contentId, moment(course.lastModifiedAt));
             });
+
+            // todo load quill ids for questions
+            // todo add remove callbacks for segments
 
             let content: QuillEditorData[] = await Promise.all(quillAsync);
             let contentSegments:ContentSegment[] = content.map((quillEditor) => {

@@ -27,7 +27,7 @@ export class CreateSectionComponent extends Vue {
     errorMessages: { [index: string]: string };
     loading: boolean;
     title: string;
-    timeEstimate: string;
+    timeEstimate: number;
     description: string;
     formstate: VueForm.FormState;
     quillContent: Segment[] = [];
@@ -47,6 +47,7 @@ export class CreateSectionComponent extends Vue {
                 title: this.title,
                 description: this.description,
                 timeEstimate: this.timeEstimate,
+                active: true, // todo make field
                 courseId: this.$store.state.course.currentCourseId,
                 moduleId: currentModuleId,
                 contentQuestions: (<TrainingSegmentComponent> this.$refs.trainingSegment).getContentQuestionsDelta(),
@@ -77,7 +78,7 @@ export class CreateSectionComponent extends Vue {
     addContentCallback(addContentId: string) {
         this.quillContent.push({
             id: addContentId,
-            type: 'CONTENT',
+            type: 'CONTENT'
         });
     }
 }

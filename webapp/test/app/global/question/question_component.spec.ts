@@ -18,7 +18,7 @@ describe('Question Component', function () {
     const questionQuillId = createdQuillPlaceholderId();
     const storedQuestion: QuestionQuillData = {
         id: createdQuestionPlaceholderId(),
-        version: "0",
+        version: 0,
         questionType: QuestionType.DEFAULT,
         answerType: AnswerType.DEFAULT,
         randomizeOptionOrder: true,
@@ -28,7 +28,7 @@ describe('Question Component', function () {
         optionIds: [],
         questionQuill: {
             id: questionQuillId,
-            version: "0",
+            version: 0,
             editorJson: new Delta()
         },
         options: <QuestionOptionQuillData[]> []

@@ -19,12 +19,12 @@ describe('Question Option Component', function () {
         id: createdQuestionOptionPlaceholderId(),
         option: {
             id: optionQuillId,
-            version: "0",
+            version: 0,
             editorJson: new Delta()
         },
         explanation: {
             id: explanationQuillId,
-            version: "0",
+            version: 0,
             editorJson: new Delta()
         },
         removeCallback: () => {

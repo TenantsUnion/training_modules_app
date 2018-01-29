@@ -65,7 +65,7 @@ export class EditModuleComponent extends Vue {
     @Watch('currentModule', {immediate: true})
     updateModule(currentModule: ViewModuleQuillData, oldCurrentModule) {
         let module = currentModule ? _.extend({}, currentModule) : this.module;
-        let quillContent = currentModule ? _.map(currentModule.content, (content) => {
+        let quillContent = currentModule ? _.map(currentModule.contentQuestions, (content) => {
             return _.extend({}, content, {
                 // add callback that removes content element from component array before passing to segment viewer
                 removeCallback: () => {

@@ -15,8 +15,6 @@ import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {TrainingEntityDiffDelta} from '@shared/training_entity';
 import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
-import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
-import VueTrainingSegmentComponent from '@global/training_segments/training_segments_component.vue';
 
 @Component({
     data: () => {

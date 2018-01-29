@@ -28,8 +28,9 @@ export class CoursesService {
     async loadAdminCourse(courseId: string): Promise<ViewCourseQuillData> {
         try {
             let response = await axios.get(`view/course/admin/${courseId}`);
-            let course = await transformTransferViewService.populateTrainingEntityQuillData(response.data);
-            return <ViewCourseQuillData> course;
+            let course =
+                await transformTransferViewService.populateTrainingEntityQuillData<ViewCourseQuillData>(response.data);
+            return  course;
         } catch (e) {
             console.error(`Error loading course data for course: ${courseId}${e}`);
             throw e.data;

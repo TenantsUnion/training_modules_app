@@ -42,21 +42,6 @@ export class QuillService {
 
         return await quillDataQuery;
     }
-
-    async getQuillId(): Promise<string> {
-        let idRequest = await axios.get('/quill-id');
-        return idRequest.data;
-    }
-
-    async createQuillContent(): Promise<QuillEditorData> {
-        let id = await this.getQuillId();
-        return {
-            editorJson: new Delta(),
-            lastModifiedAt: new Date(),
-            id,
-            version: "0"
-        };
-    }
 }
 
 export const quillService = new QuillService();

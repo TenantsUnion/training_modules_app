@@ -41,7 +41,7 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
                 metadata: {
                     userId: rootState.user.userId,
                     id: 'NEW',
-                    version: '0',
+                    version: 0,
                     type: 'CourseEntity',
                     timestamp: new Date().toUTCString(),
                     correlationId: getCorrelationId(rootState.user.userId),

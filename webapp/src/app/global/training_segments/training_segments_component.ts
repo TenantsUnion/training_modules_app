@@ -99,19 +99,6 @@ export default class TrainingSegmentsComponent extends Vue {
         };
     }
 
-    // getQuillDiff(): QuillDeltaMap {
-    //     let contentQuillDiff = this.contentRefs.reduce((acc, contentQuill: QuillComponent) => {
-    //         if(contentQuill.hasChanged()){
-    //             acc[contentQuill.editorId] = contentQuill.getChanges();
-    //         }
-    //         return acc;
-    //     }, {});
-    //
-    //     let questionQuillDiff =this.questionRefs
-    //         .reduce((acc, question) => ({...acc, ...question.quillChanges()}), {});
-    //     return {...contentQuillDiff, ...questionQuillDiff};
-    // }
-
     isContent(segment: ContentSegment | QuestionSegment): boolean {
         return isContentSegment(segment);
     }
@@ -139,6 +126,7 @@ export default class TrainingSegmentsComponent extends Vue {
         let createdAt = new Date();
         this.currentSegments.push(<QuestionSegment>{
             id: addContentId,
+
             type: 'QUESTION',
             removeCallback: () => {
                 let rmIndex = this.currentSegments.findIndex((el) => el.id === addContentId);
@@ -146,7 +134,7 @@ export default class TrainingSegmentsComponent extends Vue {
             },
             question: {
                 id: addContentId,
-                version: "0",
+                version: 0,
                 questionType: QuestionType.DEFAULT,
                 answerType: AnswerType.DEFAULT,
                 answerInOrder: false,
@@ -154,7 +142,7 @@ export default class TrainingSegmentsComponent extends Vue {
                 randomizeOptionOrder: true,
                 questionQuill: {
                     id: questionQuillId,
-                    version: "0",
+                    version: 0,
                     editorJson: new Delta(),
                 },
                 correctOptionIds: [],
@@ -196,25 +184,4 @@ export const isNotEmptyQuillData = (quillData: Quill.DeltaStatic): boolean => {
         // newly created quill editor will default to single line insert operation
         return quillOp.insert !== '\n';
     });
-};
-
-/**
- * Maps the specified to question object to an object whose keys are the ids of the quill data of the question and
- * its options.
- * @param {QuestionQuillData} question
- * @returns {QuillDeltaMap}
- */
-export const questionToQuillMap = (question: QuestionQuillData): QuillDeltaMap => {
-    let {questionQuill} = question;
-    let quillData: QuillDeltaMap = {};
-    quillData[questionQuill.id] = questionQuill.editorJson;
-
-    question.options.reduce((acc, optionData) => {
-        let {explanation, option} = optionData;
-        quillData[explanation.id] = explanation.editorJson;
-        quillData[option.id] = option.editorJson;
-        return acc;
-    }, quillData);
-
-    return quillData;
 };
