@@ -24,7 +24,7 @@ export abstract class AbstractRepository {
 }
 
 export const getUTCNow = (): string => {
-    return new Date().toISOString();
+    return Moment().format(TIMESTAMP_FORMAT);
 };
 
 export const TIMESTAMP_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ';

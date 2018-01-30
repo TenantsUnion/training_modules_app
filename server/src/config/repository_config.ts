@@ -41,14 +41,23 @@ export const questionOptionRepository = new QuestionOptionRepository(postgresDb)
 let TIMESTAMPTZ_OID = 1184;
 let TIMESTAMP_OID = 1114;
 let zoneOffsetRegex = /(-\d\d)$/;
-types.setTypeParser(TIMESTAMPTZ_OID, function(val) {
+types.setTypeParser(TIMESTAMPTZ_OID, function (val) {
     // postgres timestamp format only show hour offset add ':00' afterwards to more closely match standard ISO 8601 format
     // that moment uses
-    // postgres format is YYYY-MM-DD HH:mm:ss.SSS-ZZ when dates
     // when returning a date field that is in a jsonb object it is YYYY-MM-DDTHH:mm:ss.SSS-ZZ
-    return val? [val.substr(0, 10), "T", val.substr(11, 25), ':00'].join('') : val;
+    // if fractional second of SSS ends in zero it is left off by postgres but kept by moment, add the 0 back on to match moment
+    // length is 26 if not round down fractional of second
+    if (!val) {
+        return val;
+    }
+    // postgres format is YYYY-MM-DD HH:mm:ss.[SSS]-ZZ when dates
+    let paddedFractionalSecond = val.substring(20, val.length - 3).padEnd(3, '0');
+    return [
+        val.substring(0, 10), "T", val.substring(11, 20), paddedFractionalSecond,
+        val.substring(val.length - 3), ':00'
+    ].join('');
 });
-types.setTypeParser(TIMESTAMP_OID, function(val){
+types.setTypeParser(TIMESTAMP_OID, function (val) {
     // leave as string
     return val;
 });
