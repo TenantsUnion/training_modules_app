@@ -8,6 +8,7 @@ import * as Delta from 'quill-delta';
 import {clearData} from '../test_db_util';
 import {IUserInfo} from '@shared/user';
 import {createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from './test_course_util';
+import {getUTCNow} from "../../../../server/src/repository";
 
 describe('Course Handler: Create Course', function () {
     let timestamp = new Date().toUTCString();
@@ -15,13 +16,13 @@ describe('Course Handler: Create Course', function () {
         id: 'NEW-0',
         version: 0,
         editorJson: new Delta(),
-        lastModifiedAt: new Date()
+        lastModifiedAt: getUTCNow()
     };
     let editorJson2: QuillEditorData = {
         id: 'NEW-1',
         version: 0,
         editorJson: new Delta().insert('editor json 2'),
-        lastModifiedAt: new Date()
+        lastModifiedAt: getUTCNow()
     };
 
     let courseInfo1: CreateCourseEntityCommand;

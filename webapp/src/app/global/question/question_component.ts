@@ -71,6 +71,7 @@ export class QuestionComponent extends Vue {
         let explanationQuillId = createdQuillPlaceholderId();
         this.options.push({
             id: id,
+            version: 0,
             option: {
                 id: optionQuillId,
                 version: 0,

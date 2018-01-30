@@ -1,7 +1,7 @@
 import * as _ from 'underscore';
 import {CreateQuestionData, QuestionChangesObj, QuestionTransferData} from './questions';
 import {Moment} from 'moment';
-import {QuillEditorData} from './quill_editor';
+import {QuillEditorData, QuillTransferData} from './quill_editor';
 import {EntityCommand, SaveEntityCommand} from './entity';
 import {DeltaObjDiff} from './delta/delta';
 import {applyDeltaArrOps, DeltaArrOp} from './delta/diff_key_array';
@@ -18,15 +18,15 @@ export interface ViewTrainingEntity {
     orderedContentIds: string[],
     orderedQuestionIds: string[],
     orderedContentQuestionIds: string[],
+    lastModifiedAt: string;
+    createdAt: string;
 }
 
 export interface ViewTrainingEntityTransferData extends ViewTrainingEntity {
-    lastModifiedAt: string;
-    questions: QuestionTransferData[]
+    contentQuestions: (QuestionTransferData | QuillTransferData)[];
 }
 
 export interface ViewTrainingEntityQuillData extends ViewTrainingEntity {
-    lastModifiedAt: Moment;
     contentQuestions: (ContentSegment | QuestionSegment)[];
     // todo handle questions
 }

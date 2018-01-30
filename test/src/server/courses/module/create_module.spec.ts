@@ -46,7 +46,6 @@ describe('Create module', function () {
         expect(moduleIds2.length).to.eq(2);
         expect(moduleIds2[1]).to.eq(moduleId2);
 
-        // todo use http://sinonjs.org/ to mock new Date() in order to be able to test lastModifiedTime being updated when course is modified
         const expectedModule1 = {
             active: true,
             description: "Module 1 description blerg",
@@ -57,7 +56,7 @@ describe('Create module', function () {
             orderedQuestionIds: [],
             orderedSectionIds: [],
             sections: [],
-            timeEstimate: "60",
+            timeEstimate: 60,
             title: "first module",
             version: 0
         };
@@ -72,7 +71,7 @@ describe('Create module', function () {
             orderedQuestionIds: [],
             orderedSectionIds: [],
             sections: [],
-            timeEstimate: "120",
+            timeEstimate: 120,
             title: "second module",
             version: 0
         };

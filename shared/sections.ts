@@ -1,7 +1,7 @@
 import {Moment} from 'moment';
 import {
     CreateTrainingEntityPayload, SaveTrainingEntityPayload, TrainingEntityDiffDelta,
-    TrainingEntity, ViewTrainingEntity
+    TrainingEntity, ViewTrainingEntity, ViewTrainingEntityQuillData
 } from './training_entity';
 import {QuillEditorData} from './quill_editor';
 import {ViewCourseTransferData} from './courses';
@@ -15,24 +15,11 @@ export interface SectionDetails {
     description?: string;
 }
 
-interface ViewSectionData extends ViewTrainingEntity{
-    id: string;
-    orderedContentIds: string[];
-    orderedQuestionIds: string[];
-    orderedContentQuestionIds: string[];
-}
+interface ViewSectionData extends ViewTrainingEntity {}
 
-export interface ViewSectionQuillData extends ViewSectionData {
-    createdAt: Moment;
-    lastModifiedAt: Moment;
-    content: QuillEditorData[];
-}
+export interface ViewSectionQuillData extends ViewTrainingEntityQuillData {}
 
-export interface ViewSectionTransferData extends ViewSectionData {
-    createdAt: string;
-    lastModifiedAt: string;
-    orderedContentIds: string[];
-}
+export interface ViewSectionTransferData extends ViewSectionData {}
 
 export interface SaveSectionEntityPayload extends SaveTrainingEntityPayload<TrainingEntityDiffDelta> {
     courseId: string;

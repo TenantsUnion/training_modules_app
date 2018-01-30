@@ -123,10 +123,8 @@ export default class TrainingSegmentsComponent extends Vue {
     addQuestion() {
         let addContentId = createdQuestionPlaceholderId();
         let questionQuillId = createdQuillPlaceholderId();
-        let createdAt = new Date();
         this.currentSegments.push(<QuestionSegment>{
             id: addContentId,
-
             type: 'QUESTION',
             removeCallback: () => {
                 let rmIndex = this.currentSegments.findIndex((el) => el.id === addContentId);
@@ -148,8 +146,6 @@ export default class TrainingSegmentsComponent extends Vue {
                 correctOptionIds: [],
                 optionIds: [],
                 options: [],
-                createdAt: createdAt,
-                lastModifiedAt: createdAt,
             }
         });
     }

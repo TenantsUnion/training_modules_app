@@ -53,7 +53,7 @@ export class EditCourseComponent extends Vue {
     @Watch('currentCourse', {immediate: true})
     updateCourse(currentCourse: ViewCourseQuillData) {
         let course = currentCourse ? _.extend({}, currentCourse) : this.course;
-        let quillContent = currentCourse ? _.map(currentCourse.content, (content) => {
+        let quillContent = currentCourse ? _.map(currentCourse.contentQuestions, (content) => {
             return _.extend({}, content, {
                 removeCallback: () => {
                     // add callback that removes content element from component array before passing to segment viewer

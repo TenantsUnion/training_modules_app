@@ -37,8 +37,8 @@ export interface QuestionData {
     canPickMultiple: boolean,
     correctOptionIds: string[],
     optionIds: string[],
-    createdAt?: Date | string, // date?
-    lastModifiedAt?: Date | string
+    createdAt?: string,
+    lastModifiedAt?: string
 }
 
 export interface QuestionTransferData extends QuestionData {
@@ -79,7 +79,7 @@ export const isCreateQuestionData = (obj: any): obj is CreateQuestionData => {
 
 export interface QuestionOptionData {
     id: string;
-    version?: number,
+    version: number,
     lastModifiedAt?: string,
     createdAt?: string
 }

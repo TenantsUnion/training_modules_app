@@ -14,6 +14,13 @@ export interface QuillEditorData {
     createdAt?: string;
 }
 
+export interface QuillTransferData {
+    id: string;
+    version: number,
+    lastModifiedAt?: string;
+    createdAt?: string;
+}
+
 /**
  * Returns a boolean indicating whether the provided obj is of the {@type QuillEditorData} type by checking if there
  * exists a property {@link QuillEditorData#editorJson}' that is of {@type Quill.DeltaStatic}

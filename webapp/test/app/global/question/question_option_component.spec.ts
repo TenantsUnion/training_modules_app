@@ -17,6 +17,7 @@ describe('Question Option Component', function () {
     const explanationQuillId = createdQuillPlaceholderId();
     let storedOption: QuestionOptionQuillData & SegmentArrayElement = {
         id: createdQuestionOptionPlaceholderId(),
+        version: 0,
         option: {
             id: optionQuillId,
             version: 0,

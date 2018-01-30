@@ -6,7 +6,7 @@ import {
     AdminCourseDescription, EnrolledCourseDescription, UserEnrolledCourseData,
     ViewCourseTransferData
 } from '../../../../shared/courses';
-import {processRow} from '../course_row_processor';
+import {processCourseView} from './course_view_row_processor';
 
 export class CourseViewQuery {
     logger: LoggerInstance = getLogger('CourseRepository', 'info');
@@ -65,7 +65,7 @@ export class CourseViewQuery {
         let query = {
             // language=PostgreSQL
             text: `
-              SELECT c.*, m.modules, q.questions FROM tu.course c
+              SELECT c.*, m.modules, q.questions, qd.content FROM tu.course c
                 INNER JOIN LATERAL
                            (SELECT json_agg(m.*) AS modules
                             FROM (SELECT m.*, s.sections
@@ -83,8 +83,13 @@ export class CourseViewQuery {
                                     INNER JOIN LATERAL (SELECT jsonb_agg(o.*) AS options
                                                         FROM tu.question_option o
                                                         WHERE o.id = ANY (q.option_ids)) o
-                                      ON TRUE) q
-                            WHERE q.id = ANY (c.ordered_question_ids)) q ON TRUE
+                                      ON TRUE) q WHERE q.id = ANY (c.ordered_question_ids)) q
+                  ON TRUE
+                INNER JOIN LATERAL
+                           (SELECT jsonb_agg(qd.*) AS content
+                            FROM (SELECT id, version, last_modified_at, created_at FROM tu.quill_data) qd WHERE
+                              qd.id = ANY (c.ordered_content_ids)) qd
+                  ON TRUE
               WHERE c.id = $1;
             `,
             values: [courseId]
@@ -93,7 +98,7 @@ export class CourseViewQuery {
             this.logger.log('info', 'querying for admin course');
             this.logger.log('debug', `sql => ${query.text}`);
             let results = await this.datasource.query(query);
-            let processedResults = results.map((row) => processRow(row));
+            let processedResults = results.map((row) => processCourseView(row));
             return <ViewCourseTransferData> processedResults[0];
         } catch (e) {
             this.logger.log('error', e);

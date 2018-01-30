@@ -55,7 +55,7 @@ export class EditSectionComponent extends Vue {
     @Watch('currentSection', {immediate: true})
     updateSection(currentSection: ViewSectionQuillData, oldCurrentSection) {
         let section = currentSection ? _.extend({}, currentSection) : this.section;
-        let quillContent = currentSection ? _.map(currentSection.content, (content) => {
+        let quillContent = currentSection ? _.map(currentSection.contentQuestions, (content) => {
             return _.extend({}, content, {
                 // add callback that removes content element from component array before passing to segment viewer
                 removeCallback: () => {

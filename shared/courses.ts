@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import {Moment} from "moment";
-import {ViewModuleTransferData} from './modules';
+import {ViewModuleData, ViewModuleQuillData, ViewModuleTransferData} from './modules';
 import {ContentSegment} from './segment';
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, SaveTrainingEntityPayload,
@@ -36,28 +36,19 @@ export interface CourseEntityDeltas extends TrainingEntityDiffDelta {
     orderedModuleIds?: DeltaArrOp[];
 }
 
-export interface ViewCourseData extends ViewTrainingEntity {
+export interface ViewCourseData<T extends ViewModuleData<ViewTrainingEntity>> extends ViewTrainingEntity {
     openEnrollment: boolean,
-
     orderedModuleIds: string[],
-    orderedContentIds: string[],
-    orderedQuestionIds: string[],
-    orderedContentQuestionIds: string[]
+    modules: T[]
 }
 
-export interface ViewCourseQuillData extends ViewCourseData, ViewTrainingEntityQuillData {
-    lastModifiedAt: Moment;
-    modules: ViewModuleTransferData[];
-    content: ContentSegment[];
-}
+export interface ViewCourseQuillData extends ViewCourseData<ViewModuleQuillData>, ViewTrainingEntityQuillData {}
 
 /**
- * The transfer shape of a course view where properties that refer to quill data instead of have a string of
+ * The transfer shape of a course view where properties that refer to quill data have a string of
  * the corresponding ids and timestamps are in string form.
  */
-export interface ViewCourseTransferData extends ViewCourseData, ViewTrainingEntityTransferData {
-    modules: ViewModuleTransferData[],
-}
+export interface ViewCourseTransferData extends ViewCourseData<ViewModuleTransferData>, ViewTrainingEntityTransferData {}
 
 export interface UserEnrolledCourseData extends ViewCourseQuillData {
     //todo maybe user description?

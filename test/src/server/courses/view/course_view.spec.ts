@@ -1,18 +1,18 @@
 import {expect} from 'chai';
-import {clearData} from '../test_db_util';
-import {createCourse, createUser, latestUser} from './test_course_util';
-import {courseViewQuery} from '../../../../server/src/config/query_service_config';
-import {CreateCourseEntityPayload, ViewCourseTransferData} from '@shared/courses';
+import {clearData} from '../../test_db_util';
+import {createCourse, createUser, latestUser} from '../test_course_util';
+import {courseViewQuery} from '../../../../../server/src/config/query_service_config';
+import {CreateCourseEntityPayload, ViewCourseTransferData} from '../../../../../shared/courses';
 import {
     createdQuestionOptionPlaceholderId,
     createdQuestionPlaceholderId,
     createdQuillPlaceholderId
-} from '@shared/quill_editor';
-import {Delta} from '@shared/normalize_imports';
-import {AnswerType, QuestionChanges, QuestionType} from '@shared/questions';
-import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';
+} from '../../../../../shared/quill_editor';
+import {Delta} from '../../../../../shared/normalize_imports';
+import {AnswerType, QuestionChanges, QuestionType} from '../../../../../shared/questions';
+import {toAddDeltaArrOps} from '../../../../../shared/delta/diff_key_array';
 import * as MockDate from 'mockdate';
-import {toDbTimestampFormat} from "../../../../server/src/repository";
+import {toDbTimestampFormat} from "../../../../../server/src/repository";
 
 describe('Course view', function () {
     let questionId = createdQuestionPlaceholderId();
@@ -107,7 +107,12 @@ describe('Course view', function () {
             orderedContentIds: [idMap[contentQuillId]],
             orderedQuestionIds: [idMap[questionId]],
             orderedContentQuestionIds: [contentQuillId, questionId].map((id) => idMap[id]),
-            questions: [{
+            contentQuestions: [{
+                id: idMap[contentQuillId],
+                version: 0,
+                createdAt: nowTimestamp,
+                lastModifiedAt: nowTimestamp
+            },{
                 id: idMap[questionId],
                 version: 0,
                 createdAt: nowTimestamp,
