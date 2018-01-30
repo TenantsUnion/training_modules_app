@@ -56,10 +56,11 @@ const basicTransportOptions = {
     prettyPrint: true,
     showLevel: true,
     colorize: true,
-    levels: LOG_LEVEL_VALUES,
-    colors: LOG_COLORS
 };
 
+winston.setLevels(LOG_LEVEL_VALUES);
+winston.addColors(LOG_COLORS);
+console.log(`Log config level ${LogConfig.level}`);
 export const getLogger = (loggerName: string, level?: string & keyof LogLevels, loggerFile?: string): LoggerInstance => {
     let transport = LogConfig.fileLogging ? new winston.transports.File({
             label: loggerName,
@@ -78,6 +79,7 @@ export const getLogger = (loggerName: string, level?: string & keyof LogLevels, 
         });
 
     return new winston.Logger({
+        levels: LOG_LEVEL_VALUES,
         transports: [
             transport
         ]
