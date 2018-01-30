@@ -6,9 +6,11 @@ import {ModuleEntity} from "@shared/modules";
 import {moduleRepository, quillRepository} from "../../../../../server/src/config/repository_config";
 import * as Moment from 'moment';
 import {Delta} from '@shared/normalize_imports';
+import {TIMESTAMP_FORMAT, toDbTimestampFormat} from "../../../../../server/src/repository";
 
 describe('Module Repository', function () {
     let now = new Date();
+    let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
         await clearData();
         MockDate.set(now);
@@ -25,8 +27,8 @@ describe('Module Repository', function () {
     };
 
     let defaultModuleProps = {
-        createdAt: now,
-        lastModifiedAt: now,
+        createdAt: nowTimestamp,
+        lastModifiedAt: nowTimestamp,
         headerDataId: null,
         version: 0,
         orderedSectionIds: []
@@ -68,24 +70,22 @@ describe('Module Repository', function () {
         let updatedModuleEntity = await moduleRepository.loadModuleEntity(moduleId);
         expect(updatedModuleEntity).to.deep.eq({
             ...moduleUpdate,
-            createdAt: now,
-            lastModifiedAt: updated.toDate()
+            createdAt: nowTimestamp,
+            lastModifiedAt: updated.format(TIMESTAMP_FORMAT)
         });
 
     });
 
     it('should update the last modified time of a module', async function () {
         let moduleId = await moduleRepository.createModule(moduleData);
-        let updated = new Date();
-        updated.setTime(now.getTime());
-        updated.setHours(now.getHours());
+        let updated = Moment(now).add(1, 'hour').toDate();
         MockDate.set(updated);
 
         await moduleRepository.updateLastModified(moduleId);
         expect(await moduleRepository.loadModuleEntity(moduleId)).to.deep.eq({
             id: moduleId,
-            lastModifiedAt: updated,
-            ...moduleData, ...defaultModuleProps
+            ...moduleData, ...defaultModuleProps,
+            lastModifiedAt: toDbTimestampFormat(updated)
         });
     });
 

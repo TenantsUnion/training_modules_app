@@ -15,17 +15,17 @@ export interface ViewTrainingEntity {
     description?: string;
     timeEstimate?: number;
     active: boolean;
-}
-
-export interface ViewTrainingEntityTransferData extends ViewTrainingEntity {
-    lastModifiedAt: string | any;
     orderedContentIds: string[],
     orderedQuestionIds: string[],
     orderedContentQuestionIds: string[],
+}
+
+export interface ViewTrainingEntityTransferData extends ViewTrainingEntity {
+    lastModifiedAt: string;
     questions: QuestionTransferData[]
 }
 
-export interface ViewTrainingEntityQuillData extends ViewTrainingEntityTransferData {
+export interface ViewTrainingEntityQuillData extends ViewTrainingEntity {
     lastModifiedAt: Moment;
     contentQuestions: (ContentSegment | QuestionSegment)[];
     // todo handle questions

@@ -4,9 +4,11 @@ import {postgresDb, quillRepository} from "../../../../../server/src/config/repo
 import * as MockDate from 'mockdate';
 import {clearData} from "../../test_db_util";
 import * as Moment from 'moment';
+import {toDbTimestampFormat} from "../../../../../server/src/repository";
 
 describe('Quill Repository', function () {
     let now = new Date();
+    let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
         await clearData();
         MockDate.set(now);
@@ -21,8 +23,8 @@ describe('Quill Repository', function () {
             version: 0,
             //use parse to remove functions attached to delta object which would fail comparison
             editorJson: JSON.parse(JSON.stringify(quillData)),
-            lastModifiedAt: now,
-            createdAt: now
+            lastModifiedAt: nowTimestamp,
+            createdAt: nowTimestamp
         });
     });
 
@@ -44,15 +46,15 @@ describe('Quill Repository', function () {
             version: 0,
             //use parse to remove functions attached to delta object which would fail comparison
             editorJson: JSON.parse(JSON.stringify(quillData[0].editorJson)),
-            lastModifiedAt: now,
-            createdAt: now
+            lastModifiedAt: nowTimestamp,
+            createdAt: nowTimestamp
         }, {
             id: quillData[2].id,
             version: 0,
             //use parse to remove functions attached to delta object which would fail comparison
             editorJson: JSON.parse(JSON.stringify(quillData[2].editorJson)),
-            lastModifiedAt: now,
-            createdAt: now
+            lastModifiedAt: nowTimestamp,
+            createdAt: nowTimestamp
         }]);
     });
 
@@ -61,7 +63,7 @@ describe('Quill Repository', function () {
         let quillData = new Delta().insert('Some text or whatever');
         await quillRepository.insertEditorJson(quillId, quillData);
 
-        let updated = Moment(now).add(1, 'hour');
+        let updated = Moment(now).add(1, 'hour').toDate();
         MockDate.set(updated);
 
 
@@ -76,8 +78,8 @@ describe('Quill Repository', function () {
             version: 0,
             //use parse to remove functions attached to delta object which would fail comparison
             editorJson: JSON.parse(JSON.stringify(updatedEditorJson)),
-            lastModifiedAt: updated.toDate(),
-            createdAt: now
+            lastModifiedAt: toDbTimestampFormat(updated),
+            createdAt: nowTimestamp
         });
     });
 

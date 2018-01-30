@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {clearData, quillDBTableToQuillMap} from '../test_db_util';
+import {clearData} from '../test_db_util';
 import {createCourse, createUser, latestUser} from './test_course_util';
 import {courseViewQuery} from '../../../../server/src/config/query_service_config';
 import {CreateCourseEntityPayload, ViewCourseTransferData} from '@shared/courses';
@@ -12,8 +12,9 @@ import {Delta} from '@shared/normalize_imports';
 import {AnswerType, QuestionChanges, QuestionType} from '@shared/questions';
 import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';
 import * as MockDate from 'mockdate';
-import {postgresDb} from "../../../../server/src/config/repository_config";
-xdescribe('Course view', function () {
+import {toDbTimestampFormat} from "../../../../server/src/repository";
+
+describe('Course view', function () {
     let questionId = createdQuestionPlaceholderId();
     let optionId1 = createdQuestionOptionPlaceholderId();
     let optionId2 = createdQuestionOptionPlaceholderId();
@@ -33,6 +34,7 @@ xdescribe('Course view', function () {
     let explanationText2 = `Explanation 2 Text`;
 
     let now = new Date();
+    let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
         await clearData();
         await createUser();
@@ -54,12 +56,6 @@ xdescribe('Course view', function () {
         canPickMultiple: false,
         answerInOrder: false
     };
-
-    it('blah', async function () {
-        await createCourse();
-        let result = await postgresDb.query(`SELECT to_json(c.*) as test from tu.course c`);
-        expect(result[0].test.id).to.be.a('string');
-    });
 
     it('should load a course that has 1 question and 1 content segment', async function () {
         let data: CreateCourseEntityPayload = {
@@ -96,46 +92,45 @@ xdescribe('Course view', function () {
                 orderedQuestionIds: toAddDeltaArrOps([questionId])
             },
         };
-        let courseIdMap = await createCourse(latestUser.id, data);
-        let course = await courseViewQuery.loadAdminCourse(courseIdMap.courseId);
+        let idMap = await createCourse(latestUser.id, data);
+        let course = await courseViewQuery.loadAdminCourse(idMap.courseId);
 
-        expect(course.id).to.eq(courseIdMap.courseId);
         expect(course).to.deep.eq(<ViewCourseTransferData> {
-            id: courseIdMap.courseId,
+            id: idMap.courseId,
             version: 0,
-            lastModifiedAt: now,
-            createdAt: now,
+            lastModifiedAt: nowTimestamp,
+            createdAt: nowTimestamp,
             ...basicCourseProps,
             headerDataId: null,
             modules: [],
             orderedModuleIds: [],
-            orderedContentIds: [courseIdMap[contentQuillId]],
-            orderedQuestionIds: [courseIdMap[questionId]],
-            orderedContentQuestionIds: [contentQuillId, questionId].map((id) => courseIdMap[id]),
+            orderedContentIds: [idMap[contentQuillId]],
+            orderedQuestionIds: [idMap[questionId]],
+            orderedContentQuestionIds: [contentQuillId, questionId].map((id) => idMap[id]),
             questions: [{
-                id: courseIdMap[questionId],
+                id: idMap[questionId],
                 version: 0,
-                createdAt: now,
-                lastModifiedAt: now,
-                questionQuillId: courseIdMap[questionQuillId],
+                createdAt: nowTimestamp,
+                lastModifiedAt: nowTimestamp,
+                questionQuillId: idMap[questionQuillId],
                 ...basicQuestionProps,
-                optionIds: [optionId1, optionId2].map((id) => courseIdMap[id]),
-                correctOptionIds: [courseIdMap[optionId2]],
+                optionIds: [optionId1, optionId2].map((id) => idMap[id]),
+                correctOptionIds: [idMap[optionId2]],
                 options: [{
-                    id: optionId1,
+                    id: idMap[optionId1],
                     version: 0,
-                    optionQuillId: optionQuillId1,
-                    explanationQuillId: explanationQuillId1,
-                    lastModifiedAt: now,
-                    createdAt: now
-                    
+                    optionQuillId: idMap[optionQuillId1],
+                    explanationQuillId: idMap[explanationQuillId1],
+                    lastModifiedAt: nowTimestamp,
+                    createdAt: nowTimestamp
+
                 }, {
-                    id: optionId2,
+                    id: idMap[optionId2],
                     version: 0,
-                    optionQuillId: optionQuillId2,
-                    explanationQuillId: explanationQuillId2,
-                    lastModifiedAt: now,
-                    createdAt: now
+                    optionQuillId: idMap[optionQuillId2],
+                    explanationQuillId: idMap[explanationQuillId2],
+                    lastModifiedAt: nowTimestamp,
+                    createdAt: nowTimestamp
                 }]
             }]
         });

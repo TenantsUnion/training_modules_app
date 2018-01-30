@@ -10,8 +10,8 @@ export interface QuillEditorData {
     id: string;
     version: number,
     editorJson: DeltaStatic;
-    lastModifiedAt?: Date;
-    createdAt?: Date;
+    lastModifiedAt?: string;
+    createdAt?: string;
 }
 
 /**

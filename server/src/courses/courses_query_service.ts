@@ -1,4 +1,3 @@
-import * as _ from "underscore";
 import {Datasource} from '../datasource';
 import {slugToId, slugToTitle, titleToSlug} from '../../../shared/slug/title_slug_transformations';
 

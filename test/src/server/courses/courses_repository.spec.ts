@@ -6,9 +6,11 @@ import {CourseEntity} from "@shared/courses";
 import * as Moment from 'moment';
 import {Delta} from '@shared/normalize_imports';
 import {clearData} from "../test_db_util";
+import {TIMESTAMP_FORMAT, toDbTimestampFormat} from "../../../../server/src/repository";
 
 describe('Courses Repository', function () {
     let now = new Date();
+    let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
         MockDate.set(now);
         await clearData();
@@ -26,8 +28,8 @@ describe('Courses Repository', function () {
     };
 
     let defaultCourseProps = {
-        createdAt: now,
-        lastModifiedAt: now,
+        createdAt: nowTimestamp,
+        lastModifiedAt: nowTimestamp,
         headerDataId: null,
         version: 0,
         orderedModuleIds: []
@@ -52,7 +54,7 @@ describe('Courses Repository', function () {
         expect(await coursesRepository.loadCourseEntity(courseId)).to.deep.eq({
             id: courseId,
             ...courseData, ...defaultCourseProps,
-            lastModifiedAt: updated,
+            lastModifiedAt: toDbTimestampFormat(updated),
         });
     });
 
@@ -98,8 +100,8 @@ describe('Courses Repository', function () {
         let updatedCourseEntity = await coursesRepository.loadCourseEntity(courseId);
         expect(updatedCourseEntity).to.deep.eq({
             ...courseUpdate,
-            createdAt: now,
-            lastModifiedAt: updated.toDate()
+            createdAt: nowTimestamp,
+            lastModifiedAt: updated.format(TIMESTAMP_FORMAT)
         });
     });
 });

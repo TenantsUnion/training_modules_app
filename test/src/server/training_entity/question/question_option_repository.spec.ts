@@ -7,10 +7,12 @@ import {
     quillRepository
 } from "../../../../../server/src/config/repository_config";
 import {Delta} from '@shared/normalize_imports';
+import {toDbTimestampFormat} from "../../../../../server/src/repository";
 
 describe('Question Option Repository', function () {
 
     let now = new Date();
+    let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
         await clearData();
         MockDate.set(now);
@@ -32,8 +34,8 @@ describe('Question Option Repository', function () {
         expect(await questionOptionRepository.loadQuestionOption(id)).to.deep.equal({
             version: 0,
             ...questionOptionDto,
-            createdAt: now,
-            lastModifiedAt: now
+            createdAt: nowTimestamp,
+            lastModifiedAt: nowTimestamp
         });
     });
 

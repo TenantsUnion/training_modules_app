@@ -20,6 +20,7 @@ import {
 } from '../../../../../shared/training_entity';
 import {addDeltaArrOp} from '../../../../../shared/delta/diff_key_array';
 import * as MockDate from 'mockdate';
+import {toDbTimestampFormat} from "../../../../../server/src/repository";
 
 /**
  * Creates a question with two options in the before() test setup call. Each test then asserts a different part of the
@@ -88,6 +89,7 @@ describe('Question handler create question', async function () {
     let placeholderIdMap;
 
     let creationDate = new Date();
+    let creationDateTimestamp = toDbTimestampFormat(creationDate);
     before(function () {
         MockDate.set(creationDate);
     });
@@ -132,8 +134,8 @@ describe('Question handler create question', async function () {
             canPickMultiple: createQuestionData[questionPlaceholderId].canPickMultiple,
             answerInOrder: createQuestionData[questionPlaceholderId].answerInOrder,
             version: 0,
-            createdAt: creationDate,
-            lastModifiedAt: creationDate
+            createdAt: creationDateTimestamp,
+            lastModifiedAt: creationDateTimestamp
         };
         const questionEntity = await questionRepository.loadQuestionEntity(questionId);
         expect(questionEntity).to.deep.eq(expectedQuestion);

@@ -1,16 +1,16 @@
 import {expect} from 'chai';
 import {clearData} from "../../test_db_util";
 import * as MockDate from 'mockdate';
-import {ModuleInsertDbData} from "../../../../../server/src/courses/module/module_repository";
-import {ModuleEntity} from "@shared/modules";
-import {moduleRepository, quillRepository, sectionRepository} from "../../../../../server/src/config/repository_config";
+import {quillRepository, sectionRepository} from "../../../../../server/src/config/repository_config";
 import * as Moment from 'moment';
 import {Delta} from '@shared/normalize_imports';
 import {SectionInsertDbData} from "../../../../../server/src/courses/section/section_repository";
 import {SectionEntity} from "@shared/sections";
+import {toDbTimestampFormat} from "../../../../../server/src/repository";
 
 describe('Section Repository', function () {
     let now = new Date();
+    let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
         await clearData();
         MockDate.set(now);
@@ -27,8 +27,8 @@ describe('Section Repository', function () {
     };
 
     let defaultSectionProps = {
-        createdAt: now,
-        lastModifiedAt: now,
+        createdAt: nowTimestamp,
+        lastModifiedAt: nowTimestamp,
         headerDataId: null,
         version: 0,
     };
@@ -45,7 +45,7 @@ describe('Section Repository', function () {
 
     it('should save a section with updated values', async function () {
         let sectionId = await sectionRepository.createSection(sectionData);
-        let updated = Moment(now).add(1, 'hour');
+        let updated = Moment(now).add(1, 'hour').toDate();
         MockDate.set(updated);
 
         let quillId = 'QD4';
@@ -68,24 +68,22 @@ describe('Section Repository', function () {
         let updatedModuleEntity = await sectionRepository.loadSection(sectionId);
         expect(updatedModuleEntity).to.deep.eq({
             ...sectionUpdate,
-            createdAt: now,
-            lastModifiedAt: updated.toDate()
+            createdAt: nowTimestamp,
+            lastModifiedAt: toDbTimestampFormat(updated)
         });
 
     });
 
     it('should update the last modified time of a module', async function () {
         let sectionId = await sectionRepository.createSection(sectionData);
-        let updated = new Date();
-        updated.setTime(now.getTime());
-        updated.setHours(now.getHours());
+        let updated = Moment(now).add(1, 'hour').toDate();
         MockDate.set(updated);
 
         await sectionRepository.updateLastModified(sectionId);
         expect(await sectionRepository.loadSection(sectionId)).to.deep.eq({
             id: sectionId,
-            lastModifiedAt: updated,
-            ...sectionData, ...defaultSectionProps
+            ...sectionData, ...defaultSectionProps,
+            lastModifiedAt: toDbTimestampFormat(updated)
         });
     });
 });

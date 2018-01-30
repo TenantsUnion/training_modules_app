@@ -9,12 +9,14 @@ import {DeltaStatic} from 'quill';
 import {Delta} from '@shared/normalize_imports';
 import {createdQuillPlaceholderId, QuillEditorData} from '@shared/quill_editor';
 import * as MockDate from 'mockdate';
+import {toDbTimestampFormat} from "../../../../../server/src/repository";
 
 describe('Save module', function () {
     let courseId;
     let moduleId;
 
     let now = new Date();
+    let nowTimestamp = toDbTimestampFormat(now);
     before(function () {
         MockDate.set(now);
     });
@@ -43,8 +45,8 @@ describe('Save module', function () {
                 orderedContentIds: [],
                 orderedQuestionIds: [],
                 orderedSectionIds: [],
-                lastModifiedAt: new Date(),
-                createdAt: new Date(),
+                lastModifiedAt: nowTimestamp,
+                createdAt: nowTimestamp,
             };
             let currentModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(currentModule).to.deep.eq(defaultModule);
@@ -226,14 +228,14 @@ describe('Save module', function () {
                 {
                     id: updatedModule.orderedContentIds[0],
                     version: 0,
-                    lastModifiedAt: now,
-                    createdAt: now,
+                    lastModifiedAt: nowTimestamp,
+                    createdAt: nowTimestamp,
                     editorJson: content1
                 }, {
                     id: updatedModule.orderedContentIds[1],
                     version: 0,
-                    lastModifiedAt: now,
-                    createdAt: now,
+                    lastModifiedAt: nowTimestamp,
+                    createdAt: nowTimestamp,
                     editorJson: content2
                 }
 

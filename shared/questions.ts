@@ -23,8 +23,8 @@ export interface QuestionEntity {
     randomizeOptionOrder: boolean,
     answerInOrder: boolean,
     canPickMultiple: boolean,
-    createdAt?: Date,
-    lastModifiedAt?: Date
+    createdAt?: string,
+    lastModifiedAt?: string
 }
 
 export interface QuestionData {
@@ -37,8 +37,8 @@ export interface QuestionData {
     canPickMultiple: boolean,
     correctOptionIds: string[],
     optionIds: string[],
-    createdAt?: Date, // date?
-    lastModifiedAt?: Date
+    createdAt?: Date | string, // date?
+    lastModifiedAt?: Date | string
 }
 
 export interface QuestionTransferData extends QuestionData {
@@ -80,8 +80,8 @@ export const isCreateQuestionData = (obj: any): obj is CreateQuestionData => {
 export interface QuestionOptionData {
     id: string;
     version?: number,
-    lastModifiedAt?: Date,
-    createdAt?: Date
+    lastModifiedAt?: string,
+    createdAt?: string
 }
 
 export interface QuestionOptionTransferData extends QuestionOptionData {
@@ -140,9 +140,7 @@ export const convertQuestionChangesToEntity = (id: string, changes: QuestionChan
         id, questionQuillId, questionType, answerType, randomizeOptionOrder, answerInOrder, canPickMultiple,
         version: 0,
         optionIds: applyDeltaArrOps([], optionIdsOps),
-        correctOptionIds: applyDeltaArrOps([], correctOptionIdsOps),
-        createdAt: new Date(),
-        lastModifiedAt: new Date()
+        correctOptionIds: applyDeltaArrOps([], correctOptionIdsOps)
     };
 };
 

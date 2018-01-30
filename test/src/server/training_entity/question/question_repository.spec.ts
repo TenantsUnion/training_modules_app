@@ -7,9 +7,11 @@ import {Delta} from "@shared/normalize_imports";
 import {AnswerType, QuestionEntity, QuestionType} from "@shared/questions";
 import {QuestionInsertDbData} from "../../../../../server/src/training_entity/question/question_repository";
 import * as Moment from 'moment';
+import {toDbTimestampFormat} from "../../../../../server/src/repository";
 
 describe('Question Repository', function () {
     let now = new Date();
+    let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
         await clearData();
         MockDate.set(now);
@@ -37,7 +39,7 @@ describe('Question Repository', function () {
         await questionRepository.insertQuestion(questionInsertData);
         expect(await questionRepository.loadQuestionEntity(id)).to.deep.eq(<QuestionEntity>{
             version: 0,
-            createdAt: now, lastModifiedAt: now,
+            createdAt: nowTimestamp, lastModifiedAt: nowTimestamp,
             ...questionInsertData
         });
     });
@@ -69,7 +71,7 @@ describe('Question Repository', function () {
 
         expect(await questionRepository.loadQuestionEntity(id)).to.deep.eq(<QuestionEntity>{
             ...updatedQuestion,
-            createdAt: now, lastModifiedAt: updated,
+            createdAt: nowTimestamp, lastModifiedAt: toDbTimestampFormat(updated),
         });
 
     });
