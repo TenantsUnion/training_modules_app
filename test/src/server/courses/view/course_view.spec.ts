@@ -2,15 +2,15 @@ import {expect} from 'chai';
 import {clearData} from '../../test_db_util';
 import {createCourse, createUser, latestUser} from '../test_course_util';
 import {courseViewQuery} from '../../../../../server/src/config/query_service_config';
-import {CreateCourseEntityPayload, ViewCourseTransferData} from '../../../../../shared/courses';
+import {CreateCourseEntityPayload, CreateCourseIdMap, ViewCourseTransferData} from '@shared/courses';
 import {
     createdQuestionOptionPlaceholderId,
     createdQuestionPlaceholderId,
     createdQuillPlaceholderId
-} from '../../../../../shared/quill_editor';
-import {Delta} from '../../../../../shared/normalize_imports';
-import {AnswerType, QuestionChanges, QuestionType} from '../../../../../shared/questions';
-import {toAddDeltaArrOps} from '../../../../../shared/delta/diff_key_array';
+} from '@shared/quill_editor';
+import {Delta} from '@shared/normalize_imports';
+import {AnswerType, QuestionChanges, QuestionType} from '@shared/questions';
+import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';
 import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
 
@@ -57,53 +57,40 @@ describe('Course view', function () {
         answerInOrder: false
     };
 
-    it('should load a course that has 1 question and 1 content segment', async function () {
-        let data: CreateCourseEntityPayload = {
-            ...basicCourseProps,
-            contentQuestions: {
-                quillChanges: {
-                    [contentQuillId]: new Delta().insert(contentText),
-                    [questionQuillId]: new Delta().insert(questionText),
-                    [optionQuillId1]: new Delta().insert(optionText1),
-                    [explanationQuillId1]: new Delta().insert(explanationText1),
-                    [optionQuillId2]: new Delta().insert(optionText2),
-                    [explanationQuillId2]: new Delta().insert(explanationText2)
-                },
-                questionChanges: {
-                    [questionId]: <QuestionChanges>{
-                        ...basicQuestionProps,
-                        questionQuillId: questionQuillId,
-                        optionIds: toAddDeltaArrOps([optionId1, optionId2]),
-                        correctOptionIds: toAddDeltaArrOps([optionId2]),
-                        optionChangesObject: {
-                            [optionId1]: {
-                                optionQuillId: optionQuillId1,
-                                explanationQuillId: explanationQuillId1
-                            },
-                            [optionId2]: {
-                                optionQuillId: optionQuillId2,
-                                explanationQuillId: explanationQuillId2
-                            }
-                        }
+    const contentQuestionsDelta = {
+        quillChanges: {
+            [contentQuillId]: new Delta().insert(contentText),
+            [questionQuillId]: new Delta().insert(questionText),
+            [optionQuillId1]: new Delta().insert(optionText1),
+            [explanationQuillId1]: new Delta().insert(explanationText1),
+            [optionQuillId2]: new Delta().insert(optionText2),
+            [explanationQuillId2]: new Delta().insert(explanationText2)
+        },
+        questionChanges: {
+            [questionId]: <QuestionChanges>{
+                ...basicQuestionProps,
+                questionQuillId: questionQuillId,
+                optionIds: toAddDeltaArrOps([optionId1, optionId2]),
+                correctOptionIds: toAddDeltaArrOps([optionId2]),
+                optionChangesObject: {
+                    [optionId1]: {
+                        optionQuillId: optionQuillId1,
+                        explanationQuillId: explanationQuillId1
+                    },
+                    [optionId2]: {
+                        optionQuillId: optionQuillId2,
+                        explanationQuillId: explanationQuillId2
                     }
-                },
-                orderedContentQuestionIds: toAddDeltaArrOps([contentQuillId, questionId]),
-                orderedContentIds: toAddDeltaArrOps([contentQuillId]),
-                orderedQuestionIds: toAddDeltaArrOps([questionId])
-            },
-        };
-        let idMap = await createCourse(latestUser.id, data);
-        let course = await courseViewQuery.loadAdminCourse(idMap.courseId);
+                }
+            }
+        },
+        orderedContentQuestionIds: toAddDeltaArrOps([contentQuillId, questionId]),
+        orderedContentIds: toAddDeltaArrOps([contentQuillId]),
+        orderedQuestionIds: toAddDeltaArrOps([questionId])
+    };
 
-        expect(course).to.deep.eq(<ViewCourseTransferData> {
-            id: idMap.courseId,
-            version: 0,
-            lastModifiedAt: nowTimestamp,
-            createdAt: nowTimestamp,
-            ...basicCourseProps,
-            headerDataId: null,
-            modules: [],
-            orderedModuleIds: [],
+    const expectedContentQuestions = (idMap: CreateCourseIdMap) => {
+        return {
             orderedContentIds: [idMap[contentQuillId]],
             orderedQuestionIds: [idMap[questionId]],
             orderedContentQuestionIds: [contentQuillId, questionId].map((id) => idMap[id]),
@@ -112,7 +99,7 @@ describe('Course view', function () {
                 version: 0,
                 createdAt: nowTimestamp,
                 lastModifiedAt: nowTimestamp
-            },{
+            }, {
                 id: idMap[questionId],
                 version: 0,
                 createdAt: nowTimestamp,
@@ -138,6 +125,27 @@ describe('Course view', function () {
                     createdAt: nowTimestamp
                 }]
             }]
+        };
+    };
+
+    it('should load a course that has 1 question and 1 content segment', async function () {
+        let data: CreateCourseEntityPayload = {
+            ...basicCourseProps,
+            contentQuestions: contentQuestionsDelta,
+        };
+        let idMap = await createCourse(latestUser.id, data);
+        let course = await courseViewQuery.loadAdminCourse(idMap.courseId);
+
+        expect(course).to.deep.eq(<ViewCourseTransferData> {
+            id: idMap.courseId,
+            version: 0,
+            lastModifiedAt: nowTimestamp,
+            createdAt: nowTimestamp,
+            ...basicCourseProps,
+            headerDataId: null,
+            modules: [],
+            orderedModuleIds: [],
+            ...expectedContentQuestions(idMap)
         });
     });
 });
