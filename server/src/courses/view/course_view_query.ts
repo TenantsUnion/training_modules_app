@@ -68,28 +68,47 @@ export class CourseViewQuery {
               SELECT c.*, m.modules, q.questions, qd.content FROM tu.course c
                 INNER JOIN LATERAL
                            (SELECT json_agg(m.*) AS modules
-                            FROM (SELECT m.*, s.sections
-                                  FROM tu.module m
-                                    INNER JOIN LATERAL (SELECT json_agg(s.*) AS sections
-                                                        FROM tu.section s
-                                                        WHERE s.id = ANY (m.ordered_section_ids)) s
-                                      ON TRUE)
-                                 m
-                            WHERE m.id = ANY (c.ordered_module_ids)) m ON TRUE
+                            FROM (SELECT m.*, s.sections, q.questions, qd.content FROM tu.module m
+                              INNER JOIN LATERAL
+                                         (SELECT json_agg(s.*) AS sections
+                                          FROM (SELECT s.*, q.questions, qd.content FROM tu.section s
+                                            INNER JOIN LATERAL
+                                                       (SELECT jsonb_agg(q.*) AS questions FROM
+                                              (SELECT q.*, o.options FROM tu.question q
+                                                INNER JOIN LATERAL
+                                                           (SELECT jsonb_agg(o.*) AS options FROM tu.question_option o
+                                                WHERE o.id = ANY (q.option_ids)) o ON TRUE) q
+                                            WHERE q.id = ANY (s.ordered_question_ids)) q ON TRUE
+                                            INNER JOIN LATERAL
+                                                       (SELECT jsonb_agg(qd.*) AS content
+                                                        FROM (SELECT id, version, last_modified_at, created_at FROM
+                                                          tu.quill_data) qd WHERE
+                                                          qd.id = ANY (s.ordered_content_ids)) qd ON TRUE
+                                          WHERE s.id = ANY (m.ordered_section_ids)) s) s ON TRUE
+                              INNER JOIN LATERAL
+                                         (SELECT jsonb_agg(q.*) AS questions
+                                          FROM (SELECT q.*, o.options FROM tu.question q
+                                            INNER JOIN LATERAL
+                                                       (SELECT jsonb_agg(o.*) AS options FROM tu.question_option o
+                                            WHERE o.id = ANY (q.option_ids)) o ON TRUE) q
+                                          WHERE q.id = ANY (m.ordered_question_ids)) q ON TRUE
+                              INNER JOIN LATERAL
+                                         (SELECT jsonb_agg(qd.*) AS content
+                                          FROM (SELECT id, version, last_modified_at, created_at FROM
+                                            tu.quill_data) qd WHERE
+                                            qd.id = ANY (m.ordered_content_ids)) qd ON TRUE
+                            WHERE m.id = ANY (c.ordered_module_ids)) m) m ON TRUE
                 INNER JOIN LATERAL
                            (SELECT jsonb_agg(q.*) AS questions
-                            FROM (SELECT q.*, o.options
-                                  FROM tu.question q
-                                    INNER JOIN LATERAL (SELECT jsonb_agg(o.*) AS options
-                                                        FROM tu.question_option o
-                                                        WHERE o.id = ANY (q.option_ids)) o
-                                      ON TRUE) q WHERE q.id = ANY (c.ordered_question_ids)) q
-                  ON TRUE
+                            FROM (SELECT q.*, o.options FROM tu.question q
+                              INNER JOIN LATERAL (SELECT jsonb_agg(o.*) AS options
+                                                  FROM tu.question_option o
+                                                  WHERE o.id = ANY (q.option_ids)) o
+                                ON TRUE) q WHERE q.id = ANY (c.ordered_question_ids)) q ON TRUE
                 INNER JOIN LATERAL
                            (SELECT jsonb_agg(qd.*) AS content
                             FROM (SELECT id, version, last_modified_at, created_at FROM tu.quill_data) qd WHERE
-                              qd.id = ANY (c.ordered_content_ids)) qd
-                  ON TRUE
+                              qd.id = ANY (c.ordered_content_ids)) qd ON TRUE
               WHERE c.id = $1;
             `,
             values: [courseId]
