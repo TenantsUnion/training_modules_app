@@ -1,6 +1,6 @@
-import * as Moment from 'moment';
 import {Datasource} from "./datasource";
 import {LoggerInstance} from 'winston';
+import {moment} from "@shared/normalize_imports";
 
 export abstract class AbstractRepository {
     protected logger: LoggerInstance;
@@ -24,10 +24,10 @@ export abstract class AbstractRepository {
 }
 
 export const getUTCNow = (): string => {
-    return Moment().format(TIMESTAMP_FORMAT);
+    return moment().format(TIMESTAMP_FORMAT);
 };
 
 export const TIMESTAMP_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
 export const toDbTimestampFormat = (date: Date): string => {
-    return Moment(date).format(TIMESTAMP_FORMAT);
+    return moment(date).format(TIMESTAMP_FORMAT);
 };
