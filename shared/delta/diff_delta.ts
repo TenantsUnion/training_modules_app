@@ -5,7 +5,7 @@ import {isDeltaObj, isDeltaStatic, isKeyArr} from './typeguards_delta';
 import {deltaArrayDiff} from './diff_key_array';
 import {TrainingEntityDiffDelta, TrainingEntity, QuillChangesObj, ViewTrainingEntity} from '../training_entity';
 
-export const TRAINING_ENTITY_BASIC_PROPS = ['title', 'description', 'timeEstimate'];
+export const TRAINING_ENTITY_BASIC_PROPS = ['title', 'description', 'timeEstimate', 'active', 'answerImmediately'];
 export type DiffEntity = TrainingEntity | ViewTrainingEntity;
 export const diffBasicPropsTrainingEntity = <T extends TrainingEntity | ViewTrainingEntity>(before: T, after: T): TrainingEntityDiffDelta => {
     return <TrainingEntityDiffDelta> diffPropsDeltaObj(TRAINING_ENTITY_BASIC_PROPS, before, after);

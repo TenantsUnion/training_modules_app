@@ -17,7 +17,6 @@ export type CreateCourseEntityCommand = CreateTrainingEntityCommand<CourseEntity
 export type SaveCourseEntityCommand = SaveTrainingEntityCommand<CourseEntityType, CourseEntityDeltas>;
 
 export interface CreateCourseEntityPayload extends CreateTrainingEntityPayload {
-    active: boolean;
     openEnrollment: boolean;
 }
 
@@ -25,13 +24,11 @@ export type SaveCourseEntityPayload = SaveTrainingEntityPayload<CourseEntityDiff
 export type CourseEntityCommandMetadata = EntityCommandMetaData<CourseEntityType>;
 
 export interface CourseEntity extends TrainingEntity {
-    active: boolean;
     openEnrollment: boolean;
     orderedModuleIds: string[];
 }
 
 export interface CourseEntityDeltas extends TrainingEntityDiffDelta {
-    active?: boolean;
     openEnrollment?: boolean;
     orderedModuleIds?: DeltaArrOp[];
 }
@@ -71,7 +68,6 @@ export interface EnrolledCourseDescription extends CourseDescription {
 export interface CreateCourseResponse extends ViewCourseTransferData {}
 
 export interface CourseEntityDiffDelta extends TrainingEntityDiffDelta {
-    active?: boolean;
     openEnrollment?: boolean;
     modules?: DeltaArrOp[];
 }
@@ -81,7 +77,7 @@ export interface SaveCourseResponse {
 }
 
 export const diffBasicPropsCourseProps = (before: ViewCourseQuillData, after: ViewCourseQuillData): CourseEntityDiffDelta => {
-    return <CourseEntityDiffDelta> diffPropsDeltaObj(_.extend(['active', 'openEnrollment'], TRAINING_ENTITY_BASIC_PROPS), before, after);
+    return <CourseEntityDiffDelta> diffPropsDeltaObj(['openEnrollment', ...TRAINING_ENTITY_BASIC_PROPS], before, after);
 };
 
 /**

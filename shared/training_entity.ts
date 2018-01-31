@@ -15,6 +15,7 @@ export interface ViewTrainingEntity {
     description?: string;
     timeEstimate?: number;
     active: boolean;
+    answerImmediately?: boolean;
     orderedContentIds: string[],
     orderedQuestionIds: string[],
     orderedContentQuestionIds: string[],
@@ -53,6 +54,7 @@ export const isQuillContentDiff = (obj: any): obj is QuillChangesObj => {
  */
 export interface ContentQuestionEntity {
     headerDataId?: string;
+    answerImmediately?: boolean;
     orderedContentIds: string[];
     orderedQuestionIds: string[];
     orderedContentQuestionIds: string[];

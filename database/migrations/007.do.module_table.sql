@@ -6,6 +6,7 @@ CREATE TABLE tu.module (
   description                  VARCHAR(300),
   time_estimate                INTEGER,
   active                       BOOLEAN     NOT NULL DEFAULT FALSE,
+  answer_immediately           BOOLEAN     NOT NULL DEFAULT TRUE,
   --references id pk column of tu.section
   ordered_section_ids          TEXT []     NOT NULL DEFAULT ARRAY [] :: TEXT [],
   --references id pk column of tu.quill_data

@@ -10,6 +10,7 @@ export type CourseInsertDbData = {
     timeEstimate?: number;
     active: boolean;
     openEnrollment: boolean;
+    answerImmediately?: boolean;
     headerDataId?: string;
     orderedContentIds: string[],
     orderedQuestionIds: string[],
