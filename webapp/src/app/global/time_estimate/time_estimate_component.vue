@@ -40,7 +40,7 @@
         },
         props: {
             //the duration in minutes
-            timeEstimate: String,
+            timeEstimate: Number,
             isInput: {
                 type: Boolean,
                 default: false
