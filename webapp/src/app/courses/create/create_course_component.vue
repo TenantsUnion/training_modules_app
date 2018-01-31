@@ -53,7 +53,7 @@
                         </div>
                         <div class="row">
                             <div class="columns small-12 large-10">
-                                <training-segments :stored-segments="quillContent" ref="trainingSegment"></training-segments>
+                                <training-segments :stored-segments="contentQuestions" ref="trainingSegment"></training-segments>
                             </div>
                         </div>
                         <div class="row">
@@ -91,10 +91,9 @@
                     description: '',
                     timeEstimate: '',
                     createdBy: '',
-                    contentQuestions: null
                 },
                 formstate: {},
-                quillContent: []
+                contentQuestions: []
             };
         },
     })
@@ -102,7 +101,7 @@
         errorMessages: {};
         loading: boolean;
         course: CreateCourseEntityPayload;
-        quillContent: Segment[] = [];
+        contentQuestions: Segment[] = [];
         formstate: FormState;
 
         async createCourse() {
@@ -136,7 +135,7 @@
             }
         }
 
-        timeUpdated(time: string) {
+        timeUpdated(time: number) {
             this.course.timeEstimate = time;
         }
 
