@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {ViewCourseQuillData} from '../../../../../shared/courses';
+import {ViewCourseQuillData} from '@shared/courses';
 import {RawLocation, RouteRecord} from 'vue-router/types/router';
 import {COURSES_ROUTE_NAMES} from '../courses_routes';
 import {mapGetters} from 'vuex';
@@ -20,10 +20,9 @@ import {mapGetters} from 'vuex';
         ...mapGetters({
             course: 'courseNavigationDescription'
         })
-    },
-    template: require('./course_navigation_component.tpl.html'),
+    }
 })
-export class CourseNavigationComponent extends Vue {
+export default class CourseNavigationComponent extends Vue {
     course: ViewCourseQuillData;
     isCourseAdmin: boolean;
 
