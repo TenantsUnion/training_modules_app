@@ -1,5 +1,4 @@
 import {SECTION_MUTATIONS} from './section_mutations';
-import {transformTransferViewService} from '../../../global/quill/transform_transfer_view_service';
 import {COURSE_MUTATIONS} from '../course/course_mutations';
 import {coursesService} from '../../courses_service';
 import {RootGetters, RootState} from '../../../state_store';
@@ -7,10 +6,10 @@ import {SectionState} from './section_state';
 import {Action, ActionTree} from 'vuex';
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload, SaveSectionResponse,
-    SectionEntity
-} from '../../../../../../shared/sections';
-import {Constant} from '../../../../../../shared/typings/util_typings';
+} from '@shared/sections';
+import {Constant} from '@shared/typings/util_typings';
 import {MODULE_ACTIONS} from '../module/module_actions';
+import {loadSection} from '../../modules/sections/sections_requests';
 
 export type SectionAction<P> = Action<SectionState, RootState>;
 
@@ -56,7 +55,7 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
 
         let section = getters.currentModule.sections.find((section) => section.id === sectionId);
 
-        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, await transformTransferViewService.populateTrainingEntityQuillData(section));
+        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, await loadSection(section));
         commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, sectionId);
     },
     async SET_CURRENT_SECTION({state, getters, commit}, {sectionId, moduleId}) {
@@ -69,10 +68,9 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
             commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, sectionId);
             if (!getters.currentSectionLoaded) {
                 commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {sectionId, requesting: true});
-                let sectionTransferData = getters.getSectionTransferData(moduleId, sectionId);
-                let sectionEntity = await transformTransferViewService.populateTrainingEntityQuillData(sectionTransferData);
+                let section = await loadSection(sectionId);
                 commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {sectionId, requesting: false});
-                commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, sectionEntity);
+                commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, section);
             }
         } catch (e) {
             console.error(e);
@@ -116,10 +114,8 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
         await dispatch(SECTION_ACTIONS.LOAD_SECTION_ENTITY, response);
     },
     async LOAD_SECTION_ENTITY({commit, getters}, ids: { sectionId: string, moduleId: string }) {
-        let sectionTransferData = getters.getSectionTransferData(ids.moduleId, ids.sectionId);
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: ids.sectionId, requesting: true});
-        let moduleEntity = await transformTransferViewService.populateTrainingEntityQuillData(sectionTransferData);
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: ids.sectionId, requesting: false});
-        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, moduleEntity);
+        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, await loadSection(ids.sectionId));
     }
 };

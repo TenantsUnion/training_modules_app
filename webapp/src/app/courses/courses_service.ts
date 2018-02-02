@@ -1,47 +1,34 @@
 import axios, {AxiosResponse} from "axios";
-import VueRouter from "vue-router";
 import {CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload, SaveModuleResponse} from "@shared/modules";
 import {
-    ViewCourseQuillData, ViewCourseTransferData, CourseEntity,
-    CreateCourseEntityCommand, SaveCourseEntityPayload, SaveCourseResponse, CreateCourseResponse
+    CreateCourseEntityCommand, SaveCourseEntityPayload, SaveCourseResponse, CreateCourseResponse, ViewCourseData
 } from '@shared/courses';
 import {
-    ViewSectionQuillData, CreateSectionEntityPayload, CreateSectionResponse,
+    CreateSectionEntityPayload, CreateSectionResponse,
     SaveSectionEntityPayload, SaveSectionResponse
 } from '@shared/sections';
-import {appRouter} from "../router";
-import {transformTransferViewService} from '../global/quill/transform_transfer_view_service';
 
 export const isAxiosResponse = (obj: any): obj is AxiosResponse => {
     let {data, status, statusText, headers, config} = <AxiosResponse> obj;
     return !!(data && status && statusText && headers && config);
 };
 export class CoursesService {
-    currentCourse: Promise<ViewCourseQuillData>;
-    currentSection: Promise<ViewSectionQuillData>;
-    router: VueRouter;
-
-    constructor(router: VueRouter) {
-        this.router = router;
-    }
-
-    async loadAdminCourse(courseId: string): Promise<ViewCourseQuillData> {
+    async loadAdminCourse(courseId: string): Promise<ViewCourseData> {
         try {
             let response = await axios.get(`view/course/admin/${courseId}`);
-            let course =
-                await transformTransferViewService.populateTrainingEntityQuillData<ViewCourseQuillData>(response.data);
-            return  course;
+            let course:ViewCourseData = response.data;
+            return course;
         } catch (e) {
             console.error(`Error loading course data for course: ${courseId}${e}`);
             throw e.data;
         }
     }
 
-    loadEnrolledCourse(courseInfo: {userId: string, courseId: string}): Promise<ViewCourseTransferData> {
+    loadEnrolledCourse(courseInfo: {userId: string, courseId: string}): Promise<ViewCourseData> {
         return null;
     }
 
-    async getAdminCourseFromSlug(slug: string, userId: string): Promise<ViewCourseTransferData> {
+    async getAdminCourseFromSlug(slug: string, userId: string): Promise<ViewCourseData> {
         try {
             let response = await axios.get(`user/${userId}/admin/course/${slug}`);
             return response.data;
@@ -102,12 +89,11 @@ export class CoursesService {
      * @param {CreateCourseEntityCommand} createCourseCommand
      * @returns {Promise<string>}
      */
-    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<ViewCourseQuillData> {
+    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<ViewCourseData> {
         let createdCourse: CreateCourseResponse = (await axios.post('courses/create', createCourseCommand)).data;
-        let viewCourseQuillData = await transformTransferViewService.populateTrainingEntityQuillData(createdCourse);
-        return <ViewCourseQuillData> viewCourseQuillData;
+        return <ViewCourseData> createdCourse;
     }
 }
 
 
-export const coursesService = new CoursesService(appRouter);
+export const coursesService = new CoursesService();

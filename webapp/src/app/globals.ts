@@ -16,10 +16,12 @@ import VueForm from 'vue-form';
 //put jquery on global window for debugging,
 //workaround for webpack doing this with module number prefixes
 let unTypedWindow = <any> window;
-unTypedWindow.jQuery = jQuery;
-unTypedWindow.$ = jQuery;
-
-unTypedWindow.Quill = Quill;
+if (process.env.NODE_ENV !== 'production') {
+    unTypedWindow.jQuery = jQuery;
+    unTypedWindow.$ = jQuery;
+    unTypedWindow.Quill = Quill;
+    unTypedWindow.axios = axios;
+}
 
 export const registerGlobalComponents = () => {
     Vue.component('loading', LoadingComponent);

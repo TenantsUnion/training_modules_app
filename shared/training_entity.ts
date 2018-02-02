@@ -1,11 +1,9 @@
 import * as _ from 'underscore';
-import {CreateQuestionData, QuestionChangesObj, QuestionTransferData} from './questions';
-import {Moment} from 'moment';
-import {QuillEditorData, QuillTransferData} from './quill_editor';
+import {CreateQuestionData, QuestionChangesObj, QuestionQuillData, QuestionTransferData} from './questions';
+import {QuillEditorData} from './quill_editor';
 import {EntityCommand, SaveEntityCommand} from './entity';
 import {DeltaObjDiff} from './delta/delta';
 import {applyDeltaArrOps, DeltaArrOp} from './delta/diff_key_array';
-import {ContentSegment, QuestionSegment} from './segment';
 import {isDeltaStatic} from './delta/typeguards_delta';
 
 export interface ViewTrainingEntity {
@@ -16,22 +14,22 @@ export interface ViewTrainingEntity {
     timeEstimate?: number;
     active: boolean;
     answerImmediately?: boolean;
-    orderedContentIds: string[],
-    orderedQuestionIds: string[],
-    orderedContentQuestionIds: string[],
+    orderedContentIds?: string[],
+    orderedQuestionIds?: string[],
+    orderedContentQuestionIds?: string[],
     lastModifiedAt: string;
     createdAt: string;
+    contentQuestions: (QuillEditorData | QuestionQuillData)[];
 }
 
-export interface ViewTrainingEntityTransferData extends ViewTrainingEntity {
-    contentQuestions: (QuestionTransferData | QuillTransferData)[];
+export interface ViewTrainingEntityDescription {
+    id: string,
+    active: boolean,
+    title: string,
+    version: number,
+    lastModifiedAt: string,
+    description?: string
 }
-
-export interface ViewTrainingEntityQuillData extends ViewTrainingEntity {
-    contentQuestions: (ContentSegment | QuestionSegment)[];
-    // todo handle questions
-}
-
 
 /**
  * Represents a change to quill delta as a diff with the key as the unique primary key identifying the quill data
@@ -60,12 +58,12 @@ export interface ContentQuestionEntity {
     orderedContentQuestionIds: string[];
 }
 
-export interface ContentQuestionsDelta {
+export interface ContentQuestionsDelta extends TrainingEntityDiffDelta {
     quillChanges: QuillChangesObj,
     questionChanges: QuestionChangesObj;
-    orderedContentQuestionIds: DeltaArrOp[];
-    orderedContentIds?: DeltaArrOp[];
-    orderedQuestionIds?: DeltaArrOp[];
+    orderedContentQuestionIds: DeltaArrOp<string>[];
+    orderedContentIds?: DeltaArrOp<string>[];
+    orderedQuestionIds?: DeltaArrOp<string>[];
 }
 
 export const convertContentQuestionsDeltaToEntity = (delta: ContentQuestionsDelta): ContentQuestionEntity => {
@@ -84,15 +82,16 @@ export interface TrainingEntity extends ContentQuestionEntity {
     description?: string;
     timeEstimate?: number;
     active?: boolean;
-    lastModifiedAt?: Date | string;
-    createdAt?: Date | string;
+    lastModifiedAt?: string;
+    createdAt?: string;
 }
 
 
-export interface TrainingEntityDiffDelta extends DeltaObjDiff, ContentQuestionsDelta {
+export interface TrainingEntityDiffDelta extends DeltaObjDiff {
     title?: string;
     description?: string;
-    timeEstimateMinutes?: string;
+    timeEstimate?: number;
+    active?: boolean;
 }
 
 export type CreateContentQuestion = QuillEditorData | CreateQuestionData;

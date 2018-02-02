@@ -38,11 +38,13 @@ describe('Create module', function () {
             active: false
         };
         let moduleId1 = await coursesHandler.createModule(module1);
-        let {orderedModuleIds: moduleIds1} = await coursesViewHandler.loadAdminCourse(courseId);
+        let {modules: modules1} = await coursesViewHandler.loadAdminCourse(courseId);
+        let moduleIds1 = modules1.map(({id}) => id);
         expect(moduleIds1.length).to.eq(1);
         expect(moduleIds1[0]).to.eq(moduleId1);
         let moduleId2 = await coursesHandler.createModule(module2);
-        let {modules, orderedModuleIds: moduleIds2} = await coursesViewHandler.loadAdminCourse(courseId);
+        let {modules, modules: modules2} = await coursesViewHandler.loadAdminCourse(courseId);
+        let moduleIds2 = modules2.map(({id}) => id);
         expect(moduleIds2.length).to.eq(2);
         expect(moduleIds2[1]).to.eq(moduleId2);
 
@@ -98,12 +100,12 @@ describe('Create module', function () {
         };
 
         let moduleId = await coursesHandler.createModule(createModulePayload);
-        let {orderedModuleIds} = await coursesViewHandler.loadAdminCourse(courseId);
+        let {modules} = await coursesViewHandler.loadAdminCourse(courseId);
 
         let module = await moduleRepository.loadModuleEntity(moduleId);
         let quillContent = await quillRepository.loadQuillData(module.orderedContentIds[0]);
 
-        expect(orderedModuleIds.length).to.equal(1);
+        expect(modules.length).to.equal(1);
         expect(module.orderedContentIds.length).to.equal(1);
         expect(quillContent.editorJson.ops).to.deep.equal(content.ops);
     });

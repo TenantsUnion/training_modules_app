@@ -2,7 +2,7 @@ import {CourseState} from './course_state';
 import {COURSE_MUTATIONS} from './course_mutations';
 import {
     AdminCourseDescription, CourseEntity, CreateCourseEntityCommand, CreateCourseEntityPayload,
-    SaveCourseEntityPayload, SaveCourseResponse, ViewCourseQuillData
+    SaveCourseEntityPayload, SaveCourseResponse, ViewCourseData
 } from '@shared/courses';
 import {getCorrelationId} from '@shared/correlation_id_generator';
 import {coursesService} from '../../courses_service';
@@ -10,7 +10,6 @@ import {subscribeCourse} from '../../subscribe_course';
 import {RootGetters, TypedAction, TypedActionTree} from '../../../state_store';
 import {Constant} from '@shared/typings/util_typings';
 import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../courses_listing/courses_listing_store';
-import {transformTransferViewService} from '../../../global/quill/transform_transfer_view_service';
 
 export interface CourseActions {
     CREATE_COURSE: CourseAction<CreateCourseEntityPayload>,
@@ -49,7 +48,7 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
                 payload: course
             };
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
-            let courseEntity: ViewCourseQuillData = await coursesService.createCourse(createCourseCommand);
+            let courseEntity: ViewCourseData = await coursesService.createCourse(createCourseCommand);
             let updateAdminDescriptions: AdminCourseDescription[] = [courseEntity, ...rootState.userCourses.adminCourseDescriptions];
             commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, updateAdminDescriptions);
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
@@ -93,8 +92,7 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
         commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: saveCourseEntityPayload.id, requesting: true});
         try {
             let response: SaveCourseResponse = await coursesService.saveCourse(saveCourseEntityPayload);
-            let course = await transformTransferViewService.populateTrainingEntityQuillData(response.course);
-            commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, course);
+            commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
             if (saveCourseEntityPayload.changes.title) {
                 // title change means slug changed -- reload admin courses to recalculate slug
                 commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, false);

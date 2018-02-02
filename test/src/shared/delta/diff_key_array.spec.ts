@@ -8,7 +8,7 @@ describe('Diff Key Array', function () {
     describe('apply operations', function () {
         describe('insert', function () {
             it('should insert an element', function () {
-                let addOp: DeltaArrOp = {
+                let addOp: DeltaArrOp<string> = {
                     val: 'i',
                     op: 'ADD',
                     index: 2
@@ -19,7 +19,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should insert two consecutive elements', function () {
-                let addOps: DeltaArrOp[] = [
+                let addOps: DeltaArrOp<string>[] = [
                     {
                         val: 'i',
                         op: 'ADD',
@@ -37,7 +37,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should insert two non consecutive elements', function () {
-                let addOps: DeltaArrOp[] = [
+                let addOps: DeltaArrOp<string>[] = [
                     {
                         val: 'i',
                         op: 'ADD',
@@ -56,7 +56,7 @@ describe('Diff Key Array', function () {
         });
         describe('delete', function () {
             it('should delete a single element', function () {
-                let deleteOps: DeltaArrOp[] = [
+                let deleteOps: DeltaArrOp<string>[] = [
                     {
                         val: '3',
                         op: 'DELETE',
@@ -69,7 +69,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should delete two consecutive elements', function () {
-                let deleteOps: DeltaArrOp[] = [
+                let deleteOps: DeltaArrOp<string>[] = [
                     {
                         val: '2',
                         op: 'DELETE',
@@ -87,7 +87,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should delete two non consecutive elements', function () {
-                let deleteOps: DeltaArrOp[] = [
+                let deleteOps: DeltaArrOp<string>[] = [
                     {
                         val: '1',
                         op: 'DELETE',
@@ -107,7 +107,7 @@ describe('Diff Key Array', function () {
 
         describe('move', function () {
             it('should move a single element', function () {
-                let moveOps: DeltaArrOp[] = [
+                let moveOps: DeltaArrOp<string>[] = [
                     {
                         op: 'MOVE',
                         beforeIndex: 0,
@@ -120,7 +120,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should move two consecutive elements', function () {
-                let moveOps: DeltaArrOp[] = [
+                let moveOps: DeltaArrOp<string>[] = [
                     {
                         op: 'MOVE',
                         beforeIndex: 1,
@@ -138,7 +138,7 @@ describe('Diff Key Array', function () {
             });
 
             it('should swap two elements', function () {
-                let moveOps: DeltaArrOp[] = [
+                let moveOps: DeltaArrOp<string>[] = [
                     {
                         op: 'MOVE',
                         beforeIndex: 1,
@@ -327,7 +327,7 @@ describe('Diff Key Array', function () {
             it('should determine one delete operation, one add operation, and move operations', function () {
                 let beforeArr = ['1', '2', '3'];
                 let afterArr = ['add', '3', '2'];
-                let ops: DeltaArrOp[] = [
+                let ops: DeltaArrOp<string>[] = [
                     {
                         index: 0,
                         val: '1',

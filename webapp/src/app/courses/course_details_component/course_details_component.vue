@@ -8,7 +8,7 @@
                 <div>
                     <h2>{{currentCourse.title}}</h2>
                     <p>{{currentCourse.description}}</p>
-                    <time-estimate :time-estimate="currentCourse.timeEstimate"/>
+                    <time-estimate v-if="currentCourse.timeEstimate !== 0" :time-estimate="currentCourse.timeEstimate"/>
                 </div>
                 <div class="row">
                     <div class="columns small-12 large-10">
@@ -29,7 +29,6 @@
         </div>
     </div>
 </template>
-
 <script lang="ts">
     import Vue from 'vue';
     import Component from "vue-class-component";

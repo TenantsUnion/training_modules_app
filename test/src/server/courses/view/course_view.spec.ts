@@ -2,17 +2,18 @@ import {expect} from 'chai';
 import {clearData} from '../../test_db_util';
 import {createCourse, createUser, latestUser} from '../test_course_util';
 import {courseViewQuery} from '../../../../../server/src/config/query_service_config';
-import {CreateCourseEntityPayload, CreateCourseIdMap, ViewCourseTransferData} from '@shared/courses';
+import {CreateCourseEntityPayload, CreateCourseIdMap, ViewCourseData} from '@shared/courses';
 import {
     createdQuestionOptionPlaceholderId,
     createdQuestionPlaceholderId,
-    createdQuillPlaceholderId
+    createdQuillPlaceholderId, QuillEditorData
 } from '@shared/quill_editor';
 import {Delta} from '@shared/normalize_imports';
-import {AnswerType, QuestionChanges, QuestionType} from '@shared/questions';
+import {AnswerType, QuestionChanges, QuestionQuillData, QuestionType} from '@shared/questions';
 import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';
 import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
+import DeltaStatic = Quill.DeltaStatic;
 
 describe('Course view', function () {
     let questionId = createdQuestionPlaceholderId();
@@ -25,13 +26,6 @@ describe('Course view', function () {
     let explanationQuillId1 = createdQuillPlaceholderId();
     let optionQuillId2 = createdQuillPlaceholderId();
     let explanationQuillId2 = createdQuillPlaceholderId();
-
-    let contentText = `Content text`;
-    let questionText = `Some question text`;
-    let optionText1 = `Option 1 Text`;
-    let explanationText1 = `Explanation 1 Text`;
-    let optionText2 = `Option 2 Text`;
-    let explanationText2 = `Explanation 2 Text`;
 
     let now = new Date();
     let nowTimestamp = toDbTimestampFormat(now);
@@ -57,14 +51,20 @@ describe('Course view', function () {
         answerInOrder: false
     };
 
+    const contentQuill = new Delta().insert(`Content text`);
+    const questionQuill = new Delta().insert(`Some question text`);
+    const optionQuill1 = new Delta().insert(`Option 1 Text`);
+    const explanationQuill1 = new Delta().insert(`Explanation 1 Text`);
+    const optionQuill2 = new Delta().insert(`Option 2 Text`);
+    const explanationQuill2 = new Delta().insert(`Explanation 2 Text`);
     const contentQuestionsDelta = {
         quillChanges: {
-            [contentQuillId]: new Delta().insert(contentText),
-            [questionQuillId]: new Delta().insert(questionText),
-            [optionQuillId1]: new Delta().insert(optionText1),
-            [explanationQuillId1]: new Delta().insert(explanationText1),
-            [optionQuillId2]: new Delta().insert(optionText2),
-            [explanationQuillId2]: new Delta().insert(explanationText2)
+            [contentQuillId]: contentQuill,
+            [questionQuillId]: questionQuill,
+            [optionQuillId1]: optionQuill1,
+            [explanationQuillId1]: explanationQuill1,
+            [optionQuillId2]: optionQuill2,
+            [explanationQuillId2]: explanationQuill2
         },
         questionChanges: {
             [questionId]: <QuestionChanges>{
@@ -89,43 +89,63 @@ describe('Course view', function () {
         orderedQuestionIds: toAddDeltaArrOps([questionId])
     };
 
-    const expectedContentQuestions = (idMap: CreateCourseIdMap) => {
-        return {
-            orderedContentIds: [idMap[contentQuillId]],
-            orderedQuestionIds: [idMap[questionId]],
-            orderedContentQuestionIds: [contentQuillId, questionId].map((id) => idMap[id]),
-            contentQuestions: [{
-                id: idMap[contentQuillId],
-                version: 0,
-                createdAt: nowTimestamp,
-                lastModifiedAt: nowTimestamp
-            }, {
-                id: idMap[questionId],
-                version: 0,
-                createdAt: nowTimestamp,
-                lastModifiedAt: nowTimestamp,
-                questionQuillId: idMap[questionQuillId],
-                ...basicQuestionProps,
-                optionIds: [optionId1, optionId2].map((id) => idMap[id]),
-                correctOptionIds: [idMap[optionId2]],
-                options: [{
-                    id: idMap[optionId1],
-                    version: 0,
-                    optionQuillId: idMap[optionQuillId1],
-                    explanationQuillId: idMap[explanationQuillId1],
-                    lastModifiedAt: nowTimestamp,
-                    createdAt: nowTimestamp
+    const expectedContentQuestions = (idMap: { [id: string]: string }): (QuestionQuillData | QuillEditorData)[] => {
+        const content: QuillEditorData = {
+            id: idMap[contentQuillId],
+            version: 0,
+            createdAt: nowTimestamp,
+            lastModifiedAt: nowTimestamp,
+            editorJson: contentQuill
+        };
 
-                }, {
-                    id: idMap[optionId2],
+
+        const question: QuestionQuillData = {
+            id: idMap[questionId],
+            version: 0,
+            createdAt: nowTimestamp,
+            lastModifiedAt: nowTimestamp,
+            ...basicQuestionProps,
+            questionQuill: {
+                id: idMap[questionQuillId],
+                version: 0,
+                editorJson: questionQuill
+            },
+            optionIds: [optionId1, optionId2].map((id) => idMap[id]),
+            correctOptionIds: [idMap[optionId2]],
+            options: [{
+                id: idMap[optionId1],
+                version: 0,
+                option: {
+                    id: idMap[optionQuillId1],
                     version: 0,
-                    optionQuillId: idMap[optionQuillId2],
-                    explanationQuillId: idMap[explanationQuillId2],
-                    lastModifiedAt: nowTimestamp,
-                    createdAt: nowTimestamp
-                }]
+                    editorJson: optionQuill1
+                },
+                explanation: {
+                    id: idMap[explanationQuillId2],
+                    version: 0,
+                    editorJson: explanationQuill1
+                },
+                lastModifiedAt: nowTimestamp,
+                createdAt: nowTimestamp
+
+            }, {
+                id: idMap[optionId2],
+                version: 0,
+                option: {
+                    id: idMap[optionQuillId2],
+                    version: 0,
+                    editorJson: optionQuill2
+                },
+                explanation: {
+                    id: idMap[explanationQuillId2],
+                    version: 0,
+                    editorJson: explanationQuill2
+                },
+                lastModifiedAt: nowTimestamp,
+                createdAt: nowTimestamp
             }]
         };
+        return [content, question]
     };
 
     it('should load a course that has 1 question and 1 content segment', async function () {
@@ -136,7 +156,7 @@ describe('Course view', function () {
         let idMap = await createCourse(latestUser.id, data);
         let course = await courseViewQuery.loadAdminCourse(idMap.courseId);
 
-        expect(course).to.deep.eq(<ViewCourseTransferData> {
+        expect(course).to.deep.eq(<ViewCourseData> {
             id: idMap.courseId,
             version: 0,
             lastModifiedAt: nowTimestamp,
@@ -144,8 +164,8 @@ describe('Course view', function () {
             ...basicCourseProps,
             headerDataId: null,
             modules: [],
-            orderedModuleIds: [],
-            ...expectedContentQuestions(idMap)
+            // orderedModuleIds: [],
+            contentQuestions: expectedContentQuestions(idMap)
         });
     });
 });

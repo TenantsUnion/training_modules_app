@@ -9,6 +9,11 @@ import {isCreatedQuestionOptionPlaceholderId, QuillDeltaMap} from '@shared/quill
 
 @Component({
     props: {
+        viewOnly: {
+          type: Boolean,
+          required: false,
+          default: false
+        },
         storedOption: {
             required: true,
             type: Object

@@ -27,6 +27,13 @@ let Delta: DeltaStatic = Quill.import('delta');
             formstate: {}
         };
     },
+    props: {
+        viewOnly: {
+            type: Boolean,
+            required: false,
+            default: false
+        }
+    },
     components: {
         'question-option': VueQuestionOptionComponent
     }
@@ -43,16 +50,16 @@ export class QuestionComponent extends Vue {
     formstate: FormState;
 
     @Watch('storedQuestion', {immediate: true})
-    updateQuestion(incomingQuestion) {
+    updateQuestion (incomingQuestion) {
         this.question = {...incomingQuestion};
         this.options = [...this.question.options];
     }
 
-    getCurrentQuestion(): QuestionQuillData {
+    getCurrentQuestion (): QuestionQuillData {
         return {...this.question, options: this.options};
     }
 
-    quillChanges(): QuillDeltaMap {
+    quillChanges (): QuillDeltaMap {
         let questionQuill = (<QuillComponent> this.$refs.questionQuill);
         let changes = {};
 
@@ -65,7 +72,7 @@ export class QuestionComponent extends Vue {
             .reduce((acc, optionQuillChanges) => ({...acc, ...optionQuillChanges}), changes);
     }
 
-    addOption() {
+    addOption () {
         let id = createdQuestionOptionPlaceholderId();
         let optionQuillId = createdQuillPlaceholderId();
         let explanationQuillId = createdQuillPlaceholderId();
@@ -89,11 +96,11 @@ export class QuestionComponent extends Vue {
         });
     }
 
-    isCorrectOption(option: QuestionOptionQuillData) {
+    isCorrectOption (option: QuestionOptionQuillData) {
         return this.question.correctOptionIds.indexOf(option.id) !== -1;
     }
 
-    diffQuestion(): QuestionChanges {
+    diffQuestion (): QuestionChanges {
         if (isCreatedQuestionPlaceholderId(this.question.id)) {
             const {storedQuestion, options} = this;
             const {
@@ -128,7 +135,7 @@ export class QuestionComponent extends Vue {
         return null;
     }
 
-    get optionRefs(): QuestionOptionComponent[] {
+    get optionRefs (): QuestionOptionComponent[] {
         if (_.isArray(this.$refs.optionRefs)) {
             return (<QuestionOptionComponent[]>this.$refs.optionRefs);
         } else if (_.isObject(this.$refs.optionRefs)) {

@@ -1,16 +1,12 @@
-import * as _ from 'underscore';
-import {Moment} from "moment";
-import {ViewModuleData, ViewModuleQuillData, ViewModuleTransferData} from './modules';
-import {ContentSegment} from './segment';
+import {ViewModuleDescription} from './modules';
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, SaveTrainingEntityPayload,
     TrainingEntityDiffDelta,
-    TrainingEntity, ViewTrainingEntityTransferData, ViewTrainingEntity, ViewTrainingEntityQuillData
+    TrainingEntity, ViewTrainingEntity, ContentQuestionsDelta
 } from './training_entity';
 import {EntityCommandMetaData} from './entity';
 import {DeltaArrOp} from './delta/diff_key_array';
 import {diffPropsDeltaObj, TRAINING_ENTITY_BASIC_PROPS} from './delta/diff_delta';
-import {QuestionTransferData} from '@shared/questions';
 
 export type CourseEntityType = 'CourseEntity';
 export type CreateCourseEntityCommand = CreateTrainingEntityCommand<CourseEntityType, CreateCourseEntityPayload>;
@@ -30,27 +26,26 @@ export interface CourseEntity extends TrainingEntity {
 
 export interface CourseEntityDeltas extends TrainingEntityDiffDelta {
     openEnrollment?: boolean;
-    orderedModuleIds?: DeltaArrOp[];
+    orderedModuleIds?: DeltaArrOp<string>[];
 }
 
-export interface ViewCourseData<T extends ViewModuleData<ViewTrainingEntity>> extends ViewTrainingEntity {
+export interface ViewCourseData extends ViewTrainingEntity {
     openEnrollment: boolean,
-    orderedModuleIds: string[],
-    modules: T[]
+    modules: ViewModuleDescription[]
 }
 
-export interface ViewCourseQuillData extends ViewCourseData<ViewModuleQuillData>, ViewTrainingEntityQuillData {}
+export interface ViewCourseDelta extends TrainingEntityDiffDelta {
+    openEnrollment?: boolean,
+    // replace, move and update module descriptions
+    modules?: DeltaArrOp<ViewModuleDescription>[]
+}
 
-/**
- * The transfer shape of a course view where properties that refer to quill data have a string of
- * the corresponding ids and timestamps are in string form.
- */
-export interface ViewCourseTransferData extends ViewCourseData<ViewModuleTransferData>, ViewTrainingEntityTransferData {}
-
-export interface UserEnrolledCourseData extends ViewCourseQuillData {
+export interface UserEnrolledCourseData extends ViewCourseData {
     //todo maybe user description?
     //todo module and section progress
-} export interface CourseDescription {
+}
+
+export interface CourseDescription {
     id: string;
     slug?: string;
     title: string;
@@ -65,18 +60,19 @@ export interface AdminCourseDescription extends CourseDescription {
 export interface EnrolledCourseDescription extends CourseDescription {
 }
 
-export interface CreateCourseResponse extends ViewCourseTransferData {}
+export interface CreateCourseResponse extends ViewCourseData {
+}
 
-export interface CourseEntityDiffDelta extends TrainingEntityDiffDelta {
+export interface CourseEntityDiffDelta extends ContentQuestionsDelta {
     openEnrollment?: boolean;
-    modules?: DeltaArrOp[];
+    modules?: DeltaArrOp<string>[];
 }
 
 export interface SaveCourseResponse {
-    course: ViewCourseTransferData;
+    course: ViewCourseData;
 }
 
-export const diffBasicPropsCourseProps = (before: ViewCourseQuillData, after: ViewCourseQuillData): CourseEntityDiffDelta => {
+export const diffBasicPropsCourseProps = (before: ViewCourseData, after: ViewCourseData): CourseEntityDiffDelta => {
     return <CourseEntityDiffDelta> diffPropsDeltaObj(['openEnrollment', ...TRAINING_ENTITY_BASIC_PROPS], before, after);
 };
 
@@ -86,5 +82,6 @@ export const diffBasicPropsCourseProps = (before: ViewCourseQuillData, after: Vi
  */
 export interface CreateCourseIdMap {
     courseId: string,
+
     [p: string]: string
 }

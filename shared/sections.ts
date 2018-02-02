@@ -1,10 +1,9 @@
-import {Moment} from 'moment';
 import {
     CreateTrainingEntityPayload, SaveTrainingEntityPayload, TrainingEntityDiffDelta,
-    TrainingEntity, ViewTrainingEntity, ViewTrainingEntityQuillData
+    TrainingEntity, ViewTrainingEntity, ContentQuestionsDelta
 } from './training_entity';
-import {QuillEditorData} from './quill_editor';
-import {ViewCourseTransferData} from './courses';
+import {ViewCourseDelta} from '@shared/courses';
+import {ViewModuleDelta} from '@shared/modules';
 
 export type SectionEntityType = 'SectionEntity';
 export type SectionEntity = TrainingEntity;
@@ -15,26 +14,26 @@ export interface SectionDetails {
     description?: string;
 }
 
-interface ViewSectionData extends ViewTrainingEntity {}
+export interface ViewSectionData extends ViewTrainingEntity {}
 
-export interface ViewSectionQuillData extends ViewTrainingEntityQuillData {}
 
-export interface ViewSectionTransferData extends ViewSectionData {}
-
-export interface SaveSectionEntityPayload extends SaveTrainingEntityPayload<TrainingEntityDiffDelta> {
+export interface SaveSectionEntityPayload extends SaveTrainingEntityPayload<ContentQuestionsDelta> {
     courseId: string;
     moduleId: string;
 }
 
 export interface SaveSectionResponse {
-    sectionId: string;
+    courseId: string;
     moduleId: string;
-    course: ViewCourseTransferData;
+    sectionId: string;
+    course: ViewCourseDelta;
+    module: ViewModuleDelta;
 }
 
 export interface CreateSectionResponse {
     sectionId: string;
-    course: ViewCourseTransferData;
+    course: ViewCourseDelta;
+    module: ViewModuleDelta;
 }
 
 export interface CreateSectionEntityPayload extends CreateTrainingEntityPayload {

@@ -27,6 +27,11 @@ export interface QuestionEntity {
     lastModifiedAt?: string
 }
 
+export const isQuestionTransferData = (obj: any): obj is QuestionTransferData => {
+    return obj instanceof Object && !(obj instanceof Array)  &&
+        obj.id.substr(0, 2) !== 'QU' && typeof obj.questionQuillId === 'string';
+};
+
 export interface QuestionData {
     id: string;
     version: number;
@@ -124,8 +129,8 @@ export type QuestionChanges = {
     questionQuillId?: string,
     questionType?: QuestionType,
     answerType?: AnswerType,
-    optionIds: DeltaArrOp[],
-    correctOptionIds: DeltaArrOp[],
+    optionIds: DeltaArrOp<string>[],
+    correctOptionIds: DeltaArrOp<string>[],
     randomizeOptionOrder?: boolean,
     answerInOrder?: boolean,
     canPickMultiple?: boolean,

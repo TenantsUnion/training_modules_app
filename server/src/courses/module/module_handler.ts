@@ -2,8 +2,7 @@ import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
 import {ModuleRepository} from './module_repository';
 import {
-    CreateModuleEntityPayload, ModuleEntity, ModuleEntityDiffDelta, SaveModuleEntityPayload,
-    ViewModuleTransferData
+    CreateModuleEntityPayload, ModuleEntity, ModuleEntityDiffDelta, SaveModuleEntityPayload, ViewModuleDescription,
 } from '@shared/modules';
 import {applyDeltaDiff} from '@shared/delta/apply_delta';
 import {applyDeltaArrOps, updateArrOpsValues} from '@shared/delta/diff_key_array';
@@ -46,7 +45,7 @@ export class ModuleHandler {
         await this.moduleRepo.saveModule(updatedModule);
     }
 
-    async removeModule(module: ViewModuleTransferData): Promise<void> {
+    async removeModule(module: ViewModuleDescription): Promise<void> {
         // todo;
         // let removeQuillContent = _.map(module.orderedContentIds, (quillId) => {
         //     return this.quillRepo.remove(quillId);

@@ -1,6 +1,6 @@
 import {SectionRepository} from './section_repository';
 import {
-    CreateSectionEntityPayload, SaveSectionEntityPayload, ViewSectionTransferData
+    CreateSectionEntityPayload, SaveSectionEntityPayload, ViewSectionData
 } from '@shared/sections';
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
@@ -38,7 +38,7 @@ export class SectionHandler {
         await this.sectionRepo.updateSection(updatedSection);
     }
 
-    async removeSection(section: ViewSectionTransferData): Promise<void> {
+    async removeSection(section: ViewSectionData): Promise<void> {
         // let removeQuillContent = _.map(section.orderedContentIds, (quillId) => {
         //     return this.quillRepo.remove(quillId);
         // });

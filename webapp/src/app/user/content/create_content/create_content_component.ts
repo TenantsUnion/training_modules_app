@@ -3,6 +3,7 @@ import Component from "vue-class-component";
 import {contentHttpService} from "../content_http_service";
 import {appRouter} from "../../../router";
 import QuillComponent from '../../../global/quill/quill_component';
+import {QuillEditorData} from '@shared/quill_editor';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class CreateContentComponent extends Vue {
     }
 
     create () {
-        let quillData: Quill.DeltaStatic = this.quillEditor.getQuillEditorContents();
+        let quillData: QuillEditorData = this.quillEditor.getQuillEditorContents();
         contentHttpService.createContent(this.title, quillData)
             .then(() => {
                 //successfully created content

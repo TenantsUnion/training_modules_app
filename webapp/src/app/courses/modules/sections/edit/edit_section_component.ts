@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import * as VueForm from '../../../../vue-form';
-import {SaveSectionEntityPayload, ViewSectionQuillData} from '@shared/sections';
+import {SaveSectionEntityPayload, ViewSectionData} from '@shared/sections';
 import {CourseRefreshComponent} from '@global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '../../../../state_store';
@@ -13,7 +13,7 @@ import {Watch} from 'vue-property-decorator';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
-import {TrainingEntityDiffDelta} from '@shared/training_entity';
+import {ContentQuestionsDelta, TrainingEntityDiffDelta} from '@shared/training_entity';
 import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
 
 @Component({
@@ -46,14 +46,14 @@ export class EditSectionComponent extends Vue {
     errorMessages: {};
     quillContent: Segment[] = [];
     formstate: VueForm.FormState;
-    section: ViewSectionQuillData;
-    currentSection: ViewSectionQuillData;
+    section: ViewSectionData;
+    currentSection: ViewSectionData;
     currentCourseId: string;
     currentModuleId: string;
     getSectionSlugFromId: getSectionSlugFromIdFn;
 
     @Watch('currentSection', {immediate: true})
-    updateSection(currentSection: ViewSectionQuillData, oldCurrentSection) {
+    updateSection(currentSection: ViewSectionData, oldCurrentSection) {
         let section = currentSection ? _.extend({}, currentSection) : this.section;
         let quillContent = currentSection ? _.map(currentSection.contentQuestions, (content) => {
             return _.extend({}, content, {
@@ -94,7 +94,14 @@ export class EditSectionComponent extends Vue {
             id: this.section.id,
             courseId: this.currentCourseId,
             moduleId: this.currentModuleId,
-            changes
+            changes: {
+                ...changes,
+                quillChanges: null, // todo fill in
+                questionChanges: null, //todo fill in
+                orderedContentQuestionIds: null,
+                orderedQuestionIds: null,
+                orderedContentIds: null
+            }
         };
 
         try {

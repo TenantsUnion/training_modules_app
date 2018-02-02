@@ -2,7 +2,8 @@
   "include": [
     "./src/app/**/*.ts",
     "./test/**/*.ts",
-    "../shared/**/*.ts"
+    "../shared/**/*.ts",
+    "../node_modules/@types"
   ],
   "compilerOptions": {
     "lib": [

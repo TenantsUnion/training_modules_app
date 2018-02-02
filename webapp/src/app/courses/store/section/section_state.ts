@@ -1,18 +1,17 @@
 import {RootGetters, RootState} from '../../../state_store';
-import {ViewSectionQuillData, ViewSectionTransferData} from '../../../../../../shared/sections';
+import {ViewSectionData} from '@shared/sections';
 
 export interface SectionState {
     currentSectionTitle: string;
-    currentSectionTransfer: ViewSectionTransferData;
     currentSectionId: string;
-    sections: { [index: string]: ViewSectionQuillData }
+    sections: { [index: string]: ViewSectionData }
     sectionRequests: { [index: string]: boolean }
 }
 
 export type SectionGetterFn = (state: SectionState, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => any;
 
 export interface SectionGetters {
-    currentSection: ViewSectionQuillData;
+    currentSection: ViewSectionData;
     currentSectionLoading: boolean;
     currentSectionLoaded: boolean;
     getSectionIdFromSlug: (slugInfo: { moduleId: string, sectionSlug: string }) => string;
@@ -22,7 +21,7 @@ export interface SectionGetters {
 export type getSectionSlugFromIdFn = (slugInfo: { moduleId: string, sectionId: string }) => string;
 export type getSectionIdFromSlugFn = (slugInfo: { moduleId: string, sectionSlug: string }) => string;
 export const sectionGetters: {[index in keyof SectionGetters]: SectionGetterFn} = {
-    currentSection: ({sections, currentSectionId}): ViewSectionQuillData => sections[currentSectionId],
+    currentSection: ({sections, currentSectionId}): ViewSectionData => sections[currentSectionId],
     currentSectionLoaded: ({sections, currentSectionId}) => !!sections[currentSectionId],
     currentSectionLoading: ({currentSectionId, sectionRequests}) => !!currentSectionId && sectionRequests[currentSectionId],
     getSectionIdFromSlug(state, {courseNavigationDescription}): getSectionIdFromSlugFn {
@@ -53,7 +52,6 @@ export const sectionGetters: {[index in keyof SectionGetters]: SectionGetterFn} 
 
 export const sectionState: SectionState = {
     currentSectionTitle: '',
-    currentSectionTransfer: null,
     currentSectionId: '',
     sections: {},
     sectionRequests: {}

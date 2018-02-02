@@ -1,15 +1,14 @@
 import {
-    CreateModuleEntityPayload, ModuleEntity, SaveModuleEntityPayload, SaveModuleResponse,
-    ViewModuleTransferData
-} from '../../../../../../shared/modules';
+    CreateModuleEntityPayload, ModuleEntity, SaveModuleEntityPayload, SaveModuleResponse
+} from '@shared/modules';
 import {MODULE_MUTATIONS} from './module_mutations';
 import {ModuleState} from './module_state';
 import {Action, ActionTree} from 'vuex';
 import {RootGetters, RootState} from '../../../state_store';
-import {Constant} from '../../../../../../shared/typings/util_typings';
+import {Constant} from '@shared/typings/util_typings';
 import {coursesService} from '../../courses_service';
-import {transformTransferViewService} from '../../../global/quill/transform_transfer_view_service';
 import {COURSE_MUTATIONS} from '../course/course_mutations';
+import {loadModule, createModule} from '../../modules/modules_requests';
 
 export type ModuleAction<P> = Action<ModuleState, RootState>;
 
@@ -21,7 +20,7 @@ export interface ModuleActions {
     CREATE_MODULE: CreateModuleAction,
     SET_CURRENT_MODULE: SetCurrentModuleAction;
     SET_CURRENT_MODULE_FROM_SLUG: SetCurrentModuleFromSlugAction;
-    LOAD_MODULE_ENTITY: ModuleAction<ViewModuleTransferData>;
+    LOAD_MODULE_ENTITY: ModuleAction<string>; //module id
     SAVE_MODULE: ModuleAction<SaveModuleEntityPayload>;
 }
 
@@ -41,14 +40,14 @@ export const CREATE_ID = 'CREATING';
  * Module store actions
  */
 export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions = {
-    CREATE_MODULE: async ({commit}, createModule: CreateModuleEntityPayload) => {
+    CREATE_MODULE: async ({commit, getters}, createModulePayload: CreateModuleEntityPayload) => {
+        // todo return created module as well
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
-        let {course, moduleId} = await coursesService.createModule(createModule);
+        let {course, moduleId, module} = await createModule(createModulePayload);
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
-        let module = course.modules.find((module) => module.id === moduleId);
-
-        commit(MODULE_MUTATIONS.SET_MODULE_ENTITY, await transformTransferViewService.populateTrainingEntityQuillData(module));
+        commit(MODULE_MUTATIONS.SET_MODULE_ENTITY, module);
         commit(MODULE_MUTATIONS.SET_CURRENT_MODULE, moduleId);
+        // todo return course entity delta to update module descriptions
         commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, course);
     },
     async SET_CURRENT_MODULE({state, getters, dispatch, commit}, id) {
@@ -72,16 +71,16 @@ export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions =
         dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE, id);
     },
     async LOAD_MODULE_ENTITY({commit, getters}, id: string) {
-        let moduleTransferData = getters.getModuleTransferData(id);
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id, requesting: true});
-        let moduleEntity = await transformTransferViewService.populateTrainingEntityQuillData(moduleTransferData);
+        commit(MODULE_MUTATIONS.SET_MODULE_ENTITY, await loadModule(getters.currentCourseId, id));
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id, requesting: false});
-        commit(MODULE_MUTATIONS.SET_MODULE_ENTITY, moduleEntity);
     },
     async SAVE_MODULE({commit, dispatch}, saveModuleEntity: SaveModuleEntityPayload){
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: saveModuleEntity.id, requesting: true});
         let response: SaveModuleResponse = await coursesService.saveModule(saveModuleEntity);
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: saveModuleEntity.id, requesting: false});
+
+        // todo return course entity to update modules property
         commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
         await dispatch(MODULE_ACTIONS.LOAD_MODULE_ENTITY, response.moduleId);
 

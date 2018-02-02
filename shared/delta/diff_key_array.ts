@@ -1,28 +1,29 @@
 import * as _ from 'underscore';
 
-export const addDeltaArrOp = (val: any, index: number): DeltaArrOp => {
+export const addDeltaArrOp = <T>(val: T, index: number): DeltaArrOp<T> => {
     return {
         val, index,
         op: 'ADD',
     };
 };
 
-export const toAddDeltaArrOps = (values: any[]): DeltaArrOp[] => {
+export const toAddDeltaArrOps = <T>(values: T[]): DeltaArrOp<T>[] => {
     return values.map((val, index) => addDeltaArrOp(val, index));
 };
 
-export interface DeltaArrOp {
-    val?: any,
+
+export interface DeltaArrOp<T> {
+    val?: T,
     op: 'ADD' | 'DELETE' | 'MOVE',
     index: number,
     beforeIndex?: number
 }
 
-export const isDeltaArrDiff = (arr: any): arr is DeltaArrOp[] => {
+export const isDeltaArrDiff = (arr: any): arr is DeltaArrOp<any>[] => {
     return _.isArray(arr) && arr.every((obj) => isDeltaArrOp(obj));
 };
 
-export const isDeltaArrOp = (obj: any): obj is DeltaArrOp => {
+export const isDeltaArrOp = (obj: any): obj is DeltaArrOp<any> => {
     return _.isObject(obj) && !_.isArray(obj)
         && (obj.op === 'MOVE' || obj.op === 'ADD' || obj.op === 'DELETE')
         && (!obj.beforeIndex || _.isString(obj.beforeIndex) || _.isNumber(obj.beforeIndex))
@@ -35,8 +36,8 @@ export const isDeltaArrOp = (obj: any): obj is DeltaArrOp => {
  */
 type KeyArray = string[]
 
-export const deltaMapArrayDiff = <T> (before: T[], after: T[], mapFn: (diffObj: T[]) => KeyArray): DeltaArrOp[] => {
-  return deltaArrayDiff(mapFn(before), mapFn(after));
+export const deltaMapArrayDiff = <T>(before: T[], after: T[], mapFn: (diffObj: T[]) => KeyArray): DeltaArrOp<string>[] => {
+    return deltaArrayDiff(mapFn(before), mapFn(after));
 };
 /**
  * Expects each Delta Object array to hash to a unique key when called with the key function.
@@ -46,14 +47,14 @@ export const deltaMapArrayDiff = <T> (before: T[], after: T[], mapFn: (diffObj: 
  * @param {(delta: DeltaObj) => string} keyFn
  * @returns {delta.DeltaArrDiff}
  */
-export const deltaArrayDiff = (beforeArr: string[], afterArr: string[]): DeltaArrOp[] => {
+export const deltaArrayDiff = (beforeArr: string[], afterArr: string[]): DeltaArrOp<string>[] => {
     // cases -- no change, elements moved (how to identify unique elements?), elements deleted, elements added,
     // think of as array of ids -- title and description is part of the view/ changes handled differently
     // each element is unique
     let beforeMap = toIndexMap(beforeArr);
     let afterMap = toIndexMap(afterArr);
 
-    let changeOps: DeltaArrOp[] = [];
+    let changeOps: DeltaArrOp<string>[] = [];
     // ops applied is the state of the current ops that are needed to transform the before array into the new one
     // applied on a copy of the before array
     let opsApplied = applyDeltaArrOps(beforeArr, changeOps);
@@ -64,7 +65,7 @@ export const deltaArrayDiff = (beforeArr: string[], afterArr: string[]): DeltaAr
     changeOps = beforeArr.reduce((acc, key, index) => {
         let intermediateMap = toIndexMap(opsApplied);
         if (!_.isNumber(afterMap[key]) && _.isNumber(intermediateMap[key])) {
-            let op: DeltaArrOp = {
+            let op: DeltaArrOp<string> = {
                 val: key,
                 op: 'DELETE',
                 index: intermediateMap[key]
@@ -96,7 +97,7 @@ export const deltaArrayDiff = (beforeArr: string[], afterArr: string[]): DeltaAr
     afterArr.reduce((accOps, key, index) => {
         let currentIndex = toIndexMap(opsApplied)[key];
         if (currentIndex !== index) {
-            let moveOp: DeltaArrOp = {
+            let moveOp: DeltaArrOp<string> = {
                 beforeIndex: currentIndex,
                 index: index,
                 // val: key,
@@ -126,8 +127,8 @@ const toIndexMap = (keyArray: (string | number)[]) => {
  * @param {KeyArray} keyArray
  * @param {DeltaArrOp[]} ops
  */
-export const applyDeltaArrOps = (keyArray: KeyArray, ops: DeltaArrOp[]): KeyArray => {
-    return ops.reduce((intermediateArr: KeyArray, op: DeltaArrOp) => {
+export const applyDeltaArrOps = <T> (keyArray: T[], ops: DeltaArrOp<T>[]): T[] => {
+    return ops.reduce((intermediateArr: T[], op: DeltaArrOp<T>) => {
         switch (op.op) {
             case 'ADD':
                 intermediateArr.splice(op.index, 0, op.val);
@@ -154,8 +155,8 @@ export const applyDeltaArrOps = (keyArray: KeyArray, ops: DeltaArrOp[]): KeyArra
  * @param valReplaceMap
  * @returns {DeltaArrOp[]}
  */
-export const updateArrOpsValues = (deltaArr: DeltaArrOp[], valReplaceMap: { [p: string]: string }): DeltaArrOp[] => {
-    return deltaArr.map((quillArrOp: DeltaArrOp) => {
+export const updateArrOpsValues = (deltaArr: DeltaArrOp<string>[], valReplaceMap: { [p: string]: string }): DeltaArrOp<string>[] => {
+    return deltaArr.map((quillArrOp: DeltaArrOp<string>) => {
         let quillId = valReplaceMap[quillArrOp.val];
         return quillId ? _.extend({}, quillArrOp, {val: quillId}) : quillArrOp;
     });

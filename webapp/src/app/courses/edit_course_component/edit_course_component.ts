@@ -10,13 +10,9 @@ import * as VueForm from '../../vue-form';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {COURSE_ACTIONS} from '../store/course/course_actions';
 import {
-    CourseEntityDiffDelta, diffBasicPropsCourseProps, SaveCourseEntityPayload,
-    ViewCourseQuillData
+    CourseEntityDiffDelta, diffBasicPropsCourseProps, SaveCourseEntityPayload, ViewCourseData
 } from '@shared/courses';
 import {getSlugFromCourseIdFn} from '../store/courses_listing/courses_listing_store';
-import VueTrainingSegmentComponent from '@global/training_segments/training_segments_component.vue';
-import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
-
 let Delta = Quill.import('delta');
 
 
@@ -46,12 +42,12 @@ export class EditCourseComponent extends Vue {
     errorMessages: {};
     quillContent: Segment[] = [];
     formstate: VueForm.FormState;
-    course: ViewCourseQuillData;
-    currentCourse: ViewCourseQuillData;
+    course: ViewCourseData;
+    currentCourse: ViewCourseData;
     getSlugFromCourseId: getSlugFromCourseIdFn;
 
     @Watch('currentCourse', {immediate: true})
-    updateCourse(currentCourse: ViewCourseQuillData) {
+    updateCourse(currentCourse: ViewCourseData) {
         let course = currentCourse ? _.extend({}, currentCourse) : this.course;
         let quillContent = currentCourse ? _.map(currentCourse.contentQuestions, (content) => {
             return _.extend({}, content, {

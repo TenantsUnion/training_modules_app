@@ -3,21 +3,19 @@ import Vue from 'vue';
 import draggable from 'vuedraggable';
 import Component from 'vue-class-component';
 import * as VueForm from '../../../vue-form';
-import {SaveModuleEntityPayload, ViewModuleQuillData} from '@shared/modules';
-import {ViewSectionTransferData} from '@shared/sections';
+import {SaveModuleEntityPayload, ViewModuleData} from '@shared/modules';
 import {CourseRefreshComponent} from '@global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '../../../state_store';
 import {currentModuleRouteGuard} from '../module_details_component/module_details_component';
 import {Segment} from '@shared/segment';
-import {TrainingEntityDiffDelta} from '@shared/training_entity';
+import {TrainingEntityDiffDelta, ViewTrainingEntityDescription} from '@shared/training_entity';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {MODULE_ACTIONS} from '../../store/module/module_actions';
 import {COURSES_ROUTE_NAMES} from '../../courses_routes';
 import {getModuleSlugFromIdFn} from '../../store/module/module_state';
 import {Watch} from 'vue-property-decorator';
-import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
 
 @Component({
     data: () => {
@@ -54,16 +52,16 @@ export class EditModuleComponent extends Vue {
     errorMessages: {};
     quillContent: Segment[] = [];
     formstate: VueForm.FormState;
-    module: ViewModuleQuillData;
-    currentModule: ViewModuleQuillData;
-    moduleSections: ViewSectionTransferData[] = [];
+    module: ViewModuleData;
+    currentModule: ViewModuleData;
+    moduleSections: ViewTrainingEntityDescription[] = [];
     currentCourseId: string;
     currentModuleId: string;
     removeSections: { [index: string]: boolean };
     getModuleSlugFromId: getModuleSlugFromIdFn;
 
     @Watch('currentModule', {immediate: true})
-    updateModule(currentModule: ViewModuleQuillData, oldCurrentModule) {
+    updateModule(currentModule: ViewModuleData, oldCurrentModule) {
         let module = currentModule ? _.extend({}, currentModule) : this.module;
         let quillContent = currentModule ? _.map(currentModule.contentQuestions, (content) => {
             return _.extend({}, content, {
@@ -121,7 +119,12 @@ export class EditModuleComponent extends Vue {
             courseId: this.currentCourseId,
             changes: {
                 ...changes,
-                orderedSectionIds: orderedSectionIdsDiff
+                orderedSectionIds: orderedSectionIdsDiff,
+                quillChanges: null, // todo fill in
+                questionChanges: null, //todo fill in
+                orderedContentQuestionIds: null,
+                orderedQuestionIds: null,
+                orderedContentIds: null
             }
         };
 
@@ -153,7 +156,7 @@ export class EditModuleComponent extends Vue {
         });
     }
 
-    sectionTitleStyles(module: ViewSectionTransferData) {
+    sectionTitleStyles(section: ViewTrainingEntityDescription) {
         return {
             "text-decoration": this.removeSections[module.id] ? "line-through" : "none"
         };

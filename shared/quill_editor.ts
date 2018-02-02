@@ -21,6 +21,11 @@ export interface QuillTransferData {
     createdAt?: string;
 }
 
+export const isQuillTransferData = (obj): obj is QuillTransferData => {
+    return obj instanceof Object && !Array.isArray(obj) && typeof obj.id === 'string'
+        && obj.id.substr(0, 2) === 'QD' && !obj.editorJson
+};
+
 /**
  * Returns a boolean indicating whether the provided obj is of the {@type QuillEditorData} type by checking if there
  * exists a property {@link QuillEditorData#editorJson}' that is of {@type Quill.DeltaStatic}
@@ -29,7 +34,7 @@ export interface QuillTransferData {
  * @returns {obj is QuillEditorData}
  */
 export const isQuillEditorData = (obj: any): obj is QuillEditorData => {
-  return obj && _.isObject(obj) && isDeltaStatic(obj.editorJson);
+    return obj && _.isObject(obj) && isDeltaStatic(obj.editorJson);
 };
 
 export type QuillDeltaMap = { [index: string]: DeltaStatic; };
@@ -43,7 +48,7 @@ export const createdQuillPlaceholderId = () => {
 };
 
 export const isCreatedQuillPlaceholderId = (id: string) => {
-  return id.indexOf(CREATED_QUILL_PREFIX) === 0;
+    return id.indexOf(CREATED_QUILL_PREFIX) === 0;
 };
 
 /* Question Placeholder Id */

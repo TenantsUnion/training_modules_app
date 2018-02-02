@@ -5,6 +5,7 @@ import Component from "vue-class-component";
 import {DeltaStatic, Sources} from "quill";
 import {isNotEmptyQuillData} from '@global/training_segments/training_segments_component';
 import {Prop} from 'vue-property-decorator';
+import {QuillEditorData} from '@shared/quill_editor';
 
 // only log quill error messages if not in debug or dev mode
 if (['debug', 'dev'].indexOf(process.env.NODE_ENV) === -1) {
@@ -78,6 +79,8 @@ type EditorState = 'NEW' | 'CHANGED' | 'PRISTINE';
 export default class QuillComponent extends Vue {
     editorId: string;
     editorJson: DeltaStatic;
+    @Prop({type: Number, default: 0})
+    version: number;
     quill: Quill.Quill;
     readOnly: boolean;
     onChange: QuillChangeFn;
@@ -111,8 +114,13 @@ export default class QuillComponent extends Vue {
         this.editorJson && this.quill.setContents(new Delta(this.editorJson.ops), 'api');
     }
 
-    getQuillEditorContents(): Quill.DeltaStatic {
-        return this.quill.getContents();
+    getQuillEditorContents(): QuillEditorData {
+
+        return {
+            id: this.editorId,
+            version: this.version,
+            editorJson: this.quill.getContents()
+        };
     }
 
     getChanges(): Quill.DeltaStatic {

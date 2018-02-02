@@ -8,7 +8,7 @@ import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
 import {
     CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload,
-    SaveModuleResponse
+    SaveModuleResponse, ViewModuleData
 } from "@shared/modules";
 import {ModuleOperations} from './module/module_routes';
 import {
@@ -20,6 +20,8 @@ import {SectionOperations} from './section/section_routes';
 import {validateCreateCourse, validateSaveCourse} from './courses_validation';
 import {logHandleServerError, logHandleValidationError} from '../util/handle_validation_error';
 import {CoursesViewHandler} from './courses_view_handler';
+import {ModuleViewQuery} from './module/module_view_query';
+import {SectionViewQuery} from './section/section_view_query';
 
 export class CourseCommandController implements ModuleOperations, SectionOperations {
     private logger = getLogger('CoursesController', 'info');
@@ -27,7 +29,9 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     private handleServerErr = logHandleServerError(this.logger);
 
     constructor(private coursesHandler: CoursesHandler,
-                private coursesViewHandler: CoursesViewHandler) {
+                private coursesViewHandler: CoursesViewHandler,
+                private moduleViewQuery: ModuleViewQuery,
+                private sectionViewQuery: SectionViewQuery) {
     }
 
     async createCourse(request: Request, response: Response) {
@@ -37,7 +41,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
             if (errMsgs) {
                 this.handleValidationErr(errMsgs, request, response);
             } else {
-                let {courseId}  = await this.coursesHandler.createCourse(createCourseCommand);
+                let {courseId} = await this.coursesHandler.createCourse(createCourseCommand);
                 let createdCourse: CreateCourseResponse = await this.coursesViewHandler.loadAdminCourse(courseId);
                 // todo handle room creation for course
                 response.status(200).send(createdCourse);
@@ -54,7 +58,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
             if (errMsgs) {
                 this.handleValidationErr(errMsgs, request, response);
             } else {
-                    await coursesHandler.saveCourse(course);
+                await coursesHandler.saveCourse(course);
                 let result: SaveCourseResponse = {
                     course: await coursesViewHandler.loadAdminCourse(course.id)
                 };
@@ -89,9 +93,13 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         let createModuleData: CreateModuleEntityPayload = request.body.payload;
         try {
             let moduleId = await this.coursesHandler.createModule(createModuleData);
+            let module: ViewModuleData = await this.moduleViewQuery.loadModule(moduleId);
             let result: CreateModuleResponse = {
                 moduleId,
-                course: await this.coursesViewHandler.loadAdminCourse(createModuleData.courseId)
+                module: module,
+                course: {
+                    modules: []
+                }
             };
             response.status(200).send(result);
         } catch (e) {
@@ -105,7 +113,8 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
             await this.coursesHandler.saveModule(saveModuleData);
             let result: SaveModuleResponse = {
                 moduleId: saveModuleData.id,
-                course: await this.coursesViewHandler.loadAdminCourse(saveModuleData.courseId)
+                courseId: saveModuleData.courseId,
+                course: null, // todo course delta
             };
             response.status(200).send(result);
         } catch (e) {
@@ -119,7 +128,8 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
             let sectionId = await this.coursesHandler.createSection(createSectionData);
             let result: CreateSectionResponse = {
                 sectionId,
-                course: await this.coursesViewHandler.loadAdminCourse(createSectionData.courseId)
+                module: null, // todo module delta
+                course: null// todo course delta
             };
             response.status(200).send(result);
         } catch (e) {
@@ -132,9 +142,11 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         try {
             await this.coursesHandler.saveSection(saveSectionData);
             let result: SaveSectionResponse = {
+                courseId: saveSectionData.courseId,
                 sectionId: saveSectionData.id,
                 moduleId: saveSectionData.moduleId,
-                course: await this.coursesViewHandler.loadAdminCourse(saveSectionData.courseId)
+                course: null,// todo course delta,
+                module: null // todo module delta
             };
             response.status(200).send(result);
         } catch (e) {

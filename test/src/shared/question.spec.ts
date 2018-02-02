@@ -30,17 +30,10 @@ describe('question utilities', function () {
         it('should return false if optionIds contains an operation', function () {
             expect(isEmptyQuestionChanges({
                 optionChangesObject: {},
-                optionIds: [addDeltaArrOp(1, 0)],
+                optionIds: [addDeltaArrOp('QO1', 0)],
                 correctOptionIds: []
             }))
         });
 
-        it('should return false if correctOptionIds contains an operation', function () {
-            expect(isEmptyQuestionChanges({
-                optionChangesObject: {},
-                optionIds: [],
-                correctOptionIds: [addDeltaArrOp(1, 0)]
-            }));
-        });
     });
 });

@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
 import {COURSES_ROUTE_NAMES} from '../../courses_routes';
-import {ViewModuleQuillData} from '../../../../../../shared/modules';
-import {CourseRefreshComponent, ModuleRefreshComponent} from '../../../global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
 import {NavigationGuard} from 'vue-router';
 import {RootState, store} from '../../../state_store';

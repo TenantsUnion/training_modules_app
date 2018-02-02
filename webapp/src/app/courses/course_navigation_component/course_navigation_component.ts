@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {ViewCourseQuillData} from '@shared/courses';
+import {ViewCourseData} from '@shared/courses';
 import {RawLocation, RouteRecord} from 'vue-router/types/router';
 import {COURSES_ROUTE_NAMES} from '../courses_routes';
 import {mapGetters} from 'vuex';
@@ -23,7 +23,7 @@ import {mapGetters} from 'vuex';
     }
 })
 export default class CourseNavigationComponent extends Vue {
-    course: ViewCourseQuillData;
+    course: ViewCourseData;
     isCourseAdmin: boolean;
 
     get activeNavigation() {

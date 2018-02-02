@@ -2,11 +2,14 @@
     <div>
         <div v-for="(segment, index) in currentSegments" :key="segment.id">
             <quill-editor v-if="isContent(segment)" ref="segment"
+                          :read-only="viewOnly"
                           :editor-json="segment.editorJson"
                           :editor-id="segment.id"
-                          :on-change="segment.onChangeCallback"
                           :on-remove="segment.removeCallback"/>
-            <question v-if="isQuestion(segment)" ref="segment" :remove-callback="segment.removeCallback" :stored-question="segment.question"/>
+            <question v-if="isQuestion(segment)"
+                      :view-only="viewOnly"
+                      ref="segment"
+                      :remove-callback="segment.removeCallback" :stored-question="segment.question"/>
         </div>
         <div class="row">
             <div class="columns small-12 medium-6">

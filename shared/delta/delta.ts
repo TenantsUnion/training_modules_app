@@ -11,7 +11,7 @@ export interface DeltaObj {
 }
 
 
-export type DeltaDiff = number | boolean | string | DeltaArrOp[] | QuillChangesObj | QuestionChangesObj | OptionChangesObj;
+export type DeltaDiff = number | boolean | string | DeltaArrOp<any>[] | QuillChangesObj | QuestionChangesObj | OptionChangesObj;
 
 export type DeltaObjDiff = {
     [index: string]: DeltaDiff;

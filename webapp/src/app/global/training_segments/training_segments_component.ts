@@ -29,7 +29,7 @@ const Delta = Quill.import('delta');
             type: Array,
             required: true,
         },
-        readOnly: {
+        viewOnly: {
             type: Boolean,
             default: false
         },
@@ -50,7 +50,7 @@ export default class TrainingSegmentsComponent extends Vue {
             return <ContentSegment> {
                 id: editor.editorId,
                 type: 'CONTENT',
-                editorJson: editor.getQuillEditorContents()
+                content: editor.getQuillEditorContents()
             }
         });
         return contentData;
@@ -73,18 +73,18 @@ export default class TrainingSegmentsComponent extends Vue {
 
 
         let contentQuillDiff = this.contentRefs.reduce((acc, contentQuill: QuillComponent) => {
-            if(contentQuill.hasChanged()){
+            if (contentQuill.hasChanged()) {
                 acc[contentQuill.editorId] = contentQuill.getChanges();
             }
             return acc;
         }, {});
 
-        let questionQuillDiff =this.questionRefs
+        let questionQuillDiff = this.questionRefs
             .reduce((acc, question) => ({...acc, ...question.quillChanges()}), {});
 
         let questionChanges = this.questionRefs.reduce((acc, question) => {
             let questionChanges = question.diffQuestion();
-            if(!isEmptyQuestionChanges(questionChanges)){
+            if (!isEmptyQuestionChanges(questionChanges)) {
                 acc[question.question.id] = questionChanges;
             }
             return acc;
@@ -112,7 +112,11 @@ export default class TrainingSegmentsComponent extends Vue {
         this.currentSegments.push({
             id: addContentId,
             type: 'CONTENT',
-            editorJson: new Delta(),
+            content: {
+                id: addContentId,
+                version: 0,
+                editorJson: new Delta()
+            },
             removeCallback: () => {
                 let rmIndex = this.currentSegments.findIndex((el) => el.id === addContentId);
                 this.currentSegments.splice(rmIndex, 1);

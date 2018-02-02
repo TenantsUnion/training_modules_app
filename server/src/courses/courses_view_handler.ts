@@ -1,7 +1,6 @@
-import * as _ from 'underscore';
-import {AdminCourseDescription, EnrolledCourseDescription, ViewCourseTransferData} from '../../../shared/courses';
+import {AdminCourseDescription, EnrolledCourseDescription, ViewCourseData} from '../../../shared/courses';
 import {getLogger} from '../log';
-import {CourseViewQuery} from './view/course_view_query';
+import {CourseViewQuery} from './view/course_views_query';
 
 export class CoursesViewHandler {
     logger = getLogger('CourseViewHandler', 'info');
@@ -15,7 +14,7 @@ export class CoursesViewHandler {
     async getUserAdminCourses(userId: string): Promise<AdminCourseDescription[]> {
         return await this.courseViewQuery.loadUserAdminCourses(userId);
     }
-    async loadAdminCourse(courseId: string): Promise<ViewCourseTransferData> {
+    async loadAdminCourse(courseId: string): Promise<ViewCourseData> {
         return await this.courseViewQuery.loadAdminCourse(courseId);
     }
 }

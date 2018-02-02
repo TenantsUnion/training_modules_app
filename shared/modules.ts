@@ -1,29 +1,23 @@
-import {ViewSectionQuillData, ViewSectionTransferData} from "./sections";
 import {
-    CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, SaveTrainingEntityPayload,
-    TrainingEntityDiffDelta, TrainingEntity, ViewTrainingEntityQuillData, ViewTrainingEntityTransferData,
-    ViewTrainingEntity
+    CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityPayload,
+    TrainingEntityDiffDelta, TrainingEntity, ViewTrainingEntity, ViewTrainingEntityDescription, ContentQuestionsDelta
 } from './training_entity';
 import {DeltaArrOp} from './delta/diff_key_array';
-import {ViewCourseTransferData} from './courses';
+import {ViewCourseDelta, ViewCourseData} from '@shared/courses';
 
 export type ModuleEntityType = 'ModuleEntity';
 
-export interface ViewModuleData<T extends ViewTrainingEntity> extends ViewTrainingEntity {
-    orderedSectionIds: string[]
-    sections: T[]
+export interface ViewModuleData extends ViewTrainingEntity {
+    sections: ViewTrainingEntityDescription[]
 }
-
-export interface ViewModuleQuillData extends ViewModuleData<ViewSectionQuillData>, ViewTrainingEntityQuillData {}
-export interface ViewModuleTransferData extends ViewModuleData<ViewSectionTransferData>, ViewTrainingEntityTransferData {}
 
 export interface ModuleEntity extends TrainingEntity {
     headerDataId: string;
     orderedSectionIds: string[]
 }
 
-export interface ModuleEntityDiffDelta extends TrainingEntityDiffDelta {
-    orderedSectionIds?: DeltaArrOp[];
+export interface ModuleEntityDiffDelta extends ContentQuestionsDelta {
+    orderedSectionIds?: DeltaArrOp<string>[];
 }
 
 export interface CreateModuleEntityPayload extends CreateTrainingEntityPayload {
@@ -33,7 +27,8 @@ export interface CreateModuleEntityPayload extends CreateTrainingEntityPayload {
 
 export interface CreateModuleResponse {
     moduleId: string;
-    course: ViewCourseTransferData;
+    module: ViewModuleData;
+    course: ViewCourseDelta;
 }
 
 export type CreateModuleEntityCommand = CreateTrainingEntityCommand<ModuleEntityType, CreateModuleEntityPayload>;
@@ -49,7 +44,20 @@ export interface ModuleDetails {
 }
 
 export interface SaveModuleResponse {
+    courseId: string;
     moduleId: string;
-    course: ViewCourseTransferData;
+    course: ViewCourseDelta;
 }
 
+export interface ViewModuleDelta extends TrainingEntityDiffDelta {
+    // replace, add, update, remove changes that happen to sections in the module
+    sections: DeltaArrOp<ViewTrainingEntityDescription>[];
+}
+
+export interface ViewModuleDescription extends ViewTrainingEntityDescription {
+    sections: ViewTrainingEntityDescription[]
+}
+
+export interface ModuleEntityDiffDelta extends TrainingEntityDiffDelta {
+    sections?: DeltaArrOp<string>[];
+}

@@ -1,19 +1,35 @@
-import {ViewModuleData, ViewModuleTransferData} from '@shared/modules';
-import {ViewCourseData, ViewCourseTransferData} from '@shared/courses';
-import {QuestionTransferData} from "@shared/questions";
-import {ViewTrainingEntity} from "@shared/training_entity";
-import {QuillTransferData} from "@shared/quill_editor";
-import {ViewSectionTransferData} from "@shared/sections";
+import {ViewModuleData} from '@shared/modules';
+import {ViewCourseData} from '@shared/courses';
+import {QuestionQuillData, QuestionTransferData} from "@shared/questions";
+import {ViewTrainingEntity, ViewTrainingEntityDescription} from "@shared/training_entity";
+import {QuillEditorData, QuillTransferData} from "@shared/quill_editor";
 
-export interface ViewTrainingEntityDbData extends ViewTrainingEntity {
+export interface ViewTrainingEntityDbData {
+    id: string;
+    title: string;
+    version: number;
+    description?: string;
+    timeEstimate?: number;
+    active: boolean;
+    answerImmediately?: boolean;
+    orderedContentIds: string[],
+    orderedQuestionIds: string[],
+    orderedContentQuestionIds: string[],
+    lastModifiedAt: string;
+    createdAt: string;
     content: QuillTransferData[],
     questions: QuestionTransferData[]
 }
 
-export interface ViewCourseDbData extends ViewCourseData<ViewModuleDbData>, ViewTrainingEntityDbData {
+export interface ViewCourseDbData extends ViewTrainingEntityDbData {
+    openEnrollment: boolean,
+    orderedModuleIds: string[],
+    modules: ViewModuleDbData[]
 }
 
-export interface ViewModuleDbData extends ViewModuleData<ViewTrainingEntityDbData & ViewTrainingEntity>, ViewTrainingEntityDbData {
+export interface ViewModuleDbData extends ViewTrainingEntityDbData {
+    orderedSectionIds: string[],
+    sections: ViewTrainingEntityDescription[]
 }
 
 /**
@@ -21,33 +37,32 @@ export interface ViewModuleDbData extends ViewModuleData<ViewTrainingEntityDbDat
  * @param {ViewCourseTransferData} row
  * @returns {ViewCourseTransferData}
  */
-export const processCourseView = (row: ViewCourseDbData): ViewCourseTransferData => {
+export const processCourseView = (row: ViewCourseDbData): ViewCourseData => {
     // modules aren't pulled out in order since results are narrowed down via 'WHERE'
     // clause and then automatically joined with ON TRUE. Have to manually order according
     // to orderedModuleIds property
-    let {content, questions, ...viewCourse} = row;
     let modules = row.modules ? row.modules: [];
+    let {content, questions, orderedModuleIds, ...viewCourse} = row;
     return {
         ...viewCourse,
         contentQuestions: processContentQuestions(row),
-        modules: orderEntitiesByIds(row.orderedModuleIds, toEntityMap(modules)).map((module: ViewModuleDbData) => {
+        modules: orderEntitiesByIds(orderedModuleIds, toEntityMap(modules)).map((module) => {
             let sections = module.sections ? module.sections : [];
-            let orderedSections: ViewSectionTransferData[] =
+            let orderedSections: ViewTrainingEntityDescription[] =
                 orderEntitiesByIds(module.orderedSectionIds, toEntityMap(sections))
                     .map((section) => {
-                        let {content, questions, ...viewSection} = section;
-                        return {...viewSection, contentQuestions: processContentQuestions(section)};
+                        let {...viewSection} = section;
+                        return {...viewSection};
                     });
-            let {content, questions, ...viewModule} = module;
+            let {...viewModule} = module;
             return {
                 ...viewModule, sections: orderedSections,
-                contentQuestions: processContentQuestions(module)
             };
         })
     };
 };
 
-export const processContentQuestions = (row: ViewTrainingEntityDbData): (QuillTransferData | QuestionTransferData)[] => {
+export const processContentQuestions = (row: ViewTrainingEntityDbData): (QuillEditorData | QuestionQuillData)[] => {
     let questionsOptionsOrdered: QuestionTransferData[] = row.questions ?  row.questions
         .map((q) => ({...q, options: orderEntitiesByIds(q.optionIds, toEntityMap(q.options))})) : [];
     let content = row.content ? row.content : [];

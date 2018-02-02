@@ -1,9 +1,9 @@
 import * as _ from 'underscore';
 import {CourseEntity} from '@shared/courses';
 import {AppGetter, RootGetters} from '../../../state_store';
-import {ViewModuleTransferData} from '@shared/modules';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
-import {ViewSectionTransferData} from '@shared/sections';
+import {ViewModuleDescription} from '@shared/modules';
+import {ViewTrainingEntityDescription} from '@shared/training_entity';
 
 export interface NavigationDescription {
     id: string,
@@ -28,8 +28,8 @@ export interface CourseGetters {
     currentCourseLoaded: boolean,
     currentCourseLoading: boolean,
     courseNavigationDescription: CourseNavigationDescription,
-    getModuleTransferData: (moduleId: string) => ViewModuleTransferData,
-    getSectionTransferData: (moduleId: string, sectionId: string) => ViewSectionTransferData,
+    getModuleDescription: (moduleId: string) => ViewModuleDescription,
+    getSectionDescription: (moduleId: string, sectionId: string) => ViewTrainingEntityDescription,
     nextSectionIdInModule: string,
     previousSectionIdInModule: string
 }
@@ -46,14 +46,14 @@ export const courseGetters: {[index in keyof CourseGetters]: AppGetter<CourseSta
     currentCourse: (state) => state.courses[state.currentCourseId],
     currentCourseLoaded: (state) => !!state.courses[state.currentCourseId],
     currentCourseLoading: (state) => state.courseRequests[state.currentCourseId],
-    getModuleTransferData: (state, getters) => {
+    getModuleDescription: (state, getters) => {
         return function (moduleId) {
             return getters.currentCourse.modules.find((module) => module.id === moduleId);
         }
     },
-    getSectionTransferData: (state, {getModuleTransferData}) => {
+    getSectionDescription: (state, {getModuleDescription}) => {
         return function (moduleId, sectionId) {
-            return getModuleTransferData(moduleId).sections.find((section) => section.id === sectionId);
+            return getModuleDescription(moduleId).sections.find((section) => section.id === sectionId);
         }
     },
     courseNavigationDescription(state, {currentCourse, getSlugFromCourseId}): CourseNavigationDescription {

@@ -1,4 +1,5 @@
 import {QuestionQuillData} from "@shared/questions";
+import {QuillEditorData} from '@shared/quill_editor';
 
 export interface Segment {
     id: string,
@@ -7,7 +8,7 @@ export interface Segment {
 
 export interface ContentSegment extends Segment {
     type: 'CONTENT';
-    editorJson: Quill.DeltaStatic;
+    content: QuillEditorData;
 }
 
 export interface QuestionSegment extends Segment {
@@ -17,7 +18,6 @@ export interface QuestionSegment extends Segment {
 
 export interface SegmentArrayElement {
     removeCallback?: () => any;
-    onChangeCallback?: (QuillChangeObj) => any;
 }
 
 export const isContentSegment = (obj: any): obj is ContentSegment => {

@@ -1,15 +1,12 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {COURSES_ROUTE_NAMES, coursesRoutesService} from '../../../courses_routes';
-import {coursesService} from '../../../courses_service';
-import {ViewSectionQuillData} from '../../../../../../../shared/sections';
-import {CourseRefreshComponent} from '../../../../global/refresh_route';
+import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
+import {CourseRefreshComponent} from '@global/refresh_route';
 import {NavigationGuard} from 'vue-router';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {RootGetters, RootState, store} from '../../../../state_store';
 import {MODULE_ACTIONS} from '../../../store/module/module_actions';
 import {mapGetters, mapState} from 'vuex';
-import {COURSE_ACTIONS} from '../../../store/course/course_actions';
 
 export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) => {
     let moduleSlug = to.params.moduleSlug;

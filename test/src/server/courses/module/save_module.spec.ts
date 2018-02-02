@@ -108,7 +108,7 @@ describe('Save module', function () {
             let section2Id = await addSection();
 
             const swappedArr = [section2Id, section1Id];
-            let swapOrder: DeltaArrOp[] = deltaArrayDiff([section1Id, section2Id], swappedArr);
+            let swapOrder: DeltaArrOp<string>[] = deltaArrayDiff([section1Id, section2Id], swappedArr);
             let currentModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id]);
 
@@ -130,7 +130,7 @@ describe('Save module', function () {
             let section2Id = await addSection();
 
             const updatedArr = [section2Id];
-            let updateOps: DeltaArrOp[] = deltaArrayDiff([section1Id, section2Id], updatedArr);
+            let updateOps: DeltaArrOp<string>[] = deltaArrayDiff([section1Id, section2Id], updatedArr);
             let currentModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id]);
 
@@ -154,7 +154,7 @@ describe('Save module', function () {
             let section3Id = await addSection();
 
             const updatedArr = [section3Id, section1Id];
-            let updateOps: DeltaArrOp[] = deltaArrayDiff([section1Id, section2Id, section3Id], updatedArr);
+            let updateOps: DeltaArrOp<string>[] = deltaArrayDiff([section1Id, section2Id, section3Id], updatedArr);
             // assert current module state
             let currentModule = await moduleRepository.loadModuleEntity(moduleId);
             expect(currentModule.orderedSectionIds).to.deep.eq([section1Id, section2Id, section3Id]);
@@ -185,7 +185,7 @@ describe('Save module', function () {
             const content2: DeltaStatic = new Delta().insert('some other content');
             const placeholderId1 = createdQuillPlaceholderId();
             const placeholderId2 = createdQuillPlaceholderId();
-            const orderedContentIds: DeltaArrOp[] = [
+            const orderedContentIds: DeltaArrOp<string>[] = [
                 {
                     val: placeholderId1,
                     op: "ADD",
@@ -246,7 +246,7 @@ describe('Save module', function () {
         it('should add and update a content segment', async function () {
             const initialContent: DeltaStatic = new Delta().insert('some content');
             const contentPlaceholderId = createdQuillPlaceholderId();
-            const orderedContentIds: DeltaArrOp[] = [
+            const orderedContentIds: DeltaArrOp<string>[] = [
                 {
                     val: contentPlaceholderId,
                     op: "ADD",
@@ -296,7 +296,7 @@ describe('Save module', function () {
             const content2: DeltaStatic = new Delta().insert('some other content');
             const contentPlaceholderId1 = createdQuillPlaceholderId();
             const contentPlaceholderId2 = createdQuillPlaceholderId();
-            const orderedContentIds: DeltaArrOp[] = [
+            const orderedContentIds: DeltaArrOp<string>[] = [
                 {
                     val: contentPlaceholderId1,
                     op: "ADD",

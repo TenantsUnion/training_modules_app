@@ -20,6 +20,7 @@
                         </small>
                     </field-messages>
                     <quill-editor ref="questionQuill"
+                                  :read-only="viewOnly"
                                   :editor-json="question.questionQuill.editorJson"
                                   :editor-id="question.questionQuill.id"/>
                 </div>

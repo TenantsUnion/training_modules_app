@@ -1,4 +1,6 @@
 // deprecated was for proof of concept with quill
+import {QuillEditorData} from '@shared/quill_editor';
+
 export interface CreateUserContentCommand {
     userId: string;
     title: string;
@@ -17,7 +19,7 @@ export interface ContentData {
 export interface ContentEntity {
     id: string,
     quillDataId: string,
-    quillData: Quill.DeltaStatic,
+    quillData: QuillEditorData,
     title: string,
     tags?: string[],
     lastModifiedAt?: string,
