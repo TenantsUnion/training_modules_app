@@ -44,7 +44,8 @@ export class CreateModuleComponent extends Vue {
                 description: this.description,
                 timeEstimate: this.timeEstimate,
                 courseId: this.$store.state.course.currentCourseId,
-                orderedContentQuestions: (<TrainingSegmentComponent> this.$refs.trainingSegment).getContents(),
+                // orderedContentQuestions: (<TrainingSegmentComponent> this.$refs.trainingSegment).getContents(),
+                contentQuestions: []
             };
             await this.$store.dispatch(MODULE_ACTIONS.CREATE_MODULE, createModulePayload);
 

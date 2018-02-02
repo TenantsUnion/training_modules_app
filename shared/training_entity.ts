@@ -53,7 +53,7 @@ export const isQuillContentDiff = (obj: any): obj is QuillChangesObj => {
  */
 export interface ContentQuestionEntity {
     headerDataId?: string;
-    answerImmediately: boolean;
+    answerImmediately?: boolean;
     orderedContentIds: string[];
     orderedQuestionIds: string[];
     orderedContentQuestionIds: string[];

@@ -11,7 +11,7 @@
                       ref="segment"
                       :remove-callback="segment.removeCallback" :stored-question="segment.question"/>
         </div>
-        <div class="row">
+        <div v-if="!viewOnly" class="row">
             <div class="columns small-12 medium-6">
                 <button title="Add Content" type="button" class="button" v-on:click="addContent" ref="addContentBtn">
                     Add Content

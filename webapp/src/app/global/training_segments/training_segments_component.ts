@@ -4,17 +4,15 @@ import Vue from "vue";
 import Component from 'vue-class-component';
 import QuillComponent from '../quill/quill_component';
 import {
-    ContentSegment, isContentSegment, isQuestionSegment, QuestionSegment, Segment,
-    SegmentArrayElement
+    ContentSegment, isContentSegment, isQuestionSegment, QuestionSegment, SegmentArrayElement
 } from '@shared/segment';
 import {ContentQuestionsDelta} from '@shared/training_entity';
 import {
-    AnswerType, isEmptyQuestionChanges, QuestionChanges, QuestionChangesObj, QuestionQuillData,
-    QuestionType
+    AnswerType, isEmptyQuestionChanges, isQuestionData, QuestionQuillData, QuestionType
 } from '@shared/questions';
 import {
     createdQuestionPlaceholderId,
-    createdQuillPlaceholderId, isCreatedQuillPlaceholderId, QuillDeltaMap
+    createdQuillPlaceholderId, isQuillEditorData, QuillEditorData
 } from "@shared/quill_editor";
 import {deltaMapArrayDiff} from "@shared/delta/diff_key_array";
 import {Watch} from "vue-property-decorator";
@@ -25,7 +23,7 @@ const Delta = Quill.import('delta');
 
 @Component({
     props: {
-        storedSegments: {
+        contentQuestions: {
             type: Array,
             required: true,
         },
@@ -36,15 +34,15 @@ const Delta = Quill.import('delta');
     }
 })
 export default class TrainingSegmentsComponent extends Vue {
-    storedSegments: (ContentSegment | QuestionSegment)[];
+    contentQuestions: (QuillEditorData | QuestionQuillData)[];
     currentSegments: ((ContentSegment | QuestionSegment) & SegmentArrayElement)[] = [];
 
-    @Watch('storedSegments', {immediate: true})
+    @Watch('contentQuestions', {immediate: true})
     syncCurrentSegments(incomingSegments: ContentSegment[]) {
         this.currentSegments = [...incomingSegments];
     }
 
-    getContents(): ContentSegment[] {
+    getContents(): QuillEditorData[] {
         let contentEditor = this.$refs.contentEditor ? (<QuillComponent[]> this.$refs.contentEditor) : [];
         let contentData = contentEditor.map((editor) => {
             return <ContentSegment> {
@@ -53,21 +51,29 @@ export default class TrainingSegmentsComponent extends Vue {
                 content: editor.getQuillEditorContents()
             }
         });
-        return contentData;
+        return [];
     }
 
     getContentQuestionsDelta(): ContentQuestionsDelta {
-        let contentQuestionIds = deltaMapArrayDiff(this.storedSegments, this.currentSegments, (segments: ContentSegment[]) => {
-            return segments.map(({id}) => id);
+        let currentContentQuestions = this.currentSegments.map((segment) => {
+            if(isContentSegment(segment)) {
+                return segment.content;
+            } else if(isQuestionSegment(segment)) {
+                return segment.question;
+            }
         });
 
-        let contentIds = deltaMapArrayDiff(this.storedSegments, this.currentSegments, (segments: ContentSegment[]) => {
-            return segments.filter((segment) => isContentSegment(segment))
+        let contentQuestionIds = deltaMapArrayDiff(this.contentQuestions, currentContentQuestions, (contentQuestions) => {
+            return contentQuestions.map(({id}) => id);
+        });
+
+        let contentIds = deltaMapArrayDiff(this.contentQuestions, currentContentQuestions, (contentQuestions) => {
+            return contentQuestions.filter((obj) => isQuillEditorData(obj))
                 .map(({id}) => id);
         });
 
-        let questionIds = deltaMapArrayDiff(this.storedSegments, this.currentSegments, (segments: ContentSegment[]) => {
-            return segments.filter((segment) => isQuestionSegment(segment))
+        let questionIds = deltaMapArrayDiff(this.contentQuestions, currentContentQuestions, (contentQuestions) => {
+            return contentQuestions.filter((segment) => isQuestionData(segment))
                 .map(({id}) => id);
         });
 
@@ -125,17 +131,17 @@ export default class TrainingSegmentsComponent extends Vue {
     }
 
     addQuestion() {
-        let addContentId = createdQuestionPlaceholderId();
+        let questionId = createdQuestionPlaceholderId();
         let questionQuillId = createdQuillPlaceholderId();
         this.currentSegments.push(<QuestionSegment>{
-            id: addContentId,
+            id: questionId,
             type: 'QUESTION',
             removeCallback: () => {
-                let rmIndex = this.currentSegments.findIndex((el) => el.id === addContentId);
+                let rmIndex = this.currentSegments.findIndex((el) => el.id === questionId);
                 this.currentSegments.splice(rmIndex, 1);
             },
             question: {
-                id: addContentId,
+                id: questionId,
                 version: 0,
                 questionType: QuestionType.DEFAULT,
                 answerType: AnswerType.DEFAULT,

@@ -1,7 +1,6 @@
 import {expect} from 'chai';
 import VueTrainingSegmentComponent from '@global/training_segments/training_segments_component.vue';
 import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
-import {ContentSegment, QuestionSegment} from '@shared/segment';
 import {addQuestionText, QuestionTextObj, quillDeltaMapFromQuestionAndText} from '../../../util/test_question_util';
 import QuestionComponent from '@global/question/question_component';
 import Quill from 'quill';
@@ -9,14 +8,16 @@ import Vue from 'vue';
 import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';
 import {ContentQuestionsDelta} from '@shared/training_entity';
 import QuillComponent from '@global/quill/quill_component';
+import {QuillEditorData} from "@shared/quill_editor";
+import {QuestionQuillData} from "@shared/questions";
 
 let Delta = Quill.import('delta');
 
 const destroyComponents: Vue[] = [];
-const getMountedTrainingSegmentsComponent = (storedSegments: (ContentSegment | QuestionSegment)[] = []): TrainingSegmentComponent => {
+const getMountedTrainingSegmentsComponent = (contentQuestions: (QuillEditorData | QuestionQuillData)[] = []): TrainingSegmentComponent => {
     let el = <TrainingSegmentComponent> new VueTrainingSegmentComponent({
         propsData: {
-            storedSegments
+            contentQuestions
         }
     }).$mount();
     destroyComponents.push(el);

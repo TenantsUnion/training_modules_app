@@ -27,9 +27,8 @@ export interface QuestionEntity {
     lastModifiedAt?: string
 }
 
-export const isQuestionTransferData = (obj: any): obj is QuestionTransferData => {
-    return obj instanceof Object && !(obj instanceof Array)  &&
-        obj.id.substr(0, 2) !== 'QU' && typeof obj.questionQuillId === 'string';
+export const isQuestionData = (obj: any): obj is QuestionData => {
+    return obj instanceof Object && !(obj instanceof Array)  && obj.id.substr(0, 2) === 'QU';
 };
 
 export interface QuestionData {

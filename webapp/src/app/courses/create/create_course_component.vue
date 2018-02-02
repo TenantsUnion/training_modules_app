@@ -53,7 +53,7 @@
                         </div>
                         <div class="row">
                             <div class="columns small-12 large-10">
-                                <training-segments :stored-segments="contentQuestions" ref="trainingSegment"/>
+                                <training-segments :content-questions="contentQuestions" ref="trainingSegment"/>
                             </div>
                         </div>
                         <div class="row">

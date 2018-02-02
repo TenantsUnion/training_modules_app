@@ -12,7 +12,7 @@
                 </div>
                 <div class="row">
                     <div class="columns small-12 large-10">
-                        <training-segments :stored-segments="currentCourse.contentQuestions" ref="trainingSegment"/>
+                        <training-segments :view-only="true" :content-questions="currentCourse.contentQuestions" ref="trainingSegment"/>
                     </div>
                 </div>
                 <div v-for="module in currentCourse.modules">
