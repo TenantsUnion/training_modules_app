@@ -1,10 +1,11 @@
 import {expect} from 'chai';
 import {Delta} from '@shared/normalize_imports';
-import {postgresDb, quillRepository} from "../../../../../server/src/config/repository_config";
+import {quillRepository} from "../../../../../server/src/config/repository_config";
 import * as MockDate from 'mockdate';
 import {clearData} from "../../test_db_util";
 import * as Moment from 'moment';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
+import {postgresDb} from "../../../../../server/src/datasource";
 
 describe('Quill Repository', function () {
     let now = new Date();

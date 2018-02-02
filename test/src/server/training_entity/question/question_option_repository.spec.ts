@@ -3,11 +3,11 @@ import * as MockDate from 'mockdate';
 import {clearData} from "../../test_db_util";
 import {QuestionOptionDto} from "../../../../../server/src/training_entity/question/question_option_repository";
 import {
-    postgresDb, questionOptionRepository,
-    quillRepository
+    questionOptionRepository, quillRepository
 } from "../../../../../server/src/config/repository_config";
 import {Delta} from '@shared/normalize_imports';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
+import {postgresDb} from "../../../../../server/src/datasource";
 
 describe('Question Option Repository', function () {
 
@@ -54,7 +54,7 @@ describe('Question Option Repository', function () {
 
         const {0: questionId1, 1: questionId2} = await questionOptionRepository.getNextIds(2);
         await questionOptionRepository.createQuestionOption({
-           id: questionId1, optionQuillId: optionQuillId1, explanationQuillId: explanationQuillId1
+            id: questionId1, optionQuillId: optionQuillId1, explanationQuillId: explanationQuillId1
         });
         await questionOptionRepository.createQuestionOption({
             id: questionId2, optionQuillId: optionQuillId2, explanationQuillId: explanationQuillId2

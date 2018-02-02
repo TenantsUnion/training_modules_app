@@ -9,6 +9,7 @@ export type ModuleInsertDbData = {
     description?: string;
     timeEstimate?: number;
     active: boolean;
+    answerImmediately: boolean;
     headerDataId?: string;
     orderedContentIds: string[];
     orderedQuestionIds: string[];
@@ -27,15 +28,19 @@ export class ModuleRepository extends AbstractRepository {
     async createModule (moduleData: ModuleInsertDbData): Promise<string> {
         let {
             active, title, description, timeEstimate, orderedQuestionIds, orderedContentIds,
-            orderedContentQuestionIds, headerDataId
+            orderedContentQuestionIds, headerDataId, answerImmediately
         } = moduleData;
         let moduleId = await this.getNextId();
         await this.sqlTemplate.query({
-            text: `INSERT INTO tu.module (id, title, description, time_estimate, active, ordered_content_ids,
-                        ordered_question_ids, ordered_content_question_ids, last_modified_at, created_at, header_data_id)
-                                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $9, $10)`,
-            values: [moduleId, title, description, timeEstimate, active,
-                orderedContentIds, orderedQuestionIds, orderedContentQuestionIds, getUTCNow(), headerDataId]
+            // language=PostgreSQL
+            text: `
+              INSERT INTO tu.module (id, title, description, time_estimate, active, ordered_content_ids,
+                                     ordered_question_ids, ordered_content_question_ids, last_modified_at, created_at,
+                                     header_data_id, answer_immediately)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $9, $10, $11)
+            `,
+            values: [moduleId, title, description, timeEstimate, active, orderedContentIds, orderedQuestionIds,
+                orderedContentQuestionIds, getUTCNow(), headerDataId, answerImmediately]
         });
         return moduleId;
     }
@@ -43,7 +48,7 @@ export class ModuleRepository extends AbstractRepository {
     async saveModule (moduleData: ModuleEntity): Promise<void> {
         let {
             title, description, timeEstimate, active, orderedSectionIds, orderedContentIds, orderedQuestionIds,
-            orderedContentQuestionIds, id, headerDataId
+            orderedContentQuestionIds, id, headerDataId, answerImmediately
         } = moduleData;
         await this.sqlTemplate.query({
             // language=PostgreSQL
@@ -58,12 +63,13 @@ export class ModuleRepository extends AbstractRepository {
                 ordered_content_ids          = $7,
                 ordered_question_ids         = $8,
                 ordered_content_question_ids = $9,
-                last_modified_at             = $10
-              WHERE m.id = $11
+                last_modified_at             = $10,
+                answer_immediately           = $11
+              WHERE m.id = $12
             `,
             values: [
                 title, description, timeEstimate, active, headerDataId, orderedSectionIds, orderedContentIds,
-                orderedQuestionIds, orderedContentQuestionIds, getUTCNow(), id
+                orderedQuestionIds, orderedContentQuestionIds, getUTCNow(), answerImmediately, id
             ]
         });
     }

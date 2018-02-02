@@ -1,9 +1,9 @@
 import {LoggerInstance} from "winston";
 import {getLogger} from "../../../server/src/log";
 import {DatabaseConfig} from '../../../server/src/config/normalize_config';
-import {postgresDb} from '../../../server/src/config/repository_config';
 import {QuillDeltaMap} from '@shared/quill_editor';
 import {Delta} from '@shared/normalize_imports';
+import {postgresDb} from '../../../server/src/datasource';
 
 /**
  * Helper class for tests to check if the test db has been setup, initialized the test db, and clear the test db

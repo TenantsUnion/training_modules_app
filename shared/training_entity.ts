@@ -5,6 +5,7 @@ import {EntityCommand, SaveEntityCommand} from './entity';
 import {DeltaObjDiff} from './delta/delta';
 import {applyDeltaArrOps, DeltaArrOp} from './delta/diff_key_array';
 import {isDeltaStatic} from './delta/typeguards_delta';
+import DeltaOperation = Quill.DeltaOperation;
 
 export interface ViewTrainingEntity {
     id: string;
@@ -14,9 +15,9 @@ export interface ViewTrainingEntity {
     timeEstimate?: number;
     active: boolean;
     answerImmediately?: boolean;
-    orderedContentIds?: string[],
-    orderedQuestionIds?: string[],
-    orderedContentQuestionIds?: string[],
+    // orderedContentIds?: string[],
+    // orderedQuestionIds?: string[],
+    // orderedContentQuestionIds?: string[],
     lastModifiedAt: string;
     createdAt: string;
     contentQuestions: (QuillEditorData | QuestionQuillData)[];
@@ -38,7 +39,7 @@ export interface ViewTrainingEntityDescription {
  *
  */
 export interface QuillChangesObj {
-    [index: string]: Quill.DeltaStatic
+    [index: string]: Quill.DeltaStatic | {ops: DeltaOperation[]}
 }
 
 export const isQuillContentDiff = (obj: any): obj is QuillChangesObj => {
@@ -52,7 +53,7 @@ export const isQuillContentDiff = (obj: any): obj is QuillChangesObj => {
  */
 export interface ContentQuestionEntity {
     headerDataId?: string;
-    answerImmediately?: boolean;
+    answerImmediately: boolean;
     orderedContentIds: string[];
     orderedQuestionIds: string[];
     orderedContentQuestionIds: string[];
@@ -65,15 +66,6 @@ export interface ContentQuestionsDelta extends TrainingEntityDiffDelta {
     orderedContentIds?: DeltaArrOp<string>[];
     orderedQuestionIds?: DeltaArrOp<string>[];
 }
-
-export const convertContentQuestionsDeltaToEntity = (delta: ContentQuestionsDelta): ContentQuestionEntity => {
-    const {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = delta;
-    return {
-        orderedContentIds: applyDeltaArrOps([], orderedContentIds),
-        orderedQuestionIds: applyDeltaArrOps([], orderedQuestionIds),
-        orderedContentQuestionIds: applyDeltaArrOps([], orderedContentQuestionIds)
-    };
-};
 
 export interface TrainingEntity extends ContentQuestionEntity {
     id: string;
@@ -100,6 +92,7 @@ export interface CreateTrainingEntityPayload {
     title: string;
     description?: string;
     timeEstimate?: number;
+    answerImmediately: boolean;
     active: boolean;
     contentQuestions: ContentQuestionsDelta;
 }

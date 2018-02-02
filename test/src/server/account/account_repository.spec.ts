@@ -1,7 +1,8 @@
 import {expect} from "chai";
 import {clearData} from "../test_db_util";
-import {accountRepository, postgresDb} from "../../../../server/src/config/repository_config";
+import {accountRepository} from "../../../../server/src/config/repository_config";
 import {AccountInfo} from "../../../../server/src/user/user_handler";
+import {postgresDb} from "../../../../server/src/datasource";
 
 describe('Account Repository', function () {
 

@@ -1,6 +1,7 @@
 import * as _ from "underscore";
 import DeltaStatic = Quill.DeltaStatic;
 import {isDeltaStatic} from './delta/typeguards_delta';
+import DeltaOperation = Quill.DeltaOperation;
 
 /**
  * Type definitions for handling json data from the QuillJS and Delta library.
@@ -9,7 +10,7 @@ import {isDeltaStatic} from './delta/typeguards_delta';
 export interface QuillEditorData {
     id: string;
     version: number,
-    editorJson: DeltaStatic;
+    editorJson: DeltaStatic | {ops: DeltaOperation[]};
     lastModifiedAt?: string;
     createdAt?: string;
 }

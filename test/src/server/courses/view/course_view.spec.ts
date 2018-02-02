@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {clearData} from '../../test_db_util';
 import {createCourse, createUser, latestUser} from '../test_course_util';
 import {courseViewQuery} from '../../../../../server/src/config/query_service_config';
-import {CreateCourseEntityPayload, CreateCourseIdMap, ViewCourseData} from '@shared/courses';
+import {CreateCourseEntityPayload, ViewCourseData} from '@shared/courses';
 import {
     createdQuestionOptionPlaceholderId,
     createdQuestionPlaceholderId,
@@ -13,7 +13,7 @@ import {AnswerType, QuestionChanges, QuestionQuillData, QuestionType} from '@sha
 import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';
 import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
-import DeltaStatic = Quill.DeltaStatic;
+import DeltaOperation = Quill.DeltaOperation;
 
 describe('Course view', function () {
     let questionId = createdQuestionPlaceholderId();
@@ -40,6 +40,7 @@ describe('Course view', function () {
         title: "Course title",
         active: true,
         timeEstimate: 60,
+        answerImmediately: false,
         openEnrollment: true
     };
 
@@ -51,12 +52,13 @@ describe('Course view', function () {
         answerInOrder: false
     };
 
-    const contentQuill = new Delta().insert(`Content text`);
-    const questionQuill = new Delta().insert(`Some question text`);
-    const optionQuill1 = new Delta().insert(`Option 1 Text`);
-    const explanationQuill1 = new Delta().insert(`Explanation 1 Text`);
-    const optionQuill2 = new Delta().insert(`Option 2 Text`);
-    const explanationQuill2 = new Delta().insert(`Explanation 2 Text`);
+    type OpsObj = {ops: DeltaOperation[]};
+    const contentQuill: OpsObj = {ops: new Delta().insert(`Content text`).ops};
+    const questionQuill: OpsObj  = {ops: new Delta().insert(`Some question text`).ops};
+    const optionQuill1: OpsObj  = {ops: new Delta().insert(`Option 1 Text`).ops};
+    const explanationQuill1: OpsObj  = {ops: new Delta().insert(`Explanation 1 Text`).ops};
+    const optionQuill2: OpsObj  = {ops: new Delta().insert(`Option 2 Text`).ops};
+    const explanationQuill2: OpsObj  = {ops: new Delta().insert(`Explanation 2 Text`).ops};
     const contentQuestionsDelta = {
         quillChanges: {
             [contentQuillId]: contentQuill,
@@ -108,9 +110,11 @@ describe('Course view', function () {
             questionQuill: {
                 id: idMap[questionQuillId],
                 version: 0,
-                editorJson: questionQuill
+                editorJson: questionQuill,
+                createdAt: nowTimestamp,
+                lastModifiedAt: nowTimestamp
             },
-            optionIds: [optionId1, optionId2].map((id) => idMap[id]),
+            // optionIds: [optionId1, optionId2].map((id) => idMap[id]),
             correctOptionIds: [idMap[optionId2]],
             options: [{
                 id: idMap[optionId1],
@@ -118,12 +122,16 @@ describe('Course view', function () {
                 option: {
                     id: idMap[optionQuillId1],
                     version: 0,
-                    editorJson: optionQuill1
+                    editorJson: optionQuill1,
+                    createdAt: nowTimestamp,
+                    lastModifiedAt: nowTimestamp
                 },
                 explanation: {
-                    id: idMap[explanationQuillId2],
+                    id: idMap[explanationQuillId1],
                     version: 0,
-                    editorJson: explanationQuill1
+                    editorJson: explanationQuill1,
+                    createdAt: nowTimestamp,
+                    lastModifiedAt: nowTimestamp
                 },
                 lastModifiedAt: nowTimestamp,
                 createdAt: nowTimestamp
@@ -134,12 +142,16 @@ describe('Course view', function () {
                 option: {
                     id: idMap[optionQuillId2],
                     version: 0,
-                    editorJson: optionQuill2
+                    editorJson: optionQuill2,
+                    createdAt: nowTimestamp,
+                    lastModifiedAt: nowTimestamp
                 },
                 explanation: {
                     id: idMap[explanationQuillId2],
                     version: 0,
-                    editorJson: explanationQuill2
+                    editorJson: explanationQuill2,
+                    createdAt: nowTimestamp,
+                    lastModifiedAt: nowTimestamp
                 },
                 lastModifiedAt: nowTimestamp,
                 createdAt: nowTimestamp
@@ -156,7 +168,7 @@ describe('Course view', function () {
         let idMap = await createCourse(latestUser.id, data);
         let course = await courseViewQuery.loadAdminCourse(idMap.courseId);
 
-        expect(course).to.deep.eq(<ViewCourseData> {
+        const expected = {
             id: idMap.courseId,
             version: 0,
             lastModifiedAt: nowTimestamp,
@@ -166,6 +178,7 @@ describe('Course view', function () {
             modules: [],
             // orderedModuleIds: [],
             contentQuestions: expectedContentQuestions(idMap)
-        });
+        };
+        expect(course).to.deep.eq(<ViewCourseData> expected);
     });
 });

@@ -47,6 +47,7 @@ describe('Course Handler: Create Course', function () {
                 timeEstimate: 60,
                 description: 'Course description',
                 openEnrollment: true,
+                answerImmediately: false,
                 active: true,
                 contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
             }
@@ -58,6 +59,7 @@ describe('Course Handler: Create Course', function () {
                 timeEstimate: 120,
                 description: 'Course description 2',
                 openEnrollment: false,
+                answerImmediately: true,
                 active: false,
                 contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
             }

@@ -1,26 +1,26 @@
 import {expect} from 'chai';
 import {trainingEntityHandler} from '../../../../../server/src/config/handler_config';
-import {Delta} from '../../../../../shared/normalize_imports';
+import {Delta} from '@shared/normalize_imports';
 import {
-    postgresDb, questionOptionRepository,
-    questionRepository
+    questionOptionRepository, questionRepository
 } from '../../../../../server/src/config/repository_config';
 import {clearData} from '../../test_db_util';
 import {
     createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId,
     QuillEditorData
-} from '../../../../../shared/quill_editor';
+} from '@shared/quill_editor';
 import {QuestionOptionDto} from '../../../../../server/src/training_entity/question/question_option_repository';
 import {
     AnswerType, QuestionChangesObj, QuestionEntity,
     QuestionType
-} from '../../../../../shared/questions';
+} from '@shared/questions';
 import {
     ContentQuestionsDelta, QuillChangesObj
-} from '../../../../../shared/training_entity';
-import {addDeltaArrOp} from '../../../../../shared/delta/diff_key_array';
+} from '@shared/training_entity';
+import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
+import {postgresDb} from "../../../../../server/src/datasource";
 
 /**
  * Creates a question with two options in the before() test setup call. Each test then asserts a different part of the

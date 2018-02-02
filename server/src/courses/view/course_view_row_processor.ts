@@ -1,8 +1,8 @@
-import {ViewModuleData} from '@shared/modules';
 import {ViewCourseData} from '@shared/courses';
-import {QuestionQuillData, QuestionTransferData} from "@shared/questions";
-import {ViewTrainingEntity, ViewTrainingEntityDescription} from "@shared/training_entity";
-import {QuillEditorData, QuillTransferData} from "@shared/quill_editor";
+import {QuestionQuillData} from "@shared/questions";
+import {ViewTrainingEntityDescription} from "@shared/training_entity";
+import {QuillEditorData} from "@shared/quill_editor";
+import {QuestionOptionDbData, QuestionViewDbData} from "./view_database";
 
 export interface ViewTrainingEntityDbData {
     id: string;
@@ -17,8 +17,8 @@ export interface ViewTrainingEntityDbData {
     orderedContentQuestionIds: string[],
     lastModifiedAt: string;
     createdAt: string;
-    content: QuillTransferData[],
-    questions: QuestionTransferData[]
+    content: QuillEditorData[],
+    questions: QuestionViewDbData[]
 }
 
 export interface ViewCourseDbData extends ViewTrainingEntityDbData {
@@ -41,8 +41,11 @@ export const processCourseView = (row: ViewCourseDbData): ViewCourseData => {
     // modules aren't pulled out in order since results are narrowed down via 'WHERE'
     // clause and then automatically joined with ON TRUE. Have to manually order according
     // to orderedModuleIds property
-    let modules = row.modules ? row.modules: [];
-    let {content, questions, orderedModuleIds, ...viewCourse} = row;
+    let modules = row.modules ? row.modules : [];
+    let {
+        orderedContentIds, orderedQuestionIds, orderedContentQuestionIds,
+        content, questions, orderedModuleIds, ...viewCourse
+    } = row;
     return {
         ...viewCourse,
         contentQuestions: processContentQuestions(row),
@@ -63,9 +66,19 @@ export const processCourseView = (row: ViewCourseDbData): ViewCourseData => {
 };
 
 export const processContentQuestions = (row: ViewTrainingEntityDbData): (QuillEditorData | QuestionQuillData)[] => {
-    let questionsOptionsOrdered: QuestionTransferData[] = row.questions ?  row.questions
-        .map((q) => ({...q, options: orderEntitiesByIds(q.optionIds, toEntityMap(q.options))})) : [];
+    let questionsOptionsOrdered: QuestionQuillData[] = row.questions ? row.questions
+        .map((q) => {
+            let {optionIds, questionQuillId, ...rest} = q;
+            let withoutQuillIds = orderEntitiesByIds(q.optionIds, toEntityMap(q.options)).map((option: QuestionOptionDbData) => {
+                let {explanationQuillId, optionQuillId, ...rest} = option;
+                return rest;
+            });
+            return {
+                ...rest, options: orderEntitiesByIds(q.optionIds, toEntityMap(withoutQuillIds))
+            }
+        }) : [];
     let content = row.content ? row.content : [];
+
     return orderEntitiesByIds(row.orderedContentQuestionIds, toEntityMap([...content, ...questionsOptionsOrdered]))
 };
 

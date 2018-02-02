@@ -38,7 +38,7 @@ export class QuillHandler {
                 let {version} = content;
                 return _.extend({}, content, {
                     version: version + 1,
-                    editorJson: new Delta(content.editorJson.ops).compose(quillChanges[content.id]),
+                    editorJson: new Delta(content.editorJson.ops).compose(new Delta(quillChanges[content.id].ops)),
                     lastModifiedAt: new Date()
                 });
             })
@@ -55,7 +55,7 @@ export class QuillHandler {
 
         let quillIds = await this.quillRepository.getNextIds(insertIds.length);
         let insertAsync = insertIds.map((placeholderId, index) => {
-            return this.quillRepository.insertEditorJson(quillIds[index], quillChanges[placeholderId]);
+            return this.quillRepository.insertEditorJson(quillIds[index], new Delta(quillChanges[placeholderId].ops));
         });
         let placeholderIdMap = insertIds.reduce((acc, placeholderId, index) => {
             acc[placeholderId] = quillIds[index];

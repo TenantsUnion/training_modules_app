@@ -41,7 +41,7 @@ export interface QuestionData {
     answerInOrder: boolean,
     canPickMultiple: boolean,
     correctOptionIds: string[],
-    optionIds: string[],
+    optionIds?: string[],
     createdAt?: string,
     lastModifiedAt?: string
 }

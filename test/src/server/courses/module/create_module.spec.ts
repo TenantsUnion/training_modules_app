@@ -24,6 +24,7 @@ describe('Create module', function () {
             courseId,
             description: 'Module 1 description blerg',
             timeEstimate: 60,
+            answerImmediately: false,
             title: 'first module',
             contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             active: true
@@ -33,6 +34,7 @@ describe('Create module', function () {
             courseId,
             description: 'Module 2 description',
             timeEstimate: 120,
+            answerImmediately: true,
             title: 'second module',
             contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             active: false
@@ -87,6 +89,7 @@ describe('Create module', function () {
             courseId,
             description: 'Module 1 description blerg',
             timeEstimate: 60,
+            answerImmediately: true,
             title: 'first module',
             contentQuestions: {
                 ...EMPTY_CONTENT_QUESTIONS_DELTA,

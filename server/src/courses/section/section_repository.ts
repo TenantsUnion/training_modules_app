@@ -8,6 +8,7 @@ export type SectionInsertDbData = {
     description?: string;
     timeEstimate?: number;
     headerDataId?: string;
+    answerImmediately: boolean;
     orderedContentIds: string[];
     orderedQuestionIds: string[];
     orderedContentQuestionIds: string[];
@@ -25,15 +26,18 @@ export class SectionRepository extends AbstractRepository {
         let sectionId = await this.getNextId();
         let {
             title, description, timeEstimate, orderedContentIds, orderedQuestionIds,
-            orderedContentQuestionIds, headerDataId, active
+            orderedContentQuestionIds, headerDataId, active, answerImmediately
         } = data;
         await this.sqlTemplate.query({
-            text: ` INSERT INTO tu.section (
-              id, title, description, time_estimate, ordered_content_ids, ordered_question_ids,
-              ordered_content_question_ids, created_at, last_modified_at, header_data_id, active)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8, $9, $10)`,
+            // language=PostgreSQL
+            text: `
+              INSERT INTO tu.section (
+                id, title, description, time_estimate, ordered_content_ids, ordered_question_ids,
+                ordered_content_question_ids, created_at, last_modified_at, header_data_id, active, answer_immediately)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8, $9, $10, $11)`,
             values: [sectionId, title, description, timeEstimate,
-                orderedContentIds, orderedQuestionIds, orderedContentQuestionIds, getUTCNow(), headerDataId, active]
+                orderedContentIds, orderedQuestionIds, orderedContentQuestionIds, getUTCNow(), headerDataId, active,
+                answerImmediately]
         });
         return sectionId;
     }
@@ -41,7 +45,7 @@ export class SectionRepository extends AbstractRepository {
     async updateSection (data: SectionEntity): Promise<void> {
         let {
             id, title, description, timeEstimate, active, orderedContentIds, orderedQuestionIds,
-            orderedContentQuestionIds, headerDataId
+            orderedContentQuestionIds, headerDataId, answerImmediately
         } = data;
         await this.sqlTemplate.query({
             // language=PostgreSQL
@@ -55,10 +59,11 @@ export class SectionRepository extends AbstractRepository {
                 ordered_question_ids         = $6,
                 ordered_content_question_ids = $7,
                 last_modified_at             = $8,
-                header_data_id               = $9
-              WHERE S.id = $10`,
+                header_data_id               = $9,
+                answer_immediately           = $10
+              WHERE S.id = $11`,
             values: [title, description, timeEstimate, active, orderedContentIds, orderedQuestionIds,
-                orderedContentQuestionIds, getUTCNow(), headerDataId, id]
+                orderedContentQuestionIds, getUTCNow(), headerDataId, answerImmediately, id]
         });
     }
 

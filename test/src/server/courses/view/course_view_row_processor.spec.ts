@@ -5,8 +5,12 @@ import {
     ViewTrainingEntityDbData
 } from "../../../../../server/src/courses/view/course_view_row_processor";
 import {getUTCNow} from "../../../../../server/src/repository";
-import {QuillTransferData} from "@shared/quill_editor";
-import {AnswerType, QuestionOptionTransferData, QuestionTransferData, QuestionType} from "@shared/questions";
+import {QuillEditorData} from "@shared/quill_editor";
+import {
+    AnswerType, QuestionOptionQuillData, QuestionQuillData, QuestionType
+} from "@shared/questions";
+import {QuestionOptionDbData, QuestionViewDbData} from "../../../../../server/src/courses/view/view_database";
+import {Delta} from '@shared/normalize_imports';
 
 describe('Course View Row Processor', function () {
 
@@ -57,13 +61,13 @@ describe('Course View Row Processor', function () {
         let trainingEntity: ViewTrainingEntityDbData = {
             ...trainingEntityDbData('T1'),
             content: [contentId2, contentId3, contentId1].map(quillData),
-            questions: [questionId2, questionId1].map((id) => questionData(id)),
+            questions: [questionId2, questionId1].map((id) => questionDbData(id)),
             orderedContentQuestionIds: [questionId1, contentId1, contentId3, questionId2, contentId2]
         };
 
         expect(processContentQuestions(trainingEntity)).to.deep.eq([
-            questionData(questionId1), quillData(contentId1), quillData(contentId3),
-            questionData(questionId2), quillData(contentId2)
+            questionQuillData(questionId1), quillData(contentId1), quillData(contentId3),
+            questionQuillData(questionId2), quillData(contentId2)
         ]);
     });
 
@@ -74,16 +78,16 @@ describe('Course View Row Processor', function () {
         let optionId3 = 'QO3';
 
         let optionIds = [optionId1, optionId2, optionId3];
-        let options = [optionId3, optionId1, optionId2].map(questionOptionData);
+        let options = [optionId3, optionId1, optionId2].map(questionOptionDbData);
         let trainingEntity: ViewTrainingEntityDbData = {
             ...trainingEntityDbData('T1'),
             content: [],
-            questions: [questionData(questionId1, optionIds, options)],
+            questions: [questionDbData(questionId1, optionIds, options)],
             orderedContentQuestionIds: [questionId1]
         };
 
         expect(processContentQuestions(trainingEntity)).to.deep.eq(
-            [questionData(questionId1, optionIds, optionIds.map(questionOptionData))]
+            [questionQuillData(questionId1, optionIds.map(questionOptionQuillData))]
         );
     });
 
@@ -116,9 +120,9 @@ describe('Course View Row Processor', function () {
         };
     };
 
-    const questionData = (id: string,
+    const questionDbData = (id: string,
                           optionIds: string[] = [],
-                          options: QuestionOptionTransferData[] = []): QuestionTransferData => {
+                          options: QuestionOptionDbData[] = []): QuestionViewDbData => {
         return {
             id, optionIds, options,
             version: 0,
@@ -129,20 +133,46 @@ describe('Course View Row Processor', function () {
             canPickMultiple: true,
             correctOptionIds: [],
             questionQuillId: 'QD1',
+            questionQuill: quillData('QD1')
         };
     };
 
-    const questionOptionData = (id: string): QuestionOptionTransferData => {
+    const questionOptionDbData = (id: string): QuestionOptionDbData => {
         return {
             id,
             version: 0,
             explanationQuillId: 'QD1',
-            optionQuillId: 'QD2'
+            explanation: quillData('QD1'),
+            optionQuillId: 'QD2',
+            option: quillData('QD2')
         };
     };
 
-    const quillData = (id: string): QuillTransferData => {
-        return {id, version: 0};
+    const questionQuillData = (id: string, options: QuestionOptionQuillData[] = []): QuestionQuillData => {
+        return {
+            id, options,
+            version: 0,
+            questionType: QuestionType.DEFAULT,
+            answerType: AnswerType.DEFAULT,
+            randomizeOptionOrder: true,
+            answerInOrder: true,
+            canPickMultiple: true,
+            correctOptionIds: [],
+            questionQuill: quillData('QD1')
+        };
+    };
+
+    const questionOptionQuillData = (id: string): QuestionOptionQuillData => {
+        return {
+            id,
+            version: 0,
+            explanation: quillData('QD1'),
+            option: quillData('QD2')
+        };
+    };
+
+    const quillData = (id: string): QuillEditorData => {
+        return {id, version: 0, editorJson: new Delta().insert(`The id is ${id}`)};
     };
 
     const viewModuleDbData = (id: string,

@@ -38,6 +38,7 @@ export const DEFAULT_COURSE_ENTITY = {
     description: 'Course description',
     openEnrollment: true,
     active: true,
+    answerImmediately: false,
     contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
 
@@ -57,6 +58,7 @@ export const DEFAULT_MODULE = {
     timeEstimate: 60,
     title: 'A Module',
     active: true,
+    answerImmediately: true,
     contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
 export const moduleEntity = (module = DEFAULT_MODULE, courseId = latestCourseId): CreateModuleEntityPayload => {
@@ -76,6 +78,7 @@ export const DEFAULT_SECTION = {
     timeEstimate: 60,
     title: 'Awesome Section',
     active: true,
+    answerImmediately: true,
     contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
 
