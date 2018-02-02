@@ -56,7 +56,7 @@
         hours: string;
         minutes: string;
         timeEstimate: string;
-        updated: (time: string) => void;
+        updated: (time: number) => void;
 
         @Watch('timeEstimate', {immediate: true})
         updateTimeEstimate(timeEstimate, oldTimeEstimate) {
@@ -72,7 +72,7 @@
 
         timeChanged() {
             // parse time
-            this.updated((parseInt(this.hours) * 60 + parseInt(this.minutes)) + '');
+            this.updated((parseInt(this.hours) * 60 + parseInt(this.minutes)));
         }
     }
 </script>

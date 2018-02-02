@@ -53,7 +53,7 @@
                         </div>
                         <div class="row">
                             <div class="columns small-12 large-10">
-                                <training-segments :stored-segments="contentQuestions" ref="trainingSegment"></training-segments>
+                                <training-segments :stored-segments="contentQuestions" ref="trainingSegment"/>
                             </div>
                         </div>
                         <div class="row">
@@ -89,7 +89,7 @@
                     openEnrollment: true,
                     title: '',
                     description: '',
-                    timeEstimate: '',
+                    timeEstimate: undefined,
                     createdBy: '',
                 },
                 formstate: {},
@@ -104,7 +104,7 @@
         contentQuestions: Segment[] = [];
         formstate: FormState;
 
-        async createCourse() {
+        async createCourse () {
             this.formstate._submit();
             if (this.formstate.$invalid) {
                 return;
@@ -114,6 +114,7 @@
             let createCoursePayload: CreateCourseEntityPayload = {
                 title: this.course.title,
                 timeEstimate: this.course.timeEstimate,
+                answerImmediately: true,
                 active: this.course.active,
                 openEnrollment: this.course.openEnrollment,
                 contentQuestions: (<TrainingSegmentComponent> this.$refs.trainingSegment).getContentQuestionsDelta(),
@@ -127,7 +128,6 @@
                         courseSlug: this.$store.getters.getSlugFromCourseId(this.$store.state.course.currentCourseId)
                     }
                 });
-
             } catch (msg) {
                 this.errorMessages = msg;
             } finally {
@@ -135,7 +135,7 @@
             }
         }
 
-        timeUpdated(time: number) {
+        timeUpdated (time: number) {
             this.course.timeEstimate = time;
         }
 
