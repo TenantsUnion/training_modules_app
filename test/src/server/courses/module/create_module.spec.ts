@@ -6,8 +6,8 @@ import {clearData} from '../../test_db_util';
 import {createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../test_course_util';
 import {Delta} from '@shared/normalize_imports';
 import {moduleRepository, quillRepository} from '../../../../../server/src/config/repository_config';
-import {createdQuillPlaceholderId} from '@shared/quill_editor';
 import {addDeltaArrOp} from '@shared/delta/diff_key_array';
+import {createdQuillPlaceholderId} from "@shared/ids";
 
 describe('Create module', function () {
     let courseId: string;

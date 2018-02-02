@@ -10,13 +10,11 @@ import {ContentQuestionsDelta} from '@shared/training_entity';
 import {
     AnswerType, isEmptyQuestionChanges, isQuestionData, QuestionQuillData, QuestionType
 } from '@shared/questions';
-import {
-    createdQuestionPlaceholderId,
-    createdQuillPlaceholderId, isQuillEditorData, QuillEditorData
-} from "@shared/quill_editor";
+import {isQuillEditorData, QuillEditorData} from "@shared/quill_editor";
 import {deltaMapArrayDiff} from "@shared/delta/diff_key_array";
 import {Watch} from "vue-property-decorator";
 import QuestionComponent from '../question/question_component';
+import {createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
 
 
 const Delta = Quill.import('delta');

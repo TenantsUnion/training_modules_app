@@ -2,7 +2,6 @@ import {expect} from 'chai';
 import VueQuestionComponent from '@global/question/question_component.vue';
 import {QuestionComponent} from '@global/question/question_component';
 import {AnswerType, QuestionChanges, QuestionOptionQuillData, QuestionQuillData, QuestionType} from '@shared/questions';
-import {createdQuestionPlaceholderId, createdQuillPlaceholderId} from '@shared/quill_editor';
 import Quill from 'quill';
 
 import QuillComponent from '@global/quill/quill_component';
@@ -10,6 +9,7 @@ import QuestionOptionComponent from '@global/question/question_option_component'
 import Vue from 'vue';
 import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 import {setOptionIsCorrect} from '../../../util/test_question_util';
+import {createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
 
 let Delta: Quill.DeltaStatic = Quill.import('delta');
 

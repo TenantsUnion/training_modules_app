@@ -1,10 +1,10 @@
 import {expect} from 'chai';
-import {createdQuillPlaceholderId} from '@shared/quill_editor';
 import VueQuillComponent from '@global/quill/quill_component.vue';
 import QuillComponent from '@global/quill/quill_component';
 import Delta from 'quill-delta';
 import DeltaOperation = Quill.DeltaOperation;
 import {ComponentOptions} from 'vue';
+import {createdQuillPlaceholderId} from "@shared/ids";
 
 describe('Quill Component', () => {
     let quillComponent: QuillComponent;

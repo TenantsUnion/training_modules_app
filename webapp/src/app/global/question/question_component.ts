@@ -7,10 +7,7 @@ import {
     QuestionQuillData
 } from "@shared/questions";
 import {Prop, Watch} from "vue-property-decorator";
-import {
-    createdQuestionOptionPlaceholderId, createdQuillPlaceholderId, isCreatedQuestionOptionPlaceholderId,
-    isCreatedQuestionPlaceholderId, QuillDeltaMap
-} from "@shared/quill_editor";
+import {QuillDeltaMap} from "@shared/quill_editor";
 import DeltaStatic = Quill.DeltaStatic;
 import {SegmentArrayElement} from "@shared/segment";
 import VueQuestionOptionComponent from "./question_option_component.vue";
@@ -18,6 +15,10 @@ import {QuestionOptionComponent} from '@global/question/question_option_componen
 import {FormState} from '../../vue-form';
 import QuillComponent from '@global/quill/quill_component';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
+import {
+    createdQuestionOptionPlaceholderId, createdQuillPlaceholderId, isCreatedQuestionOptionPlaceholderId,
+    isCreatedQuestionPlaceholderId
+} from "@shared/ids";
 
 let Delta: DeltaStatic = Quill.import('delta');
 

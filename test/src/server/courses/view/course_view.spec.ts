@@ -3,17 +3,14 @@ import {clearData} from '../../test_db_util';
 import {createCourse, createUser, latestUser} from '../test_course_util';
 import {courseViewQuery} from '../../../../../server/src/config/query_service_config';
 import {CreateCourseEntityPayload, ViewCourseData} from '@shared/courses';
-import {
-    createdQuestionOptionPlaceholderId,
-    createdQuestionPlaceholderId,
-    createdQuillPlaceholderId, QuillEditorData
-} from '@shared/quill_editor';
+import {QuillEditorData} from '@shared/quill_editor';
 import {Delta} from '@shared/normalize_imports';
 import {AnswerType, QuestionChanges, QuestionQuillData, QuestionType} from '@shared/questions';
 import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';
 import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
 import DeltaOperation = Quill.DeltaOperation;
+import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
 
 describe('Course view', function () {
     let questionId = createdQuestionPlaceholderId();

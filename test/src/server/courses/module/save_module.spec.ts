@@ -7,9 +7,10 @@ import {ModuleEntity, SaveModuleEntityPayload} from '@shared/modules';
 import {deltaArrayDiff, DeltaArrOp} from '@shared/delta/diff_key_array';
 import {DeltaStatic} from 'quill';
 import {Delta} from '@shared/normalize_imports';
-import {createdQuillPlaceholderId, QuillEditorData} from '@shared/quill_editor';
+import {QuillEditorData} from '@shared/quill_editor';
 import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
+import {createdQuillPlaceholderId} from "@shared/ids";
 
 describe('Save module', function () {
     let courseId;

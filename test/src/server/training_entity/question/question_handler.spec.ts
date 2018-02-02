@@ -5,10 +5,7 @@ import {
     questionOptionRepository, questionRepository
 } from '../../../../../server/src/config/repository_config';
 import {clearData} from '../../test_db_util';
-import {
-    createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId,
-    QuillEditorData
-} from '@shared/quill_editor';
+import {QuillEditorData} from '@shared/quill_editor';
 import {QuestionOptionDto} from '../../../../../server/src/training_entity/question/question_option_repository';
 import {
     AnswerType, QuestionChangesObj, QuestionEntity,
@@ -21,6 +18,7 @@ import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
 import {postgresDb} from "../../../../../server/src/datasource";
+import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
 
 /**
  * Creates a question with two options in the before() test setup call. Each test then asserts a different part of the
