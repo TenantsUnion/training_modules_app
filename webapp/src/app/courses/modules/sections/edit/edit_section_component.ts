@@ -85,10 +85,11 @@ export class EditSectionComponent extends Vue {
 
         // ordered content ids diff
         let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);
-        let {orderedContentIds} = this.currentSection;
-        changes.orderedContentIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
-        // todo question handling
-        changes.orderedContentQuestionIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
+        // todo content question diff for saving section
+        // let {contentQuestions} = this.currentSection;
+        // changes.orderedContentIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
+        // // todo question handling
+        // changes.orderedContentQuestionIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
 
         let saveSectionPayload: SaveSectionEntityPayload = {
             id: this.section.id,

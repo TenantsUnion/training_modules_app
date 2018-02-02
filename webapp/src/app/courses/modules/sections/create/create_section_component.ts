@@ -47,6 +47,7 @@ export class CreateSectionComponent extends Vue {
                 title: this.title,
                 description: this.description,
                 timeEstimate: this.timeEstimate,
+                answerImmediately: false, // todo make field
                 active: true, // todo make field
                 courseId: this.$store.state.course.currentCourseId,
                 moduleId: currentModuleId,

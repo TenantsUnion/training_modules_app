@@ -102,10 +102,10 @@ export class EditModuleComponent extends Vue {
 
         // ordered content ids diff
         let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);
-        let {orderedContentIds} = this.currentModule;
-        changes.orderedContentIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
-        // todo question handling
-        changes.orderedContentQuestionIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
+        // // let {orderedContentIds} = this.currentModule;
+        // // changes.orderedContentIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
+        // // todo question handling
+        // changes.orderedContentQuestionIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
 
         // todo calculate section id change operations
         let orderedSectionIds = this.moduleSections

@@ -78,11 +78,11 @@ export class EditCourseComponent extends Vue {
         // changes.quillChanges = (<TrainingSegmentComponent> this.$refs.trainingSegment).getQuillDiff();
 
         // ordered content ids diff
-        let userChangedOrderedContentIds: string[] = this.quillContent.map(({id}) => id);
-        let {orderedContentIds} = this.currentCourse;
-        changes.orderedContentIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
-        // todo question handling
-        changes.orderedContentQuestionIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
+        // let userChangedOrderedContentIds: string[] = this.quillContent.map(({id}) => id);
+        // let {orderedContentIds} = this.currentCourse;
+        // changes.orderedContentIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
+        // // todo question handling
+        // changes.orderedContentQuestionIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
 
         let saveCoursePayload: SaveCourseEntityPayload = {
             id: this.currentCourse.id,
