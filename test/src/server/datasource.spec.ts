@@ -26,7 +26,7 @@ describe('Datasource', function () {
         await postgresDb.query(`DROP TABLE tu.test_data;`);
     });
 
-    let date = '2018-01-31T12:30:01.100'; // result should still have .100 and not .1
+    let date = '2018-01-31T12:30:01.100-8:00'; // result should still have .100 and not .1
     let notDate = '20 February';
     let notDate2 = '2016 March 5';
     it('should format timestamptz fields as \'YYYY-MM-DDTHH:mm:ss.SSSZ\' and not truncate fractional second trailing 0s', async function () {
