@@ -10,7 +10,7 @@ import {appRouter} from '../router';
 import {CreateSectionComponent} from './modules/sections/create/create_section_component';
 import {ViewSectionComponent} from './modules/sections/view/view_section_component';
 import {EditSectionComponent} from './modules/sections/edit/edit_section_component';
-import {EditCourseComponent} from './edit_course_component/edit_course_component';
+import VueEditCourseComponent from './edit_course_component/edit_course_component.vue';
 import {EditModuleComponent} from './modules/edit_modules_component/edit_module_component';
 
 export const COURSES_ROUTE_NAMES = {
@@ -73,7 +73,7 @@ export const coursesRoutes: RouteConfig[] = [
                 path: ':courseSlug/edit',
                 name: COURSES_ROUTE_NAMES.editCourse,
                 props: true,
-                component: EditCourseComponent
+                component: VueEditCourseComponent
             },
             {
                 path: ':courseSlug/module/create',
