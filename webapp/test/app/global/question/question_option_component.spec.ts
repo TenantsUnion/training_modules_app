@@ -31,7 +31,7 @@ describe('Question Option Component', function () {
         removeCallback: () => {
         }
     };
-    const mountedQuestionOptionComponent = (isAnswer: boolean = false, option: QuestionOptionQuillData & SegmentArrayElement = storedOption) => {
+    const mountedQuestionOptionComponent = (isAnswer: boolean = false, option: QuestionOptionQuillData & SegmentArrayElement = storedOption): QuestionOptionComponent => {
         return <QuestionOptionComponent> new VueQuestionOptionComponent({
             propsData: {
                 storedOption: option,
@@ -40,18 +40,28 @@ describe('Question Option Component', function () {
         }).$mount();
     };
     describe('Quill Changes', function () {
-        it('should return that no quill changes have happened right after initialization', function () {
-            expect(mountedQuestionOptionComponent().quillChanges()).to.deep.equal({});
+        it('should return that quill changes have happened right after initialization if the option is newly added', function () {
+            const questionOptionComponent = mountedQuestionOptionComponent();
+            expect(questionOptionComponent.quillChanges()).to.deep.equal({
+                [questionOptionComponent.option.explanation.id]: new Delta(),
+                [questionOptionComponent.option.option.id]: new Delta()
+            });
         });
 
-        it('should return that the explanation quill editor has changed', function () {
+        it('should return that the option and explanation quill editor has changed', function () {
             let questionOptionComponent = mountedQuestionOptionComponent();
 
             let optionQuill: Quill = (<QuillComponent> questionOptionComponent.$refs.optionQuill).quill;
             const insert = 'The text for the option';
             optionQuill.insertText(0, insert, 'user');
+
+            let explanationQuill: Quill = (<QuillComponent> questionOptionComponent.$refs.explanationQuill).quill;
+            const insertExplanation = 'The text for the explanation';
+            explanationQuill.insertText(0, insert, 'user');
+
             expect(questionOptionComponent.quillChanges()).to.deep.equal({
-                [optionQuillId]: new Delta().insert(`${insert}`)
+                [optionQuillId]: new Delta().insert(`${insert}`),
+                [explanationQuillId]: new Delta().insert(`${insert}`)
             });
         });
 

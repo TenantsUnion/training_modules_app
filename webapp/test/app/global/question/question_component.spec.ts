@@ -56,9 +56,11 @@ describe('Question Component', function () {
     };
 
     describe('Quill Delta Map', function () {
-        it('should return an empty quill delta map when initialized with no quill data', function () {
+        it('should return an quill delta map with the questionQuillId when initialized', function () {
             let questionComponent = mountedCreatedQuestionComponent();
-            expect(questionComponent.quillChanges()).to.deep.equal({});
+            expect(questionComponent.quillChanges()).to.deep.equal({
+                [questionComponent.question.questionQuill.id]:  new Delta()
+            });
         });
 
         it('should indicate that the question quill data has changed', function () {
