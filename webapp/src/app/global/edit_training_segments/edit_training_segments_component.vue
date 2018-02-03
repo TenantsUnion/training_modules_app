@@ -27,4 +27,4 @@
         </div>
     </div>
 </template>
-<script lang="ts" src="./training_segments_component.ts"></script>
+<script lang="ts" src="./edit_training_segments_component.ts"></script>

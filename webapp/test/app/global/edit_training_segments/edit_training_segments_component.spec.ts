@@ -1,6 +1,6 @@
 import {expect} from 'chai';
-import VueTrainingSegmentComponent from '@global/training_segments/training_segments_component.vue';
-import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
+import VueEditTrainingSegmentComponent from '@global/edit_training_segments/edit_training_segments_component.vue';
+import TrainingSegmentComponent from '@global/edit_training_segments/edit_training_segments_component';
 import {addQuestionText, QuestionTextObj, quillDeltaMapFromQuestionAndText} from '../../../util/test_question_util';
 import QuestionComponent from '@global/question/question_component';
 import Quill from 'quill';
@@ -15,7 +15,7 @@ let Delta = Quill.import('delta');
 
 const destroyComponents: Vue[] = [];
 const getMountedTrainingSegmentsComponent = (contentQuestions: (QuillEditorData | QuestionQuillData)[] = []): TrainingSegmentComponent => {
-    let el = <TrainingSegmentComponent> new VueTrainingSegmentComponent({
+    let el = <TrainingSegmentComponent> new VueEditTrainingSegmentComponent({
         propsData: {
             contentQuestions
         }

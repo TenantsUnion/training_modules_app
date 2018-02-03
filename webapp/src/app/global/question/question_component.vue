@@ -4,7 +4,7 @@
             <div class="cell small-11 large-9">
                 <h6 class="subheader">Question</h6>
             </div>
-            <div class="cell small-1 large-3">
+            <div v-if="!viewOnly" class="cell small-1 large-3">
                 <button type="button" class="close-button" title="Remove Question"
                         v-on:click="removeCallback" aria-label="Remove Question">
                     <span aria-hidden="true">&times;</span>
@@ -25,7 +25,7 @@
                                   :editor-id="question.questionQuill.id"/>
                 </div>
             </div>
-            <div class="grix-x">
+            <div v-if="!viewOnly" class="grix-x">
                 <div class="cell small-12">
                     <h6 class="subheader">Options
                         <button type="button" class="button" v-on:click="addOption" ref="addOptionBtn">Add Option</button>
@@ -34,7 +34,7 @@
             </div>
         </vue-form>
         <question-option v-for="option in options" :key="option.id" :stored-option="option" ref="optionRefs"
-                         :is-answer="isCorrectOption(option)"></question-option>
+                         :is-answer="isCorrectOption(option)" :view-only="viewOnly"></question-option>
     </div>
 </template>
 

@@ -6,7 +6,7 @@ import {Segment} from '@shared/segment';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {CreateSectionEntityPayload} from '@shared/sections';
 import {currentModuleRouteGuard} from '../../module_details_component/module_details_component';
-import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
+import TrainingSegmentComponent from '@global/edit_training_segments/edit_training_segments_component';
 
 @Component({
     data: () => {

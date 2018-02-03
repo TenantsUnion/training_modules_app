@@ -53,7 +53,7 @@
                         </div>
                         <div class="row">
                             <div class="columns small-12 large-10">
-                                <training-segments :content-questions="contentQuestions" ref="trainingSegment"/>
+                                <edit-training-segments :content-questions="contentQuestions" ref="trainingSegment"/>
                             </div>
                         </div>
                         <div class="row">
@@ -77,7 +77,7 @@
     import {COURSE_ACTIONS} from '../store/course/course_actions';
     import {appRouter} from '../../router';
     import {COURSES_ROUTE_NAMES} from '../courses_routes';
-    import TrainingSegmentComponent from '../../global/training_segments/training_segments_component';
+    import TrainingSegmentComponent from '../../global/edit_training_segments/edit_training_segments_component';
 
     @Component({
         data: () => {

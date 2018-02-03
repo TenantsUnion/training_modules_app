@@ -4,7 +4,7 @@ import * as VueForm from "../../../vue-form";
 import {MODULE_ACTIONS} from '../../store/module/module_actions';
 import {Segment} from '@shared/segment';
 import {COURSES_ROUTE_NAMES} from '../../courses_routes';
-import TrainingSegmentComponent from '@global/training_segments/training_segments_component';
+import TrainingSegmentComponent from '@global/edit_training_segments/edit_training_segments_component';
 
 @Component({
     data: () => {
