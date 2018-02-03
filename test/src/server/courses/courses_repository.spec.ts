@@ -76,7 +76,7 @@ describe('Courses Repository', function () {
 
     it('should create a course and save it with changed data', async function() {
         let courseId = await coursesRepository.createCourse(courseData);
-        let updated = Moment(now).add(1, 'hour');
+        let updated = Moment(now).utc().add(1, 'hour');
         MockDate.set(updated);
 
         let quillId = 'QD4';

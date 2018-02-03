@@ -47,7 +47,7 @@ describe('Module Repository', function () {
 
     it('should save a module with updated values', async function () {
         let moduleId = await moduleRepository.createModule(moduleData);
-        let updated = Moment(now).add(1, 'hour');
+        let updated = Moment(now).utc().add(1, 'hour');
         MockDate.set(updated);
 
         let quillId = 'QD4';
@@ -80,7 +80,7 @@ describe('Module Repository', function () {
 
     it('should update the last modified time of a module', async function () {
         let moduleId = await moduleRepository.createModule(moduleData);
-        let updated = Moment(now).add(1, 'hour').toDate();
+        let updated = Moment(now).utc().add(1, 'hour').toDate();
         MockDate.set(updated);
 
         await moduleRepository.updateLastModified(moduleId);

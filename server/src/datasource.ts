@@ -130,7 +130,7 @@ const JSONB_OID = 3802;
 //2018-01-31T12:30:01.1-08:00
 const pgTimestampIsoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\./;
 const jsonDateFormatFn = function (key, val) {
-    return typeof val === 'string' && pgTimestampIsoRegex.test(val) ? moment(val).format(TIMESTAMP_FORMAT) : val;
+    return typeof val === 'string' && pgTimestampIsoRegex.test(val) ? moment(val).utc().format(TIMESTAMP_FORMAT) : val;
 };
 types.setTypeParser(JSON_OID, function (val) {
     return JSON.parse(val, jsonDateFormatFn);
@@ -151,6 +151,7 @@ pool.on('error', (err, client) => {
 // set
 pool.on('connect', (client) => {
     client.query('SET DATESTYLE = iso');
+    client.query('SET TIMEZONE to \'UTC\'');
 });
 
 

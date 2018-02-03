@@ -29,5 +29,5 @@ export const getUTCNow = (): string => {
 
 export const TIMESTAMP_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSSZ';
 export const toDbTimestampFormat = (date: Date): string => {
-    return moment(date).format(TIMESTAMP_FORMAT);
+    return moment(date).utc().format(TIMESTAMP_FORMAT);
 };
