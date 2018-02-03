@@ -6,6 +6,7 @@ import {DeltaStatic, Sources} from "quill";
 import {isNotEmptyQuillData} from '@global/edit_training_segments/edit_training_segments_component';
 import {Prop} from 'vue-property-decorator';
 import {QuillEditorData} from '@shared/quill_editor';
+import {isCreatedQuillPlaceholderId} from "@shared/ids";
 
 // only log quill error messages if not in debug or dev mode
 if (['debug', 'dev'].indexOf(process.env.NODE_ENV) === -1) {
@@ -132,7 +133,7 @@ export default class QuillComponent extends Vue {
      * @returns {boolean}
      */
     hasChanged(): boolean {
-        return isNotEmptyQuillData(this.changes);
+        return isCreatedQuillPlaceholderId(this.editorId) || isNotEmptyQuillData(this.changes);
     }
 
     /**

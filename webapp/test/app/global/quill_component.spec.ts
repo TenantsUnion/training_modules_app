@@ -10,18 +10,19 @@ describe('Quill Component', () => {
     let quillComponent: QuillComponent;
 
     // init and assign default QuillComponent
-    const initQuillComponent = (options?: ComponentOptions<QuillComponent>) => {
+    const initQuillComponent = (options?: ComponentOptions<QuillComponent>): QuillComponent => {
         if (quillComponent) {
             // destroy old quill component if there is one
             quillComponent.$destroy();
         }
         let componentOptions = options || {
             propsData: {
-                editorId: createdQuillPlaceholderId()
+                editorId: 'QD1'
             }
         };
         quillComponent = <QuillComponent> new VueQuillComponent(componentOptions);
         quillComponent.$mount();
+        return quillComponent;
     };
 
     beforeEach(function () {
@@ -78,7 +79,7 @@ describe('Quill Component', () => {
 
             initQuillComponent({
                 propsData: {
-                    editorId: createdQuillPlaceholderId(),
+                    editorId: 'QU1',
                     editorJson: new Delta().insert(startingText)
                 }
             });
@@ -98,6 +99,12 @@ describe('Quill Component', () => {
         it('should return true when changes have happened', function () {
             expect(quillComponent.hasChanged()).to.be.false;
             quillComponent.$destroy();
+        });
+
+        it('should return true when no changes have happened but the id is for a newly created quill object', function () {
+            let component = initQuillComponent({propsData: {editorId: createdQuillPlaceholderId()}});
+            expect(quillComponent.hasChanged()).to.be.true;
+
         });
     })
 });
