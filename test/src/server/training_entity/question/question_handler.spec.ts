@@ -18,7 +18,10 @@ import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
 import {postgresDb} from "../../../../../server/src/datasource";
-import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
+import {
+    createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId,
+    isQuestionId, isQuestionOptionId
+} from "@shared/ids";
 
 /**
  * Creates a question with two options in the before() test setup call. Each test then asserts a different part of the
@@ -136,6 +139,9 @@ describe('Question handler create question', async function () {
             lastModifiedAt: creationDateTimestamp
         };
         const questionEntity = await questionRepository.loadQuestionEntity(questionId);
+        expect(isQuestionId(questionEntity.id)).to.be.true;
+        expect(questionEntity.optionIds.every((id) => isQuestionOptionId(id))).to.be.true;
+
         expect(questionEntity).to.deep.eq(expectedQuestion);
         expect(createdQuestionOptions.length).to.equal(2);
     });

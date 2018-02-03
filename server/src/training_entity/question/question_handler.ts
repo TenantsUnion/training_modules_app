@@ -101,7 +101,7 @@ export class QuestionHandler {
             return {};
         }
 
-        let questionIds = await this.questionOptionRepository.getNextIds(placeholderIds.length);
+        let questionIds = await this.questionRepository.getNextIds(placeholderIds.length);
         let createQuestionsAsync = placeholderIds.map((placeholderId, index) => {
             let id = questionIds[index];
             let questionDelta = questionsChanges[placeholderId];
