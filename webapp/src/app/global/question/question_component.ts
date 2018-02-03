@@ -14,7 +14,7 @@ import VueQuestionOptionComponent from "./question_option_component.vue";
 import {QuestionOptionComponent} from '@global/question/question_option_component';
 import {FormState} from '../../vue-form';
 import QuillComponent from '@global/quill/quill_component';
-import {deltaArrayDiff} from '@shared/delta/diff_key_array';
+import {deltaArrayDiff, DeltaArrOp} from '@shared/delta/diff_key_array';
 import {
     createdQuestionOptionPlaceholderId, createdQuillPlaceholderId, isCreatedQuestionOptionPlaceholderId,
     isCreatedQuestionPlaceholderId
@@ -51,9 +51,17 @@ export class QuestionComponent extends Vue {
     formstate: FormState;
 
     @Watch('storedQuestion', {immediate: true})
-    updateQuestion (incomingQuestion) {
+    updateQuestion (incomingQuestion: QuestionQuillData) {
         this.question = {...incomingQuestion};
-        this.options = [...this.question.options];
+        this.options = this.question.options ? this.question.options.map((option: QuestionOptionQuillData) => {
+            return {
+                removeCallback: () => {
+                    let rmIndex = this.options.findIndex((el) => el.id === option.id);
+                    this.options.splice(rmIndex, 1);
+                },
+                ...option
+            }
+        }) : [];
     }
 
     getCurrentQuestion (): QuestionQuillData {
@@ -102,38 +110,62 @@ export class QuestionComponent extends Vue {
     }
 
     diffQuestion (): QuestionChanges {
-        if (isCreatedQuestionPlaceholderId(this.question.id)) {
-            const {storedQuestion, options} = this;
-            const {
-                questionType, answerType, randomizeOptionOrder,
-                canPickMultiple, answerInOrder, questionQuill
-            } = this.question;
 
-            const optionIds = deltaArrayDiff(storedQuestion.optionIds, options.map(({id}) => id));
-            const correctOptionIds = deltaArrayDiff(storedQuestion.correctOptionIds, this.optionRefs
-                .filter((option) => option.isCorrectAnswer())
-                .map((option) => option.option.id));
+        let optionIdsDiff =
+            deltaArrayDiff(this.question.options.map(({id}) => id), this.optionRefs.map(({option: {id}}) => id));
 
-            const optionChangesObject: OptionChangesObj = this.optionRefs.reduce((acc, {option}) => {
-                if (isCreatedQuestionOptionPlaceholderId(option.id)) {
-                    acc[option.id] = <OptionQuillIdsObj> {
-                        optionQuillId: option.option.id,
-                        explanationQuillId: option.explanation.id
-                    };
+        // option changes
+        // added
+        const optionChangesObject: OptionChangesObj = this.optionRefs.reduce((acc, {option}) => {
+            if (isCreatedQuestionOptionPlaceholderId(option.id)) {
+                acc[option.id] = <OptionQuillIdsObj> {
+                    optionQuillId: option.option.id,
+                    explanationQuillId: option.explanation.id
+                };
+            }
+            return acc;
+        }, {});
+
+        // removed
+        optionIdsDiff.reduce((acc, optionIdOp: DeltaArrOp<string>) => {
+            if (optionIdOp.op === 'DELETE') {
+                acc[optionIdOp.val] = optionIdOp.op;
+            }
+            return acc;
+        }, optionChangesObject);
+
+
+        let basicQuestionProps = isCreatedQuestionPlaceholderId(this.question.id) ? this.basicQuestionProps()
+            : Object.keys(this.storedQuestion).reduce((acc, key) => {
+                if ((typeof key === 'string' || typeof key === 'boolean' || typeof key === 'number') &&
+                    this.storedQuestion[key] !== this.question[key]) {
+                    acc[key] = this.question[key];
                 }
                 return acc;
             }, {});
 
-            let questionChanges: QuestionChanges = {
-                questionType, answerType, randomizeOptionOrder, canPickMultiple, answerInOrder,
-                questionQuillId: questionQuill.id,
-                optionIds, correctOptionIds, optionChangesObject
-            };
+        let currentCorrectOptionIds = this.optionRefs
+            .filter((optionComp) => optionComp.isCorrectAnswer())
+            .map(({option: {id}}) => id);
+        let correctOptionIdsDiff = deltaArrayDiff(this.storedQuestion.correctOptionIds, currentCorrectOptionIds);
+        return {
+            ...basicQuestionProps,
+            optionIds: optionIdsDiff,
+            correctOptionIds: correctOptionIdsDiff,
+            optionChangesObject
+        };
+    }
 
-            return questionChanges
+    private basicQuestionProps () {
+        const {
+            questionType, answerType, randomizeOptionOrder,
+            canPickMultiple, answerInOrder, questionQuill
+        } = this.question;
 
+        return {
+            questionType, answerType, randomizeOptionOrder, canPickMultiple, answerInOrder,
+            questionQuillId: questionQuill.id
         }
-        return null;
     }
 
     get optionRefs (): QuestionOptionComponent[] {

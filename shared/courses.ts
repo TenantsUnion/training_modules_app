@@ -73,7 +73,8 @@ export interface SaveCourseResponse {
 }
 
 export const diffBasicPropsCourseProps = (before: ViewCourseData, after: ViewCourseData): CourseEntityDiffDelta => {
-    return <CourseEntityDiffDelta> diffPropsDeltaObj(['openEnrollment', ...TRAINING_ENTITY_BASIC_PROPS], before, after);
+    return <CourseEntityDiffDelta> diffPropsDeltaObj(['openEnrollment', 'answerImmediately',
+        ...TRAINING_ENTITY_BASIC_PROPS], before, after);
 };
 
 /**

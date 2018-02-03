@@ -25,7 +25,6 @@ describe('Question Component', function () {
         answerInOrder: false,
         canPickMultiple: false,
         correctOptionIds: [],
-        optionIds: [],
         questionQuill: {
             id: questionQuillId,
             version: 0,
@@ -33,7 +32,8 @@ describe('Question Component', function () {
         },
         options: <QuestionOptionQuillData[]> []
     };
-    const mountedQuestionComponent = (question?: any): QuestionComponent => {
+
+    const mountedCreatedQuestionComponent = (question?: any): QuestionComponent => {
         let props: { storedQuestion: QuestionQuillData, removeCallback: () => void } = {
             storedQuestion: {...storedQuestion, ...question},
             removeCallback: () => {
@@ -44,14 +44,25 @@ describe('Question Component', function () {
         }).$mount();
     };
 
+    const mountedQuestionComponent = (question?: any): QuestionComponent => {
+        let props: { storedQuestion: QuestionQuillData, removeCallback: () => void } = {
+            storedQuestion: {...storedQuestion, ...question, id: 'QU1'},
+            removeCallback: () => {
+            }
+        };
+        return <QuestionComponent> new VueQuestionComponent({
+            propsData: props
+        }).$mount();
+    };
+
     describe('Quill Delta Map', function () {
         it('should return an empty quill delta map when initialized with no quill data', function () {
-            let questionComponent = mountedQuestionComponent();
+            let questionComponent = mountedCreatedQuestionComponent();
             expect(questionComponent.quillChanges()).to.deep.equal({});
         });
 
         it('should indicate that the question quill data has changed', function () {
-            let questionComponent = mountedQuestionComponent();
+            let questionComponent = mountedCreatedQuestionComponent();
             let {quill} = <QuillComponent> questionComponent.$refs.questionQuill;
             let questionText = `This is some question text`;
             quill.insertText(0, questionText, 'user');
@@ -62,7 +73,7 @@ describe('Question Component', function () {
         });
 
         it('should have the explanation and option quill data from an added option', async function () {
-            let questionComponent = mountedQuestionComponent();
+            let questionComponent = mountedCreatedQuestionComponent();
             questionComponent.addOption();
 
             let {quill: questionQuill} = <QuillComponent> questionComponent.$refs.questionQuill;
@@ -90,7 +101,7 @@ describe('Question Component', function () {
 
     describe('Diff Question', function () {
         it('should return the primitive types and quill id of a newly created question', function () {
-            let questionComponent = mountedQuestionComponent();
+            let questionComponent = mountedCreatedQuestionComponent();
             let questionChanges: QuestionChanges = questionComponent.diffQuestion();
 
             expect(questionChanges).to.deep.eq(<QuestionChanges>{
@@ -107,7 +118,7 @@ describe('Question Component', function () {
         });
 
         it('should return the primitive types and an added option of a newly created question', async function () {
-            let questionComponent = mountedQuestionComponent();
+            let questionComponent = mountedCreatedQuestionComponent();
             questionComponent.addOption();
             await Vue.nextTick();
             let questionChanges: QuestionChanges = questionComponent.diffQuestion();
@@ -123,7 +134,7 @@ describe('Question Component', function () {
                 optionIds: [addDeltaArrOp(addedOption.id, 0)],
                 correctOptionIds: [],
                 optionChangesObject: {
-                    [addedOption.id] : {
+                    [addedOption.id]: {
                         optionQuillId: addedOption.option.id,
                         explanationQuillId: addedOption.explanation.id
                     }
@@ -131,8 +142,33 @@ describe('Question Component', function () {
             });
         });
 
-        it('should return that two options have been added with the second option marked correct', async function () {
+        it('should return an empty question changes object when question hasn\'t changed', async function () {
             let questionComponent = mountedQuestionComponent();
+            await Vue.nextTick();
+            expect(questionComponent.diffQuestion()).to.deep.eq({
+                correctOptionIds: [],
+                optionIds: [],
+                optionChangesObject: {}
+            });
+        });
+
+        it('should indicate that the can answer multiple and the randomize option order values have changed', async function () {
+            let questionComponent = mountedQuestionComponent();
+            await Vue.nextTick();
+            questionComponent.question.randomizeOptionOrder = false; // stored question is true
+            questionComponent.question.canPickMultiple = true; // stored question is false
+
+            expect(questionComponent.diffQuestion()).to.deep.eq({
+                canPickMultiple: true,
+                randomizeOptionOrder: false,
+                correctOptionIds: [],
+                optionIds: [],
+                optionChangesObject: {}
+            });
+        });
+
+        it('should return that two options have been added with the second option marked correct', async function () {
+            let questionComponent = mountedCreatedQuestionComponent();
             questionComponent.addOption();
             questionComponent.addOption();
 
@@ -152,11 +188,11 @@ describe('Question Component', function () {
                 optionIds: [addDeltaArrOp(firstOption.id, 0), addDeltaArrOp(secondOption.id, 1)],
                 correctOptionIds: [addDeltaArrOp(secondOption.id, 0)],
                 optionChangesObject: {
-                    [firstOption.id] : {
+                    [firstOption.id]: {
                         optionQuillId: firstOption.option.id,
                         explanationQuillId: firstOption.explanation.id
                     },
-                    [secondOption.id] : {
+                    [secondOption.id]: {
                         optionQuillId: secondOption.option.id,
                         explanationQuillId: secondOption.explanation.id
                     }

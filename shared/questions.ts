@@ -40,7 +40,6 @@ export interface QuestionData {
     answerInOrder: boolean,
     canPickMultiple: boolean,
     correctOptionIds: string[],
-    optionIds?: string[],
     createdAt?: string,
     lastModifiedAt?: string
 }
@@ -119,7 +118,7 @@ export type OptionQuillIdsObj = {
 };
 
 export type OptionChangesObj = {
-    [p: string]: OptionQuillIdsObj
+    [p: string]: OptionQuillIdsObj | 'DELETE';
 }
 
 export type QuestionChanges = {
