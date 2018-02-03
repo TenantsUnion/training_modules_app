@@ -17,7 +17,7 @@ export interface SectionDetails {
 export interface ViewSectionData extends ViewTrainingEntity {}
 
 
-export interface SaveSectionEntityPayload extends SaveTrainingEntityPayload<ContentQuestionsDelta> {
+export interface SaveSectionEntityPayload extends SaveTrainingEntityPayload<TrainingEntityDiffDelta> {
     courseId: string;
     moduleId: string;
 }

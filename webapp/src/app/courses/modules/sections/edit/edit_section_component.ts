@@ -53,7 +53,7 @@ export class EditSectionComponent extends Vue {
     getSectionSlugFromId: getSectionSlugFromIdFn;
 
     @Watch('currentSection', {immediate: true})
-    updateSection(currentSection: ViewSectionData, oldCurrentSection) {
+    updateSection (currentSection: ViewSectionData, oldCurrentSection) {
         let section = currentSection ? _.extend({}, currentSection) : this.section;
         let quillContent = currentSection ? _.map(currentSection.contentQuestions, (content) => {
             return _.extend({}, content, {
@@ -68,7 +68,7 @@ export class EditSectionComponent extends Vue {
         Vue.set(this, 'quillContent', quillContent);
     }
 
-    async saveSection() {
+    async saveSection () {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
@@ -95,8 +95,8 @@ export class EditSectionComponent extends Vue {
             id: this.section.id,
             courseId: this.currentCourseId,
             moduleId: this.currentModuleId,
-            changes: {
-                ...changes,
+            changes,
+            contentQuestions: {
                 quillChanges: null, // todo fill in
                 questionChanges: null, //todo fill in
                 orderedContentQuestionIds: null,
@@ -125,11 +125,11 @@ export class EditSectionComponent extends Vue {
         }
     }
 
-    timeEstimateUpdated(time) {
+    timeEstimateUpdated (time) {
         this.section.timeEstimate = time;
     }
 
-    addContentCallback(addContentId: string) {
+    addContentCallback (addContentId: string) {
         this.quillContent.push({
             id: addContentId,
             type: 'CONTENT',

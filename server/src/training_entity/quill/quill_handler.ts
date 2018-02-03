@@ -66,14 +66,6 @@ export class QuillHandler {
         await Promise.all(insertAsync);
         return placeholderIdMap;
     }
-
-    async insertQuillContent (quillContent: Quill.DeltaStatic): Promise<string> {
-        // create quill content
-        let quillId = await this.quillRepository.getNextId();
-        await quillRepository.insertEditorJson(quillId, quillContent);
-        return quillId;
-    }
-
     loadQuillData (quillId: string): Promise<QuillEditorData> {
         return this.quillRepository.loadQuillData(quillId);
     }

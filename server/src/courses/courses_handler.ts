@@ -60,6 +60,22 @@ export class CoursesHandler {
         }
     }
 
+    async saveCourse(saveCourse: SaveCourseEntityPayload): Promise<void> {
+        let {id, changes} = saveCourse;
+        let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = saveCourse.contentQuestions;
+        let placeholderIdMap = await this.trainingEntityHandler.handleContentQuestionDelta(saveCourse.contentQuestions);
+
+        let course: CourseEntity = await this.coursesRepository.loadCourseEntity(id);
+        let updatedCourse = applyDeltaDiff(course, {
+            ...changes,
+            orderedContentIds: updateArrOpsValues(orderedContentIds, placeholderIdMap),
+            orderedQuestionIds: updateArrOpsValues(orderedQuestionIds, placeholderIdMap),
+            orderedContentQuestionIds: updateArrOpsValues(orderedContentQuestionIds, placeholderIdMap)
+        });
+
+        await this.coursesRepository.saveCourse(updatedCourse);
+    }
+
     async createModule(createModuleCommand: CreateModuleEntityPayload): Promise<string> {
         const {courseId} = createModuleCommand;
         try {
@@ -104,16 +120,6 @@ export class CoursesHandler {
         return sectionId;
     }
 
-    async saveCourse(saveCourse: SaveCourseEntityPayload): Promise<void> {
-        let {id, changes, changes: {quillChanges, orderedContentIds}} = saveCourse;
 
-        let course: CourseEntity = await this.coursesRepository.loadCourseEntity(id);
-        await this.trainingEntityHandler.handleContentQuestionDelta(changes);
-        let updatedCourse = applyDeltaDiff(course, {
-            ...changes, orderedContentIdsOps: orderedContentIds
-        });
-
-        await this.coursesRepository.saveCourse(updatedCourse);
-    }
 }
 

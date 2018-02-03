@@ -100,6 +100,7 @@ export interface CreateTrainingEntityPayload {
 export interface SaveTrainingEntityPayload<T extends TrainingEntityDiffDelta> {
     id: string;
     changes: T;
+    contentQuestions: ContentQuestionsDelta;
 }
 
 export type CreateTrainingEntityCommand<T, P extends CreateTrainingEntityPayload> = EntityCommand<T, P>;

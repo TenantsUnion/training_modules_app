@@ -63,7 +63,7 @@ export interface EnrolledCourseDescription extends CourseDescription {
 export interface CreateCourseResponse extends ViewCourseData {
 }
 
-export interface CourseEntityDiffDelta extends ContentQuestionsDelta {
+export interface CourseEntityDiffDelta extends TrainingEntityDiffDelta {
     openEnrollment?: boolean;
     modules?: DeltaArrOp<string>[];
 }

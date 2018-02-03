@@ -16,7 +16,7 @@ export interface ModuleEntity extends TrainingEntity {
     orderedSectionIds: string[]
 }
 
-export interface ModuleEntityDiffDelta extends ContentQuestionsDelta {
+export interface ModuleEntityDiffDelta extends TrainingEntityDiffDelta {
     orderedSectionIds?: DeltaArrOp<string>[];
 }
 

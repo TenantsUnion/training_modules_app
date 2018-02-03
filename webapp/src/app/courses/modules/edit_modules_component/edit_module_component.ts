@@ -61,7 +61,7 @@ export class EditModuleComponent extends Vue {
     getModuleSlugFromId: getModuleSlugFromIdFn;
 
     @Watch('currentModule', {immediate: true})
-    updateModule(currentModule: ViewModuleData, oldCurrentModule) {
+    updateModule (currentModule: ViewModuleData, oldCurrentModule) {
         let module = currentModule ? _.extend({}, currentModule) : this.module;
         let quillContent = currentModule ? _.map(currentModule.contentQuestions, (content) => {
             return _.extend({}, content, {
@@ -78,15 +78,15 @@ export class EditModuleComponent extends Vue {
         Vue.set(this, 'module', module);
     }
 
-    removeSection(section) {
+    removeSection (section) {
         this.$set(this.removeSections, section.id, true);
     }
 
-    cancelRemoveSection(section) {
+    cancelRemoveSection (section) {
         this.$set(this.removeSections, section.id, false);
     }
 
-    async saveModule() {
+    async saveModule () {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
@@ -120,6 +120,8 @@ export class EditModuleComponent extends Vue {
             changes: {
                 ...changes,
                 orderedSectionIds: orderedSectionIdsDiff,
+            },
+            contentQuestions: {
                 quillChanges: null, // todo fill in
                 questionChanges: null, //todo fill in
                 orderedContentQuestionIds: null,
@@ -145,18 +147,18 @@ export class EditModuleComponent extends Vue {
         }
     }
 
-    timeEstimateUpdated(time) {
+    timeEstimateUpdated (time) {
         this.module.timeEstimate = time;
     }
 
-    addContentCallback(addContentId: string) {
+    addContentCallback (addContentId: string) {
         this.quillContent.push({
             id: addContentId,
             type: 'CONTENT',
         });
     }
 
-    sectionTitleStyles(section: ViewTrainingEntityDescription) {
+    sectionTitleStyles (section: ViewTrainingEntityDescription) {
         return {
             "text-decoration": this.removeSections[module.id] ? "line-through" : "none"
         };

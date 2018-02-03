@@ -65,11 +65,7 @@ export class EditCourseComponent extends Vue {
         let contentQuestions =  (<EditTrainingSegmentsComponent> this.$refs.trainingSegment).getContentQuestionsDelta();
 
         let saveCoursePayload: SaveCourseEntityPayload = {
-            id: this.storedCourse.id,
-            changes: {
-                ...changes,
-                ...contentQuestions
-            }
+            id: this.storedCourse.id, changes, contentQuestions
         };
 
         try {
