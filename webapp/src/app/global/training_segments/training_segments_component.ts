@@ -36,11 +36,33 @@ export default class TrainingSegmentsComponent extends Vue {
     currentSegments: ((ContentSegment | QuestionSegment) & SegmentArrayElement)[] = [];
 
     @Watch('contentQuestions', {immediate: true})
-    syncCurrentSegments(incomingSegments: ContentSegment[]) {
-        this.currentSegments = [...incomingSegments];
+    syncCurrentSegments (incomingContentQuestions: (QuillEditorData | QuestionQuillData)[]) {
+        this.currentSegments = incomingContentQuestions ? incomingContentQuestions.map((contentQuestion) => {
+            if (isQuillEditorData(contentQuestion)) {
+                return <ContentSegment>{
+                    id: contentQuestion.id,
+                    type: 'CONTENT',
+                    content: contentQuestion,
+                    removeCallback: () => {
+                        let rmIndex = this.currentSegments.findIndex((el) => el.id === contentQuestion.id);
+                        this.currentSegments.splice(rmIndex, 1);
+                    }
+                }
+            } else if (isQuestionData(contentQuestion)) {
+                return <QuestionSegment> {
+                    id: contentQuestion.id,
+                    type: 'QUESTION',
+                    question: contentQuestion,
+                    removeCallback: () => {
+                        let rmIndex = this.currentSegments.findIndex((el) => el.id === contentQuestion.id);
+                        this.currentSegments.splice(rmIndex, 1);
+                    }
+                }
+            }
+        }) : [];
     }
 
-    getContents(): QuillEditorData[] {
+    getContents (): QuillEditorData[] {
         let contentEditor = this.$refs.contentEditor ? (<QuillComponent[]> this.$refs.contentEditor) : [];
         let contentData = contentEditor.map((editor) => {
             return <ContentSegment> {
@@ -52,11 +74,11 @@ export default class TrainingSegmentsComponent extends Vue {
         return [];
     }
 
-    getContentQuestionsDelta(): ContentQuestionsDelta {
+    getContentQuestionsDelta (): ContentQuestionsDelta {
         let currentContentQuestions = this.currentSegments.map((segment) => {
-            if(isContentSegment(segment)) {
+            if (isContentSegment(segment)) {
                 return segment.content;
-            } else if(isQuestionSegment(segment)) {
+            } else if (isQuestionSegment(segment)) {
                 return segment.question;
             }
         });
@@ -103,15 +125,15 @@ export default class TrainingSegmentsComponent extends Vue {
         };
     }
 
-    isContent(segment: ContentSegment | QuestionSegment): boolean {
+    isContent (segment: ContentSegment | QuestionSegment): boolean {
         return isContentSegment(segment);
     }
 
-    isQuestion(segment: ContentSegment | QuestionSegment): boolean {
+    isQuestion (segment: ContentSegment | QuestionSegment): boolean {
         return isQuestionSegment(segment);
     }
 
-    addContent() {
+    addContent () {
         let addContentId = createdQuillPlaceholderId();
         this.currentSegments.push({
             id: addContentId,
@@ -128,7 +150,7 @@ export default class TrainingSegmentsComponent extends Vue {
         });
     }
 
-    addQuestion() {
+    addQuestion () {
         let questionId = createdQuestionPlaceholderId();
         let questionQuillId = createdQuillPlaceholderId();
         this.currentSegments.push(<QuestionSegment>{
@@ -158,7 +180,7 @@ export default class TrainingSegmentsComponent extends Vue {
         });
     }
 
-    get questionRefs(): QuestionComponent[] {
+    get questionRefs (): QuestionComponent[] {
         if (_.isArray(this.$refs.segment)) {
             return (<(QuestionComponent | QuillComponent)[]> this.$refs.segment).filter((segment, index) => {
                 return isQuestionSegment(this.currentSegments[index]);
@@ -170,7 +192,7 @@ export default class TrainingSegmentsComponent extends Vue {
         }
     }
 
-    get contentRefs(): QuillComponent[] {
+    get contentRefs (): QuillComponent[] {
         if (_.isArray(this.$refs.segment)) {
             return (<(QuestionComponent | QuillComponent)[]> this.$refs.segment).filter((segment, index) => {
                 return isContentSegment(this.currentSegments[index]);
