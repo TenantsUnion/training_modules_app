@@ -1,8 +1,9 @@
 import axios from "axios";
 import {CreateModuleEntityPayload, CreateModuleResponse} from '@shared/modules';
 
-export const loadModule = async (courseId, moduleId) => {
-
+export const loadModule = async (moduleId) => {
+    let response = await axios.get(`view/module/admin/${moduleId}`);
+    return response.data;
 };
 
 export const saveModule = () => {

@@ -4,7 +4,7 @@ import {UserAdminCourseComponent} from "../user/courses/admin/user_admin_courses
 import CreateCourseComponent from "./create/create_course_component.vue";
 import CourseComponent from './course_component/course_component.vue';
 import CourseDetailsComponent from './course_details_component/course_details_component.vue';
-import {CreateModuleComponent} from "./modules/create_module_component/create_module_component";
+import CreateModuleComponent from "./modules/create_module_component/create_module_component.vue";
 import {ModuleDetailsComponent} from './modules/module_details_component/module_details_component';
 import {appRouter} from '../router';
 import {CreateSectionComponent} from './modules/sections/create/create_section_component';

@@ -4,6 +4,18 @@ import {ViewTrainingEntityDescription} from "@shared/training_entity";
 import {QuillEditorData} from "@shared/quill_editor";
 import {QuestionOptionDbData, QuestionViewDbData} from "./view_database";
 
+export interface ViewTrainingEntityDescriptionDbData {
+    id: string;
+    title: string;
+    version: number;
+    description?: string;
+    timeEstimate?: number;
+    active: boolean;
+    answerImmediately?: boolean;
+    lastModifiedAt: string;
+    createdAt: string;
+}
+
 export interface ViewTrainingEntityDbData {
     id: string;
     title: string;
@@ -21,16 +33,18 @@ export interface ViewTrainingEntityDbData {
     questions: QuestionViewDbData[]
 }
 
+
 export interface ViewCourseDbData extends ViewTrainingEntityDbData {
     openEnrollment: boolean,
     orderedModuleIds: string[],
-    modules: ViewModuleDbData[]
+    modules: ViewModuleDescriptionDbData[]
 }
 
-export interface ViewModuleDbData extends ViewTrainingEntityDbData {
+export interface ViewModuleDescriptionDbData extends ViewTrainingEntityDescriptionDbData {
     orderedSectionIds: string[],
     sections: ViewTrainingEntityDescription[]
 }
+
 
 /**
  * Processes the row ViewCourseTransfer data by ordering the modules, questions, and content fields
@@ -49,21 +63,23 @@ export const processCourseView = (row: ViewCourseDbData): ViewCourseData => {
     return {
         ...viewCourse,
         contentQuestions: processContentQuestions(row),
-        modules: orderEntitiesByIds(orderedModuleIds, toEntityMap(modules)).map((module) => {
-            let sections = module.sections ? module.sections : [];
-            let orderedSections: ViewTrainingEntityDescription[] =
-                orderEntitiesByIds(module.orderedSectionIds, toEntityMap(sections))
-                    .map((section) => {
-                        let {...viewSection} = section;
-                        return {...viewSection};
-                    });
-            let {...viewModule} = module;
-            return {
-                ...viewModule, sections: orderedSections,
-            };
-        })
+        modules: processModuleDescriptions(orderedModuleIds, modules)
     };
 };
+
+export const processModuleDescriptions = (orderedModuleIds: string[], modules: ViewModuleDescriptionDbData[]) => {
+    return orderEntitiesByIds(orderedModuleIds, toEntityMap(modules)).map((module) => {
+        let sections = module.sections ? module.sections : [];
+        let orderedSections: ViewTrainingEntityDescription[] =
+            orderEntitiesByIds(module.orderedSectionIds, toEntityMap(sections))
+                .map((section) => {
+                    return section;
+                });
+        return {
+            ...module, sections: orderedSections,
+        };
+    });
+}
 
 export const processContentQuestions = (row: ViewTrainingEntityDbData): (QuillEditorData | QuestionQuillData)[] => {
     let questionsOptionsOrdered: QuestionQuillData[] = row.questions ? row.questions
@@ -83,13 +99,13 @@ export const processContentQuestions = (row: ViewTrainingEntityDbData): (QuillEd
     return orderEntitiesByIds(row.orderedContentQuestionIds, toEntityMap([...content, ...questionsOptionsOrdered]))
 };
 
-const toEntityMap = <T extends { id: string }> (objects: T[]): { [index: string]: T } => {
+export const toEntityMap = <T extends { id: string }> (objects: T[]): { [index: string]: T } => {
     return objects.reduce((acc, el) => {
         acc[el.id] = el;
         return acc;
     }, {});
 };
 
-const orderEntitiesByIds = (orderedIds: string[], objectMap: { [p: string]: { id: string } }): any[] => {
+export const orderEntitiesByIds = (orderedIds: string[], objectMap: { [p: string]: { id: string } }): any[] => {
     return orderedIds.map((id) => objectMap[id]);
 };

@@ -1,7 +1,7 @@
 import {IUserHandler} from "../user/user_handler";
 import {CoursesRepository} from "./courses_repository";
 import {getLogger} from '../log';
-import {CreateModuleEntityPayload, SaveModuleEntityPayload} from "@shared/modules";
+import {CreateModuleEntityPayload, CreateModuleIdMap, SaveModuleEntityPayload} from "@shared/modules";
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload
 } from '@shared/sections';
@@ -76,17 +76,17 @@ export class CoursesHandler {
         await this.coursesRepository.saveCourse(updatedCourse);
     }
 
-    async createModule(createModuleCommand: CreateModuleEntityPayload): Promise<string> {
+    async createModule(createModuleCommand: CreateModuleEntityPayload): Promise<CreateModuleIdMap> {
         const {courseId} = createModuleCommand;
         try {
 
-            let moduleId = await this.moduleHandler.createModule(createModuleCommand);
-            let addCoursesModule = this.coursesRepository.addModule(courseId, moduleId);
+            let placeholderIdMap = await this.moduleHandler.createModule(createModuleCommand);
+            let addCoursesModule = this.coursesRepository.addModule(courseId, placeholderIdMap.moduleId);
             let updateLastActive = this.coursesRepository.updateLastModified(courseId);
             await Promise.all([addCoursesModule, updateLastActive]);
             this.logger.info('Adding module to course finished');
 
-            return moduleId;
+            return placeholderIdMap;
         } catch (e) {
             this.logger.log('error', 'Failed to add module to course %s', courseId);
             throw e;

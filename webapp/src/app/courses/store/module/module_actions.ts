@@ -41,14 +41,13 @@ export const CREATE_ID = 'CREATING';
  */
 export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions = {
     CREATE_MODULE: async ({commit, getters}, createModulePayload: CreateModuleEntityPayload) => {
-        // todo return created module as well
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
-        let {course, moduleId, module} = await createModule(createModulePayload);
+        let {courseModuleDescriptions, moduleId, module} = await createModule(createModulePayload);
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
         commit(MODULE_MUTATIONS.SET_MODULE_ENTITY, module);
         commit(MODULE_MUTATIONS.SET_CURRENT_MODULE, moduleId);
-        // todo return course entity delta to update module descriptions
-        commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, course);
+        let {courseId} = createModulePayload;
+        commit(COURSE_MUTATIONS.SET_COURSE_MODULE_DESCRIPTIONS, {courseId, courseModuleDescriptions});
     },
     async SET_CURRENT_MODULE({state, getters, dispatch, commit}, id) {
         try {
@@ -72,7 +71,7 @@ export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions =
     },
     async LOAD_MODULE_ENTITY({commit, getters}, id: string) {
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id, requesting: true});
-        commit(MODULE_MUTATIONS.SET_MODULE_ENTITY, await loadModule(getters.currentCourseId, id));
+        commit(MODULE_MUTATIONS.SET_MODULE_ENTITY, await loadModule(id));
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id, requesting: false});
     },
     async SAVE_MODULE({commit, dispatch}, saveModuleEntity: SaveModuleEntityPayload){

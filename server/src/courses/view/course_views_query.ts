@@ -1,11 +1,12 @@
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
 import {Datasource} from '../../datasource';
-import {processCourseView} from './course_view_row_processor';
+import {processCourseView, processModuleDescriptions} from './course_view_row_processor';
 import {
     AdminCourseDescription, EnrolledCourseDescription, UserEnrolledCourseData,
     ViewCourseData
 } from '@shared/courses';
+import {ViewModuleDescription} from "@shared/modules";
 
 export class CourseViewQuery {
     logger: LoggerInstance = getLogger('CourseViewQuery', 'info');
@@ -109,6 +110,35 @@ export class CourseViewQuery {
         } catch (e) {
             this.logger.log('error', e);
             this.logger.log('error', e.stack);
+            throw e;
+        }
+    }
+
+    async loadModuleDescriptions (courseId: string): Promise<ViewModuleDescription[]> {
+        let query = {
+            // language=PostgreSQL
+            text: `
+              SELECT c.ordered_module_ids, m.modules FROM tu.course c
+                INNER JOIN LATERAL
+                           (SELECT json_agg(m.*) AS modules
+                            FROM (SELECT m.*, s.sections
+                                  FROM tu.module m
+                                    INNER JOIN LATERAL
+                                               (SELECT json_agg(s.*) AS sections
+                                                FROM tu.section s
+                                                WHERE s.id = ANY (m.ordered_section_ids)) s ON TRUE
+                                  WHERE m.id = ANY (c.ordered_module_ids)) m) m ON TRUE
+            `,
+            values: [courseId]
+        };
+
+        try {
+          let results = (await this.datasource.query(query))[0];
+          return processModuleDescriptions(results.orderedModuleIds, results.modules);
+        } catch (e) {
+            this.logger.log('error', e);
+            this.logger.log('error', e.stack);
+            throw e;
         }
     }
 }

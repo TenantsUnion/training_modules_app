@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import {expect} from 'chai';
-import {coursesHandler, coursesViewHandler} from '../../../../../server/src/config/handler_config';
+import {coursesHandler} from '../../../../../server/src/config/handler_config';
 import {CreateModuleEntityPayload} from '@shared/modules';
 import {clearData} from '../../test_db_util';
 import {createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../test_course_util';
@@ -8,6 +8,7 @@ import {Delta} from '@shared/normalize_imports';
 import {moduleRepository, quillRepository} from '../../../../../server/src/config/repository_config';
 import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 import {createdQuillPlaceholderId} from "@shared/ids";
+import {courseViewQuery} from "../../../../../server/src/config/query_service_config";
 
 describe('Create module', function () {
     let courseId: string;
@@ -39,13 +40,13 @@ describe('Create module', function () {
             contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             active: false
         };
-        let moduleId1 = await coursesHandler.createModule(module1);
-        let {modules: modules1} = await coursesViewHandler.loadAdminCourse(courseId);
+        let {moduleId: moduleId1} = await coursesHandler.createModule(module1);
+        let {modules: modules1} = await courseViewQuery.loadAdminCourse(courseId);
         let moduleIds1 = modules1.map(({id}) => id);
         expect(moduleIds1.length).to.eq(1);
         expect(moduleIds1[0]).to.eq(moduleId1);
-        let moduleId2 = await coursesHandler.createModule(module2);
-        let {modules, modules: modules2} = await coursesViewHandler.loadAdminCourse(courseId);
+        let {moduleId: moduleId2} = await coursesHandler.createModule(module2);
+        let {modules, modules: modules2} = await courseViewQuery.loadAdminCourse(courseId);
         let moduleIds2 = modules2.map(({id}) => id);
         expect(moduleIds2.length).to.eq(2);
         expect(moduleIds2[1]).to.eq(moduleId2);
@@ -102,8 +103,8 @@ describe('Create module', function () {
             active: true
         };
 
-        let moduleId = await coursesHandler.createModule(createModulePayload);
-        let {modules} = await coursesViewHandler.loadAdminCourse(courseId);
+        let {moduleId} = await coursesHandler.createModule(createModulePayload);
+        let {modules} = await courseViewQuery.loadAdminCourse(courseId);
 
         let module = await moduleRepository.loadModuleEntity(moduleId);
         let quillContent = await quillRepository.loadQuillData(module.orderedContentIds[0]);

@@ -2,13 +2,14 @@ import {expect} from 'chai';
 import {
     AdminCourseDescription, CourseEntityCommandMetadata, CreateCourseEntityCommand
 } from '@shared/courses';
-import {coursesHandler, coursesViewHandler} from '../../../../server/src/config/handler_config';
+import {coursesHandler} from '../../../../server/src/config/handler_config';
 import {QuillEditorData} from '@shared/quill_editor';
 import * as Delta from 'quill-delta';
 import {clearData} from '../test_db_util';
 import {IUserInfo} from '@shared/user';
 import {createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from './test_course_util';
 import {getUTCNow} from "../../../../server/src/repository";
+import {courseViewQuery} from "../../../../server/src/config/query_service_config";
 
 describe('Course Handler: Create Course', function () {
     let timestamp = new Date().toUTCString();
@@ -84,7 +85,7 @@ describe('Course Handler: Create Course', function () {
             }
         ];
 
-        let adminCourses: AdminCourseDescription[] = await coursesViewHandler.getUserAdminCourses(userInfo.id);
+        let adminCourses: AdminCourseDescription[] = await courseViewQuery.loadUserAdminCourses(userInfo.id);
         expect(adminCourses.length).to.equal(2);
         expect(adminCourses[0]).to.deep.equal(expectedDescriptions[0]);
         expect(adminCourses[1]).to.deep.equal(expectedDescriptions[1]);

@@ -28,9 +28,9 @@ export class SectionHandler {
     }
 
     async saveSection(data: SaveSectionEntityPayload): Promise<void> {
-        let {id, changes} = data;
+        let {id, changes, contentQuestions} = data;
         let section = await this.sectionRepo.loadSection(id);
-        let contentQuestionOps = await this.trainingEntityHandler.handleContentQuestionDelta(changes);
+        let contentQuestionOps = await this.trainingEntityHandler.handleContentQuestionDelta(contentQuestions);
 
         let updatedSection = applyDeltaDiff(section, {
             ...changes, ...contentQuestionOps

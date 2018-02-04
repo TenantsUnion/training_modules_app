@@ -69,8 +69,9 @@ export const moduleEntity = (module = DEFAULT_MODULE, courseId = latestCourseId)
 };
 let latestModuleId;
 export const addModule = async (module: CreateModuleEntityPayload = moduleEntity()): Promise<string> => {
-    latestModuleId = await coursesHandler.createModule(module);
-    return latestModuleId;
+    let {moduleId} = await coursesHandler.createModule(module);
+    latestModuleId = moduleId
+    return moduleId;
 };
 
 export const DEFAULT_SECTION = {
@@ -97,8 +98,8 @@ export const addSection = async (section: CreateSectionEntityPayload = sectionEn
 export const EMPTY_CHANGES_OBJ = {
     quillChanges: {},
     questionChanges: {},
-    orderedSectionIds: [],
     orderedContentIds: [],
     orderedQuestionIds: [],
     orderedContentQuestionIds: []
 };
+

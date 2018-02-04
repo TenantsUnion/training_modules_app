@@ -2,7 +2,8 @@ import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
 import {ModuleRepository} from './module_repository';
 import {
-    CreateModuleEntityPayload, ModuleEntity, ModuleEntityDiffDelta, SaveModuleEntityPayload, ViewModuleDescription,
+    CreateModuleEntityPayload, CreateModuleIdMap, ModuleEntity, ModuleEntityDiffDelta, SaveModuleEntityPayload,
+    ViewModuleDescription,
 } from '@shared/modules';
 import {applyDeltaDiff} from '@shared/delta/apply_delta';
 import {applyDeltaArrOps, updateArrOpsValues} from '@shared/delta/diff_key_array';
@@ -17,7 +18,7 @@ export class ModuleHandler {
                 private trainingEntityHandler: TrainingEntityHandler) {
     }
 
-    async createModule(createModuleData: CreateModuleEntityPayload): Promise<string> {
+    async createModule(createModuleData: CreateModuleEntityPayload): Promise<CreateModuleIdMap> {
         let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = createModuleData.contentQuestions;
         let placeholderIdMap = await this.trainingEntityHandler.handleContentQuestionDelta(createModuleData.contentQuestions);
         let contentQuestions: ContentQuestionEntity = {
@@ -25,15 +26,19 @@ export class ModuleHandler {
             orderedContentIds: applyDeltaArrOps([], updateArrOpsValues(orderedContentIds, placeholderIdMap)),
             orderedQuestionIds: applyDeltaArrOps([], updateArrOpsValues(orderedQuestionIds, placeholderIdMap)),
         };
-        return await this.moduleRepo.createModule({...createModuleData, ...contentQuestions});
+        let moduleId = await this.moduleRepo.createModule({...createModuleData, ...contentQuestions});
+        return {
+            moduleId,
+            ...placeholderIdMap
+        }
     }
 
     async saveModule(data: SaveModuleEntityPayload): Promise<void> {
-        let {id, changes} = data;
+        let {id, changes, contentQuestions} = data;
         let module = await this.moduleRepo.loadModuleEntity(id);
 
-        let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = changes;
-        let placeholderIdMap = await this.trainingEntityHandler.handleContentQuestionDelta(changes);
+        let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = contentQuestions;
+        let placeholderIdMap = await this.trainingEntityHandler.handleContentQuestionDelta(contentQuestions);
         let updatedModule: ModuleEntity = applyDeltaDiff(module, <ModuleEntityDiffDelta>{
             ...changes,
             // replace placeholder ids with ones return by quill handler
