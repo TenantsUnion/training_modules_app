@@ -23,11 +23,9 @@ export interface SaveSectionEntityPayload extends SaveTrainingEntityPayload<Trai
 }
 
 export interface SaveSectionResponse {
-    courseId: string;
-    moduleId: string;
-    sectionId: string;
-    course: ViewCourseDelta;
-    module: ViewModuleDelta;
+    section: ViewSectionData
+    courseModuleDescriptions: ViewModuleDescription[];
+    moduleSectionDescriptions: ViewTrainingEntityDescription[];
 }
 
 export interface CreateSectionEntityPayload extends CreateTrainingEntityPayload {

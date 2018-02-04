@@ -8,11 +8,10 @@ import {CoursesHandler} from "./courses_handler";
 import {getLogger} from '../log';
 import {
     CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload,
-    SaveModuleResponse, ViewModuleData
-} from "@shared/modules";
+    SaveModuleResponse} from "@shared/modules";
 import {ModuleOperations} from './module/module_routes';
 import {
-    CreateSectionEntityPayload, CreateSectionResponse, SaveSectionEntityPayload,
+    CreateSectionEntityPayload, SaveSectionEntityPayload,
     SaveSectionResponse
 } from '@shared/sections';
 import {coursesHandler} from '../config/handler_config';
@@ -150,12 +149,14 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         let saveSectionData: SaveSectionEntityPayload = request.body.payload;
         try {
             await this.coursesHandler.saveSection(saveSectionData);
+            let {moduleId, courseId, id} = saveSectionData;
+            let {0: courseModuleDescriptions, 1: moduleSectionDescriptions, 2: section} = await Promise.all([
+                this.courseViewQuery.loadModuleDescriptions(courseId),
+                this.moduleViewQuery.loadSectionDescriptions(moduleId),
+                this.sectionViewQuery.loadSection(id)
+            ]);
             let result: SaveSectionResponse = {
-                courseId: saveSectionData.courseId,
-                sectionId: saveSectionData.id,
-                moduleId: saveSectionData.moduleId,
-                course: null,// todo course delta,
-                module: null // todo module delta
+                courseModuleDescriptions, moduleSectionDescriptions, section
             };
             response.status(200).send(result);
         } catch (e) {

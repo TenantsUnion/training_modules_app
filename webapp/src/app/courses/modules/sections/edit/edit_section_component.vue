@@ -3,10 +3,10 @@
         <div class="row">
             <div class="columns small-12 large-10">
                 <h1>Edit Section</h1>
-                <loading v-if="loading || saving"></loading>
+                <loading v-if="loading || saving"/>
             </div>
         </div>
-        <template v-if="currentSection && section">
+        <template v-if="section">
             <vue-form :state="formstate" @submit.prevent="saveSection">
                 <validate>
                     <small class="error" v-if="errorMessages">
@@ -53,12 +53,7 @@
                 </validate>
                 <div class="row">
                     <div class="small-12 large-10 columns">
-                        <training-segments :stored-segments="quillContent" ref="trainingSegment"></training-segments>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="columns small-12 large-10">
-                        <add-content-component :callback="addContentCallback"></add-content-component>
+                        <edit-training-segments :content-questions="section.contentQuestions" ref="trainingSegment"/>
                     </div>
                 </div>
                 <div class="row">

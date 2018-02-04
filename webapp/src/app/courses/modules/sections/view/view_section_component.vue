@@ -9,16 +9,13 @@
             <div class="row">
                 <div class="columns small-12 large-10">
                     <h2>{{section.title}}</h2>
-                    <time-estimate :time-estimate="section.timeEstimate"></time-estimate>
+                    <time-estimate :time-estimate="section.timeEstimate"/>
                 </div>
             </div>
             <div class="row">
                 <div class="columns small-12 large-10">
                     <div class="small-12 columns">
-                        <div v-for="content in section.content">
-                            <quill-editor :read-only="true" :editor-id="content.id"
-                                          :editor-json="content.editorJson"></quill-editor>
-                        </div>
+                        <view-training-segments :content-questions="section.contentQuestions"/>
                     </div>
                 </div>
             </div>

@@ -101,7 +101,7 @@ export class CoursesHandler {
     async saveSection(sectionData: SaveSectionEntityPayload): Promise<void> {
         try {
             await this.coursesRepository.updateLastModified(sectionData.courseId);
-            await this.moduleHandler.saveModule(sectionData);
+            await this.moduleHandler.saveSection(sectionData);
             await this.sectionHandler.saveSection(sectionData);
         } catch (e) {
             this.logger.error(e);

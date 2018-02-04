@@ -14,6 +14,7 @@ import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {TrainingEntityDiffDelta} from '@shared/training_entity';
 import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
+import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
 
 @Component({
     data: () => {
@@ -25,7 +26,10 @@ import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
         };
     },
     computed: {
-        ...mapGetters(['currentSection', 'getSectionSlugFromId']),
+        ...mapGetters({
+            storedSection: 'currentSection',
+            getSectionSlugFromId: 'getSectionSlugFromId'
+        }),
         ...mapState({
             loading: (state: RootState, getters: RootGetters) => {
                 return !getters.currentSection || getters.currentSectionLoading
@@ -42,28 +46,19 @@ import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
 export default class EditSectionComponent extends Vue {
     saving: boolean;
     errorMessages: {};
-    quillContent: Segment[] = [];
     formstate: VueForm.FormState;
     section: ViewSectionData;
-    currentSection: ViewSectionData;
+    storedSection: ViewSectionData;
     currentCourseId: string;
     currentModuleId: string;
     getSectionSlugFromId: getSectionSlugFromIdFn;
 
-    @Watch('currentSection', {immediate: true})
-    updateSection (currentSection: ViewSectionData, oldCurrentSection) {
-        let section = currentSection ? _.extend({}, currentSection) : this.section;
-        let quillContent = currentSection ? _.map(currentSection.contentQuestions, (content) => {
-            return _.extend({}, content, {
-                // add callback that removes content element from component array before passing to segment viewer
-                removeCallback: () => {
-                    let rmIndex = this.quillContent.findIndex((el) => el.id === content.id);
-                    this.quillContent.splice(rmIndex, 1);
-                }
-            });
-        }) : [];
-        Vue.set(this, 'section', section);
-        Vue.set(this, 'quillContent', quillContent);
+    @Watch('storedSection', {immediate: true})
+    updateSection (storedSection: ViewSectionData, oldCurrentSection) {
+        if (storedSection) {
+            let section = {...storedSection};
+            Vue.set(this, 'section', section);
+        }
     }
 
     async saveSection () {
@@ -73,34 +68,14 @@ export default class EditSectionComponent extends Vue {
         }
 
         this.errorMessages = null;
-
-        // primitive keys diff
-        let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.currentSection, this.section);
-
-        // quill content diff
-        // todo use entire contentquestion changes
-        // changes.quillChanges = (<TrainingSegmentComponent> this.$refs.trainingSegment).getQuillDiff();
-
-        // ordered content ids diff
-        let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);
-        // todo content question diff for saving section
-        // let {contentQuestions} = this.currentSection;
-        // changes.orderedContentIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
-        // // todo question handling
-        // changes.orderedContentQuestionIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
+        let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.storedSection, this.section);
+        let contentQuestions = (<EditTrainingSegmentsComponent> this.$refs.trainingSegment).getContentQuestionsDelta();
 
         let saveSectionPayload: SaveSectionEntityPayload = {
             id: this.section.id,
             courseId: this.currentCourseId,
             moduleId: this.currentModuleId,
-            changes,
-            contentQuestions: {
-                quillChanges: null, // todo fill in
-                questionChanges: null, //todo fill in
-                orderedContentQuestionIds: null,
-                orderedQuestionIds: null,
-                orderedContentIds: null
-            }
+            changes, contentQuestions
         };
 
         try {
@@ -110,7 +85,7 @@ export default class EditSectionComponent extends Vue {
                 name: COURSES_ROUTE_NAMES.viewSection,
                 params: {
                     sectionSlug: this.getSectionSlugFromId({
-                        sectionId: this.currentSection.id,
+                        sectionId: this.section.id,
                         moduleId: this.currentModuleId
                     })
                 }
@@ -125,12 +100,5 @@ export default class EditSectionComponent extends Vue {
 
     timeEstimateUpdated (time) {
         this.section.timeEstimate = time;
-    }
-
-    addContentCallback (addContentId: string) {
-        this.quillContent.push({
-            id: addContentId,
-            type: 'CONTENT',
-        });
     }
 }

@@ -49,8 +49,10 @@ export class EditCourseComponent extends Vue {
 
     @Watch('storedCourse', {immediate: true})
     updateCourse (storedCourse: ViewCourseData) {
-        let course = {...storedCourse};
-        Vue.set(this, 'course', course);
+        if (storedCourse) {
+            let course = {...storedCourse};
+            Vue.set(this, 'course', course);
+        }
     }
 
     async save () {
@@ -62,7 +64,7 @@ export class EditCourseComponent extends Vue {
         this.errorMessages = null;
 
         let changes = diffBasicPropsCourseProps(this.storedCourse, this.course);
-        let contentQuestions =  (<EditTrainingSegmentsComponent> this.$refs.trainingSegment).getContentQuestionsDelta();
+        let contentQuestions = (<EditTrainingSegmentsComponent> this.$refs.trainingSegment).getContentQuestionsDelta();
 
         let saveCoursePayload: SaveCourseEntityPayload = {
             id: this.storedCourse.id, changes, contentQuestions
