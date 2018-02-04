@@ -53,12 +53,9 @@
                         </div>
                         <div class="row">
                             <div class="columns small-12 large-10">
-                                <edit-training-segments :content-questions="contentQuestions" ref="trainingSegment"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="columns small-12 large-10">
+                                <button @click="createCourseEdit" type="button" class="button">Create and Edit</button>
                                 <button @click="createCourse" type="button" class="button">Create</button>
+                                <button @click="cancel" type="button" class="button">Cancel</button>
                             </div>
                         </div>
                     </validate>
@@ -69,75 +66,115 @@
 </template>
 
 <script lang="ts">
-    import Vue from "vue";
-    import Component from "vue-class-component";
-    import {CreateCourseEntityPayload} from '@shared/courses';
-    import {FormState} from '../../vue-form';
-    import {Segment} from '@shared/segment';
-    import {COURSE_ACTIONS} from '../store/course/course_actions';
-    import {appRouter} from '../../router';
-    import {COURSES_ROUTE_NAMES} from '../courses_routes';
-    import TrainingSegmentComponent from '../../global/edit_training_segments/edit_training_segments_component';
+import Vue from "vue";
+import Component from "vue-class-component";
+import {CreateCourseEntityPayload} from '@shared/courses';
+import {FormState} from '../../vue-form';
+import {Segment} from '@shared/segment';
+import {COURSE_ACTIONS} from '../store/course/course_actions';
+import {appRouter} from '../../router';
+import {COURSES_ROUTE_NAMES} from '../courses_routes';
+import {RawLocation} from "vue-router";
 
-    @Component({
-        data: () => {
-            return {
-                loading: false,
-                errorMessages: null,
-                course: {
-                    active: true,
-                    openEnrollment: true,
-                    title: '',
-                    description: '',
-                    timeEstimate: undefined,
-                    createdBy: '',
-                },
-                formstate: {},
-                contentQuestions: []
-            };
-        },
-    })
-    export default class CreateCourseComponent extends Vue {
-        errorMessages: {};
-        loading: boolean;
-        course: CreateCourseEntityPayload;
-        contentQuestions: Segment[] = [];
-        formstate: FormState;
+@Component({
+    data: () => {
+        return {
+            loading: false,
+            errorMessages: null,
+            course: {
+                active: true,
+                openEnrollment: true,
+                title: '',
+                description: '',
+                timeEstimate: undefined,
+                createdBy: '',
+            },
+            formstate: {},
+            contentQuestions: []
+        };
+    },
+})
+export default class CreateCourseComponent extends Vue {
+    errorMessages: {};
+    loading: boolean;
+    course: CreateCourseEntityPayload;
+    contentQuestions: Segment[] = [];
+    formstate: FormState;
 
-        async createCourse () {
-            this.formstate._submit();
-            if (this.formstate.$invalid) {
-                return;
-            }
-            this.loading = true;
-            this.errorMessages = null;
-            let createCoursePayload: CreateCourseEntityPayload = {
-                title: this.course.title,
-                timeEstimate: this.course.timeEstimate,
-                answerImmediately: true,
-                active: this.course.active,
-                openEnrollment: this.course.openEnrollment,
-                contentQuestions: (<TrainingSegmentComponent> this.$refs.trainingSegment).getContentQuestionsDelta(),
-                description: this.course.description
-            };
-            try {
-                await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
-                appRouter.push({
-                    name: COURSES_ROUTE_NAMES.adminCourseDetails,
-                    params: {
-                        courseSlug: this.$store.getters.getSlugFromCourseId(this.$store.state.course.currentCourseId)
-                    }
-                });
-            } catch (msg) {
-                this.errorMessages = msg;
-            } finally {
-                this.loading = false
-            }
+
+    async createCourse() {
+        this.formstate._submit();
+        if (this.formstate.$invalid) {
+            return;
         }
-
-        timeUpdated (time: number) {
-            this.course.timeEstimate = time;
+        this.loading = true;
+        this.errorMessages = null;
+        let createCoursePayload = this.getCoursePayload();
+        try {
+            await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
+            await this.$store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: null, isAdmin: false});
+            appRouter.push(<RawLocation>{
+                name: COURSES_ROUTE_NAMES.adminCourses
+            });
+        } catch (msg) {
+            this.errorMessages = msg;
+        } finally {
+            this.loading = false
         }
-
     }
+
+
+    async createCourseEdit () {
+        this.formstate._submit();
+        if (this.formstate.$invalid) {
+            return;
+        }
+        this.loading = true;
+        this.errorMessages = null;
+        let createCoursePayload = this.getCoursePayload();
+        try {
+            await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
+            appRouter.push({
+                name: COURSES_ROUTE_NAMES.adminCourseDetails,
+                params: {
+                    courseSlug: this.$store.getters.getSlugFromCourseId(this.$store.state.course.currentCourseId)
+                }
+            });
+        } catch (msg) {
+            this.errorMessages = msg;
+        } finally {
+            this.loading = false
+        }
+    }
+
+    private getCoursePayload () {
+        let createCoursePayload: CreateCourseEntityPayload = {
+            title: this.course.title,
+            timeEstimate: this.course.timeEstimate,
+            answerImmediately: true,
+            active: this.course.active,
+            openEnrollment: this.course.openEnrollment,
+            contentQuestions: {
+                quillChanges: {},
+                questionChanges: {},
+                orderedContentQuestionIds: [],
+                orderedContentIds: [],
+                orderedQuestionIds: []
+            },
+            description: this.course.description
+        };
+        return createCoursePayload;
+    }
+
+    timeUpdated (time: number) {
+        this.course.timeEstimate = time;
+    }
+
+    cancel() {
+        appRouter.push(<RawLocation>{
+            name: COURSES_ROUTE_NAMES.adminCourses
+        });
+    }
+
+}
 </script>
