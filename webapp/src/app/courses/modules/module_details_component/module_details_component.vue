@@ -20,16 +20,15 @@
                         <h3>{{section.title}}</h3>
                         <p>{{section.description}}</p>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="small-12 columns">
-                    <div v-for="content in module.content">
-                        <quill-editor :read-only="true" :editor-id="content.id"
-                                      :editor-json="content.editorJson"/>
+                    <div class="row">
+                        <div class="columns small-12 large-10">
+                            <view-training-segments :content-questions="module.contentQuestions"
+                                                    ref="trainingSegment"/>
+                        </div>
                     </div>
                 </div>
             </div>
+
         </template>
     </div>
 </template>
