@@ -3,7 +3,7 @@
         <div v-for="(segment, index) in currentSegments" :key="segment.id">
             <quill-editor v-if="isContent(segment)" ref="segment"
                           :read-only="viewOnly"
-                          :editor-json="segment.editorJson"
+                          :editor-json="segment.content.editorJson"
                           :editor-id="segment.id"
                           :on-remove="segment.removeCallback"/>
             <question v-if="isQuestion(segment)"
