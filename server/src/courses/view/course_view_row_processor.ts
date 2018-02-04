@@ -69,7 +69,8 @@ export const processContentQuestions = (row: ViewTrainingEntityDbData): (QuillEd
     let questionsOptionsOrdered: QuestionQuillData[] = row.questions ? row.questions
         .map((q) => {
             let {optionIds, questionQuillId, ...rest} = q;
-            let withoutQuillIds = orderEntitiesByIds(q.optionIds, toEntityMap(q.options)).map((option: QuestionOptionDbData) => {
+            let options = q.options ? q.options : [];
+            let withoutQuillIds = orderEntitiesByIds(q.optionIds, toEntityMap(options)).map((option: QuestionOptionDbData) => {
                 let {explanationQuillId, optionQuillId, ...rest} = option;
                 return rest;
             });

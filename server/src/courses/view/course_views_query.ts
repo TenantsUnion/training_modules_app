@@ -8,7 +8,7 @@ import {
 } from '@shared/courses';
 
 export class CourseViewQuery {
-    logger: LoggerInstance = getLogger('CourseRepository', 'info');
+    logger: LoggerInstance = getLogger('CourseViewQuery', 'info');
 
     constructor (private datasource: Datasource) {
     }

@@ -14,7 +14,7 @@ import {isQuillEditorData, QuillEditorData} from "@shared/quill_editor";
 import {deltaMapArrayDiff} from "@shared/delta/diff_key_array";
 import {Watch} from "vue-property-decorator";
 import QuestionComponent from '../question/question_component';
-import {createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
+import {createdQuestionPlaceholderId, createdQuillPlaceholderId, isCreatedQuestionPlaceholderId} from "@shared/ids";
 
 
 const Delta = Quill.import('delta');
@@ -109,9 +109,10 @@ export default class EditTrainingSegmentsComponent extends Vue {
             .reduce((acc, question) => ({...acc, ...question.quillChanges()}), {});
 
         let questionChanges = this.questionRefs.reduce((acc, question) => {
+            let {question: {id}} = question;
             let questionChanges = question.diffQuestion();
-            if (!isEmptyQuestionChanges(questionChanges)) {
-                acc[question.question.id] = questionChanges;
+            if (!isEmptyQuestionChanges(questionChanges) || isCreatedQuestionPlaceholderId(id)) {
+                acc[id] = questionChanges;
             }
             return acc;
         }, {});

@@ -91,11 +91,23 @@ describe('Course View Row Processor', function () {
         );
     });
 
-    it('should process an empty training entity to an empty content question array', function(){
+    it('should process an empty training entity to an empty content question array', function () {
         let trainingEntity: ViewTrainingEntityDbData = {
             ...trainingEntityDbData('T1'),
             content: [], questions: [], orderedContentQuestionIds: []
         };
+
+        expect(processContentQuestions(trainingEntity)).to.deep.eq([]);
+    });
+
+    it('should process a question with no options', function () {
+        let questionId = 'QU1';
+        let trainingEntity: ViewTrainingEntityDbData = {
+            ...trainingEntityDbData('T1'),
+            content: [], questions: [questionDbData(questionId)], orderedContentQuestionIds: [questionId]
+        };
+
+        expect(processContentQuestions(trainingEntity)).to.deep.eq([questionQuillData(questionId)]);
     });
 
     /**
@@ -120,9 +132,11 @@ describe('Course View Row Processor', function () {
         };
     };
 
+    // optionIds defaults [] when there are no question options,
+    // options defaults to null when there are no question options
     const questionDbData = (id: string,
-                          optionIds: string[] = [],
-                          options: QuestionOptionDbData[] = []): QuestionViewDbData => {
+                            optionIds: string[] = [],
+                            options: QuestionOptionDbData[] = null): QuestionViewDbData => {
         return {
             id, optionIds, options,
             version: 0,
