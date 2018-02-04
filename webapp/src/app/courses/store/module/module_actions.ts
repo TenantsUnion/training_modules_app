@@ -8,7 +8,7 @@ import {RootGetters, RootState} from '../../../state_store';
 import {Constant} from '@shared/typings/util_typings';
 import {coursesService} from '../../courses_service';
 import {COURSE_MUTATIONS} from '../course/course_mutations';
-import {loadModule, createModule} from '../../modules/modules_requests';
+import {loadModule, createModule, saveModule} from '../../modules/modules_requests';
 
 export type ModuleAction<P> = Action<ModuleState, RootState>;
 
@@ -76,12 +76,12 @@ export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions =
     },
     async SAVE_MODULE({commit, dispatch}, saveModuleEntity: SaveModuleEntityPayload){
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: saveModuleEntity.id, requesting: true});
-        let response: SaveModuleResponse = await coursesService.saveModule(saveModuleEntity);
+        let {courseModuleDescriptions, module} = await saveModule(saveModuleEntity);
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: saveModuleEntity.id, requesting: false});
 
-        // todo return course entity to update modules property
-        commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
-        await dispatch(MODULE_ACTIONS.LOAD_MODULE_ENTITY, response.moduleId);
+        let {courseId, id} = saveModuleEntity;
+        commit(COURSE_MUTATIONS.SET_COURSE_MODULE_DESCRIPTIONS, {courseId, courseModuleDescriptions});
+        commit(MODULE_MUTATIONS.SET_MODULE_ENTITY, module);
 
     }
 };

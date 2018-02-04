@@ -112,11 +112,12 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         let saveModuleData: SaveModuleEntityPayload = request.body.payload;
         try {
             await this.coursesHandler.saveModule(saveModuleData);
-            let result: SaveModuleResponse = {
-                moduleId: saveModuleData.id,
-                courseId: saveModuleData.courseId,
-                course: null, // todo course delta
-            };
+            let {courseId, id: moduleId} = saveModuleData;
+            let {0: courseModuleDescriptions, 1: module} = await Promise.all([
+                this.courseViewQuery.loadModuleDescriptions(courseId),
+                this.moduleViewQuery.loadModule(moduleId)
+            ]);
+            let result: SaveModuleResponse = {courseModuleDescriptions, module};
             response.status(200).send(result);
         } catch (e) {
             this.handleServerErr(e, request, response);
@@ -182,7 +183,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         }
     }
 
-    async loadSection(request: Request, response: Response) {
+    async loadSection (request: Request, response: Response) {
         let {sectionId} = request.params;
         try {
             let section = await this.sectionViewQuery.loadSection(sectionId);

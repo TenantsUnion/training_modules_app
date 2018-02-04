@@ -31,6 +31,11 @@ export interface CreateModuleResponse {
     courseModuleDescriptions: ViewModuleDescription[];
 }
 
+export interface SaveModuleResponse {
+    module: ViewModuleData;
+    courseModuleDescriptions: ViewModuleDescription[];
+}
+
 export type CreateModuleEntityCommand = CreateTrainingEntityCommand<ModuleEntityType, CreateModuleEntityPayload>;
 
 export interface SaveModuleEntityPayload extends SaveTrainingEntityPayload<ModuleEntityDiffDelta> {
@@ -43,11 +48,6 @@ export interface ModuleDetails {
     description?: string;
 }
 
-export interface SaveModuleResponse {
-    courseId: string;
-    moduleId: string;
-    course: ViewCourseDelta;
-}
 
 export interface ViewModuleDelta extends TrainingEntityDiffDelta {
     // replace, add, update, remove changes that happen to sections in the module

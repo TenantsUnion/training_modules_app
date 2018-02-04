@@ -1,4 +1,3 @@
-import * as _ from 'underscore';
 import Vue from 'vue';
 import draggable from 'vuedraggable';
 import Component from 'vue-class-component';
@@ -8,7 +7,6 @@ import {CourseRefreshComponent} from '@global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '../../../state_store';
 import {currentModuleRouteGuard} from '../module_details_component/module_details_component';
-import {Segment} from '@shared/segment';
 import {TrainingEntityDiffDelta, ViewTrainingEntityDescription} from '@shared/training_entity';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
@@ -16,6 +14,7 @@ import {MODULE_ACTIONS} from '../../store/module/module_actions';
 import {COURSES_ROUTE_NAMES} from '../../courses_routes';
 import {getModuleSlugFromIdFn} from '../../store/module/module_state';
 import {Watch} from 'vue-property-decorator';
+import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
 
 @Component({
     data: () => {
@@ -29,7 +28,10 @@ import {Watch} from 'vue-property-decorator';
         };
     },
     computed: {
-        ...mapGetters(['currentModule', 'getModuleSlugFromId']),
+        ...mapGetters({
+            storedModule: 'currentModule',
+            getModuleSlugFromId: 'getModuleSlugFromId'
+        }),
         ...mapState({
             loading: (state: RootState, getters: RootGetters) => {
                 return !getters.currentModule || getters.currentModuleLoading
@@ -49,32 +51,22 @@ import {Watch} from 'vue-property-decorator';
 export class EditModuleComponent extends Vue {
     saving: boolean;
     errorMessages: {};
-    quillContent: Segment[] = [];
     formstate: VueForm.FormState;
+    storedModule: ViewModuleData;
     module: ViewModuleData;
-    currentModule: ViewModuleData;
-    moduleSections: ViewTrainingEntityDescription[] = [];
+    sections: ViewTrainingEntityDescription[] = [];
     currentCourseId: string;
     currentModuleId: string;
     removeSections: { [index: string]: boolean };
     getModuleSlugFromId: getModuleSlugFromIdFn;
 
-    @Watch('currentModule', {immediate: true})
+    @Watch('storedModule', {immediate: true})
     updateModule (currentModule: ViewModuleData, oldCurrentModule) {
-        let module = currentModule ? _.extend({}, currentModule) : this.module;
-        let quillContent = currentModule ? _.map(currentModule.contentQuestions, (content) => {
-            return _.extend({}, content, {
-                // add callback that removes content element from component array before passing to segment viewer
-                removeCallback: () => {
-                    let rmIndex = this.quillContent.findIndex((el) => el.id === content.id);
-                    this.quillContent.splice(rmIndex, 1);
-                }
-            });
-        }) : [];
-        let moduleSections = currentModule ? _.extend([], currentModule.sections) : [];
-        Vue.set(this, 'quillContent', quillContent);
-        Vue.set(this, 'moduleSections', moduleSections);
-        Vue.set(this, 'module', module);
+        if (currentModule) {
+            let module = {...currentModule};
+            Vue.set(this, 'sections', [...module.sections]);
+            Vue.set(this, 'module', module);
+        }
     }
 
     removeSection (section) {
@@ -91,27 +83,16 @@ export class EditModuleComponent extends Vue {
             return;
         }
 
-
         // primitive keys diff
-        let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.currentModule, this.module);
+        let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.storedModule, this.module);
 
-        // quill content diff
-        // todo use entire question content changes
-        // changes.quillChanges = (<TrainingSegmentComponent> this.$refs.trainingSegment).getQuillDiff();
+        let contentQuestions = (<EditTrainingSegmentsComponent> this.$refs.trainingSegment).getContentQuestionsDelta();
 
-        // ordered content ids diff
-        let userChangedOrderedContentIds = this.quillContent.map(({id}) => id);
-        // // let {orderedContentIds} = this.currentModule;
-        // // changes.orderedContentIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
-        // // todo question handling
-        // changes.orderedContentQuestionIds = deltaArrayDiff(orderedContentIds, userChangedOrderedContentIds);
-
-        // todo calculate section id change operations
-        let orderedSectionIds = this.moduleSections
+        let orderedSectionIds = this.sections
             .map(({id}) => id)
             .filter((id) => !this.removeSections[id]);
 
-        let orderedSectionIdsDiff = deltaArrayDiff(this.$store.getters.currentModule.orderedSectionIds, orderedSectionIds);
+        let orderedSectionIdsDiff = deltaArrayDiff(this.storedModule.sections.map(({id}) => id), orderedSectionIds);
 
         let moduleEntityPayload: SaveModuleEntityPayload = {
             id: this.module.id,
@@ -120,13 +101,7 @@ export class EditModuleComponent extends Vue {
                 ...changes,
                 orderedSectionIds: orderedSectionIdsDiff,
             },
-            contentQuestions: {
-                quillChanges: null, // todo fill in
-                questionChanges: null, //todo fill in
-                orderedContentQuestionIds: null,
-                orderedQuestionIds: null,
-                orderedContentIds: null
-            }
+            contentQuestions
         };
 
         try {
@@ -150,16 +125,9 @@ export class EditModuleComponent extends Vue {
         this.module.timeEstimate = time;
     }
 
-    addContentCallback (addContentId: string) {
-        this.quillContent.push({
-            id: addContentId,
-            type: 'CONTENT',
-        });
-    }
-
     sectionTitleStyles (section: ViewTrainingEntityDescription) {
         return {
-            "text-decoration": this.removeSections[module.id] ? "line-through" : "none"
+            "text-decoration": this.removeSections[section.id] ? "line-through" : "none"
         };
     }
 }

@@ -4,10 +4,10 @@
         <div class="row">
             <div class="columns small-12 large-10">
                 <h1>Edit Module</h1>
-                <loading v-if="loading || saving"></loading>
+                <loading v-if="loading || saving"/>
             </div>
         </div>
-        <template v-if="currentModule && module">
+        <template v-if="module">
             <vue-form :state="formstate" @submit.prevent="saveModule">
                 <validate>
                     <small class="error" v-if="errorMessages">
@@ -58,8 +58,8 @@
                     <div class="columns small-12 large-10">
                         <h3>Sections</h3>
                     </div>
-                    <draggable v-model="moduleSections" element="div" class="columns small-12 large-10">
-                        <div v-for="section in moduleSections">
+                    <draggable v-model="sections" element="div" class="columns small-12 large-10">
+                        <div v-for="section in sections">
                             <h4 v-bind:style="sectionTitleStyles(section)">
                                 {{section.title}}
                                 <button v-if="!removeSections[section.id]"
@@ -82,12 +82,7 @@
                 </div>
                 <div class="row">
                     <div class="columns small-12 large-10">
-                        <training-segments :stored-segments="quillContent" ref="trainingSegment"></training-segments>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="columns small-12 large-10">
-                        <add-content-component :callback="addContentCallback"></add-content-component>
+                        <edit-training-segments :content-questions="module.contentQuestions" ref="trainingSegment"/>
                     </div>
                 </div>
                 <div class="row">
