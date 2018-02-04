@@ -1,6 +1,6 @@
 import {NavigationGuard, RouteConfig} from "vue-router";
 import {CreateContentComponent} from "./content/create_content/create_content_component";
-import {AppHeader} from "./header/user_header_component";
+import AppHeader from "./header/user_header_component.vue";
 import {ContentDescriptionListComponent} from "./content/content_description_list/content_description_list_component";
 import {EditUserContentComponent} from "./content/edit/edit_user_content_component";
 import {coursesRoutes} from "../courses/courses_routes";

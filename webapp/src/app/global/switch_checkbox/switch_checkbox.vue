@@ -1,6 +1,6 @@
 <template>
-    <div class="grid-x grid-padding-x">
-        <div class="cell small-3 switch success tiny">
+    <div class="grid-x">
+        <div class="cell small-2 switch success tiny">
             <input class="switch-input" :id="id" type="checkbox" name="checkboxSwitch" ref="checkbox"
                    v-model="vmChecked"/>
             <label class="switch-paddle" :for="id">

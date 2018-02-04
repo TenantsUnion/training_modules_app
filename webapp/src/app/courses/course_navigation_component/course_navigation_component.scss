@@ -1,4 +1,4 @@
-@import '../variables';
+@import '../../scss/variables';
 /* Sidebar Navigation Styles */
 
 .sidebar-nav {
@@ -10,7 +10,6 @@
   color: #999999;
   position: relative;
   bottom: 0;
-  background-color: #3e3e3e;
 
   .menu-header {
     justify-content: space-between;

@@ -1,9 +1,12 @@
 <template>
-    <div class="grid-x callout">
-        <div class="cell callout small-6 large-9">
+    <div class="grid-x callout small-12 large-11">
+        <div class="cell small-11">
             <div class="grid-x">
                 <div class="cell small-12">
                     <h6 class="subheader">Option</h6>
+                    <div v-if="!viewOnly" class="cell small-4 large-3">
+                        <switch-checkbox ref="correctSwitch" switch-text="Correct" :checked="isAnswer"/>
+                    </div>
                     <quill-editor ref="optionQuill"
                                   :read-only="viewOnly"
                                   :editor-id="option.option.id"
@@ -24,6 +27,8 @@
                             <i class="fa fa-chevron-up fa-fw" aria-hidden="true"></i>
                         </button>
                     </h6>
+                </div>
+                <div class="cell small-12">
                     <div class="explanation-container" v-show="showExplanationField">
                         <quill-editor ref="explanationQuill"
                                       :read-only="viewOnly"
@@ -33,9 +38,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div v-if="!viewOnly" class="cell small-4 large-3">
-            <switch-checkbox ref="correctSwitch" switch-text="Correct" :checked="isAnswer"/>
         </div>
         <button v-if="!viewOnly" type="button" class="close-button" title="Remove Option"
                 v-on:click="option.removeCallback" aria-label="Remove Option">

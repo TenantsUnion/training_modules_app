@@ -62,4 +62,6 @@
         </div>
     </nav>
 </template>
+<style lang="scss" src="./course_navigation_component.scss"></style>
+
 <script src="./course_navigation_component.ts" lang="ts"></script>

@@ -10,7 +10,7 @@ import EditTrainingSegmentsComponent from './global/edit_training_segments/edit_
 import ViewTrainingSegmentsComponent from './global/view_training_segments/view_training_segments_component.vue';
 import QuestionComponent from "./global/question/question_component.vue";
 import SwitchCheckBoxComponent from './global/switch_checkbox/switch_checkbox.vue';
-import {AppHeader} from './user/header/user_header_component';
+import AppHeader from './user/header/user_header_component.vue';
 import VueRouter from 'vue-router';
 import VueForm from 'vue-form';
 

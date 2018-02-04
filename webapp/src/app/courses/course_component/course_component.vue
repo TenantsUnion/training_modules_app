@@ -15,6 +15,9 @@
         </div>
     </div>
 </template>
+
+<style lang="scss" src="./course_component.scss"></style>
+
 <script lang="ts">
     import Vue from "vue";
     import Component from "vue-class-component";
