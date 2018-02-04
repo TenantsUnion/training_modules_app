@@ -6,6 +6,7 @@ export interface ModuleOperations {
     createModule: RequestHandler;
     saveModule: RequestHandler;
     createSection: RequestHandler;
+    loadModule: RequestHandler;
 }
 
 export const ModuleRoutes = (moduleCtrl: ModuleOperations) => {
@@ -19,6 +20,14 @@ export const ModuleRoutes = (moduleCtrl: ModuleOperations) => {
 
     router.post('/course/:courseId/module/:moduleId/section/create', (request, response, next) => {
         moduleCtrl.createSection(request, response, next);
+    });
+
+    // router.get('/view/course/admin/:courseId', (request, response) => {
+    //     coursesController.loadUserAdminCourseWebView(request, response);
+    // });
+
+    router.get('/view/module/admin/:moduleId', (request, response, next) => {
+        moduleCtrl.loadModule(request, response, next);
     });
 
     return router

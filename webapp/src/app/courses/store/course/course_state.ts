@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import {CourseEntity} from '@shared/courses';
+import {CourseEntity, ViewCourseData} from '@shared/courses';
 import {AppGetter, RootGetters} from '../../../state_store';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
 import {ViewModuleDescription} from '@shared/modules';
@@ -19,12 +19,12 @@ export interface CourseState {
     courseRequests: { [id: string]: boolean }
     currentCourseTitle: string;
     currentCourseId: string;
-    courses: { [id: string]: CourseEntity };
+    courses: { [id: string]: ViewCourseData };
     isAdmin: boolean;
 }
 
 export interface CourseGetters {
-    currentCourse: CourseEntity,
+    currentCourse: ViewCourseData,
     currentCourseLoaded: boolean,
     currentCourseLoading: boolean,
     courseNavigationDescription: CourseNavigationDescription,

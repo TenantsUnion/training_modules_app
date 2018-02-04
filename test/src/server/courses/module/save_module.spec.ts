@@ -59,8 +59,8 @@ describe('Save module', function () {
                 id: moduleId,
                 changes: {
                     ...propChange,
-                    ...EMPTY_CHANGES_OBJ
-                }
+                },
+                contentQuestions: EMPTY_CHANGES_OBJ
             };
 
         };
@@ -117,9 +117,9 @@ describe('Save module', function () {
                 id: moduleId,
                 courseId: courseId,
                 changes: {
-                    ...EMPTY_CHANGES_OBJ,
                     orderedSectionIds: swapOrder
-                }
+                },
+                contentQuestions: EMPTY_CHANGES_OBJ
             });
 
             let updatedModule = await moduleRepository.loadModuleEntity(moduleId);
@@ -139,9 +139,9 @@ describe('Save module', function () {
                 id: moduleId,
                 courseId: courseId,
                 changes: {
-                    ...EMPTY_CHANGES_OBJ,
                     orderedSectionIds: updateOps
-                }
+                },
+                contentQuestions: EMPTY_CHANGES_OBJ,
             });
 
             let updatedModule = await moduleRepository.loadModuleEntity(moduleId);
@@ -164,9 +164,9 @@ describe('Save module', function () {
                 id: moduleId,
                 courseId: courseId,
                 changes: {
-                    ...EMPTY_CHANGES_OBJ,
                     orderedSectionIds: updateOps
-                }
+                },
+                contentQuestions: EMPTY_CHANGES_OBJ,
             });
 
             let updatedModule = await moduleRepository.loadModuleEntity(moduleId);
@@ -201,7 +201,8 @@ describe('Save module', function () {
             let saveModulePayload: SaveModuleEntityPayload = {
                 courseId,
                 id: moduleId,
-                changes: {
+                changes: {},
+                contentQuestions: {
                     ...EMPTY_CHANGES_OBJ,
                     quillChanges: {
                         [placeholderId1]: content1,
@@ -209,7 +210,7 @@ describe('Save module', function () {
                     },
                     orderedContentIds: orderedContentIds,
                     orderedContentQuestionIds: orderedContentIds
-                }
+                },
             };
 
 
@@ -256,7 +257,8 @@ describe('Save module', function () {
             ];
             let saveAddedContentPayload: SaveModuleEntityPayload = {
                 courseId, id: moduleId,
-                changes: {
+                changes: {},
+                contentQuestions: {
                     ...EMPTY_CHANGES_OBJ,
                     quillChanges: {
                         [contentPlaceholderId]: initialContent
@@ -274,10 +276,12 @@ describe('Save module', function () {
 
             let saveUpdateContent: SaveModuleEntityPayload = {
                 courseId, id: moduleId,
-                changes: {
+                changes: {},
+                contentQuestions: {
                     ...EMPTY_CHANGES_OBJ,
                     quillChanges: {
                         [moduleEntity.orderedContentIds[0]]: updatedContentDiff
+
                     }
                 }
             };
@@ -311,7 +315,8 @@ describe('Save module', function () {
             ];
             let addContentSave: SaveModuleEntityPayload = {
                 courseId, id: moduleId,
-                changes: {
+                changes: {},
+                contentQuestions: {
                     ...EMPTY_CHANGES_OBJ,
                     quillChanges: {
                         [contentPlaceholderId1]: content1,
@@ -331,7 +336,8 @@ describe('Save module', function () {
             let removeFirstContentOp = deltaArrayDiff(moduleEntity.orderedContentIds, [moduleEntity.orderedContentIds[1]]);
             let saveUpdateContent: SaveModuleEntityPayload = {
                 courseId, id: moduleId,
-                changes: {
+                changes: {},
+                contentQuestions: {
                     ...EMPTY_CHANGES_OBJ,
                     quillChanges: {
                         [moduleEntity.orderedContentIds[1]]: updatedContentDiff

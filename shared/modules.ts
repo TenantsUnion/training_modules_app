@@ -28,7 +28,7 @@ export interface CreateModuleEntityPayload extends CreateTrainingEntityPayload {
 export interface CreateModuleResponse {
     moduleId: string;
     module: ViewModuleData;
-    course: ViewCourseDelta;
+    courseModuleDescriptions: ViewModuleDescription[];
 }
 
 export type CreateModuleEntityCommand = CreateTrainingEntityCommand<ModuleEntityType, CreateModuleEntityPayload>;
@@ -60,4 +60,12 @@ export interface ViewModuleDescription extends ViewTrainingEntityDescription {
 
 export interface ModuleEntityDiffDelta extends TrainingEntityDiffDelta {
     sections?: DeltaArrOp<string>[];
+}
+
+/**
+ * Map of the placeholder ids to their database sequence id correspondents when a module is created.
+ */
+export interface CreateModuleIdMap {
+    moduleId: string,
+    [p: string]: string
 }

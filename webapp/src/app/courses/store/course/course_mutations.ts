@@ -1,7 +1,8 @@
 import Vue from "vue";
 import {CourseState} from './course_state';
-import {CourseEntity} from '@shared/courses';
+import {CourseEntity, ViewCourseData} from '@shared/courses';
 import {Mutation, MutationTree} from 'vuex';
+import {ViewModuleDescription} from "@shared/modules";
 
 export type CourseMutation<P> = (state: CourseState, payload: P) => any | Mutation<CourseState>;
 
@@ -12,14 +13,16 @@ export const COURSE_MUTATIONS: {[index in keyof  CourseMutations]: keyof CourseM
     SET_CURRENT_COURSE: 'SET_CURRENT_COURSE',
     SET_COURSE_REQUEST_STAGE: 'SET_COURSE_REQUEST_STAGE',
     SET_COURSE_ADMIN: 'SET_COURSE_ADMIN',
-    SET_COURSE_ENTITY: 'SET_COURSE_ENTITY'
+    SET_COURSE_ENTITY: 'SET_COURSE_ENTITY',
+    SET_COURSE_MODULE_DESCRIPTIONS: 'SET_COURSE_MODULE_DESCRIPTIONS'
 };
 
 export interface CourseMutations {
     SET_CURRENT_COURSE: CourseMutation<{id}>;
     SET_COURSE_REQUEST_STAGE: CourseMutation<{id: string; requesting: boolean}>,
     SET_COURSE_ADMIN: CourseMutation<boolean>;
-    SET_COURSE_ENTITY: CourseMutation<CourseEntity>;
+    SET_COURSE_ENTITY: CourseMutation<ViewCourseData>;
+    SET_COURSE_MODULE_DESCRIPTIONS: CourseMutation<{courseId: string, courseModuleDescriptions: ViewModuleDescription[]}>;
 }
 
 /**
@@ -35,7 +38,12 @@ export const coursesMutations: CourseMutations & MutationTree<CourseState> = {
     SET_COURSE_ADMIN: (state: CourseState, isAdmin: boolean) => {
         state.isAdmin = isAdmin;
     },
-    SET_COURSE_ENTITY: (state: CourseState, courseEntity: CourseEntity) => {
-        Vue.set(state.courses, courseEntity.id, courseEntity);
+    SET_COURSE_ENTITY: (state: CourseState, courseView: ViewCourseData) => {
+        Vue.set(state.courses, courseView.id, courseView);
+    },
+    SET_COURSE_MODULE_DESCRIPTIONS: (state: CourseState, descriptionData) => {
+        let viewCourse = state.courses[descriptionData.courseId];
+        viewCourse.modules = descriptionData.courseModuleDescriptions;
+        Vue.set(state.courses, descriptionData.courseId, viewCourse);
     }
 };

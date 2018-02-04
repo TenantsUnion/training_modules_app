@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {
     processContentQuestions,
-    processCourseView, ViewCourseDbData, ViewModuleDbData,
+    processCourseView, ViewCourseDbData, ViewModuleDescriptionDbData,
     ViewTrainingEntityDbData
 } from "../../../../../server/src/courses/view/course_view_row_processor";
 import {getUTCNow} from "../../../../../server/src/repository";
@@ -191,7 +191,16 @@ describe('Course View Row Processor', function () {
 
     const viewModuleDbData = (id: string,
                               orderedSectionIds: string[] = [],
-                              sections: ViewTrainingEntityDbData[] = []): ViewModuleDbData => {
-        return {...trainingEntityDbData(id), orderedSectionIds, sections};
+                              sections: ViewTrainingEntityDbData[] = []): ViewModuleDescriptionDbData => {
+        return {
+            id,
+            title: 'a title',
+            version: 0,
+            description: 'a description',
+            timeEstimate: 60,
+            active: false,
+            orderedSectionIds,
+            createdAt: getUTCNow(),
+            lastModifiedAt: getUTCNow(), sections};
     };
 });
