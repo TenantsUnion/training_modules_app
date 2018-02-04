@@ -19,8 +19,6 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-    @import '../../scss/variables';
-
     @mixin colored-switches($checked-color) {
         input:checked ~ .switch-paddle {
             background: $checked-color;

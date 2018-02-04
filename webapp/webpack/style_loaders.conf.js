@@ -1,3 +1,4 @@
+const path = require('path');
 /**
  * Config for webpack style loaders
  */
@@ -25,7 +26,7 @@ exports.cssLoaders = function (options) {
     };
 
     // generate loader string to be used with extract text plugin
-    function generateLoaders (loader, loaderOptions) {
+    function generateLoaders(loader, loaderOptions) {
         const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader]
 
         if (loader) {
@@ -54,8 +55,17 @@ exports.cssLoaders = function (options) {
         css: generateLoaders(),
         postcss: generateLoaders(),
         less: generateLoaders('less'),
-        sass: generateLoaders('sass', { indentedSyntax: true }),
-        scss: generateLoaders('sass'),
+        sass: generateLoaders('sass', {indentedSyntax: true}),
+        scss: generateLoaders('sass', {
+            data: '@import "style";',
+            includePaths: [
+                path.resolve(__dirname, '../src/app'),
+                'node_modules/foundation-sites/scss',
+                'node_modules/foundation-sites/scss/util',
+                'node_modules/foundation-sites/_vendor',
+                'node_modules/font-awesome-sass/assets/stylesheets/font-awesome'
+            ]
+        }),
     };
 };
 
