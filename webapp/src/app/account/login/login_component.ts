@@ -1,16 +1,12 @@
 import {appRouter} from '../../router';
 import Vue from 'vue';
 import Component from "vue-class-component";
-import * as VueForm from "../../vue-form";
-import {FormField} from "../../vue-form";
 import {Watch} from "vue-property-decorator";
 import {AccountLoginFieldErrors} from "@shared/account";
 import {$} from "../../globals";
 import {USER_ACTIONS} from '../../courses/store/user/user_store';
-
-export interface AccountFormState extends VueForm.FormState {
-    username: FormField;
-}
+import {RawLocation} from "vue-router";
+import {AccountFormState} from "../account_routes";
 
 @Component({
     data: () => {
@@ -24,7 +20,7 @@ export interface AccountFormState extends VueForm.FormState {
             formstate: {},
         };
     },
-    template: require('./login_component.tpl.html')
+    template: require('./login_component.vue')
 })
 export default class LoginComponent extends Vue {
     errorMessages: AccountLoginFieldErrors;
@@ -36,11 +32,11 @@ export default class LoginComponent extends Vue {
     formstate: AccountFormState;
 
     @Watch('model.username')
-    resetUsername() {
+    resetUsername () {
         this.errorMessages && delete this.errorMessages.username;
     }
 
-    async login() {
+    async login () {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
@@ -52,7 +48,7 @@ export default class LoginComponent extends Vue {
             await this.$store.dispatch(USER_ACTIONS.LOGIN, {username: this.model.username});
             this.loading = false;
             if (this.$store.state.user.loggedIn) {
-                appRouter.push({
+                appRouter.push(<RawLocation>{
                     path: `user/${this.model.username}/enrolled-courses`,
                     params: {userId: this.$store.state.user.userId}
                 });
@@ -63,7 +59,7 @@ export default class LoginComponent extends Vue {
         }
     }
 
-    mounted() {
+    mounted () {
         $(this.$refs.login).focus();
     }
 }

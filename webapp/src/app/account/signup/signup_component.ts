@@ -1,11 +1,11 @@
 import {appRouter} from '../../router';
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {AccountFormState} from '../login/login_component';
 import {Watch} from 'vue-property-decorator';
 import {AccountSignupFieldErrors} from '@shared/account';
 import {$} from "../../globals";
 import {USER_ACTIONS} from '../../courses/store/user/user_store';
+import {AccountFormState} from "../account_routes";
 
 @Component({
     data: () => {
@@ -19,7 +19,6 @@ import {USER_ACTIONS} from '../../courses/store/user/user_store';
             formstate: {}
         };
     },
-    template: require('./signup_component.tpl.html')
 })
 export default class SignupComponent extends Vue {
     errorMessages: AccountSignupFieldErrors = {};

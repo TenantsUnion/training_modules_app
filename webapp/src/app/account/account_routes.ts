@@ -1,10 +1,16 @@
 import {RouteConfig} from 'vue-router';
-import LoginComponent from './login/login_component';
-import SignupComponent from "./signup/signup_component";
+import LoginComponent from './login/login_component.vue';
+import SignupComponent from "./signup/signup_component.vue";
+import * as VueForm from "../vue-form";
+import {FormField} from "../vue-form";
 
 
 export const LOGIN_ROUTE = '/login';
 export const SIGNUP_ROUTE = '/signup';
+
+export interface AccountFormState extends VueForm.FormState {
+    username: FormField;
+}
 export const loginRoutes: RouteConfig = {
     path: '/',
     name: 'account',
