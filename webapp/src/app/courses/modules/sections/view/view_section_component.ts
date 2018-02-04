@@ -45,9 +45,8 @@ export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) 
     beforeRouteUpdate: currentSectionRouteGuard,
     beforeRouteEnter: currentSectionRouteGuard,
     extends: CourseRefreshComponent,
-    template: require('./view_section_component.tpl.html')
 })
-export class ViewSectionComponent extends Vue {
+export default class ViewSectionComponent extends Vue {
     async next() {
         let moduleId = this.$store.state.module.currentModuleId;
         let nextId = this.$store.getters.nextSectionIdInModule;

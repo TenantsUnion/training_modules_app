@@ -12,8 +12,7 @@ import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
 import {Watch} from 'vue-property-decorator';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
-import {deltaArrayDiff} from '@shared/delta/diff_key_array';
-import {ContentQuestionsDelta, TrainingEntityDiffDelta} from '@shared/training_entity';
+import {TrainingEntityDiffDelta} from '@shared/training_entity';
 import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
 
 @Component({
@@ -39,9 +38,8 @@ import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
     beforeRouteUpdate: currentSectionRouteGuard,
     beforeRouteEnter: currentSectionRouteGuard,
     extends: CourseRefreshComponent,
-    template: require('./edit_section_component.tpl.html')
 })
-export class EditSectionComponent extends Vue {
+export default class EditSectionComponent extends Vue {
     saving: boolean;
     errorMessages: {};
     quillContent: Segment[] = [];

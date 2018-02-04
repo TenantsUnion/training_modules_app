@@ -21,9 +21,8 @@ import TrainingSegmentComponent from '@global/edit_training_segments/edit_traini
     },
     beforeRouteEnter: currentModuleRouteGuard,
     beforeRouteUpdate: currentModuleRouteGuard,
-    template: require('./create_section_component.tpl.html')
 })
-export class CreateSectionComponent extends Vue {
+export default class CreateSectionComponent extends Vue {
     errorMessages: { [index: string]: string };
     loading: boolean;
     title: string;
