@@ -7,14 +7,30 @@
                     <quill-editor ref="optionQuill"
                                   :read-only="viewOnly"
                                   :editor-id="option.option.id"
-                                  :editor-json="option.option.editorJson"/>
+                                  :editor-json="option.option.editorJson"
+                                  :toolbar-config="questionOptionToolbarConfig"/>
                 </div>
                 <div class="cell small-12">
-                    <h6 class="subheader">Explanation</h6>
-                    <quill-editor ref="explanationQuill"
-                                  :read-only="viewOnly"
-                                  :editor-id="option.explanation.id"
-                                  :editor-json="option.explanation.editorJson"/>
+                    <h6 class="subheader">Explanation
+                        <button v-if="!showExplanationField" type="button" class="button" title="Add Option Explanation"
+                                v-on:click="showExplanationField = !showExplanationField"
+                                aria-label="Add Option Explanation">
+                            <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
+                        </button>
+
+                        <button v-if="showExplanationField" type="button" class="button" title="Hide Option Explanation"
+                                v-on:click="showExplanationField = !showExplanationField"
+                                aria-label="Hide Option Explanation">
+                            <i class="fa fa-chevron-up fa-fw" aria-hidden="true"></i>
+                        </button>
+                    </h6>
+                    <div class="explanation-container" v-show="showExplanationField">
+                        <quill-editor ref="explanationQuill"
+                                      :read-only="viewOnly"
+                                      :editor-id="option.explanation.id"
+                                      :editor-json="option.explanation.editorJson"
+                                      :toolbar-config="questionOptionToolbarConfig"/>
+                    </div>
                 </div>
             </div>
         </div>

@@ -50,6 +50,7 @@ export class QuestionComponent extends Vue {
     question: QuestionQuillData = null;
     options: (QuestionOptionQuillData & SegmentArrayElement)[] = [];
     formstate: FormState;
+    questionToolbarConfig = [['bold', 'italic', 'underline', 'strike']];
 
     @Watch('storedQuestion', {immediate: true})
     updateQuestion (incomingQuestion: QuestionQuillData) {

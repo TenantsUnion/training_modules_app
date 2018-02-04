@@ -1,8 +1,8 @@
 <template>
-    <div class="grid-container fluid callout">
+    <div class="grid-container fluid callout question-component">
         <div class="grid-x">
             <div class="cell small-11 large-9">
-                <h6 class="subheader">Question</h6>
+                <h5 class="subheader">Question</h5>
             </div>
             <div v-if="!viewOnly" class="cell small-1 large-3">
                 <button type="button" class="minimize-button" title="Minimize Question"
@@ -27,13 +27,15 @@
                         <quill-editor ref="questionQuill"
                                       :read-only="viewOnly"
                                       :editor-json="question.questionQuill.editorJson"
-                                      :editor-id="question.questionQuill.id"/>
+                                      :editor-id="question.questionQuill.id"
+                                      :toolbar-config="questionToolbarConfig"/>
                     </div>
                 </div>
                 <div v-if="!viewOnly" class="grix-x">
                     <div class="cell small-12">
                         <h6 class="subheader">Options
-                            <button type="button" class="button" v-on:click="addOption" ref="addOptionBtn">Add Option</button>
+                            <button type="button" class="button" v-on:click="addOption" ref="addOptionBtn">Add Option
+                            </button>
                         </h6>
                     </div>
                 </div>
@@ -43,5 +45,7 @@
         </div>
     </div>
 </template>
+
+<style lang="scss" src="./question_component.scss" scoped></style>
 
 <script lang="ts" src="./question_component.ts"></script>

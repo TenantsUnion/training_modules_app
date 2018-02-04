@@ -37,27 +37,6 @@ export type QuillChangeFn = (change: QuillChangeEvent) => any;
 type EditorState = 'NEW' | 'CHANGED' | 'PRISTINE';
 
 @Component({
-    data: () => {
-        return {
-            // same format used to specify toolbar module config programatically via Quill constructor
-            toolbarConfig: [
-                ['bold', 'italic', 'underline', 'strike'],
-                ['link', 'image'],
-                [{'color': []}, {'background': []}],
-                ['blockquote', 'code-block'],
-
-                [{'list': 'ordered'}, {'list': 'bullet'}],
-                [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
-                [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
-                [{'direction': 'rtl'}],                         // text direction
-
-                [{'header': [false, 1, 2, 3, 4, 5, 6]}],
-
-                [{'font': []}],
-                [{'align': []}]
-            ]
-        };
-    },
     props: {
         readOnly: {
             type: Boolean,
@@ -75,6 +54,27 @@ type EditorState = 'NEW' | 'CHANGED' | 'PRISTINE';
             required: false,
             default: null
         },
+        toolbarConfig: {
+            type: Array,
+            required: false,
+            default: function() {
+                return [
+                ['bold', 'italic', 'underline', 'strike'],
+                ['link', 'image'],
+                [{'color': []}, {'background': []}],
+                ['blockquote', 'code-block'],
+
+                [{'list': 'ordered'}, {'list': 'bullet'}],
+                [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
+                [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+                [{'direction': 'rtl'}],                         // text direction
+
+                [{'header': [false, 1, 2, 3, 4, 5, 6]}],
+
+                [{'font': []}],
+                [{'align': []}]
+            ]}
+        }
     },
 })
 export default class QuillComponent extends Vue {

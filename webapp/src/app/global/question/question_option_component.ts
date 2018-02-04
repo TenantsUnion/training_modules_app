@@ -8,6 +8,11 @@ import {QuillDeltaMap} from '@shared/quill_editor';
 
 
 @Component({
+    data: () => {
+        return {
+            showExplanationField: false
+        }
+    },
     props: {
         viewOnly: {
           type: Boolean,
@@ -27,6 +32,7 @@ import {QuillDeltaMap} from '@shared/quill_editor';
 export class QuestionOptionComponent extends Vue {
     storedOption: QuestionOptionQuillData;
     option: QuestionOptionQuillData = null;
+    questionOptionToolbarConfig = [['bold', 'italic', 'underline', 'strike']];
 
     @Watch('storedOption', {immediate: true})
     updatedOption(incomingOption: QuestionOptionQuillData) {
