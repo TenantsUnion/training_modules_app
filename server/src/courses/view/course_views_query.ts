@@ -128,13 +128,14 @@ export class CourseViewQuery {
                                                 FROM tu.section s
                                                 WHERE s.id = ANY (m.ordered_section_ids)) s ON TRUE
                                   WHERE m.id = ANY (c.ordered_module_ids)) m) m ON TRUE
+              WHERE c.id = $1
             `,
             values: [courseId]
         };
 
         try {
-          let results = (await this.datasource.query(query))[0];
-          return processModuleDescriptions(results.orderedModuleIds, results.modules);
+            let results = (await this.datasource.query(query))[0];
+            return processModuleDescriptions(results.orderedModuleIds, results.modules);
         } catch (e) {
             this.logger.log('error', e);
             this.logger.log('error', e.stack);
