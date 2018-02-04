@@ -25,7 +25,8 @@ let Delta: DeltaStatic = Quill.import('delta');
 @Component({
     data: () => {
         return {
-            formstate: {}
+            formstate: {},
+            showQuestion: true
         };
     },
     props: {

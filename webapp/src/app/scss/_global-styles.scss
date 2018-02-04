@@ -63,3 +63,8 @@ button.button {
     margin: 0;
   }
 }
+
+.minimize-button {
+  @extend .close-button;
+  margin-right: 2rem;
+}
