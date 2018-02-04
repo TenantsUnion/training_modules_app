@@ -42,7 +42,6 @@ import {Watch} from 'vue-property-decorator';
     beforeRouteUpdate: currentModuleRouteGuard,
     beforeRouteEnter: currentModuleRouteGuard,
     extends: CourseRefreshComponent,
-    template: require('./edit_module_component.tpl.html'),
     components: {
         draggable
     }
@@ -163,5 +162,6 @@ export class EditModuleComponent extends Vue {
             "text-decoration": this.removeSections[module.id] ? "line-through" : "none"
         };
     }
-
 }
+
+export default EditModuleComponent;

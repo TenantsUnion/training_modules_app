@@ -29,14 +29,14 @@ export const currentModuleRouteGuard: NavigationGuard = async (to, from, next) =
             isCourseAdmin: (state:RootState) => state.course.isAdmin
         })
     },
-    template: require('./module_details_component.tpl.html'),
     beforeRouteUpdate: currentModuleRouteGuard,
     beforeRouteEnter: currentModuleRouteGuard
 })
-export class ModuleDetailsComponent extends Vue {
+export default class ModuleDetailsComponent extends Vue {
     loading: boolean;
 
     createSection() {
         this.$router.push({name: COURSES_ROUTE_NAMES.createSection});
     }
 }
+
