@@ -1,7 +1,7 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import {contentHttpService} from "../content_http_service";
-import {ContentData} from '../../../../../../shared/content';
+import {ContentData} from '@shared/content';
 
 @Component({
     data: () => {
@@ -11,9 +11,8 @@ import {ContentData} from '../../../../../../shared/content';
             contentDescriptionList: []
         }
     },
-    template: require('./content_description_list_component.tpl.html')
 })
-export class ContentDescriptionListComponent extends Vue {
+export default class ContentDescriptionListComponent extends Vue {
     errorMessages: object;
     loading: boolean;
     contentDescriptionList: ContentData[];

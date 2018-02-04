@@ -15,9 +15,8 @@ import {QuillEditorData} from '@shared/quill_editor';
             formstate: {}
         };
     },
-    template: require('./create_content_component.tpl.html')
 })
-export class CreateContentComponent extends Vue {
+export default class CreateContentComponent extends Vue {
     errorMessages: object;
     loading: boolean;
     title: string;

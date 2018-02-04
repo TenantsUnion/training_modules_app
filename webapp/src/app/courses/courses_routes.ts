@@ -1,6 +1,6 @@
 import {RouteConfig, default as VueRouter} from "vue-router";
-import {UserEnrolledCoursesComponent} from "../user/courses/enrolled/user_enrolled_courses_component";
-import {UserAdminCourseComponent} from "../user/courses/admin/user_admin_courses_component";
+import UserEnrolledCoursesComponent from "../user/courses/enrolled/user_enrolled_courses_component.vue";
+import UserAdminCourseComponent from "../user/courses/admin/user_admin_courses_component.vue";
 import CreateCourseComponent from "./create/create_course_component.vue";
 import CourseComponent from './course_component/course_component.vue';
 import CourseDetailsComponent from './course_details_component/course_details_component.vue';

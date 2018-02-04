@@ -1,10 +1,9 @@
 import {NavigationGuard, RouteConfig} from "vue-router";
-import {CreateContentComponent} from "./content/create_content/create_content_component";
+import CreateContentComponent from "./content/create_content/create_content_component.vue";
 import AppHeader from "./header/user_header_component.vue";
-import {ContentDescriptionListComponent} from "./content/content_description_list/content_description_list_component";
-import {EditUserContentComponent} from "./content/edit/edit_user_content_component";
+import ContentDescriptionListComponent from "./content/content_description_list/content_description_list_component.vue";
+import EditUserContentComponent from "./content/edit/edit_user_content_component.vue";
 import {coursesRoutes} from "../courses/courses_routes";
-import * as _ from "underscore";
 import {store} from '../state_store';
 import {USER_ACTIONS} from '../courses/store/user/user_store';
 import {appRouter} from '../router';

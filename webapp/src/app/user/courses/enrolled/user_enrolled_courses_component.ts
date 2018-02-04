@@ -8,9 +8,8 @@ import Component from "vue-class-component";
             courses: []
         };
     },
-    template: require('./user_enrolled_courses_component.tpl.html')
 })
-export class UserEnrolledCoursesComponent extends Vue {
+export default class UserEnrolledCoursesComponent extends Vue {
 
     go (courseId: string) {
 

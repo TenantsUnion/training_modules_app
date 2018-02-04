@@ -7,13 +7,12 @@ import {COURSE_ACTIONS} from '../../../courses/store/course/course_actions';
 
 
 @Component({
-    template: require('./user_admin_courses_component.tpl.html'),
     computed: mapState({
         courses: ({userCourses}) => userCourses.adminCourseDescriptions,
         loading: ({userCourses}) => userCourses.loading
     })
 })
-export class UserAdminCourseComponent extends Vue {
+export default class UserAdminCourseComponent extends Vue {
     createCourse() {
         this.$router.push('course/create')
     }

@@ -22,10 +22,9 @@ import {ContentEntity} from "@shared/content";
                 title: '',
             }
         };
-    },
-    template: require('./edit_user_content_component.tpl.html')
+    }
 })
-export class EditUserContentComponent extends Vue {
+export default class EditUserContentComponent extends Vue {
     errorMessages: object;
     loading: boolean;
     contentId: string;
