@@ -89,10 +89,9 @@ export const sectionEntity = (section = DEFAULT_SECTION, courseId = latestCourse
         ...DEFAULT_SECTION
     };
 };
-let latestSectionId;
 export const addSection = async (section: CreateSectionEntityPayload = sectionEntity()): Promise<string> => {
-    latestSectionId = await coursesHandler.createSection(section);
-    return latestSectionId;
+    let {sectionId} = await coursesHandler.createSection(section);
+    return sectionId;
 };
 
 export const EMPTY_CHANGES_OBJ = {
