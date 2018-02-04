@@ -152,12 +152,11 @@ export default class QuillComponent extends Vue {
     }
 
     formatObjVal(obj: any): string {
-        return Object.keys(obj).map((key) => obj[key])
-            .find((val) => val);
+        return Object.keys(obj).map((key) => obj[key])[0];
     }
 
     formatObjProp(obj: any): string {
-        return Object.keys(obj).find((key) => !!key);
+        return Object.keys(obj)[0];
     }
 
     isDropdownObj(obj: any) {
