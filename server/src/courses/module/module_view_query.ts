@@ -1,8 +1,8 @@
 import {Datasource} from '../../datasource';
 import {ViewModuleData} from '@shared/modules';
 import {getLogger} from "../../log";
-import {processModuleView} from "./module_view_row_processor";
 import {orderEntitiesByIds, processContentQuestions, toEntityMap} from "../view/course_view_row_processor";
+import {ViewTrainingEntityDescription} from "@shared/training_entity";
 
 export class ModuleViewQuery {
     logger = getLogger('ModuleViewQuery', 'info');
@@ -46,8 +46,6 @@ export class ModuleViewQuery {
             values: [moduleId]
         };
         try {
-            this.logger.log('info', 'querying for admin course');
-            this.logger.log('debug', `sql => ${query.text}`);
             let results = await this.datasource.query(query);
             let row = results[0];
 
@@ -62,6 +60,37 @@ export class ModuleViewQuery {
                 contentQuestions: processContentQuestions(row),
                 sections: orderEntitiesByIds(orderedSectionIds, toEntityMap(sections))
             };
+        } catch (e) {
+            this.logger.log('error', e);
+            this.logger.log('error', e.stack);
+            throw e;
+        }
+    }
+
+    async loadSectionDescriptions (moduleId: string): Promise<ViewTrainingEntityDescription[]> {
+        let query = {
+            text: `
+              SELECT m.id, m.ordered_section_ids, s.sections
+              FROM tu.module m
+                INNER JOIN LATERAL
+                           (SELECT json_agg(s.*) AS sections
+                            FROM tu.section s
+                            WHERE s.id = ANY (m.ordered_section_ids)) s ON TRUE
+              WHERE m.id = $1;
+            `,
+            values: [moduleId]
+        };
+        try {
+            let results = await this.datasource.query(query);
+            let row = results[0];
+
+            let sections = row.sections ? row.sections : [];
+            let {
+                orderedContentIds, orderedQuestionIds, orderedContentQuestionIds,
+                content, questions, orderedSectionIds, ...viewModule
+            } = row;
+
+            return orderEntitiesByIds(orderedSectionIds, toEntityMap(sections))
         } catch (e) {
             this.logger.log('error', e);
             this.logger.log('error', e.stack);

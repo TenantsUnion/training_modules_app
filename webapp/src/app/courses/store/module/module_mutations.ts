@@ -3,12 +3,14 @@ import {ModuleEntity} from '../../../../../../shared/modules';
 import {ModuleState} from './module_state';
 import Vue from 'vue';
 import {Constant} from '../../../../../../shared/typings/util_typings';
+import {TrainingEntity, ViewTrainingEntityDescription} from "@shared/training_entity";
 
 export type ModuleMutation<P> = (state: ModuleState, payload: P) => any & Mutation<ModuleState>;
 export interface ModuleMutations {
     SET_CURRENT_MODULE: ModuleMutation<String>;
     SET_MODULE_REQUEST_STAGE: ModuleMutation<{id: string; requesting: boolean}>
     SET_MODULE_ENTITY: ModuleMutation<ModuleEntity>;
+    SET_MODULE_SECTION_DESCRIPTIONS: ModuleMutation<{moduleId: string, moduleSectionDescriptions: ViewTrainingEntityDescription[]}>;
 }
 
 /**
@@ -17,7 +19,8 @@ export interface ModuleMutations {
 export const MODULE_MUTATIONS: Constant<ModuleMutations> = {
     SET_CURRENT_MODULE: 'SET_CURRENT_MODULE',
     SET_MODULE_REQUEST_STAGE: 'SET_MODULE_REQUEST_STAGE',
-    SET_MODULE_ENTITY: 'SET_MODULE_ENTITY'
+    SET_MODULE_ENTITY: 'SET_MODULE_ENTITY',
+    SET_MODULE_SECTION_DESCRIPTIONS: 'SET_MODULE_SECTION_DESCRIPTIONS'
 };
 
 
@@ -34,6 +37,12 @@ export const moduleMutations: ModuleMutations & MutationTree<ModuleState>= {
     },
     SET_MODULE_ENTITY: (state: ModuleState, module: ModuleEntity) => {
         Vue.set(state.modules, module.id, module);
+    },
+    SET_MODULE_SECTION_DESCRIPTIONS: (state: ModuleState, descriptionData) => {
+        let viewModule = state.modules[descriptionData.moduleId];
+        viewModule.sections = descriptionData.moduleSectionDescriptions;
+        Vue.set(state.modules, module.id, module);
     }
+
 
 };

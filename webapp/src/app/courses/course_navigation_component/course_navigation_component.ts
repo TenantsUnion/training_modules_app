@@ -83,10 +83,10 @@ export default class CourseNavigationComponent extends Vue {
         })
     }
 
-    createSection(moduleTitle: string) {
+    createSection(moduleSlug: string) {
         this.$router.push({
             name: COURSES_ROUTE_NAMES.createSection, params: {
-                moduleTitle: moduleTitle
+                moduleSlug
             }
         });
     }

@@ -3,7 +3,7 @@ import {CoursesRepository} from "./courses_repository";
 import {getLogger} from '../log';
 import {CreateModuleEntityPayload, CreateModuleIdMap, SaveModuleEntityPayload} from "@shared/modules";
 import {
-    CreateSectionEntityPayload, SaveSectionEntityPayload
+    CreateSectionEntityPayload, SaveSectionEntityPayload, SectionIdMap
 } from '@shared/sections';
 import {SectionHandler} from './section/section_handler';
 import {
@@ -110,14 +110,13 @@ export class CoursesHandler {
         }
     }
 
-    async createSection(sectionData: CreateSectionEntityPayload): Promise<string> {
-        let sectionId = await this.sectionHandler.createSection(sectionData);
-        this.logger.info('Created new section with id: %s', sectionId);
+    async createSection(sectionData: CreateSectionEntityPayload): Promise<SectionIdMap> {
+        let sectionPlaceholderIdMap = await this.sectionHandler.createSection(sectionData);
+        let {sectionId} = sectionPlaceholderIdMap;
         await this.coursesRepository.updateLastModified(sectionData.courseId);
-        this.logger.info('Updated course last modified: %s', sectionData.courseId);
 
         await this.moduleHandler.addSection({sectionId, ...sectionData});
-        return sectionId;
+        return sectionPlaceholderIdMap;
     }
 
 

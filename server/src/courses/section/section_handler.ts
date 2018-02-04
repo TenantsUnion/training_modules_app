@@ -1,6 +1,6 @@
 import {SectionRepository} from './section_repository';
 import {
-    CreateSectionEntityPayload, SaveSectionEntityPayload, ViewSectionData
+    CreateSectionEntityPayload, SaveSectionEntityPayload, SectionIdMap, ViewSectionData
 } from '@shared/sections';
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
@@ -16,7 +16,7 @@ export class SectionHandler {
                 private trainingEntityHandler: TrainingEntityHandler) {
     }
 
-    async createSection(createSectionData: CreateSectionEntityPayload): Promise<string> {
+    async createSection(createSectionData: CreateSectionEntityPayload): Promise<SectionIdMap> {
         let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = createSectionData.contentQuestions;
         let placeholderIdMap = await this.trainingEntityHandler.handleContentQuestionDelta(createSectionData.contentQuestions);
         let contentQuestion: ContentQuestionEntity = {
@@ -24,7 +24,8 @@ export class SectionHandler {
             orderedQuestionIds: applyDeltaArrOps([], updateArrOpsValues(orderedQuestionIds, placeholderIdMap)),
             orderedContentQuestionIds: applyDeltaArrOps([], updateArrOpsValues(orderedContentQuestionIds, placeholderIdMap)),
         };
-        return await this.sectionRepo.createSection({...createSectionData, ...contentQuestion});
+        let sectionId = await this.sectionRepo.createSection({...createSectionData, ...contentQuestion});
+        return {sectionId, ...placeholderIdMap};
     }
 
     async saveSection(data: SaveSectionEntityPayload): Promise<void> {

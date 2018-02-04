@@ -13,9 +13,9 @@ import TrainingSegmentComponent from '@global/edit_training_segments/edit_traini
         return {
             loading: false,
             errorMessages: null,
-            title: '',
-            timeEstimate: '',
-            description: '',
+            title: null,
+            timeEstimate: null,
+            description: null,
             formstate: {}
         };
     },
@@ -50,7 +50,13 @@ export default class CreateSectionComponent extends Vue {
                 active: true, // todo make field
                 courseId: this.$store.state.course.currentCourseId,
                 moduleId: currentModuleId,
-                contentQuestions: (<TrainingSegmentComponent> this.$refs.trainingSegment).getContentQuestionsDelta(),
+                contentQuestions: {
+                    quillChanges: {},
+                    orderedContentQuestionIds: [],
+                    orderedContentIds: [],
+                    orderedQuestionIds: [],
+                    questionChanges: {}
+                },
             };
             await this.$store.dispatch(SECTION_ACTIONS.CREATE_SECTION, createSectionPayload);
 
@@ -73,12 +79,5 @@ export default class CreateSectionComponent extends Vue {
 
     timeEstimateUpdated(time) {
         this.timeEstimate = time;
-    }
-
-    addContentCallback(addContentId: string) {
-        this.quillContent.push({
-            id: addContentId,
-            type: 'CONTENT'
-        });
     }
 }

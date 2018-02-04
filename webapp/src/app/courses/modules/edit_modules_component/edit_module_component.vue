@@ -40,7 +40,7 @@
                         <div class="columns small-12 large-10">
                             <time-estimate :is-input="true"
                                            :time-estimate="module.timeEstimate"
-                                           :updated="timeEstimateUpdated"></time-estimate>
+                                           :updated="timeEstimateUpdated"/>
                         </div>
                     </div>
                 </validate>

@@ -9,7 +9,8 @@ import {
 } from '@shared/sections';
 import {Constant} from '@shared/typings/util_typings';
 import {MODULE_ACTIONS} from '../module/module_actions';
-import {loadSection} from '../../modules/sections/sections_requests';
+import {createSection, loadSection} from '../../modules/sections/sections_requests';
+import {MODULE_MUTATIONS} from "../module/module_mutations";
 
 export type SectionAction<P> = Action<SectionState, RootState>;
 
@@ -45,20 +46,20 @@ export const CREATE_ID = 'CREATING';
  * Section store actions
  */
 export const sectionActions: ActionTree<SectionState, RootState> & SectionActions = {
-    CREATE_SECTION: async ({dispatch, commit, getters, rootState}, createSection: CreateSectionEntityPayload) => {
+    CREATE_SECTION: async ({dispatch, commit, getters, rootState}, createSectionData: CreateSectionEntityPayload) => {
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
-        let {course, sectionId} = await coursesService.createSection(createSection);
+        let {courseModuleDescriptions, sectionId, moduleSectionDescriptions, section}
+            = await createSection(createSectionData);
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
-        commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, course);
 
-        await dispatch(MODULE_ACTIONS.LOAD_MODULE_ENTITY, rootState.module.currentModuleId);
+        let {courseId, moduleId} = createSectionData;
+        commit(COURSE_MUTATIONS.SET_COURSE_MODULE_DESCRIPTIONS, {courseId, courseModuleDescriptions});
+        commit(MODULE_MUTATIONS.SET_MODULE_SECTION_DESCRIPTIONS, {moduleId, moduleSectionDescriptions});
 
-        let section = getters.currentModule.sections.find((section) => section.id === sectionId);
-
-        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, await loadSection(section));
+        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, section);
         commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, sectionId);
     },
-    async SET_CURRENT_SECTION({state, getters, commit}, {sectionId, moduleId}) {
+    async SET_CURRENT_SECTION ({state, getters, commit}, {sectionId, moduleId}) {
         try {
             if (sectionId === state.currentSectionId) {
                 // provided id matches id of current section, no changes to state needed
@@ -77,14 +78,14 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
             throw e;
         }
     },
-    async SET_CURRENT_SECTION_FROM_SLUG({getters, dispatch}, slug: { moduleId: string, sectionSlug: string }) {
+    async SET_CURRENT_SECTION_FROM_SLUG ({getters, dispatch}, slug: { moduleId: string, sectionSlug: string }) {
         let sectionId = (<RootGetters> getters).getSectionIdFromSlug(slug);
         dispatch(SECTION_ACTIONS.SET_CURRENT_SECTION, {
             moduleId: slug.moduleId,
             sectionId
         });
     },
-    async NEXT_SECTION({getters, dispatch, rootState}) {
+    async NEXT_SECTION ({getters, dispatch, rootState}) {
         let nextId = getters.nextSectionIdInModule;
         if (!nextId) {
             return;
@@ -95,7 +96,7 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
             moduleId: rootState.module.currentModuleId
         });
     },
-    async PREVIOUS_SECTION({getters, dispatch, rootState}) {
+    async PREVIOUS_SECTION ({getters, dispatch, rootState}) {
         let previousId = getters.previousSectionIdInModule;
         if (!previousId) {
             return;
@@ -106,14 +107,14 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
             moduleId: rootState.module.currentModuleId
         });
     },
-    async SAVE_SECTION({commit, getters, dispatch, rootState}, saveSectionEntity: SaveSectionEntityPayload) {
+    async SAVE_SECTION ({commit, getters, dispatch, rootState}, saveSectionEntity: SaveSectionEntityPayload) {
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: saveSectionEntity.id, requesting: true});
         let response: SaveSectionResponse = await coursesService.saveSection(saveSectionEntity);
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: saveSectionEntity.id, requesting: false});
         commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
         await dispatch(SECTION_ACTIONS.LOAD_SECTION_ENTITY, response);
     },
-    async LOAD_SECTION_ENTITY({commit, getters}, ids: { sectionId: string, moduleId: string }) {
+    async LOAD_SECTION_ENTITY ({commit, getters}, ids: { sectionId: string, moduleId: string }) {
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: ids.sectionId, requesting: true});
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: ids.sectionId, requesting: false});
         commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, await loadSection(ids.sectionId));

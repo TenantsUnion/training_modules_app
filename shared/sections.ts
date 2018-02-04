@@ -1,9 +1,9 @@
 import {
     CreateTrainingEntityPayload, SaveTrainingEntityPayload, TrainingEntityDiffDelta,
-    TrainingEntity, ViewTrainingEntity, ContentQuestionsDelta
+    TrainingEntity, ViewTrainingEntity, ContentQuestionsDelta, ViewTrainingEntityDescription
 } from './training_entity';
 import {ViewCourseDelta} from '@shared/courses';
-import {ViewModuleDelta} from '@shared/modules';
+import {ViewModuleDelta, ViewModuleDescription} from '@shared/modules';
 
 export type SectionEntityType = 'SectionEntity';
 export type SectionEntity = TrainingEntity;
@@ -30,15 +30,24 @@ export interface SaveSectionResponse {
     module: ViewModuleDelta;
 }
 
-export interface CreateSectionResponse {
-    sectionId: string;
-    course: ViewCourseDelta;
-    module: ViewModuleDelta;
-}
-
 export interface CreateSectionEntityPayload extends CreateTrainingEntityPayload {
     courseId: string;
     moduleId: string;
+}
+
+/**
+ * Map of the placeholder ids to their database sequence id correspondents when a section is created.
+ */
+export interface SectionIdMap {
+    sectionId: string,
+    [p: string]: string
+}
+
+export interface CreateSectionResponse {
+    sectionId: string;
+    section: ViewSectionData;
+    moduleSectionDescriptions: ViewTrainingEntityDescription[];
+    courseModuleDescriptions: ViewModuleDescription[];
 }
 
 

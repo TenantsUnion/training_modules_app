@@ -46,16 +46,6 @@
                                   id="section-description"></textarea>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="small-12 large-10 columns">
-                        <training-segments :stored-segments="quillContent" ref="trainingSegment"></training-segments>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="columns small-12 large-10">
-                        <add-content-component :callback="addContentCallback"></add-content-component>
-                    </div>
-                </div>
             </validate>
             <div class="row">
                 <div class="columns small-2">

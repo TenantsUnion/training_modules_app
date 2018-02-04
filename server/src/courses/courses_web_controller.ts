@@ -28,13 +28,13 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     private handleValidationErr = logHandleValidationError(this.logger);
     private handleServerErr = logHandleServerError(this.logger);
 
-    constructor(private coursesHandler: CoursesHandler,
-                private courseViewQuery: CourseViewQuery,
-                private moduleViewQuery: ModuleViewQuery,
-                private sectionViewQuery: SectionViewQuery) {
+    constructor (private coursesHandler: CoursesHandler,
+                 private courseViewQuery: CourseViewQuery,
+                 private moduleViewQuery: ModuleViewQuery,
+                 private sectionViewQuery: SectionViewQuery) {
     }
 
-    async createCourse(request: Request, response: Response) {
+    async createCourse (request: Request, response: Response) {
         let createCourseCommand: CreateCourseEntityCommand = request.body;
         try {
             let errMsgs = validateCreateCourse(createCourseCommand);
@@ -51,7 +51,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         }
     }
 
-    async saveCourse(request: express.Request, response: express.Response) {
+    async saveCourse (request: express.Request, response: express.Response) {
         let course: SaveCourseEntityPayload = request.body.payload;
         try {
             let errMsgs = validateSaveCourse(course);
@@ -69,7 +69,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         }
     }
 
-    async getUserEnrolledCourses(request: Request, response: Response) {
+    async getUserEnrolledCourses (request: Request, response: Response) {
         let username: string = request.params.username;
         try {
             let userCourses = await this.courseViewQuery.loadUserEnrolledCourse(username);
@@ -79,7 +79,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         }
     }
 
-    async getUserAdminCourses(request: Request, response: Response) {
+    async getUserAdminCourses (request: Request, response: Response) {
         let userId: string = request.params.userId;
         try {
             let userCourses: AdminCourseDescription[] = await this.courseViewQuery.loadUserAdminCourses(userId);
@@ -89,7 +89,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         }
     }
 
-    async createModule(request: express.Request, response: express.Response) {
+    async createModule (request: express.Request, response: express.Response) {
         let createModuleData: CreateModuleEntityPayload = request.body.payload;
         try {
             let {moduleId} = await this.coursesHandler.createModule(createModuleData);
@@ -108,7 +108,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         }
     }
 
-    async saveModule(request: express.Request, response: express.Response) {
+    async saveModule (request: express.Request, response: express.Response) {
         let saveModuleData: SaveModuleEntityPayload = request.body.payload;
         try {
             await this.coursesHandler.saveModule(saveModuleData);
@@ -123,22 +123,29 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         }
     }
 
-    async createSection(request: express.Request, response: express.Response) {
+    async createSection (request: express.Request, response: express.Response) {
         let createSectionData: CreateSectionEntityPayload = request.body;
+        let {courseId, moduleId} = createSectionData;
         try {
-            let sectionId = await this.coursesHandler.createSection(createSectionData);
-            let result: CreateSectionResponse = {
+            let {sectionId} = await this.coursesHandler.createSection(createSectionData);
+            let {0: courseModuleDescriptions, 1: moduleSectionDescriptions, 2: section} =
+                await Promise.all([
+                    this.courseViewQuery.loadModuleDescriptions(courseId),
+                    this.moduleViewQuery.loadSectionDescriptions(moduleId),
+                    this.sectionViewQuery.loadSection(sectionId)
+                ]);
+            response.status(200).send({
                 sectionId,
-                module: null, // todo module delta
-                course: null// todo course delta
-            };
-            response.status(200).send(result);
+                courseModuleDescriptions,
+                moduleSectionDescriptions,
+                section
+            });
         } catch (e) {
             this.handleServerErr(e, request, response);
         }
     }
 
-    async saveSection(request: express.Request, response: express.Response) {
+    async saveSection (request: express.Request, response: express.Response) {
         let saveSectionData: SaveSectionEntityPayload = request.body.payload;
         try {
             await this.coursesHandler.saveSection(saveSectionData);
@@ -155,7 +162,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         }
     }
 
-    async loadUserAdminCourseWebView(request: Request, response: Response) {
+    async loadUserAdminCourseWebView (request: Request, response: Response) {
         let {courseId} = request.params;
         try {
             let course = await this.courseViewQuery.loadAdminCourse(courseId);
@@ -165,7 +172,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         }
     }
 
-    async loadModule(request: Request, response: Response) {
+    async loadModule (request: Request, response: Response) {
         let {moduleId} = request.params;
         try {
             let module = await this.moduleViewQuery.loadModule(moduleId);
@@ -173,7 +180,16 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
         } catch (e) {
             this.handleServerErr(e, request, response);
         }
+    }
 
+    async loadSection(request: Request, response: Response) {
+        let {sectionId} = request.params;
+        try {
+            let section = await this.sectionViewQuery.loadSection(sectionId);
+            response.status(200).send(section);
+        } catch (e) {
+            this.handleServerErr(e, request, response);
+        }
     }
 }
 
