@@ -141,11 +141,11 @@ export class CoursesRoutesService {
         return this.router.currentRoute.params.sectionTitle;
     }
 
-    isCourseAdmin() {
-        return this.router.currentRoute.matched.some((matchedRoute) => {
-            return matchedRoute.name === 'adminCourse';
-        });
-    }
+    // isCourseAdmin() {
+    //     return this.router.currentRoute.matched.some((matchedRoute) => {
+    //         return matchedRoute.name === 'adminCourse';
+    //     });
+    // }
 
 }
 

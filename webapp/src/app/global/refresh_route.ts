@@ -1,6 +1,7 @@
 import {NavigationGuard} from 'vue-router';
 import {store} from '../state_store';
 import {MODULE_ACTIONS} from '../courses/store/module/module_actions';
+import {COURSE_ACTIONS} from "../courses/store/course/course_actions";
 
 /**
  * Triggers a refresh of the current course when the route changes needed in order to update components that aren't
@@ -18,11 +19,13 @@ export const CourseRefreshComponent = {
 
 const currentModuleRouteGuard: NavigationGuard = async (to, from, next) => {
     let slug = to.params.moduleSlug;
-    if (!slug || slug === 'undefined') {
+    let courseSlug = to.params.courseSlug;
+    if (!slug || slug === 'undefined' || !courseSlug || courseSlug === 'undefined') {
         throw new Error(`Invalid route ${to.fullPath}. Route param :moduleSlug must be defined`);
     }
     try {
-        await store.dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE_FROM_SLUG, slug);
+        const mode = store.getters.getCourseModeFromId(store.state.course.currentCourseId);
+        await store.dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE_FROM_SLUG, {slug, mode});
     } catch (e) {
         console.error(`Error setting current course. ${e}`);
     } finally {

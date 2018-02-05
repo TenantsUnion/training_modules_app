@@ -9,16 +9,22 @@ import {MODULE_ACTIONS} from '../../../store/module/module_actions';
 import {mapGetters, mapState} from 'vuex';
 
 export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) => {
+    let courseSlug = to.params.courseSlug;
     let moduleSlug = to.params.moduleSlug;
     let sectionSlug = to.params.sectionSlug;
-    if (!moduleSlug || moduleSlug === 'undefined' || !sectionSlug || sectionSlug === 'undefined') {
-        throw new Error(`Invalid route ${to.fullPath}. Route param :moduleSlug, :sectionSlug must be defined`);
+    if (!courseSlug || courseSlug === 'undefined'
+        || !moduleSlug || moduleSlug === 'undefined'
+        || !sectionSlug || sectionSlug === 'undefined') {
+        throw new Error(`Invalid route ${to.fullPath}.
+        Route params :moduleSlug, :sectionSlug, :courseSlug must be defined`);
     }
     try {
-        await store.dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE_FROM_SLUG, moduleSlug);
+        const mode = store.getters.getCourseModeFromSlug(courseSlug);
+        await store.dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE_FROM_SLUG, {slug: moduleSlug, mode});
         await store.dispatch(SECTION_ACTIONS.SET_CURRENT_SECTION_FROM_SLUG, {
             sectionSlug,
-            moduleId: store.state.module.currentModuleId
+            moduleId: store.state.module.currentModuleId,
+            mode
         });
     } catch (e) {
         console.error(`Error setting current course. ${e}`);
@@ -33,7 +39,7 @@ export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) 
             section: 'currentSection',
             isCourseAdmin: 'isAdmin',
             previousSectionId: 'previousSectionIdInModule',
-            nextSectionId:  'nextSectionIdInModule'
+            nextSectionId: 'nextSectionIdInModule'
         }),
         ...mapState({
             loading: (state: RootState, getters: RootGetters) => {
@@ -47,7 +53,7 @@ export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) 
     extends: CourseRefreshComponent,
 })
 export default class ViewSectionComponent extends Vue {
-    async next() {
+    async next () {
         let moduleId = this.$store.state.module.currentModuleId;
         let nextId = this.$store.getters.nextSectionIdInModule;
         if (!nextId) {
@@ -62,7 +68,7 @@ export default class ViewSectionComponent extends Vue {
         })
     }
 
-    async back() {
+    async back () {
         let moduleId = this.$store.state.module.currentModuleId;
         let previousId = this.$store.getters.previousSectionIdInModule;
         if (!previousId) {

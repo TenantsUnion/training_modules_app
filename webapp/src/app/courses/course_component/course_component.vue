@@ -28,6 +28,7 @@
     import {COURSE_ACTIONS} from '../store/course/course_actions';
     import {NavigationGuard} from 'vue-router';
     import {store} from '../../state_store';
+    import {CourseMode} from "../store/course/course_mutations";
 
     const currentCourseRouteGuard: NavigationGuard = async (to: any, from: any, next) => {
         let slug = to.params.courseSlug;
@@ -35,7 +36,7 @@
             throw new Error('Invalid route. :courseSlug must be defined');
         }
         try {
-            await store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE_FROM_SLUG, {slug, isAdmin: true});
+            await store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE_FROM_SLUG, slug);
         } catch (e) {
             console.error(`Error setting current course. ${e}`);
         } finally {
@@ -47,7 +48,7 @@
     @Component({
         computed: {
             ...mapState({
-                isCourseAdmin: ({course}) => course.isAdmin
+                isCourseAdmin: ({course}) => course.mode === CourseMode.ADMIN
             }),
             ...mapGetters(['currentCourse', 'currentCourseLoading'])
         },

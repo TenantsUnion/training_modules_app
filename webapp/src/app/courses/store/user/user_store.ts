@@ -1,10 +1,10 @@
 import {Action, ActionContext, ActionTree, Mutation, MutationTree} from 'vuex';
 import {RootState} from '../../../state_store';
-import {Constant} from '../../../../../../shared/typings/util_typings';
-import {IUserInfo} from '../../../../../../shared/user';
+import {Constant} from '@shared/typings/util_typings';
+import {IUserInfo} from '@shared/user';
 import {accountHttpService} from '../../../account/account_http_service';
 import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../courses_listing/courses_listing_store';
-import {appRouter} from '../../../router';
+
 
 /**
  * State
@@ -21,7 +21,7 @@ export const userState: UserState = {
     username: '',
     loggedIn: false,
     // change with Vue.set since new properties will be set... or init as new object?
-    userInfo: null
+    userInfo: null,
 };
 
 /**
@@ -41,18 +41,18 @@ export const USER_MUTATIONS: Constant<UserMutations> = {
 };
 
 export const userMutations: UserMutations & MutationTree<UserState> = {
-    USER_LOGIN(state: UserState, info: IUserInfo) {
+    USER_LOGIN (state: UserState, info: IUserInfo) {
         state.loggedIn = true;
         state.userInfo = info;
         state.username = info.username;
         state.userId = info.id;
     },
-    USER_LOGOUT: (state: UserState) => {
+    USER_LOGOUT (state: UserState) {
         state.loggedIn = false;
         state.userInfo = null;
         state.username = '';
         state.userId = '';
-    },
+    }
 };
 
 /**
@@ -66,7 +66,6 @@ export interface UserActions {
     LOAD_INFO_FROM_USER_SESSION: UserAction<string>,
     LOGOUT: UserAction<any>,
     SIGNUP: UserAction<{ username: string }>
-
 }
 
 export const USER_ACTIONS: Constant<UserActions> = {
@@ -77,7 +76,7 @@ export const USER_ACTIONS: Constant<UserActions> = {
 };
 
 export const userActions: UserActions & ActionTree<UserState, RootState> = {
-    async LOGIN({commit, dispatch}, {username}) {
+    async LOGIN ({commit, dispatch}, {username}) {
         try {
             let userInfo = await accountHttpService.login({
                 username: username,
@@ -89,7 +88,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
             console.error(e);
         }
     },
-    async SIGNUP({commit, dispatch}, {username}) {
+    async SIGNUP ({commit, dispatch}, {username}) {
         let userInfo = await accountHttpService.signup({
             username: username,
             password: ''
@@ -97,7 +96,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
         commit(USER_MUTATIONS.USER_LOGIN, userInfo);
         await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
     },
-    async LOAD_INFO_FROM_USER_SESSION({dispatch, state, commit}, username) {
+    async LOAD_INFO_FROM_USER_SESSION ({dispatch, state, commit}, username) {
         if (username === state.username && state.userInfo) {
             return; // no state change
         }
@@ -114,7 +113,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
             await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
         }
     },
-    async LOGOUT({commit, state, rootState}) {
+    async LOGOUT ({commit, state, rootState}) {
         await accountHttpService.logout();
         commit(USER_MUTATIONS.USER_LOGOUT);
         commit(USER_COURSES_LISTING_MUTATIONS.CLEAR_USER_COURSES_LISTINGS);

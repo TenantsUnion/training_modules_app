@@ -4,6 +4,7 @@ import {AppGetter, RootGetters} from '../../../state_store';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
 import {ViewModuleDescription} from '@shared/modules';
 import {ViewTrainingEntityDescription} from '@shared/training_entity';
+import {CourseMode} from "./course_mutations";
 
 export interface NavigationDescription {
     id: string,
@@ -20,7 +21,7 @@ export interface CourseState {
     currentCourseTitle: string;
     currentCourseId: string;
     courses: { [id: string]: ViewCourseData };
-    isAdmin: boolean;
+    mode: CourseMode;
 }
 
 export interface CourseGetters {
@@ -34,12 +35,16 @@ export interface CourseGetters {
     previousSectionIdInModule: string
 }
 
+/**
+ * Initial empty properties object needed for vuex to know what properties to trigger reactions to. Other property
+ * changes need to be made known to Vue through Vue.set
+ */
 export const courseState: CourseState = {
     courseRequests: {},
     currentCourseId: '',
     currentCourseTitle: '',
     courses: {},
-    isAdmin: false,
+    mode: null,
 };
 
 export const courseGetters: {[index in keyof CourseGetters]: AppGetter<CourseState>} = {

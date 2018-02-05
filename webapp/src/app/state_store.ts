@@ -73,5 +73,4 @@ export interface RootState {
 export type RootGetters = CourseGetters & UserCoursesListingGetters & ModuleGetters & SectionGetters;
 
 // getters and rootGetters are the same since the modules have the namespace option set to false
-export type AppGetter<S> = Getter<S, RootState>
-    & ((state: S, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => any);
+export type AppGetter<S> = ((state: S, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => any);

@@ -1,5 +1,5 @@
 import {SECTION_MUTATIONS} from './section_mutations';
-import {COURSE_MUTATIONS} from '../course/course_mutations';
+import {COURSE_MUTATIONS, CourseMode} from '../course/course_mutations';
 import {coursesService} from '../../courses_service';
 import {RootGetters, RootState} from '../../../state_store';
 import {SectionState} from './section_state';
@@ -14,13 +14,11 @@ import {MODULE_MUTATIONS} from "../module/module_mutations";
 export type SectionAction<P> = Action<SectionState, RootState>;
 
 export type CreateSectionAction = SectionAction<CreateSectionEntityPayload>;
-export type SetCurrentSectionAction = SectionAction<{ sectionId: string, moduleId: string }>;
-export type SetCurrentSectionFromSlugAction = SectionAction<{ slug: string, isAdmin: boolean }>
 
 export interface SectionActions {
     CREATE_SECTION: CreateSectionAction,
-    SET_CURRENT_SECTION: SetCurrentSectionAction;
-    SET_CURRENT_SECTION_FROM_SLUG: SetCurrentSectionFromSlugAction;
+    SET_CURRENT_SECTION: SectionAction<{ sectionId: string, moduleId: string, mode: CourseMode }>;
+    SET_CURRENT_SECTION_FROM_SLUG: SectionAction<{ slug: string, moduleId: string, mode: CourseMode}>;
     NEXT_SECTION: SectionAction<void>;
     PREVIOUS_SECTION: SectionAction<void>;
     SAVE_SECTION: SectionAction<SaveSectionEntityPayload>;
@@ -56,7 +54,7 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
         commit(MODULE_MUTATIONS.SET_MODULE_SECTION_DESCRIPTIONS, {moduleId, moduleSectionDescriptions});
 
         commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, section);
-        commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, sectionId);
+        commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, {sectionId, mode: getters.mode});
     },
     async SET_CURRENT_SECTION ({state, getters, commit}, {sectionId, moduleId}) {
         try {

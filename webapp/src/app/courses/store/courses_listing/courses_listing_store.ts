@@ -1,11 +1,12 @@
 import Vue from 'vue';
 import * as _ from 'underscore';
-import {AdminCourseDescription} from '../../../../../../shared/courses';
+import {AdminCourseDescription} from '@shared/courses';
 import {Action, ActionContext, ActionTree, GetterTree, Mutation, MutationTree} from 'vuex';
 import {AppGetter, RootGetters, RootState} from '../../../state_store';
-import {Constant} from '../../../../../../shared/typings/util_typings';
+import {Constant} from '@shared/typings/util_typings';
 import {userCoursesHttpService} from '../../../user/courses/course_http_service';
-import {titleToSlug} from '../../../../../../shared/slug/title_slug_transformations';
+import {titleToSlug} from '@shared/slug/title_slug_transformations';
+import {CourseMode} from "../course/course_mutations";
 
 /**
  * State
@@ -21,7 +22,7 @@ export const userCoursesListingState: UserCoursesListingState = {
     // change with Vue.set since new properties will be set... or init as new object?
     adminCourseDescriptions: [],
     courseSlugIdMap: {},
-    courseListingsLoaded: null,
+    courseListingsLoaded: false,
     loading: false
 };
 
@@ -29,20 +30,25 @@ export const userCoursesListingState: UserCoursesListingState = {
  * Getters
  */
 export interface UserCoursesListingGetters {
-    getCourseIdFromSlug: (slug) => string;
-    getSlugFromCourseId: (courseId) => string;
+    getCourseIdFromSlug: (slug: string) => string;
+    getSlugFromCourseId: (courseId: string) => string;
+    getCourseModeFromId: (courseId: string) => CourseMode;
+    getCourseModeFromSlug: (slug: string) => CourseMode;
+    adminCourseListingMap: { [index: string]: AdminCourseDescription }
 }
 
 export type getCourseIdFromSlugFn = (slug: string) => string;
 export type getSlugFromCourseIdFn = (id: string) => string;
+export type courseModeFn = (courseId: string) => CourseMode;
+
 
 export const userCoursesListingGetters: {[index in keyof UserCoursesListingGetters]: AppGetter<UserCoursesListingState>} = {
-    getCourseIdFromSlug(state, getters, rootState, rootGetters): getCourseIdFromSlugFn {
+    getCourseIdFromSlug (state, getters, rootState, rootGetters): getCourseIdFromSlugFn {
         return function (slug) {
             return state.courseSlugIdMap[slug];
         }
     },
-    getSlugFromCourseId({courseSlugIdMap}, getters: RootGetters): getSlugFromCourseIdFn {
+    getSlugFromCourseId ({courseSlugIdMap}, getters: RootGetters): getSlugFromCourseIdFn {
         let courseIdSlugMap = Object.keys(courseSlugIdMap).reduce((acc, slug) => {
             acc[courseSlugIdMap[slug]] = slug;
             return acc;
@@ -51,9 +57,25 @@ export const userCoursesListingGetters: {[index in keyof UserCoursesListingGette
         return function (courseId) {
             return courseIdSlugMap[courseId];
         }
+    },
+    getCourseModeFromId (state, getters): courseModeFn {
+        return function (courseId: string): CourseMode {
+            return getters.adminCourseListingMap[courseId] ? CourseMode.ADMIN : CourseMode.ENROLLED;
+        }
+    },
+    getCourseModeFromSlug (state, getters: RootGetters): courseModeFn {
+      return function(slug: string) {
+          return getters.getCourseModeFromId(getters.getCourseIdFromSlug(slug));
+      }
+    },
+    adminCourseListingMap (state, getters): { [index: string]: AdminCourseDescription } {
+        return state.adminCourseDescriptions.reduce((acc, desc) => {
+            acc[desc.id] = desc;
+            return acc;
+        }, {});
     }
-};
 
+};
 /**
  * Mutations
  */
@@ -74,7 +96,7 @@ export const USER_COURSES_LISTING_MUTATIONS: Constant<UserCoursesListingMutation
 };
 
 export const userCoursesListingMutations: UserCoursesListingMutations & MutationTree<UserCoursesListingState> = {
-    SET_ADMIN_COURSE_DESCRIPTIONS(state: UserCoursesListingState, adminCourseDescriptions: AdminCourseDescription[]) {
+    SET_ADMIN_COURSE_DESCRIPTIONS (state: UserCoursesListingState, adminCourseDescriptions: AdminCourseDescription[]) {
         let uniqueTitle = adminCourseDescriptions.reduce((acc, {title}: AdminCourseDescription) => {
             acc[title] = _.isUndefined(acc[title]);
             return acc;
@@ -90,16 +112,18 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
             acc[course.slug] = course.id;
             return acc;
         }, {});
+
+        let adminCourseDescriptionsMap = adminCourses
         Vue.set(state, 'courseSlugIdMap', courseSlugToMap);
         Vue.set(state, 'adminCourseDescriptions', adminCourses);
     },
-    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING(state: UserCoursesListingState, loading: boolean) {
+    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING (state: UserCoursesListingState, loading: boolean) {
         state.loading = loading;
     },
-    SET_USER_COURSES_LISTINGS_LOADED(state: UserCoursesListingState, coursesListing: boolean) {
+    SET_USER_COURSES_LISTINGS_LOADED (state: UserCoursesListingState, coursesListing: boolean) {
         Vue.set(state, 'courseListingsLoaded', coursesListing);
     },
-    CLEAR_USER_COURSES_LISTINGS(state: UserCoursesListingState) {
+    CLEAR_USER_COURSES_LISTINGS (state: UserCoursesListingState) {
         state.courseListingsLoaded = null;
         state.loading = false;
         state.adminCourseDescriptions = [];

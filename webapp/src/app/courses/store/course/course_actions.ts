@@ -1,5 +1,5 @@
 import {CourseState} from './course_state';
-import {COURSE_MUTATIONS} from './course_mutations';
+import {COURSE_MUTATIONS, CourseMode} from './course_mutations';
 import {
     AdminCourseDescription, CourseEntity, CreateCourseEntityCommand, CreateCourseEntityPayload,
     SaveCourseEntityPayload, SaveCourseResponse, ViewCourseData
@@ -13,8 +13,8 @@ import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../c
 
 export interface CourseActions {
     CREATE_COURSE: CourseAction<CreateCourseEntityPayload>,
-    SET_CURRENT_COURSE: CourseAction<{ id: string, isAdmin: boolean }>;
-    SET_CURRENT_COURSE_FROM_SLUG: CourseAction<{ slug: string, isAdmin: boolean }>;
+    SET_CURRENT_COURSE: CourseAction<{id: string, mode: CourseMode}>;
+    SET_CURRENT_COURSE_FROM_SLUG: CourseAction<string>;
     SAVE_COURSE: CourseAction<SaveCourseEntityPayload>;
 }
 
@@ -33,7 +33,7 @@ export const COURSE_ACTIONS: Constant<CourseActions> = {
  * Course store actions
  */
 export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = {
-    async CREATE_COURSE({commit, dispatch, rootState, state}, course: CreateCourseEntityPayload) {
+    async CREATE_COURSE ({commit, dispatch, rootState, state}, course: CreateCourseEntityPayload) {
         let CREATE_ID = 'CREATING';
         try {
             let createCourseCommand: CreateCourseEntityCommand = {
@@ -53,23 +53,21 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
             commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, updateAdminDescriptions);
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
             commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, courseEntity);
-            await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: courseEntity.id, isAdmin: true});
+            await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: courseEntity.id, mode: CourseMode.ADMIN});
         } catch (e) {
             console.error(e);
             throw e;
         }
     },
-    async SET_CURRENT_COURSE({state, rootGetters, commit}, {id, isAdmin}): Promise<any> {
+    async SET_CURRENT_COURSE ({state, rootGetters, commit}, {id, mode}): Promise<void> {
         try {
-            if (id === state.currentCourseId && isAdmin === state.isAdmin) {
+            if (id === state.currentCourseId && mode === state.mode) {
                 // current state matches, no changes
                 return;
             }
 
+            commit(COURSE_MUTATIONS.SET_MODE, mode);
             commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, {id});
-            if (isAdmin) {
-                commit(COURSE_MUTATIONS.SET_COURSE_ADMIN, isAdmin);
-            }
             if (!rootGetters.currentCourseLoaded) {
                 commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id, requesting: true});
                 let course = await coursesService.loadAdminCourse(id);
@@ -83,12 +81,13 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
             throw e;
         }
     },
-    async SET_CURRENT_COURSE_FROM_SLUG({getters, dispatch}, {slug, isAdmin}) {
+    async SET_CURRENT_COURSE_FROM_SLUG ({getters, dispatch, rootState}, slug) {
         await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
+        let mode = (<RootGetters> getters).getCourseModeFromSlug(slug);
         let id = (<RootGetters> getters).getCourseIdFromSlug(slug);
-        await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id, isAdmin});
+        await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id, mode});
     },
-    async SAVE_COURSE({commit, dispatch}, saveCourseEntityPayload: SaveCourseEntityPayload) {
+    async SAVE_COURSE ({commit, dispatch}, saveCourseEntityPayload: SaveCourseEntityPayload) {
         commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: saveCourseEntityPayload.id, requesting: true});
         try {
             let response: SaveCourseResponse = await coursesService.saveCourse(saveCourseEntityPayload);

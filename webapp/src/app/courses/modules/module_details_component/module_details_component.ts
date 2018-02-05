@@ -5,6 +5,7 @@ import {mapGetters, mapState} from 'vuex';
 import {NavigationGuard} from 'vue-router';
 import {RootState, store} from '../../../state_store';
 import {MODULE_ACTIONS} from '../../store/module/module_actions';
+import {CourseMode} from "../../store/course/course_mutations";
 
 export const currentModuleRouteGuard: NavigationGuard = async (to, from, next) => {
     let slug = to.params.moduleSlug;
@@ -12,7 +13,7 @@ export const currentModuleRouteGuard: NavigationGuard = async (to, from, next) =
         throw new Error(`Invalid route ${to.fullPath}. Route param :moduleSlug must be defined`);
     }
     try {
-        await store.dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE_FROM_SLUG, slug);
+        await store.dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE_FROM_SLUG, {slug, mode: store.getters.mode});
     } catch (e) {
         console.error(`Error setting current course. ${e}`);
     } finally {
@@ -23,10 +24,12 @@ export const currentModuleRouteGuard: NavigationGuard = async (to, from, next) =
     computed: {
         ...mapGetters({
             loading: 'currentModuleLoading',
-            module: 'currentModule'
+            module: 'currentModule',
         }),
         ...mapState({
-            isCourseAdmin: (state:RootState) => state.course.isAdmin
+            isCourseAdmin: ({course: {mode}}) => {
+                return mode === CourseMode.ADMIN
+            }
         })
     },
     beforeRouteUpdate: currentModuleRouteGuard,
