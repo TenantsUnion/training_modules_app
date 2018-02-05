@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {AdminCourseDescription} from "@shared/courses";
-import {COURSES_ROUTE_NAMES} from '../../../courses/courses_routes';
-import {COURSE_ACTIONS} from '../../../courses/store/course/course_actions';
+import {AdminCourseDescription} from "../../../../shared/courses";
+import {COURSES_ROUTE_NAMES} from '../courses/courses_routes';
+import {COURSE_ACTIONS} from '../courses/store/course/course_actions';
 
 
 @Component({})
