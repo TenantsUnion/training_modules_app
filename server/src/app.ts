@@ -12,6 +12,7 @@ import {CoursesRoutes} from "./courses/courses_routes";
 import {QuillRoutes} from './training_entity/quill/quill_routes_controller';
 import {getLogger, LOG_LEVELS} from './log';
 import {Express} from 'express';
+import {AvailableCourseRoutes} from "./available_courses/available_courses_routes";
 
 /**
  * Configured to listen on port and started in /bin scripts
@@ -71,6 +72,7 @@ app.use(AccountRoutes);
 app.use(UserContentRoutes);
 app.use(CoursesRoutes);
 app.use(QuillRoutes);
+app.use(AvailableCourseRoutes);
 
 // has to go last so other routes can match, catch 404 and forward to error handler
 app.use(function (req, res, next) {

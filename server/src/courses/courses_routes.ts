@@ -4,8 +4,8 @@ import {ModuleRoutes} from './module/module_routes';
 import {SectionRoutes} from './section/section_routes';
 
 let router = express.Router();
-//http://localhost:8080/user/1/admin/course/course-1
-// todo delete
+// todo write http entity for deleting a course
+
 router.get('/user/:userId/admin/course/:courseSlug', (request, response) => {
     coursesController.loadUserAdminCourseWebView(request, response);
 });
