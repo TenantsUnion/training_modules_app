@@ -15,6 +15,11 @@ import {
 import {userActions, userMutations, userState, UserState} from './courses/store/user/user_store';
 import {sectionActions} from './courses/store/section/section_actions';
 import {sectionMutations} from './courses/store/section/section_mutations';
+import {
+    availableCoursesActions, availableCoursesMutations,
+    AvailableCoursesState,
+    initAvailableCoursesState
+} from "./available_courses/available_courses_store";
 
 Vue.use(Vuex);
 
@@ -58,6 +63,11 @@ export const store: Store<RootState> = new Vuex.Store({
             actions: sectionActions,
             mutations: sectionMutations,
             getters: sectionGetters
+        },
+        availableCourses: {
+            state: initAvailableCoursesState,
+            actions: availableCoursesActions,
+            mutations: availableCoursesMutations
         }
     }
 });
@@ -67,7 +77,9 @@ export interface RootState {
     course: CourseState
     module: ModuleState,
     section: SectionState,
-    userCourses: UserCoursesListingState
+    userCourses: UserCoursesListingState,
+    availableCourses: AvailableCoursesState
+
 }
 
 export type RootGetters = CourseGetters & UserCoursesListingGetters & ModuleGetters & SectionGetters;
