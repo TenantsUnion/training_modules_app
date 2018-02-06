@@ -5,13 +5,15 @@ import {userRoutes} from "./user/user_routes";
 import {store} from "./state_store";
 import {registerGlobalComponents} from './globals';
 import App from './app.vue';
+import {availableCoursesRoutes} from "./available_courses/available_courses_routes";
 
 // load javascript functionality for foundation
 require('foundation-sites');
 
 appRouter.addRoutes([
     loginRoutes,
-    userRoutes
+    userRoutes,
+    availableCoursesRoutes
 ]);
 
 registerGlobalComponents();
