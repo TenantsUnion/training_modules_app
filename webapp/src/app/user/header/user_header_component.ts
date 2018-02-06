@@ -1,8 +1,15 @@
 import Component from "vue-class-component";
 import Vue from "vue";
 import {USER_ACTIONS} from '../../courses/store/user/user_store';
+import {USER_ROUTES} from "@global/routes";
 
 @Component({
+    data: () => {
+        return {
+            adminCourses: {name: USER_ROUTES.adminCourses},
+            enrolledCourses: {name: USER_ROUTES.enrolledCourses}
+        }
+    },
     props: {
         username: String
     },

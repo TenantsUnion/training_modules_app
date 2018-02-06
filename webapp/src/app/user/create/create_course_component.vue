@@ -68,13 +68,13 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-import {CreateCourseEntityPayload} from '@shared/courses';
+import {CreateCourseEntityPayload} from '../../../../../shared/courses';
 import {FormState} from '../../vue-form';
-import {Segment} from '@shared/segment';
-import {COURSE_ACTIONS} from '../store/course/course_actions';
+import {Segment} from '../../../../../shared/segment';
+import {COURSE_ACTIONS} from '../../courses/store/course/course_actions';
 import {appRouter} from '../../router';
-import {COURSES_ROUTE_NAMES} from '../courses_routes';
-import {RawLocation} from "vue-router";
+import {Location} from "vue-router";
+import {PREVIEW_COURSE_ROUTES} from "../../global/routes";
 
 @Component({
     data: () => {
@@ -113,8 +113,8 @@ export default class CreateCourseComponent extends Vue {
         try {
             await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
             await this.$store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: null, isAdmin: false});
-            appRouter.push(<RawLocation>{
-                name: COURSES_ROUTE_NAMES.adminCourses
+            appRouter.push(<Location>{
+                name: PREVIEW_COURSE_ROUTES.coursePreview
             });
         } catch (msg) {
             this.errorMessages = msg;
@@ -134,8 +134,8 @@ export default class CreateCourseComponent extends Vue {
         let createCoursePayload = this.getCoursePayload();
         try {
             await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
-            appRouter.push({
-                name: COURSES_ROUTE_NAMES.adminCourseDetails,
+            appRouter.push(<Location>{
+                name: PREVIEW_COURSE_ROUTES.coursePreview,
                 params: {
                     courseSlug: this.$store.getters.getSlugFromCourseId(this.$store.state.course.currentCourseId)
                 }
@@ -171,8 +171,8 @@ export default class CreateCourseComponent extends Vue {
     }
 
     cancel() {
-        appRouter.push(<RawLocation>{
-            name: COURSES_ROUTE_NAMES.adminCourses
+        appRouter.push(<Location>{
+            name: PREVIEW_COURSE_ROUTES.coursePreview
         });
     }
 

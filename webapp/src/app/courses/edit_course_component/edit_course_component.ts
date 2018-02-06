@@ -1,19 +1,14 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {COURSES_ROUTE_NAMES} from '../courses_routes';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '../../state_store';
 import {Watch} from 'vue-property-decorator';
 import * as VueForm from '../../vue-form';
 import {COURSE_ACTIONS} from '../store/course/course_actions';
-import {
-    CourseEntityDiffDelta, diffBasicPropsCourseProps, SaveCourseEntityPayload, ViewCourseData
-} from '@shared/courses';
+import {diffBasicPropsCourseProps, SaveCourseEntityPayload, ViewCourseData} from '@shared/courses';
 import {getSlugFromCourseIdFn} from '../store/courses_listing/courses_listing_store';
 import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
-
-let Delta = Quill.import('delta');
-
+import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 
 @Component({
     data: () => {
@@ -81,7 +76,7 @@ export class EditCourseComponent extends Vue {
         }
 
         this.$router.push({
-            name: COURSES_ROUTE_NAMES.adminCourseDetails,
+            name: PREVIEW_COURSE_ROUTES.coursePreview,
             params: {
                 courseSlug: this.getSlugFromCourseId(this.storedCourse.id)
             }
@@ -89,7 +84,7 @@ export class EditCourseComponent extends Vue {
     }
 
     cancel () {
-        this.$router.push({name: COURSES_ROUTE_NAMES.adminCourseDetails})
+        this.$router.push({name: PREVIEW_COURSE_ROUTES.coursePreview})
     }
 
     timeEstimateUpdated (time) {

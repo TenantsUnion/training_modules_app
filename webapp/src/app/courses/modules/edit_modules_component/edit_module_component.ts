@@ -11,10 +11,10 @@ import {TrainingEntityDiffDelta, ViewTrainingEntityDescription} from '@shared/tr
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {MODULE_ACTIONS} from '../../store/module/module_actions';
-import {COURSES_ROUTE_NAMES} from '../../courses_routes';
 import {getModuleSlugFromIdFn} from '../../store/module/module_state';
 import {Watch} from 'vue-property-decorator';
 import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
+import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 
 @Component({
     data: () => {
@@ -108,7 +108,7 @@ export class EditModuleComponent extends Vue {
             this.saving = true;
             await this.$store.dispatch(MODULE_ACTIONS.SAVE_MODULE, moduleEntityPayload);
             this.$router.push({
-                name: COURSES_ROUTE_NAMES.moduleDetails,
+                name: PREVIEW_COURSE_ROUTES.modulePreview,
                 params: {
                     moduleSlug: this.getModuleSlugFromId(this.currentModuleId)
                 }

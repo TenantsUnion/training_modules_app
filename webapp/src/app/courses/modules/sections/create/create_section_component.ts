@@ -1,12 +1,11 @@
 import Component from 'vue-class-component';
 import Vue from 'vue';
 import * as VueForm from '../../../../vue-form';
-import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
 import {Segment} from '@shared/segment';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {CreateSectionEntityPayload} from '@shared/sections';
 import {currentModuleRouteGuard} from '../../module_details_component/module_details_component';
-import TrainingSegmentComponent from '@global/edit_training_segments/edit_training_segments_component';
+import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 
 @Component({
     data: () => {
@@ -63,7 +62,7 @@ export default class CreateSectionComponent extends Vue {
             let {getSectionSlugFromId} = this.$store.getters;
             let {currentSectionId} = this.$store.state.section;
             this.$router.push({
-                name: COURSES_ROUTE_NAMES.viewSection,
+                name: PREVIEW_COURSE_ROUTES.sectionPreview,
                 params: {
                     sectionSlug: getSectionSlugFromId({moduleId: currentModuleId, sectionId: currentSectionId})
                 },

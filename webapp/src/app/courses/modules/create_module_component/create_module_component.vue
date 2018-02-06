@@ -59,8 +59,9 @@
     import Component from 'vue-class-component';
     import {Segment} from "../../../../../../shared/segment";
     import {MODULE_ACTIONS} from "../../store/module/module_actions";
-    import {COURSES_ROUTE_NAMES} from "../../courses_routes";
+    import {Location} from 'vue-router';
     import {CreateModuleEntityPayload} from "../../../../../../shared/modules";
+    import {PREVIEW_COURSE_ROUTES} from "../../../global/routes";
 
     @Component({
         data: () => {
@@ -112,8 +113,8 @@
                 };
                 await this.$store.dispatch(MODULE_ACTIONS.CREATE_MODULE, createModulePayload);
 
-                this.$router.push({
-                    name: COURSES_ROUTE_NAMES.moduleDetails,
+                this.$router.push(<Location>{
+                    name: PREVIEW_COURSE_ROUTES.modulePreview,
                     params: {moduleSlug: this.$store.getters.getModuleSlugFromId(this.$store.state.module.currentModuleId)}
                 });
             } catch (errorMessages) {

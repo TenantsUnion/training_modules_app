@@ -1,12 +1,12 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
 import {CourseRefreshComponent} from '@global/refresh_route';
 import {NavigationGuard} from 'vue-router';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {RootGetters, RootState, store} from '../../../../state_store';
 import {MODULE_ACTIONS} from '../../../store/module/module_actions';
 import {mapGetters, mapState} from 'vuex';
+import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 
 export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) => {
     let courseSlug = to.params.courseSlug;
@@ -63,7 +63,7 @@ export default class ViewSectionComponent extends Vue {
         await this.$store.dispatch(SECTION_ACTIONS.NEXT_SECTION);
 
         this.$router.push({
-            name: COURSES_ROUTE_NAMES.viewSection,
+            name: PREVIEW_COURSE_ROUTES.sectionPreview,
             params: {sectionSlug}
         })
     }
@@ -78,7 +78,7 @@ export default class ViewSectionComponent extends Vue {
         await this.$store.dispatch(SECTION_ACTIONS.NEXT_SECTION);
 
         this.$router.push({
-            name: COURSES_ROUTE_NAMES.viewSection,
+            name: PREVIEW_COURSE_ROUTES.sectionPreview,
             params: {sectionSlug}
         })
     }

@@ -1,4 +1,3 @@
-import * as _ from 'underscore';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import * as VueForm from '../../../../vue-form';
@@ -7,13 +6,13 @@ import {CourseRefreshComponent} from '@global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '../../../../state_store';
 import {currentSectionRouteGuard} from '../view/view_section_component';
-import {COURSES_ROUTE_NAMES} from '../../../courses_routes';
 import {Watch} from 'vue-property-decorator';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
 import {TrainingEntityDiffDelta} from '@shared/training_entity';
 import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
 import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
+import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 
 @Component({
     data: () => {
@@ -81,7 +80,7 @@ export default class EditSectionComponent extends Vue {
             this.saving = true;
             await this.$store.dispatch(SECTION_ACTIONS.SAVE_SECTION, saveSectionPayload);
             this.$router.push({
-                name: COURSES_ROUTE_NAMES.viewSection,
+                name: PREVIEW_COURSE_ROUTES.sectionPreview,
                 params: {
                     sectionSlug: this.getSectionSlugFromId({
                         sectionId: this.section.id,

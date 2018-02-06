@@ -2,8 +2,8 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {AdminCourseDescription} from "@shared/courses";
 import {mapState} from 'vuex';
-import {COURSES_ROUTE_NAMES} from '../../../courses/courses_routes';
 import {COURSE_ACTIONS} from '../../../courses/store/course/course_actions';
+import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 
 @Component({
     computed: mapState({
@@ -20,7 +20,7 @@ export default class UserAdminCourseComponent extends Vue {
         const mode = this.$store.getters.getCourseModeFromId(course.id);
         await this.$store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: course.id, mode});
         this.$router.push({
-            name: COURSES_ROUTE_NAMES.adminCourseDetails,
+            name: PREVIEW_COURSE_ROUTES.coursePreview,
             params: {
                 courseSlug: course.slug
             }

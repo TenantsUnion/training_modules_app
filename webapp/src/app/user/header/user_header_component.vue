@@ -4,14 +4,10 @@
             <div class="menu-section columns">
                 <ul class="menu menu-section__menu">
                     <li v-bind:class="{'is-active': adminCoursesActive}">
-                        <router-link :to="{name: 'adminCourses'}">
-                            Admin Courses
-                        </router-link>
+                        <router-link :to="adminCourses">Admin Courses</router-link>
                     </li>
                     <li v-bind:class="{'is-active': enrolledCoursesActive}">
-                        <router-link :to="{name: 'enrolledCourses'}">
-                            Enrolled Courses
-                        </router-link>
+                        <router-link :to="enrolledCourses">Enrolled Courses</router-link>
                     </li>
                 </ul>
             </div>

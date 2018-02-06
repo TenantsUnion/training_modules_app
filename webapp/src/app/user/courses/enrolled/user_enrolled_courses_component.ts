@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
+import {USER_ROUTES} from "@global/routes";
 
 @Component({
     data: () => {
@@ -16,6 +17,8 @@ export default class UserEnrolledCoursesComponent extends Vue {
     }
 
     enrollInCourse () {
-
+        this.$router.push({
+            name: USER_ROUTES.availableCourses
+        });
     }
 }

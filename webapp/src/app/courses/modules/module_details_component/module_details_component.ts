@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {COURSES_ROUTE_NAMES} from '../../courses_routes';
 import {mapGetters, mapState} from 'vuex';
 import {NavigationGuard} from 'vue-router';
-import {RootState, store} from '../../../state_store';
+import {store} from '../../../state_store';
 import {MODULE_ACTIONS} from '../../store/module/module_actions';
 import {CourseMode} from "../../store/course/course_mutations";
+import {ADMIN_COURSE_ROUTES} from "@global/routes";
 
 export const currentModuleRouteGuard: NavigationGuard = async (to, from, next) => {
     let slug = to.params.moduleSlug;
@@ -39,7 +39,7 @@ export default class ModuleDetailsComponent extends Vue {
     loading: boolean;
 
     createSection() {
-        this.$router.push({name: COURSES_ROUTE_NAMES.createSection});
+        this.$router.push({name: ADMIN_COURSE_ROUTES.createSection});
     }
 }
 

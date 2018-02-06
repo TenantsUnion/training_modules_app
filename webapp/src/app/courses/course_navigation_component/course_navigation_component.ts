@@ -1,16 +1,56 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
 import {ViewCourseData} from '@shared/courses';
-import {RawLocation, RouteRecord} from 'vue-router/types/router';
-import {COURSES_ROUTE_NAMES} from '../courses_routes';
+import {Location} from 'vue-router/types/router';
 import {mapGetters} from 'vuex';
+import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
 
 @Component({
     data: () => {
         return {
-            courseDetails: {
-                name: 'adminCourse.courseDetails',
-            } as RouteRecord
+            editCourse: {name: ADMIN_COURSE_ROUTES.editCourse},
+            createModule: {name: ADMIN_COURSE_ROUTES.createModule},
+            coursePreview: {name: PREVIEW_COURSE_ROUTES.coursePreview},
+            editModule (moduleSlug: string): Location {
+                return {
+                    name: ADMIN_COURSE_ROUTES.editModule, params: {
+                        moduleSlug: moduleSlug
+                    }
+                };
+            },
+            editSection (moduleSlug: string, sectionSlug: string): Location {
+                return {
+                    name: ADMIN_COURSE_ROUTES.editSection,
+                    params: {
+                        moduleSlug: moduleSlug,
+                        sectionSlug: sectionSlug
+                    }
+                }
+            },
+            createSection (moduleSlug: string): Location {
+                return {
+                    name: ADMIN_COURSE_ROUTES.createSection, params: {
+                        moduleSlug
+                    }
+                };
+            },
+            modulePreviewRoute (moduleTitle): Location {
+                return {
+                    name: PREVIEW_COURSE_ROUTES.modulePreview,
+                    params: {
+                        moduleSlug: moduleTitle
+                    }
+                };
+            },
+            sectionPreviewRoute (moduleSlug, sectionSlug): Location {
+                return {
+                    name: PREVIEW_COURSE_ROUTES.sectionPreview,
+                    params: {
+                        moduleSlug: moduleSlug,
+                        sectionSlug: sectionSlug
+                    }
+                }
+            },
         }
     },
     props: {
@@ -26,73 +66,21 @@ export default class CourseNavigationComponent extends Vue {
     course: ViewCourseData;
     isCourseAdmin: boolean;
 
-    get activeNavigation() {
+    get activeNavigation () {
         return {
-            course: this.$route.name === COURSES_ROUTE_NAMES.adminCourseDetails, //todo enrolled course details
-            module: this.$route.params.moduleTitle,
-            section: this.$route.params.sectionTitle
+            // highlight course item
+            course:
+            this.$route.name === ADMIN_COURSE_ROUTES.editCourse
+            || this.$route.name === PREVIEW_COURSE_ROUTES.coursePreview
+            || this.$route.name === ADMIN_COURSE_ROUTES.createModule
+            || this.$route.name === ENROLLED_COURSE_ROUTES.enrolledCourse,
+            module: this.$route.params.moduleSlug,
+            section: this.$route.params.sectionSlug
         };
     }
 
-    goToModule(title: string): void {
-        this.$router.push('title')
-    }
-
-    createModule() {
-        this.$router.push({name: COURSES_ROUTE_NAMES.createModule})
-    }
-
-    moduleDetailsRoute(moduleTitle): RawLocation {
-        return {
-            name: COURSES_ROUTE_NAMES.moduleDetails,
-            params: {
-                moduleSlug: moduleTitle
-            }
-        };
-    }
-
-    sectionRoute(moduleSlug, sectionSlug): RawLocation {
-        return {
-            name: COURSES_ROUTE_NAMES.viewSection,
-            params: {
-                moduleSlug: moduleSlug,
-                sectionSlug: sectionSlug
-            }
-        }
-    }
-
-    editCourse() {
-        this.$router.push({name: COURSES_ROUTE_NAMES.editCourse});
-    }
-
-    editModule(moduleSlug: string) {
-        this.$router.push({
-            name: COURSES_ROUTE_NAMES.editModule, params: {
-                moduleSlug: moduleSlug
-            }
-        })
-    }
-
-    editSection(moduleSlug: string, sectionSlug: string) {
-        this.$router.push({
-            name: COURSES_ROUTE_NAMES.editSection,
-            params: {
-                moduleSlug: moduleSlug,
-                sectionSlug: sectionSlug
-            }
-        })
-    }
-
-    createSection(moduleSlug: string) {
-        this.$router.push({
-            name: COURSES_ROUTE_NAMES.createSection, params: {
-                moduleSlug
-            }
-        });
-    }
-
-    isActiveSection(moduleTitle: string, sectionTitle: string) {
-        return this.$route.params.moduleTitle === moduleTitle
-            && this.$route.params.sectionTitle === sectionTitle;
+    isActiveSection (moduleSlug: string, sectionSlug: string) {
+        return this.$route.params.moduleSlug === moduleSlug
+            && this.$route.params.sectionSlug === sectionSlug;
     }
 }

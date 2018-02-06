@@ -2,18 +2,21 @@
     <nav class="sidebar-nav">
         <div class="row menu-section__row menu-header">
         <span class="menu-section__course-title" v-bind:class="{'is-active': activeNavigation.course}">
-            <router-link :to="courseDetails">{{course.title}}</router-link>
+            <router-link :to="coursePreview">{{course.title}}</router-link>
         </span>
             <div class="buttons">
-                <button title="Edit Course" v-if="isCourseAdmin" class="button button__icon"
-                        v-on:click="editCourse">
-                    <i class="fa fa-pencil fa-fw "></i>
-                    <span class="sr-only">Edit course</span>
-                </button>
-                <button title="Add Module" v-if="isCourseAdmin" class="button button__icon" v-on:click="createModule">
-                    <i class="fa fa-plus fa-fw "></i>
-                    <span class="sr-only">Add module</span>
-                </button>
+                <router-link v-if="isCourseAdmin" :to="editCourse">
+                    <button title="Edit Course" class="button button__icon">
+                        <i class="fa fa-pencil fa-fw "></i>
+                        <span class="sr-only">Edit course</span>
+                    </button>
+                </router-link>
+                <router-link v-if="isCourseAdmin" :to="createModule">
+                    <button title="Create Module" v-if="isCourseAdmin" class="button button__icon">
+                        <i class="fa fa-plus fa-fw "></i>
+                        <span class="sr-only">Create Module</span>
+                    </button>
+                </router-link>
             </div>
         </div>
         <div class="menu-section">
@@ -22,7 +25,7 @@
                     <div class="row menu-section__row">
                         <span class="menu-section__module-title"
                               v-bind:class="{'is-active': activeNavigation.module === module.title}">
-                            <router-link :to="moduleDetailsRoute(module.slug)">{{module.title}}</router-link>
+                            <router-link :to="modulePreviewRoute(module.slug)">{{module.title}}</router-link>
                         </span>
                         <div class="buttons">
                             <button title="Edit Module" v-if="isCourseAdmin" class="button button__icon"
@@ -41,8 +44,8 @@
                         <li class="menu-section__item" v-for="section in module.sections">
                             <div class="row menu-section__row">
                                 <span class="menu-section__section-title"
-                                      v-bind:class="{'is-active': isActiveSection(module.title, section.title)}">
-                                    <router-link :to="sectionRoute(module.slug, section.slug)">
+                                      v-bind:class="{'is-active': isActiveSection(module.slug, section.slug)}">
+                                    <router-link :to="sectionPreviewRoute(module.slug, section.slug)">
                                         {{section.title}}
                                     </router-link>
                                 </span>

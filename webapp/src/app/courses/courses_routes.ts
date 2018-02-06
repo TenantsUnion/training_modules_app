@@ -1,152 +1,69 @@
-import {RouteConfig, default as VueRouter} from "vue-router";
-import UserEnrolledCoursesComponent from "../user/courses/enrolled/user_enrolled_courses_component.vue";
-import UserAdminCourseComponent from "../user/courses/admin/user_admin_courses_component.vue";
-import CreateCourseComponent from "./create/create_course_component.vue";
+import {RouteConfig} from "vue-router";
 import CourseComponent from './course_component/course_component.vue';
 import CourseDetailsComponent from './course_details_component/course_details_component.vue';
 import CreateModuleComponent from "./modules/create_module_component/create_module_component.vue";
 import ModuleDetailsComponent from './modules/module_details_component/module_details_component.vue';
-import {appRouter} from '../router';
 import CreateSectionComponent from './modules/sections/create/create_section_component.vue';
 import ViewSectionComponent from './modules/sections/view/view_section_component.vue';
 import EditSectionComponent from './modules/sections/edit/edit_section_component.vue';
 import VueEditCourseComponent from './edit_course_component/edit_course_component.vue';
 import EditModuleComponent from './modules/edit_modules_component/edit_module_component.vue';
+import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
 
-export const COURSES_ROUTE_NAMES = {
-    enrolledCourses: 'enrolledCourses',
-    enrolledCourse: 'enrolledCourse',
-    enrolledCourseDetails: 'enrolledCourse.courseDetails',
-    adminCourses: 'adminCourses',
-    adminCourse: 'adminCourse',
-    editCourse: 'adminCourse.editCourse',
-    adminCourseDetails: 'adminCourse.courseDetails',
-    createModule: 'adminCourse.createModule',
-    moduleDetails: 'adminCourse.moduleDetails',
-    editModule: 'admin.editModule',
-    createSection: 'adminCourse.createSection',
-    editSection: 'course.editSection',
-    viewSection: 'course.viewSection'
+export const CourseRoutes: RouteConfig = {
+    path: 'course',
+    props: true,
+    component: CourseComponent,
+    children: [
+        {
+            path: ':courseSlug',
+            name: PREVIEW_COURSE_ROUTES.coursePreview,
+            component: CourseDetailsComponent
+        },
+        {
+            path: ':courseSlug/edit',
+            name: ADMIN_COURSE_ROUTES.editCourse,
+            props: true,
+            component: VueEditCourseComponent
+        }, {
+            path: ':courseSlug/module/create',
+            name: ADMIN_COURSE_ROUTES.createModule,
+            props: true,
+            component: CreateModuleComponent
+        }, {
+            path: ':courseSlug/module/:moduleSlug',
+            name: PREVIEW_COURSE_ROUTES.modulePreview,
+            component: ModuleDetailsComponent
+        }, {
+            path: ':courseSlug/module/:moduleSlug/edit',
+            name: ADMIN_COURSE_ROUTES.editModule,
+            props: true,
+            component: EditModuleComponent
+        }, {
+            path: ':courseSlug/module/:moduleSlug/section/create',
+            name: ADMIN_COURSE_ROUTES.createSection,
+            props: true,
+            component: CreateSectionComponent
+        }, {
+            path: ':courseSlug/module/:moduleSlug/section/:sectionSlug',
+            name: PREVIEW_COURSE_ROUTES.sectionPreview,
+            component: ViewSectionComponent
+        }, {
+            path: ':courseSlug/module/:moduleSlug/section/:sectionSlug/edit',
+            name: ADMIN_COURSE_ROUTES.editSection,
+            props: true,
+            component: EditSectionComponent
+        }, {
+            path: ':courseSlug/learning',
+            name: ENROLLED_COURSE_ROUTES.enrolledCourse,
+            component: CourseDetailsComponent
+        }, {
+            path: ':courseSlug/module/:moduleSlug/learning',
+            name: ENROLLED_COURSE_ROUTES.enrolledModule,
+            component: ModuleDetailsComponent
+        }, {
+            path: ':courseSlug/module/:moduleSlug/section/:sectionSlug/learning',
+            name: ENROLLED_COURSE_ROUTES.enrolledSection,
+            component: ViewSectionComponent
+        }]
 };
-
-export const coursesRoutes: RouteConfig[] = [
-    {
-        path: 'enrolled-courses',
-        name: COURSES_ROUTE_NAMES.enrolledCourses,
-        props: true,
-        component: UserEnrolledCoursesComponent
-    },
-    {
-        path: 'enrolled-course',
-        name: COURSES_ROUTE_NAMES.enrolledCourse,
-        props: true,
-        component: CourseComponent,
-        children: [
-            {
-                path: ':courseSlug',
-                name: 'enrolledCourse.courseDetails',
-                props: true,
-                component: CourseDetailsComponent
-
-            }
-        ]
-    },
-    {
-        path: 'admin-courses',
-        name: COURSES_ROUTE_NAMES.adminCourses,
-        props: true,
-        component: UserAdminCourseComponent
-    },
-    {
-        path: 'admin-course',
-        name: COURSES_ROUTE_NAMES.adminCourse,
-        props: true,
-        component: CourseComponent,
-        children: [
-            {
-                path: ':courseSlug',
-                name: COURSES_ROUTE_NAMES.adminCourseDetails,
-                props: true,
-                component: CourseDetailsComponent
-            },
-            {
-                path: ':courseSlug/edit',
-                name: COURSES_ROUTE_NAMES.editCourse,
-                props: true,
-                component: VueEditCourseComponent
-            },
-            {
-                path: ':courseSlug/module/create',
-                name: COURSES_ROUTE_NAMES.createModule,
-                props: true,
-                component: CreateModuleComponent
-            },
-            {
-                path: ':courseSlug/module/:moduleSlug',
-                name: COURSES_ROUTE_NAMES.moduleDetails,
-                props: true,
-                component: ModuleDetailsComponent
-            },
-            {
-                path: ':courseSlug/module/:moduleSlug/edit',
-                name: COURSES_ROUTE_NAMES.editModule,
-                props: true,
-                component: EditModuleComponent
-            },
-            {
-                path: ':courseSlug/module/:moduleSlug/section/create',
-                name: COURSES_ROUTE_NAMES.createSection,
-                props: true,
-                component: CreateSectionComponent
-            },
-            {
-                path: ':courseSlug/module/:moduleSlug/section/:sectionSlug',
-                name: COURSES_ROUTE_NAMES.viewSection,
-                props: true,
-                component: ViewSectionComponent
-            },
-            {
-                path: ':courseSlug/module/:moduleSlug/section/:sectionSlug/edit',
-                name: COURSES_ROUTE_NAMES.editSection,
-                props: true,
-                component: EditSectionComponent
-            }
-        ]
-    },
-    {
-        path: 'course/create',
-        name: 'create',
-        props: true,
-        component: CreateCourseComponent
-    }
-];
-
-export class CoursesRoutesService {
-    constructor(private router: VueRouter) {
-    }
-
-    getCurrentModuleTitle() {
-        return this.router.currentRoute.params.moduleTitle;
-    }
-
-    getCurrentCourse() {
-        return this.router.currentRoute.params.courseSlug;
-    }
-
-    getCurrentUser() {
-        return this.router.currentRoute.params.username;
-    }
-
-    getCurrentSectionTitle() {
-        return this.router.currentRoute.params.sectionTitle;
-    }
-
-    // isCourseAdmin() {
-    //     return this.router.currentRoute.matched.some((matchedRoute) => {
-    //         return matchedRoute.name === 'adminCourse';
-    //     });
-    // }
-
-}
-
-export const coursesRoutesService = new CoursesRoutesService(appRouter);

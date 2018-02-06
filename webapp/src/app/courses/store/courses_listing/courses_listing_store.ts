@@ -64,9 +64,9 @@ export const userCoursesListingGetters: {[index in keyof UserCoursesListingGette
         }
     },
     getCourseModeFromSlug (state, getters: RootGetters): courseModeFn {
-      return function(slug: string) {
-          return getters.getCourseModeFromId(getters.getCourseIdFromSlug(slug));
-      }
+        return function (slug: string) {
+            return getters.getCourseModeFromId(getters.getCourseIdFromSlug(slug));
+        }
     },
     adminCourseListingMap (state, getters): { [index: string]: AdminCourseDescription } {
         return state.adminCourseDescriptions.reduce((acc, desc) => {
@@ -133,8 +133,9 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
 /**
  * Actions
  */
-export type UserCoursesListingAction<P> = (context: ActionContext<UserCoursesListingState, RootState>, payload: P) => Promise<any>
-    | Action<UserCoursesListingState, RootState>;
+export type UserCoursesListingAction<P> =
+    (context: ActionContext<UserCoursesListingState, RootState>, payload: P) => Promise<any>
+        | Action<UserCoursesListingState, RootState>;
 
 export interface UserCoursesListingActions {
     LOAD_USER_ADMIN_COURSES: UserCoursesListingAction<void>
