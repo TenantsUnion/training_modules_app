@@ -2,20 +2,24 @@
     <div class="user-main">
         <div class="inner-narrow">
             <div class="row section-header">
-                <h4>Admin Courses</h4>
-                <button class="button primary"
-                        @click="createCourse">Create a Course
-                </button>
+                <h4>Available Courses</h4>
             </div>
             <table v-if="courses.length"
                    class="content-list">
                 <tr v-for="course in courses"
                     class="content-item">
                     <td>{{ course.title }}</td>
+                    <td>{{course.description}}</td>
                     <td>
                         <button class="button primary"
-                                @click="go(course)">
-                            Edit
+                                @click="preview(course)">
+                            Preview
+                        </button>
+                    </td>
+                    <td v-if="enrolling">
+                        <button class="button primary"
+                                @click="enroll(course)">
+                            Enroll
                         </button>
                     </td>
                 </tr>
