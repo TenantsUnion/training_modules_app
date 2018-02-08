@@ -1,44 +1,26 @@
+const styleLoaders = require('./style_loaders.conf');
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const baseConfig = require('./default.webpack.config');
 // Extract style sheets into dedicated file in production
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+// var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = merge(baseConfig, {
     devtool: 'cheap-module-eval-source-map',
     plugins: [
-        new ExtractTextPlugin('style.css', {
-            allChunks: true,
-            sourceMap: true
-        }),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin()
+        new webpack.NamedModulesPlugin(),
+        // https://github.com/ampedandwired/html-webpack-plugin
+        new HtmlWebpackPlugin({
+            filename: 'index.html',
+            template: 'index.html',
+            inject: true
+        }),
     ],
     module: {
-        rules: [{
-            test: /\.(scss|css)$/,
-            loader: ExtractTextPlugin.extract({
-                use: [
-                    {
-                        loader: "css-loader",
-                        options: {
-                            sourceMap: true,
-                        }
-                    }, {
-                        loader: "sass-loader",
-                        options: {
-                            sourceMap: true,
-                            includePaths: [
-                                'node_modules/foundation-sites/scss',
-                                'node_modules/foundation-sites/scss/util',
-                                'node_modules/foundation-sites/_vendor',
-                                'node_modules/font-awesome-sass/assets/stylesheets/font-awesome'
-                            ]
-                        }
-                    }]
-            })
-        }],
+        rules: styleLoaders.styleLoaders({sourceMap: true, usePostCSS: true}),
     },
     devServer: {
         clientLogLevel: 'warning',
@@ -63,7 +45,7 @@ module.exports = merge(baseConfig, {
                 secure: false,
                 filter:
                     function (pathname, req) {
-                        return !pathname.match(/build\.js/);
+                        return !pathname.match(/build\.js/) || !pathname.match(/style\.css/);
                     }
             }
         }

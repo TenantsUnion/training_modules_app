@@ -1,3 +1,4 @@
+const config = require('config');
 const path = require('path');
 const webpack = require('webpack');
 const vueLoaderConf = require('./vue_loader.conf');
@@ -5,20 +6,18 @@ const vueLoaderConf = require('./vue_loader.conf');
 
 module.exports = {
     entry: [
-        '../src/app/app.ts'
+        './src/app/app.ts'
     ],
-    context: path.resolve(__dirname),
+    context: config.get('webapp.context'),
     output: {
-        path: path.resolve(__dirname, '../dist'),
-        filename: 'build.js',
+        path: config.get('webapp.dist'),
+        filename: '[name].[hash].bundle.js',
         sourceMapFilename: '[file].map'
     },
     plugins: [
-        new webpack.NodeEnvironmentPlugin([
-            'NODE_ENV'
-        ]),
-        new webpack.SourceMapDevToolPlugin({
-            filename: '[file].map'
+        // defaults process.env.NODE_ENV to development if not defined during build, otherwise substitutes value during build
+        new webpack.NodeEnvironmentPlugin({
+            'NODE_ENV': 'development'
         })
     ],
     module: {
@@ -34,13 +33,9 @@ module.exports = {
                 }
             },
             {
-              test: /\.vue$/,
-              loader: 'vue-loader',
-              options: vueLoaderConf
-            },
-            {
-                test: /\.tpl.html$/,
-                loader: 'raw-loader'
+                test: /\.vue$/,
+                loader: 'vue-loader',
+                options: vueLoaderConf
             },
             {
                 test: /.(ttf|otf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
@@ -49,21 +44,18 @@ module.exports = {
                     options: {
                         name: '[name].[ext]?[hash]',
                         outputPath: 'fonts/',    // where the fonts will go
-                        publicPath: '../'       // override the default path
                     }
                 }]
             },
-            ]
+        ]
     },
     resolve: {
         extensions: ['.js', '.ts', '.html', '.json', '.scss'],
-        alias:
-            {
-                'vue$': 'vue/dist/vue.esm.js',
-                '@shared': path.resolve(__dirname, '../../shared'),
-                '@global': path.resolve(__dirname, '../src/app/global')
-
-            }
+        alias: {
+            'vue$': 'vue/dist/vue.esm.js',
+            '@shared': path.resolve(__dirname, '../../shared'),
+            '@global': path.resolve(__dirname, '../src/app/global')
+        }
     },
     performance: {
         hints: false

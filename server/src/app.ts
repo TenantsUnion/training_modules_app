@@ -19,10 +19,6 @@ import {AvailableCourseRoutes} from "./available_courses/available_courses_route
  */
 let app:Express = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, config.get('server.views_dir')));
-app.set('view engine', 'hbs');
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
@@ -54,7 +50,7 @@ app.use(function (err: HttpResponse, req, res, next) {
     res.render('error');
 });
 
-app.use(express.static(path.join(__dirname, config.get('server.webapp_dir'))));
+app.use(express.static(config.get('webapp.dist')));
 
 const httpLogger = getLogger('HttpServer', LOG_LEVELS.debug);
 app.use((req, res, next) => {

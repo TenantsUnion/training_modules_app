@@ -1,4 +1,5 @@
 const path = require('path');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 /**
  * Config for webpack style loaders
  */
@@ -7,6 +8,9 @@ const path = require('path');
  * Return object of style loader configurations where the file extension is the key and the loader
  * configuration is the corresponding property. For use with vue loader and .vue files with
  * @code <style lang="">
+ *
+ * @param options is object with boolean props sourceMap, usePostCSS, and extract to customize style loaders config
+ * that is returned
  */
 exports.cssLoaders = function (options) {
     options = options || {};
@@ -27,7 +31,7 @@ exports.cssLoaders = function (options) {
 
     // generate loader string to be used with extract text plugin
     function generateLoaders(loader, loaderOptions) {
-        const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader]
+        const loaders = options.usePostCSS ? [cssLoader, postcssLoader] : [cssLoader];
 
         if (loader) {
             loaders.push({
@@ -41,6 +45,7 @@ exports.cssLoaders = function (options) {
         // Extract CSS when that option is specified
         // (which is the case during production build)
         if (options.extract) {
+            console.log('extract style plugin: ' + loader);
             return ExtractTextPlugin.extract({
                 use: loaders,
                 fallback: 'vue-style-loader'
