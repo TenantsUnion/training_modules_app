@@ -5,14 +5,14 @@ import {CreateModuleEntityPayload, CreateModuleIdMap, SaveModuleEntityPayload} f
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload, SectionIdMap
 } from '@shared/sections';
-import {SectionHandler} from './section/section_handler';
+import {SectionHandler} from '../section/section_handler';
 import {
     CourseEntity,
     CreateCourseEntityCommand, CreateCourseEntityPayload, CreateCourseIdMap, SaveCourseEntityPayload
 } from '@shared/courses';
 import {QuillHandler} from '../training_entity/quill/quill_handler';
 import {applyDeltaDiff} from '@shared/delta/apply_delta';
-import {ModuleHandler} from './module/module_handler';
+import {ModuleHandler} from '../module/module_handler';
 import {TrainingEntityHandler} from '../training_entity/training_entity_handler';
 import {ContentQuestionEntity} from '@shared/training_entity';
 import {applyDeltaArrOps, updateArrOpsValues} from '@shared/delta/diff_key_array';

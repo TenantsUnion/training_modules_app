@@ -3,13 +3,13 @@ import {
     processContentQuestions,
     processCourseView, ViewCourseDbData, ViewModuleDescriptionDbData,
     ViewTrainingEntityDbData
-} from "../../../../../server/src/courses/view/course_view_row_processor";
+} from "../../../../../server/src/course/view/course_view_row_processor";
 import {getUTCNow} from "../../../../../server/src/repository";
 import {QuillEditorData} from "@shared/quill_editor";
 import {
     AnswerType, QuestionOptionQuillData, QuestionQuillData, QuestionType
 } from "@shared/questions";
-import {QuestionOptionDbData, QuestionViewDbData} from "../../../../../server/src/courses/view/view_database";
+import {QuestionOptionDbData, QuestionViewDbData} from "../../../../../server/src/course/view/view_database";
 import {Delta} from '@shared/normalize_imports';
 
 describe('Course View Row Processor', function () {

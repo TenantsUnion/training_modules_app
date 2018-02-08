@@ -1,9 +1,9 @@
-import {ViewTrainingEntityDescription} from "@shared/training_entity";
+import {ViewTrainingEntityDescription} from "../../../shared/training_entity";
 import {
     orderEntitiesByIds, processContentQuestions, toEntityMap,
     ViewTrainingEntityDbData
-} from "../view/course_view_row_processor";
-import {ViewModuleData} from "@shared/modules";
+} from "../course/view/course_view_row_processor";
+import {ViewModuleData} from "../../../shared/modules";
 
 export interface ViewModuleDbData extends ViewTrainingEntityDbData {
     orderedSectionIds: string[],

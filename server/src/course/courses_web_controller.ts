@@ -9,17 +9,17 @@ import {getLogger} from '../log';
 import {
     CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload,
     SaveModuleResponse} from "@shared/modules";
-import {ModuleOperations} from './module/module_routes';
+import {ModuleOperations} from '../module/module_routes';
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload,
     SaveSectionResponse
 } from '@shared/sections';
 import {coursesHandler} from '../config/handler_config';
-import {SectionOperations} from './section/section_routes';
+import {SectionOperations} from '../section/section_routes';
 import {validateCreateCourse, validateSaveCourse} from './courses_validation';
 import {logHandleServerError, logHandleValidationError} from '../util/handle_validation_error';
-import {ModuleViewQuery} from './module/module_view_query';
-import {SectionViewQuery} from './section/section_view_query';
+import {ModuleViewQuery} from '../module/module_view_query';
+import {SectionViewQuery} from '../section/section_view_query';
 import {CourseViewQuery} from "./view/course_views_query";
 
 export class CourseCommandController implements ModuleOperations, SectionOperations {

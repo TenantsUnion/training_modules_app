@@ -31,14 +31,14 @@ export const clearData = async (): Promise<void> => {
         truncate table tu.user_content CASCADE;
         truncate table tu.course CASCADE;
         truncate table tu.module CASCADE;
-        truncate table tu.permission CASCADE;
         truncate table tu.question CASCADE;
         truncate table tu.question_option CASCADE;
         truncate table tu.quill_data CASCADE;
         truncate table tu.section CASCADE;
         truncate table tu.user CASCADE;
-        truncate table tu.user_course_progress CASCADE;
-        truncate table tu.user_permissions CASCADE;
+        truncate table tu.course_progress CASCADE;
+        truncate table tu.module_progress CASCADE;
+        truncate table tu.section_progress CASCADE;
     `);
     logger.log('info', 'successfully truncated tables');
 };

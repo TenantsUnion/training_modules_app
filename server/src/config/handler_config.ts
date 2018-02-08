@@ -7,11 +7,11 @@ import {
 } from "./repository_config";
 import {UserHandler} from "../user/user_handler";
 import {AccountHandler} from "../account/account_handler";
-import {CoursesHandler} from "../courses/courses_handler";
+import {CoursesHandler} from "../course/courses_handler";
 import {UserContentHandler} from "../content/user/user_content_handler";
-import {SectionHandler} from '../courses/section/section_handler';
+import {SectionHandler} from '../section/section_handler';
 import {QuillHandler} from '../training_entity/quill/quill_handler';
-import {ModuleHandler} from '../courses/module/module_handler';
+import {ModuleHandler} from '../module/module_handler';
 import {QuestionHandler} from '../training_entity/question/question_handler';
 import {TrainingEntityHandler} from '../training_entity/training_entity_handler';
 

@@ -1,7 +1,8 @@
 const path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 /**
- * Config for webpack style loaders
+ * Config for webpack style loaders based on the utils.js webpack build file from the vue cli 'webpack' template
+ * {@link https://github.com/vuejs-templates/webpack/blob/develop/template/build/utils.js}
  */
 
 /**

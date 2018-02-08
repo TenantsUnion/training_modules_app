@@ -1,15 +1,15 @@
 import {LoggerInstance} from 'winston';
-import {getLogger} from '../../log';
+import {getLogger} from '../log';
 import {ModuleRepository} from './module_repository';
 import {
     CreateModuleEntityPayload, CreateModuleIdMap, ModuleEntity, ModuleEntityDiffDelta, SaveModuleEntityPayload,
     ViewModuleDescription,
-} from '@shared/modules';
-import {applyDeltaDiff} from '@shared/delta/apply_delta';
-import {applyDeltaArrOps, updateArrOpsValues} from '@shared/delta/diff_key_array';
-import {CreateSectionEntityPayload, SaveSectionEntityPayload} from '@shared/sections';
-import {TrainingEntityHandler} from '../../training_entity/training_entity_handler';
-import {ContentQuestionEntity} from '@shared/training_entity';
+} from '../../../shared/modules';
+import {applyDeltaDiff} from '../../../shared/delta/apply_delta';
+import {applyDeltaArrOps, updateArrOpsValues} from '../../../shared/delta/diff_key_array';
+import {CreateSectionEntityPayload, SaveSectionEntityPayload} from '../../../shared/sections';
+import {TrainingEntityHandler} from '../training_entity/training_entity_handler';
+import {ContentQuestionEntity} from '../../../shared/training_entity';
 
 export class ModuleHandler {
     logger: LoggerInstance = getLogger('ModuleHandler', 'info');

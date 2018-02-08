@@ -1,11 +1,11 @@
 import {postgresDb} from "../datasource";
-import {CoursesRepository} from "../courses/courses_repository";
+import {CoursesRepository} from "../course/courses_repository";
 import {UserRepository} from "../user/users_repository";
 import {AccountRepository} from "../account/account_repository";
 import {ContentRepository} from "../content/content_repository";
 import {QuillRepository} from "../training_entity/quill/quill_repository";
-import {ModuleRepository} from "../courses/module/module_repository";
-import {SectionRepository} from '../courses/section/section_repository';
+import {ModuleRepository} from "../module/module_repository";
+import {SectionRepository} from '../section/section_repository';
 
 import {QuestionRepository} from '../training_entity/question/question_repository';
 import {QuestionOptionRepository} from '../training_entity/question/question_option_repository';

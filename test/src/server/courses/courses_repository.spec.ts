@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {CourseInsertDbData} from "../../../../server/src/courses/courses_repository";
+import {CourseInsertDbData} from "../../../../server/src/course/courses_repository";
 import {coursesRepository, quillRepository} from "../../../../server/src/config/repository_config";
 import * as MockDate from 'mockdate';
 import {CourseEntity} from "@shared/courses";

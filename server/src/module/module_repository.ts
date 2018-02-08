@@ -1,8 +1,8 @@
-import {AbstractRepository, getUTCNow} from "../../repository";
+import {AbstractRepository, getUTCNow} from "../repository";
 import {LoggerInstance} from "winston";
-import {getLogger} from "../../log";
-import {Datasource} from "../../datasource";
-import {ModuleEntity} from '@shared/modules';
+import {getLogger} from "../log";
+import {Datasource} from "../datasource";
+import {ModuleEntity} from '../../../shared/modules';
 
 export type ModuleInsertDbData = {
     title: string;
