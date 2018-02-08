@@ -1,7 +1,7 @@
 'use strict';
 const styleLoaders = require('./style_loaders.conf');
 const isProduction = process.env.NODE_ENV === 'production';
-console.log('vue loader is production: ' + isProduction);
+
 // sourceMap and extract params both booleans
 module.exports = {
     loaders: styleLoaders.cssLoaders({

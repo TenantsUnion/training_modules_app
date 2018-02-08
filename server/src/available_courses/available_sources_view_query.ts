@@ -9,7 +9,7 @@ export class AvailableSourcesViewQuery {
         let results = await this.datasource.query({
             // language=PostgreSQL
             text: `
-              SELECT c.id, description, last_modified_at, created_at, a.admins FROM tu.course c
+              SELECT c.id, c.title, description, last_modified_at, created_at, a.admins FROM tu.course c
                 INNER JOIN (
                              SELECT c.id AS course_id, array_agg(u.username) AS admins FROM tu.course c
                                INNER JOIN (SELECT username, unnest(admin_of_course_ids) AS course_ids FROM tu.user) u

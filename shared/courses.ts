@@ -51,6 +51,7 @@ export interface CourseDescription {
     title: string;
     description: string;
     timeEstimate?: number;
+    admins?: string[]
 }
 
 export interface AdminCourseDescription extends CourseDescription {
