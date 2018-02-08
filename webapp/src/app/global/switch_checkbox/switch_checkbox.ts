@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {Model, Prop, Watch} from 'vue-property-decorator';
 
 // generates unique id needed for foundation functionality
 let switchCounter = 0;
@@ -21,7 +20,6 @@ const uniqueSwitchId = () => {
     }
 })
 export default class SwitchCheckboxComponent extends Vue {
-    @Prop()
     checked: boolean;
     vmChecked: boolean = this.checked;
     id: string = uniqueSwitchId();

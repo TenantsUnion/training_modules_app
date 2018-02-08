@@ -74,7 +74,7 @@ import {Segment} from '../../../../../shared/segment';
 import {COURSE_ACTIONS} from '../../courses/store/course/course_actions';
 import {appRouter} from '../../router';
 import {Location} from "vue-router";
-import {PREVIEW_COURSE_ROUTES} from "../../global/routes";
+import {PREVIEW_COURSE_ROUTES, USER_ROUTES} from "../../global/routes";
 
 @Component({
     data: () => {
@@ -114,7 +114,7 @@ export default class CreateCourseComponent extends Vue {
             await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
             await this.$store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: null, isAdmin: false});
             appRouter.push(<Location>{
-                name: PREVIEW_COURSE_ROUTES.coursePreview
+                name: USER_ROUTES.adminCourses
             });
         } catch (msg) {
             this.errorMessages = msg;

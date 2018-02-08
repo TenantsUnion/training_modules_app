@@ -17,7 +17,7 @@
             </label>
         </div>
         <div v-if="!isInput">
-            <p>Time Estimate: {{hours}} hours {{minutes}} minutes</p>
+            <p>{{hours}} hours {{minutes}} minutes</p>
         </div>
     </div>
 </template>
