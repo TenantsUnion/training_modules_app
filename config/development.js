@@ -1,4 +1,4 @@
-{
+module.exports = {
   "express": {
     "secret": "1212lkasf23sksdf"
   },
@@ -12,4 +12,4 @@
   "log": {
     "fileLogging": false
   }
-}
+};
