@@ -1,3 +1,4 @@
+--not used yet
 CREATE TABLE tu.user_permissions (
   id          TEXT PRIMARY KEY,
   version     INT4       NOT NULL DEFAULT 0,
