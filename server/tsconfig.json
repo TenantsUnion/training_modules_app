@@ -19,8 +19,21 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@shared/*": ["../shared/*"],
-      "*": ["*"]
+      "@shared/*": [
+        "../shared/*"
+      ],
+      "@course/*": [
+        "./src/course/*"
+      ],
+      "@module/*": [
+        "./src/module/*"
+      ],
+      "@section/*": [
+        "./src/section/*"
+      ],
+      "*": [
+        "*"
+      ]
     }
   }
 }

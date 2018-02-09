@@ -1,5 +1,5 @@
 import {ContentEntity, CreateUserContentCommand} from "@shared/content";
-import {QuillRepository} from "../../training_entity/quill/quill_repository";
+import {QuillRepository} from "../../training_entity/admin/quill/quill_repository";
 import {UserRepository} from "../../user/users_repository";
 import {getLogger} from "../../log";
 import {ContentRepository} from "../content_repository";

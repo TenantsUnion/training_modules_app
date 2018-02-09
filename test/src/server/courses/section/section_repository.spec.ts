@@ -4,7 +4,7 @@ import * as MockDate from 'mockdate';
 import {quillRepository, sectionRepository} from "../../../../../server/src/config/repository_config";
 import * as Moment from 'moment';
 import {Delta} from '@shared/normalize_imports';
-import {SectionInsertDbData} from "../../../../../server/src/section/section_repository";
+import {SectionInsertDbData} from "../../../../../server/src/section/admin/section_repository";
 import {SectionEntity} from "@shared/sections";
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
 

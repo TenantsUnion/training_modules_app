@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import * as MockDate from 'mockdate';
 import {clearData} from "../../test_db_util";
-import {QuestionOptionDto} from "../../../../../server/src/training_entity/question/question_option_repository";
+import {QuestionOptionDto} from "../../../../../server/src/training_entity/admin/question/question_option_repository";
 import {
     questionOptionRepository, quillRepository
 } from "../../../../../server/src/config/repository_config";

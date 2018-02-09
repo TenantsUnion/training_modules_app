@@ -1,5 +1,5 @@
 import {Datasource} from '../datasource';
-import {slugToId, slugToTitle, titleToSlug} from '../../../shared/slug/title_slug_transformations';
+import {slugToId, slugToTitle, titleToSlug} from '@shared/slug/title_slug_transformations';
 
 /**
  * Service for finding out information about courses

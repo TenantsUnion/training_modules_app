@@ -1,13 +1,11 @@
 import * as _ from 'underscore';
 import {QuillHandler} from './quill/quill_handler';
 import {QuestionHandler} from './question/question_handler';
-import {CreateContentQuestion, ContentQuestionsDelta, ContentQuestionEntity} from '../../../shared/training_entity';
-import {isQuillEditorData} from '../../../shared/quill_editor';
+import {CreateContentQuestion, ContentQuestionsDelta, ContentQuestionEntity} from '../../../../shared/training_entity';
 import {LoggerInstance} from 'winston';
-import {getLogger, LOG_LEVELS} from '../log';
-import {isCreateQuestionData} from '../../../shared/questions';
-import {updateArrOpsValues} from '../../../shared/delta/diff_key_array';
-import {updateArrPlaceholderIds, updateObjPlaceholderIds} from '../../../shared/delta/update_placeholder_ids';
+import {getLogger, LOG_LEVELS} from '../../log';
+import {updateArrOpsValues} from '@shared/delta/diff_key_array';
+import {updateObjPlaceholderIds} from '@shared/delta/update_placeholder_ids';
 
 export type ContentQuestionIdsObj = {
     orderedContentQuestionIds: string[];

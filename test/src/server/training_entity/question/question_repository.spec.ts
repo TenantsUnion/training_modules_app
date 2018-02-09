@@ -5,7 +5,7 @@ import {
     questionRepository, quillRepository} from "../../../../../server/src/config/repository_config";
 import {Delta} from "@shared/normalize_imports";
 import {AnswerType, QuestionEntity, QuestionType} from "@shared/questions";
-import {QuestionInsertDbData} from "../../../../../server/src/training_entity/question/question_repository";
+import {QuestionInsertDbData} from "../../../../../server/src/training_entity/admin/question/question_repository";
 import * as Moment from 'moment';
 import {toDbTimestampFormat} from "../../../../../server/src/repository";
 

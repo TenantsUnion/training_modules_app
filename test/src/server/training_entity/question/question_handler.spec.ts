@@ -6,7 +6,7 @@ import {
 } from '../../../../../server/src/config/repository_config';
 import {clearData} from '../../test_db_util';
 import {QuillEditorData} from '@shared/quill_editor';
-import {QuestionOptionDto} from '../../../../../server/src/training_entity/question/question_option_repository';
+import {QuestionOptionDto} from '../../../../../server/src/training_entity/admin/question/question_option_repository';
 import {
     AnswerType, QuestionChangesObj, QuestionEntity,
     QuestionType

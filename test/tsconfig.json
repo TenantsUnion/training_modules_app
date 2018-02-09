@@ -25,9 +25,20 @@
       "@shared/*": [
         "../shared/*"
       ],
+      "@course/*": [
+        "../server/src/course/*"
+      ],
+      "@section/*": [
+        "../server/src/section/*"
+      ],
+      "@module/*": [
+        "../server/src/module/*"
+      ],
+      "@server/*": [
+        "../server/src/*"
+      ],
       "*": [
-        "*",
-        "../server/src/"
+        "*"
       ]
     }
   }

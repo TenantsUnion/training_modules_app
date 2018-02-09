@@ -1,5 +1,4 @@
 import express from "express";
-import path from "path";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
@@ -8,11 +7,11 @@ import session from "express-session";
 import {HttpResponse} from '@shared/http_responses';
 import {AccountRoutes} from "./account/account_routes";
 import {UserContentRoutes} from "./content/content_routes";
-import {CoursesRoutes} from "./course/courses_routes";
-import {QuillRoutes} from './training_entity/quill/quill_routes_controller';
+import {QuillRoutes} from './training_entity/admin/quill/quill_routes_controller';
 import {getLogger, LOG_LEVELS} from './log';
 import {Express} from 'express';
 import {AvailableCourseRoutes} from "./available_courses/available_courses_routes";
+import {CoursesRoutes} from "@course/admin/course_admin_routes";
 
 /**
  * Configured to listen on port and started in /bin scripts

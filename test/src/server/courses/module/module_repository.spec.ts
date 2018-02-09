@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {clearData} from "../../test_db_util";
 import * as MockDate from 'mockdate';
-import {ModuleInsertDbData} from "../../../../../server/src/module/module_repository";
+import {ModuleInsertDbData} from "../../../../../server/src/module/admin/module_repository";
 import {ModuleEntity} from "@shared/modules";
 import {moduleRepository, quillRepository} from "../../../../../server/src/config/repository_config";
 import * as Moment from 'moment';

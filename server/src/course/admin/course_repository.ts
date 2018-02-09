@@ -1,7 +1,7 @@
-import {Datasource} from "../datasource";
-import {CourseEntity} from "@shared/courses";
-import {AbstractRepository, getUTCNow} from "../repository";
-import {getLogger} from "../log";
+import {Datasource} from "../../datasource";
+import {CourseEntity} from "../../../../shared/courses";
+import {AbstractRepository, getUTCNow} from "../../repository";
+import {getLogger} from "../../log";
 import {LoggerInstance} from 'winston';
 
 export type CourseInsertDbData = {
@@ -19,7 +19,7 @@ export type CourseInsertDbData = {
     [p: string]: any
 };
 
-export class CoursesRepository extends AbstractRepository {
+export class CourseRepository extends AbstractRepository {
     logger: LoggerInstance = getLogger('CourseRepository', 'info');
 
     constructor (private datasource: Datasource) {

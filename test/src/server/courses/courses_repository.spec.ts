@@ -1,12 +1,12 @@
 import {expect} from 'chai';
-import {CourseInsertDbData} from "../../../../server/src/course/courses_repository";
-import {coursesRepository, quillRepository} from "../../../../server/src/config/repository_config";
+import {coursesRepository, quillRepository} from "@server/config/repository_config";
 import * as MockDate from 'mockdate';
 import {CourseEntity} from "@shared/courses";
 import * as Moment from 'moment';
 import {Delta} from '@shared/normalize_imports';
 import {clearData} from "../test_db_util";
-import {TIMESTAMP_FORMAT, toDbTimestampFormat} from "../../../../server/src/repository";
+import {TIMESTAMP_FORMAT, toDbTimestampFormat} from "@server/repository";
+import {CourseInsertDbData} from "@course/admin/course_repository";
 
 describe('Courses Repository', function () {
     let now = new Date();

@@ -3,6 +3,10 @@ const moduleAlias = require("module-alias");
 // Override module path alias set in package.json for running server
 // since the directory structure for tests doesn't match.
 moduleAlias.addAlias('@shared', __dirname + '/../shared');
+moduleAlias.addAlias('@server', __dirname + '/../server/src');
+moduleAlias.addAlias('@course', __dirname + '/../server/src/course');
+moduleAlias.addAlias('@module', __dirname + '/../server/src/module');
+moduleAlias.addAlias('@section', __dirname + '/../server/src/section');
 
 process.env.NODE_ENV = 'test';
 require("ts-node").register({

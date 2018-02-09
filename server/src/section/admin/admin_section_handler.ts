@@ -1,15 +1,15 @@
 import {SectionRepository} from './section_repository';
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload, SectionIdMap, ViewSectionData
-} from '../../../shared/sections';
+} from '../../../../shared/sections';
 import {LoggerInstance} from 'winston';
-import {getLogger} from '../log';
-import {applyDeltaArrOps, updateArrOpsValues} from '../../../shared/delta/diff_key_array';
-import {applyDeltaDiff} from '../../../shared/delta/apply_delta';
-import {TrainingEntityHandler} from '../training_entity/training_entity_handler';
-import {ContentQuestionEntity} from '../../../shared/training_entity';
+import {getLogger} from '../../log';
+import {applyDeltaArrOps, updateArrOpsValues} from '../../../../shared/delta/diff_key_array';
+import {applyDeltaDiff} from '../../../../shared/delta/apply_delta';
+import {TrainingEntityHandler} from '../../training_entity/admin/training_entity_handler';
+import {ContentQuestionEntity} from '../../../../shared/training_entity';
 
-export class SectionHandler {
+export class AdminSectionHandler {
     logger: LoggerInstance = getLogger('SectionHandler', 'info');
 
     constructor (private sectionRepo: SectionRepository,

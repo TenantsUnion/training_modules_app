@@ -3,12 +3,12 @@ import {QuestionRepository} from './question_repository';
 import {
     convertQuestionChangesToEntity, OptionQuillIdsObj, QuestionChanges,
     QuestionChangesObj
-} from '@shared/questions';
-import {updateObjPlaceholderIds} from '@shared/delta/update_placeholder_ids';
-import {applyDeltaDiff} from '@shared/delta/apply_delta';
+} from '../../../../../shared/questions';
+import {updateObjPlaceholderIds} from '../../../../../shared/delta/update_placeholder_ids';
+import {applyDeltaDiff} from '../../../../../shared/delta/apply_delta';
 import {LoggerInstance} from 'winston';
-import {getLogger} from '../../log';
-import {isCreatedQuestionOptionPlaceholderId, isCreatedQuestionPlaceholderId} from "@shared/ids";
+import {getLogger} from '../../../log';
+import {isCreatedQuestionOptionPlaceholderId, isCreatedQuestionPlaceholderId} from "../../../../../shared/ids";
 
 export class QuestionHandler {
     logger:LoggerInstance = getLogger('QuestionHandler', 'info');

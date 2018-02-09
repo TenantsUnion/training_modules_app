@@ -1,7 +1,7 @@
-import {AbstractRepository, getUTCNow} from '../repository';
-import {Datasource} from '../datasource';
-import {SectionEntity} from '../../../shared/sections';
-import {getLogger} from '../log';
+import {AbstractRepository, getUTCNow} from '../../repository';
+import {Datasource} from '../../datasource';
+import {SectionEntity} from '../../../../shared/sections';
+import {getLogger} from '../../log';
 
 export type SectionInsertDbData = {
     title: string;

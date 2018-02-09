@@ -1,4 +1,4 @@
-import {CreateCourseEntityCommand, SaveCourseEntityCommand, SaveCourseEntityPayload} from '../../../shared/courses';
+import {CreateCourseEntityCommand, SaveCourseEntityCommand, SaveCourseEntityPayload} from '../../../../shared/courses';
 
 export type ValidationResult = { [index: string]: string } | null;
 export const validateCreateCourse = (createCourseCommand: CreateCourseEntityCommand): ValidationResult => {

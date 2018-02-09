@@ -1,1 +1,0 @@
-// todo handle subscriptions with course view handler

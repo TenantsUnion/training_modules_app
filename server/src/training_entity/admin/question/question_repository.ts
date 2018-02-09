@@ -1,8 +1,8 @@
-import {AbstractRepository, getUTCNow} from '../../repository';
+import {AbstractRepository, getUTCNow} from '../../../repository';
 import {LoggerInstance} from 'winston';
-import {getLogger} from '../../log';
-import {Datasource} from '../../datasource';
-import {AnswerType, QuestionEntity, QuestionType} from '../../../../shared/questions';
+import {getLogger} from '../../../log';
+import {Datasource} from '../../../datasource';
+import {AnswerType, QuestionEntity, QuestionType} from '../../../../../shared/questions';
 
 export interface QuestionInsertDbData {
     id: string,
