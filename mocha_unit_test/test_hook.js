@@ -9,6 +9,7 @@ moduleAlias.addAlias('@module', __dirname + '/../server/src/module');
 moduleAlias.addAlias('@section', __dirname + '/../server/src/section');
 
 process.env.NODE_ENV = 'test';
+// mocha test environment ts-node doesn't support es6 modules yet so modules are compiled to commonjs form
 require("ts-node").register({
     project: path.resolve(__dirname, "./tsconfig.json")
 });
