@@ -6,7 +6,7 @@ console.log(`
 `);
 process.env.CHROME_BIN = puppeteer.executablePath();
 
-var webpackConfig = require('../webpack/test.webpack.config');
+var webpackConfig = require('../webpack/karma_unit_test.webpack.config');
 // reset entry since path would be wrong and it doesn't apply
 
 module.exports = function (config) {
@@ -27,7 +27,7 @@ module.exports = function (config) {
                 served: true
             },
             {
-                pattern: './test/**/*',
+                pattern: './karma_unit_test/**/*.ts',
                 watched: false,
                 included: false,
                 served: true
