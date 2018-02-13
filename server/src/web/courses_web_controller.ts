@@ -3,24 +3,24 @@ import {Request, Response} from "express";
 import {
     AdminCourseDescription, CreateCourseEntityCommand, SaveCourseEntityPayload,
     CreateCourseResponse, SaveCourseResponse
-} from "@shared/courses";
-import {AdminCourseHandler} from "./admin/course_admin_handler";
+} from "../../../shared/courses";
+import {AdminCourseHandler} from "../course/admin/course_admin_handler";
 import {getLogger} from '../log';
 import {
     CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload,
-    SaveModuleResponse} from "@shared/modules";
+    SaveModuleResponse} from "../../../shared/modules";
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload,
     SaveSectionResponse
-} from '@shared/sections';
+} from '../../../shared/sections';
 import {coursesHandler} from '../config/handler_config';
-import {SectionOperations} from '@section/admin/section_routes';
+import {SectionOperations} from 'src/web/section_routes';
 import {logHandleServerError, logHandleValidationError} from '../util/handle_validation_error';
-import {ModuleViewQuery} from '@module/module_view_query';
-import {SectionViewQuery} from '@section/admin/section_view_query';
-import {CourseViewQuery} from "./view/course_views_query";
-import {ModuleOperations} from "@module/admin/admin_module_routes";
+import {CourseViewQuery} from "@course/view/course_views_query";
 import {validateCreateCourse, validateSaveCourse} from "@course/admin/course_admin_validation";
+import {ModuleOperations} from "./admin_module_routes";
+import {ModuleViewQuery} from "@module/module_view_query";
+import {SectionViewQuery} from "@section/admin/section_view_query";
 
 export class CourseCommandController implements ModuleOperations, SectionOperations {
     private logger = getLogger('CoursesController', 'info');

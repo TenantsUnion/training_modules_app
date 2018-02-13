@@ -1,5 +1,5 @@
 import * as express from 'express';
-import {accountController} from "../config/web_controller_config";
+import {accountController} from "./web_controller_config";
 
 let router = express.Router();
 router.post('/account/login', (request, response) => {

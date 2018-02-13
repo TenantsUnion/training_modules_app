@@ -1,7 +1,7 @@
 import * as express from "express";
-import {coursesController} from "../../config/web_controller_config";
-import {SectionRoutes} from '@section/admin/section_routes';
-import {ModuleRoutes} from "@module/admin/admin_module_routes";
+import {coursesController} from "./web_controller_config";
+import {SectionRoutes} from './section_routes';
+import {ModuleRoutes} from "./admin_module_routes";
 
 let router = express.Router();
 // todo write http entity for deleting a course

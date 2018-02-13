@@ -5,13 +5,12 @@ import bodyParser from "body-parser";
 import {config} from "@shared/normalize_imports";
 import session from "express-session";
 import {HttpResponse} from '@shared/http_responses';
-import {AccountRoutes} from "./account/account_routes";
-import {UserContentRoutes} from "./content/content_routes";
+import {AccountRoutes} from "./web/account_routes";
 import {QuillRoutes} from './training_entity/admin/quill/quill_routes_controller';
 import {getLogger, LOG_LEVELS} from './log';
 import {Express} from 'express';
-import {AvailableCourseRoutes} from "./available_courses/available_courses_routes";
-import {CoursesRoutes} from "@course/admin/course_admin_routes";
+import {AvailableCourseRoutes} from "./web/available_courses_routes";
+import {CoursesRoutes} from "./web/course_admin_routes";
 
 /**
  * Configured to listen on port and started in /bin scripts
@@ -64,7 +63,6 @@ app.get('/', express.Router().get('/', function (req, res, next) {
 }));
 
 app.use(AccountRoutes);
-app.use(UserContentRoutes);
 app.use(CoursesRoutes);
 app.use(QuillRoutes);
 app.use(AvailableCourseRoutes);

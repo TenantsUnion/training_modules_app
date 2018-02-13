@@ -1,7 +1,4 @@
 {
-  "include": [
-    "src/**/*.ts"
-  ],
   "compilerOptions": {
     "lib": [
       "dom",
