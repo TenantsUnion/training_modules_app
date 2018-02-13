@@ -28,8 +28,8 @@ module.exports = {
                 exclude: /node_modules/,
                 options: {
                     appendTsSuffixTo: [/\.vue$/],
-                    logInfoToStdOut: true
-                    // configFile: '../tsconfig.json'
+                    logInfoToStdOut: true,
+                    configFile: path.resolve(__dirname, '../tsconfig.json')
                 }
             },
             {

@@ -66,10 +66,10 @@ exports.cssLoaders = function (options) {
             data: '@import "style";',
             includePaths: [
                 path.resolve(__dirname, '../src/app'),
-                'node_modules/foundation-sites/scss',
-                'node_modules/foundation-sites/scss/util',
-                'node_modules/foundation-sites/_vendor',
-                'node_modules/font-awesome-sass/assets/stylesheets/font-awesome'
+                path.resolve(__dirname, '../../node_modules/foundation-sites/scss'),
+                path.resolve(__dirname, '../../node_modules/foundation-sites/scss/util'),
+                path.resolve(__dirname, '../../node_modules/foundation-sites/_vendor'),
+                path.resolve(__dirname, '../../node_modules/font-awesome-sass/assets/stylesheets/font-awesome')
             ]
         }),
     };
