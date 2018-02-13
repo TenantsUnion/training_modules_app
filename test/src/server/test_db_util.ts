@@ -28,7 +28,6 @@ export const clearData = async (): Promise<void> => {
     logger.log('info', 'truncating tables');
     await postgresDb.query(`
         truncate table tu.account CASCADE;
-        truncate table tu.user_content CASCADE;
         truncate table tu.course CASCADE;
         truncate table tu.module CASCADE;
         truncate table tu.question CASCADE;
