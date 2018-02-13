@@ -1,0 +1,2 @@
+--require mocha_unit_test/test_hook.js
+--recursive ./mocha_unit_test/**/*.spec.ts
