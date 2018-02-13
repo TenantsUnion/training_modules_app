@@ -17,7 +17,6 @@
     "watch": "concurrently -k -p \"[{name}]\" -n \"Server-Build,Server,Webpack\" -c \"cyan.bold,green.bold,yellow.bold\"  \"npm run watch-server\" \"npm run nodemon-start\" \"npm run webpack-dev\"",
     "watch-server": "tsc --watch --project server/tsconfig.json --outDir server/dist",
     "nodemon-start": "cross-env NODE_CONFIG_DIR=./config nodemon --watch server/dist/ --signal SIGHUP --delay 1500ms --exec npm run start",
-
     "test-task": "cross-env NODE_ENV=test npm run $TASK_NAME",
     "test-drop-db": "cross-env TASK_NAME=drop-db npm run test-task",
     "test-migrate-db": "cross-env TASK_NAME=migrate-db npm run test-task",
@@ -127,8 +126,10 @@
     "script-loader": "0.7.1",
     "sinon": "4.2.2",
     "style-loader": "0.19.1",
+    "testcafe": "0.18.6",
     "ts-loader": "3.4.0",
     "ts-node": "4.1.0",
+    "tsconfig-paths": "3.1.1",
     "typescript": "2.6.2",
     "uglify-es": "3.1.0",
     "uglifyjs-webpack-plugin": "1.1.6",

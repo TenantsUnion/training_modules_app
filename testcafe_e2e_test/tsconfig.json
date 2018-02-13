@@ -1,0 +1,44 @@
+{
+  "includes": [
+    "**/*.ts",
+    "../server/**/*.ts"
+  ],
+  "compilerOptions": {
+    "lib": [
+      "es5",
+      "es2015.promise",
+      "es6",
+      "es7",
+      "dom"
+    ],
+    "module": "commonjs",
+    "target": "es6",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": [
+        "../shared/*"
+      ],
+      "@course/*": [
+        "../server/src/course/*"
+      ],
+      "@section/*": [
+        "../server/src/section/*"
+      ],
+      "@module/*": [
+        "../server/src/module/*"
+      ],
+      "@server/*": [
+        "../server/src/*"
+      ],
+      "*": [
+        "*"
+      ]
+    }
+  }
+}
