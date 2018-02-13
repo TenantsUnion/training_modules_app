@@ -1,9 +1,9 @@
-import express from "express";
-import logger from "morgan";
-import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
+const express = require("express");
+const logger = require("morgan");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 import {config} from "@shared/normalize_imports";
-import session from "express-session";
 import {HttpResponse} from '@shared/http_responses';
 import {AccountRoutes} from "./web/account_routes";
 import {QuillRoutes} from './training_entity/admin/quill/quill_routes_controller';
@@ -15,7 +15,7 @@ import {CoursesRoutes} from "./web/course_admin_routes";
 /**
  * Configured to listen on port and started in /bin scripts
  */
-let app:Express = express();
+let app: Express = express();
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

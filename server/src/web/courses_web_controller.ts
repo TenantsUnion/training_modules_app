@@ -3,18 +3,18 @@ import {Request, Response} from "express";
 import {
     AdminCourseDescription, CreateCourseEntityCommand, SaveCourseEntityPayload,
     CreateCourseResponse, SaveCourseResponse
-} from "../../../shared/courses";
-import {AdminCourseHandler} from "../course/admin/course_admin_handler";
+} from "@shared/courses";
+import {AdminCourseHandler} from "@course/admin/course_admin_handler";
 import {getLogger} from '../log';
 import {
     CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload,
-    SaveModuleResponse} from "../../../shared/modules";
+    SaveModuleResponse} from "@shared/modules";
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload,
     SaveSectionResponse
-} from '../../../shared/sections';
+} from '@shared/sections';
 import {coursesHandler} from '../config/handler_config';
-import {SectionOperations} from 'src/web/section_routes';
+import {SectionOperations} from './section_routes';
 import {logHandleServerError, logHandleValidationError} from '../util/handle_validation_error';
 import {CourseViewQuery} from "@course/view/course_views_query";
 import {validateCreateCourse, validateSaveCourse} from "@course/admin/course_admin_validation";
