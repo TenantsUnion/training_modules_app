@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {clearData} from "../test_db_util";
+import {clearData} from "../../test_db_util";
 import * as MockDate from 'mockdate';
 import {ModuleEntity} from "../../../shared/modules";
 import * as Moment from 'moment';

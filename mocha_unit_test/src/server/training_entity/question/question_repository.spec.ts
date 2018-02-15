@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {clearData} from "../../test_db_util";
+import {clearData} from "../../../test_db_util";
 import * as MockDate from 'mockdate';
 import {
     questionRepository, quillRepository} from "@server/config/repository_config";

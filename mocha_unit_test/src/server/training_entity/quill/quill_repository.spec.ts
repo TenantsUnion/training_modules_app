@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {Delta} from '@shared/normalize_imports';
 import {quillRepository} from "@server/config/repository_config";
 import * as MockDate from 'mockdate';
-import {clearData} from "../../test_db_util";
+import {clearData} from "../../../test_db_util";
 import * as Moment from 'moment';
 import {toDbTimestampFormat} from "@server/repository";
 import {postgresDb} from "@server/datasource";

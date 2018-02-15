@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {convertToDeltaObj, parameterErrorMsg} from '@shared/delta/convert_delta';
+import {convertToDeltaObj, parameterErrorMsg} from '../../../../shared/delta/convert_delta';
 
 // use @type/quilljs for standalone quill-delta library
 describe('convertObjectValuesToDeltas function', function () {

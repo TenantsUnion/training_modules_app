@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {clearData} from '../test_db_util';
+import {clearData} from '../../test_db_util';
 import {addModule, createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../courses/test_course_util';
 import {coursesHandler} from "../../../server/src/config/handler_config";
 import {courseViewQuery} from "../../../server/src/config/query_service_config";

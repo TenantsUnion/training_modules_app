@@ -5,7 +5,7 @@ import {
 import {coursesHandler} from '@server/config/handler_config';
 import {QuillEditorData} from '@shared/quill_editor';
 import * as Delta from 'quill-delta';
-import {clearData} from '../test_db_util';
+import {clearData} from '../../test_db_util';
 import {IUserInfo} from '@shared/user';
 import {createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from './test_course_util';
 import {getUTCNow} from "@server/repository";

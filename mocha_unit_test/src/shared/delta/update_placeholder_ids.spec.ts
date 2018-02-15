@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {updateArrPlaceholderIds, updateObjPlaceholderIds} from '@shared/delta/update_placeholder_ids';
+import {updateArrPlaceholderIds, updateObjPlaceholderIds} from '../../../../shared/delta/update_placeholder_ids';
 
 describe('Update placeholder ids', function () {
     let placeholder1 = 'replace1';

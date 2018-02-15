@@ -4,7 +4,7 @@ import {Delta} from '@shared/normalize_imports';
 import {
     questionOptionRepository, questionRepository
 } from '@server/config/repository_config';
-import {clearData} from '../../test_db_util';
+import {clearData} from '../../../test_db_util';
 import {QuillEditorData} from '@shared/quill_editor';
 import {QuestionOptionDto} from '@server/training_entity/admin/question/question_option_repository';
 import {

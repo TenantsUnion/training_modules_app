@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {clearData} from "../test_db_util";
+import {clearData} from "../../test_db_util";
 import {accountRepository} from "@server/config/repository_config";
 import {postgresDb} from "@server/datasource";
 import {AccountInfo} from "@server/user/user_handler";

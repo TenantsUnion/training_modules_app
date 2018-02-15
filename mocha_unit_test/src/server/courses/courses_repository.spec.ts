@@ -4,7 +4,7 @@ import * as MockDate from 'mockdate';
 import {CourseEntity} from "@shared/courses";
 import * as Moment from 'moment';
 import {Delta} from '@shared/normalize_imports';
-import {clearData} from "../test_db_util";
+import {clearData} from "../../test_db_util";
 import {TIMESTAMP_FORMAT, toDbTimestampFormat} from "@server/repository";
 import {CourseInsertDbData} from "@course/admin/course_repository";
 
