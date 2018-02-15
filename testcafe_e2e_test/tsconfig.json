@@ -1,7 +1,8 @@
 {
   "includes": [
     "**/*.ts",
-    "../server/**/*.ts"
+    "../server/**/*.ts",
+    "../mocha_unit_test/**/*.ts"
   ],
   "compilerOptions": {
     "lib": [
@@ -13,14 +14,16 @@
     ],
     "module": "commonjs",
     "target": "es6",
-    "moduleResolution": "node",
-    "allowJs": true,
     "noEmit": true,
+    "allowJs": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
+      "@mochatest/*": [
+        "../mocha_unit_test/*"
+      ],
       "@shared/*": [
         "../shared/*"
       ],
