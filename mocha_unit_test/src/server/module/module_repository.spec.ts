@@ -1,12 +1,12 @@
 import {expect} from 'chai';
 import {clearData} from "../../test_db_util";
 import * as MockDate from 'mockdate';
-import {ModuleEntity} from "../../../shared/modules";
+import {ModuleEntity} from "@shared/modules";
 import * as Moment from 'moment';
-import {Delta} from '../../../shared/normalize_imports';
-import {TIMESTAMP_FORMAT, toDbTimestampFormat} from "../../../server/src/repository";
-import {ModuleInsertDbData} from "../../../server/src/module/admin/module_repository";
-import {moduleRepository, quillRepository} from "../../../server/src/config/repository_config";
+import {Delta} from '@shared/normalize_imports';
+import {TIMESTAMP_FORMAT, toDbTimestampFormat} from "@server/repository";
+import {ModuleInsertDbData} from "@server/module/admin/module_repository";
+import {moduleRepository, quillRepository} from "@server/config/repository_config";
 
 describe('Module Repository', function () {
     let now = new Date();

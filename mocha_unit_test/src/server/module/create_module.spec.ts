@@ -1,14 +1,14 @@
 import * as _ from 'underscore';
 import {expect} from 'chai';
-import {CreateModuleEntityPayload} from '../../../shared/modules';
+import {CreateModuleEntityPayload} from '@shared/modules';
 import {clearData} from '../../test_db_util';
 import {createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../courses/test_course_util';
-import {Delta} from '../../../shared/normalize_imports';
-import {addDeltaArrOp} from '../../../shared/delta/diff_key_array';
-import {createdQuillPlaceholderId} from "../../../shared/ids";
-import {coursesHandler} from "../../../server/src/config/handler_config";
-import {courseViewQuery} from "../../../server/src/config/query_service_config";
-import {moduleRepository, quillRepository} from "../../../server/src/config/repository_config";
+import {Delta} from '@shared/normalize_imports';
+import {addDeltaArrOp} from '@shared/delta/diff_key_array';
+import {createdQuillPlaceholderId} from "@shared/ids";
+import {coursesHandler} from "@server/config/handler_config";
+import {courseViewQuery} from "@server/config/query_service_config";
+import {moduleRepository, quillRepository} from "@server/config/repository_config";
 
 describe('Create module', function () {
     let courseId: string;

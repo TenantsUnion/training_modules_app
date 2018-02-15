@@ -2,11 +2,11 @@ import {expect} from 'chai';
 import {clearData} from "../../test_db_util";
 import * as MockDate from 'mockdate';
 import * as Moment from 'moment';
-import {Delta} from '../../../shared/normalize_imports';
-import {SectionEntity} from "../../../shared/sections";
-import {toDbTimestampFormat} from "../../../server/src/repository";
-import {SectionInsertDbData} from "../../../server/src/section/admin/section_repository";
-import {quillRepository, sectionRepository} from "../../../server/src/config/repository_config";
+import {Delta} from '@shared/normalize_imports';
+import {SectionEntity} from "@shared/sections";
+import {toDbTimestampFormat} from "@server/repository";
+import {SectionInsertDbData} from "@server/section/admin/section_repository";
+import {quillRepository, sectionRepository} from "@server/config/repository_config";
 
 describe('Section Repository', function () {
     let now = new Date();
