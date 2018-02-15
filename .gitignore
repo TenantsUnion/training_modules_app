@@ -4,6 +4,7 @@ node_modules/
 -- don't check in build
 **/dist/**/*
 **/build/**/*
+**/.compiled/**/*
 
 -- ignore npm error logs
 npm-debug.log
