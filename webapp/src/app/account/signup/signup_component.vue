@@ -35,7 +35,7 @@
                             <!--<label for="password">Password-->
                             <!--<input v-model="model.password" type="password" id="password"/>-->
                             <!--</label>-->
-                            <button @click="signup" type="button" class="button">Sign Up</button>
+                            <button @click="signup" type="button" class="signup-submit-btn button">Sign Up</button>
                             <!--<button class="button secondary">Forgot Password</button>-->
                         </validate>
                     </vue-form>

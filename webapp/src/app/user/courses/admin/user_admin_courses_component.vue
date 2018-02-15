@@ -3,7 +3,7 @@
         <div class="inner-narrow">
             <div class="row section-header">
                 <h4>Admin Courses</h4>
-                <button class="button primary"
+                <button class="create-course-btn button primary"
                         @click="createCourse">Create a Course
                 </button>
             </div>
@@ -13,7 +13,7 @@
                     class="content-item">
                     <td>{{ course.title }}</td>
                     <td>
-                        <button class="button primary"
+                        <button class="edit-course-btn button primary"
                                 @click="go(course)">
                             Edit
                         </button>

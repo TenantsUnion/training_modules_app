@@ -13,7 +13,7 @@ export interface AccountFormState extends VueForm.FormState {
 }
 export const loginRoutes: RouteConfig = {
     path: '/',
-    name: 'account',
+    name: 'landing',
     children: [
         {
             path: LOGIN_ROUTE,
@@ -31,11 +31,11 @@ export const loginRoutes: RouteConfig = {
             <div>
                 <ul class="tabs" role="tablist">
                     <li class="tabs-title active" role="presentation">
-                        <router-link role="tab" :to='{name:"login"}'>Login
+                        <router-link class="login-nav" role="tab" :to='{name:"login"}'>Login
                         </router-link>
                     </li>
                     <li class="tabs-title" role="presentation">
-                        <router-link role="tab" :to="{name: 'signup'}">
+                        <router-link class="signup-nav" role="tab" :to="{name: 'signup'}">
                             Signup
                         </router-link>
                     </li>

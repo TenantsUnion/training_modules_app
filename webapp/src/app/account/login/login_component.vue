@@ -36,7 +36,7 @@
                             <!--<input v-model="password" type="password" id="password"/>-->
                             <!--</label>-->
                         </validate>
-                        <button @click="login" type="button" class="button">
+                        <button @click="login" type="button" class="login-submit-btn button">
                             Login
                         </button>
                         <!--<button class="button secondary">Forgot Password</button>-->
