@@ -292,6 +292,7 @@ describe('Save module', function () {
 
             let quillContent = await quillRepository.loadMultipleQuillData(updatedModule.orderedContentIds);
             expect(updatedModule.orderedContentIds.length).to.equal(1);
+            expect(quillContent.length).to.equal(1);
             // quill content matches updated content from applying updatedContentDiff
             expect(quillContent[0].editorJson.ops).to.deep.eq(updatedContent.ops);
         });
@@ -352,6 +353,7 @@ describe('Save module', function () {
 
             let quillContent = await quillRepository.loadMultipleQuillData(updatedModule.orderedContentIds);
             expect(updatedModule.orderedContentIds.length).to.equal(1);
+            expect(quillContent.length).to.equal(1);
             expect(quillContent[0].editorJson.ops).to.deep.eq(updatedContent.ops);
         });
     });
