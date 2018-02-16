@@ -1,4 +1,4 @@
-import {CreateSectionEntityPayload, ViewSectionData} from '@shared/sections';
+import {CreateSectionEntityPayload, ViewSectionData} from '../../../../shared/sections';
 import axios from "axios";
 
 export const loadSection = async (sectionId: string): Promise<ViewSectionData> => {

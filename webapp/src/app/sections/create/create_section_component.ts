@@ -1,11 +1,11 @@
 import Component from 'vue-class-component';
 import Vue from 'vue';
 import * as VueForm from '../../../../vue-form';
-import {Segment} from '@shared/segment';
+import {Segment} from '../../../../../shared/segment';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
-import {CreateSectionEntityPayload} from '@shared/sections';
-import {currentModuleRouteGuard} from '../../module_details_component/module_details_component';
-import {PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {CreateSectionEntityPayload} from '../../../../../shared/sections';
+import {currentModuleRouteGuard} from '../../modules/module_details_component/module_details_component';
+import {PREVIEW_COURSE_ROUTES} from "src/app/global/routes";
 
 @Component({
     data: () => {

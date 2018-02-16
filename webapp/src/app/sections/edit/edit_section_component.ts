@@ -1,18 +1,18 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import * as VueForm from '../../../../vue-form';
-import {SaveSectionEntityPayload, ViewSectionData} from '@shared/sections';
-import {CourseRefreshComponent} from '@global/refresh_route';
+import {SaveSectionEntityPayload, ViewSectionData} from '../../../../../shared/sections';
+import {CourseRefreshComponent} from 'src/app/global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '../../../../state_store';
 import {currentSectionRouteGuard} from '../view/view_section_component';
 import {Watch} from 'vue-property-decorator';
-import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
+import {diffBasicPropsTrainingEntity} from '../../../../../shared/delta/diff_delta';
 import {SECTION_ACTIONS} from '../../../store/section/section_actions';
-import {TrainingEntityDiffDelta} from '@shared/training_entity';
+import {TrainingEntityDiffDelta} from '../../../../../shared/training_entity';
 import {getSectionSlugFromIdFn} from '../../../store/section/section_state';
-import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
-import {PREVIEW_COURSE_ROUTES} from "@global/routes";
+import EditTrainingSegmentsComponent from "src/app/global/edit_training_segments/edit_training_segments_component";
+import {PREVIEW_COURSE_ROUTES} from "src/app/global/routes";
 
 @Component({
     data: () => {
