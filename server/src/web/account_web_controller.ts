@@ -95,3 +95,7 @@ const setSession = (request: Request, userInfo: IUserInfo) => {
     request.session.userId = userInfo.id;
     request.session.username = userInfo.username;
 };
+
+export const loggedInUserId = (request: Request): string | null => {
+  return request.session && request.session.userId;
+};
