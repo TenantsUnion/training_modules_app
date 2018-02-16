@@ -8,23 +8,20 @@ export class CreateCoursePageDriver {
     private descriptionInput = Selector('#course-description');
     private createAndEditBtn = Selector('button').withText('Create and Edit');
 
-    setTitle (title: string): TestControllerPromise {
-        return t.typeText(this.titleInput, title);
+    async createCourse (input: CreateCourseUserInput)  {
+        let {title, description, active, minutes, hours} = input;
+        await setChecked(this.activeCheckbox, active);
+        return new TimeEstimateComponentDriver().enterTime(hours, minutes)
+            .typeText(this.titleInput, title)
+            .typeText(this.descriptionInput, description)
+            .click(this.createAndEditBtn);
     }
+}
 
-    setDescription(description: string): TestControllerPromise {
-        return t.typeText(this.descriptionInput, description);
-    }
-
-    setTime (hours: number, minutes: number): TestControllerPromise {
-        return <TestControllerPromise> new TimeEstimateComponentDriver().enterTime(hours, minutes);
-    }
-
-    async setActive(active: boolean) {
-        return setChecked(this.activeCheckbox, active);
-    }
-
-    createAndEdit(): TestControllerPromise {
-        return t.click(this.createAndEditBtn);
-    }
+export type CreateCourseUserInput = {
+    title: string,
+    description?: string;
+    hours?: number;
+    minutes?: number;
+    active?: boolean;
 }

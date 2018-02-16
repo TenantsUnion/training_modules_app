@@ -58,6 +58,7 @@ export const run = async () => {
         let testsFailed = await t.createRunner()
             .src(tests)
             .browsers(['chrome'])
+            .concurrency(3)
             .reporter('spec')
             .run({
                // debugMode: true

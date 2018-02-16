@@ -17,6 +17,6 @@ export const uncheckCheckbox = async (checkbox: SelectorPromise) => {
 export const setChecked = async (checkbox: Selector, setChecked: boolean) => {
     let isChecked = await checkbox.checked;
     if(isChecked !== setChecked) {
-        t.click(checkbox);
+        return t.click(checkbox);
     }
 };

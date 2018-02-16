@@ -1,15 +1,12 @@
-import {clearData} from "@mochatest/src/test_db_util";
 import {LandingPageDriver} from "../util/drivers/pages/landing_page_driver";
 import {Selector} from "testcafe";
 import {landingPage} from "../util/uri_utils";
 import {LoggedInNavigationDriver} from "../util/drivers/pages/logged_in_navigation_driver";
+import {appendUUID} from "../util/uuid_generator";
 
-const username = 'test_admin';
+const username = appendUUID('test_admin');
 fixture(`Account Login`)
     .page(landingPage)
-    .before(async () => {
-        await clearData();
-    })
     .beforeEach(async () => {
         await new LandingPageDriver().signup(username);
         await new LoggedInNavigationDriver().logout();
