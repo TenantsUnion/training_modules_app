@@ -31,7 +31,6 @@ export const availableCoursesRouteGuard: NavigationGuard = async (to, from, next
 })
 export default class AvailableCoursesComponent extends Vue {
     async preview (course: CourseDescription) {
-        await this.$store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: course.id, mode: CourseMode.PREVIEW});
         this.$router.push({
             name: PREVIEW_COURSE_ROUTES.coursePreview,
             params: {

@@ -13,7 +13,7 @@ import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../c
 
 export interface CourseActions {
     CREATE_COURSE: CourseAction<CreateCourseEntityPayload>,
-    SET_CURRENT_COURSE: CourseAction<{id: string, mode: CourseMode}>;
+    SET_CURRENT_COURSE: CourseAction<{ id: string, mode: CourseMode }>;
     SET_CURRENT_COURSE_FROM_SLUG: CourseAction<string>;
     SAVE_COURSE: CourseAction<SaveCourseEntityPayload>;
     ENROLL_IN_COURSE: CourseAction<string>;
@@ -84,8 +84,9 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
     },
     async SET_CURRENT_COURSE_FROM_SLUG ({getters, dispatch, rootState}, slug) {
         await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
-        let mode = (<RootGetters> getters).getCourseModeFromSlug(slug);
-        let id = (<RootGetters> getters).getCourseIdFromSlug(slug);
+        let mode = (<RootGetters> getters).getUserCourseModeFromSlug(slug);
+        let id = mode === CourseMode.PREVIEW ? (<RootGetters> getters).getAvailableCourseIdFromSlug(slug) :
+            (<RootGetters> getters).getUserCourseIdFromSlug(slug);
         await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id, mode});
     },
     async SAVE_COURSE ({commit, dispatch}, saveCourseEntityPayload: SaveCourseEntityPayload) {
@@ -102,7 +103,7 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: saveCourseEntityPayload.id, requesting: false});
         }
     },
-    async ENROLL_IN_COURSE({commit, dispatch, getters}, courseId: string) {
+    async ENROLL_IN_COURSE ({commit, dispatch, getters}, courseId: string) {
         // todo get current user login id and make async call to http service to make POST for user to enroll in course
     }
 };

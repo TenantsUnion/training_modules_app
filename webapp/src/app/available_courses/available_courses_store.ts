@@ -1,17 +1,29 @@
 import {CourseDescription} from "@shared/courses";
 import {Action, ActionContext, ActionTree, Mutation, MutationTree} from "vuex";
 import {Constant} from "@shared/typings/util_typings";
-import {RootState} from "../state_store";
+import {AppGetter, RootState} from "../state_store";
 import {getAvailableCourses} from "./available_courses_requests";
+import {courseSlugToIdMap, determineSlugs} from "@global/course_description_util";
 
 export interface AvailableCoursesState {
     courses: CourseDescription[];
+    slugToIdMap: { [p: string]: string };
     loading: boolean;
 }
 
 export const initAvailableCoursesState = {
     courses: null,
     loading: false
+};
+
+export interface AvailableCoursesGetters {
+    getAvailableCourseIdFromSlug: (slug: string) => string;
+}
+
+export const availableCoursesGetters: {[p in keyof AvailableCoursesGetters]: AppGetter<AvailableCoursesState>} = {
+    getAvailableCourseIdFromSlug ({slugToIdMap}) {
+        return (slug: string) => slugToIdMap[slug];
+    }
 };
 
 export type AvailableCoursesMutation<P> = (state: AvailableCoursesState, payload: P) => any | Mutation<AvailableCoursesState>;
@@ -28,7 +40,8 @@ export const AVAILABLE_COURSES_MUTATIONS: Constant<AvailableCoursesMutations> = 
 
 export const availableCoursesMutations: AvailableCoursesMutations & MutationTree<AvailableCoursesState> = {
     SET_COURSES (state: AvailableCoursesState, courses: CourseDescription[]) {
-        state.courses = courses;
+        state.slugToIdMap = courseSlugToIdMap(courses);
+        state.courses = determineSlugs(courses);
     },
     SET_LOADING (state: AvailableCoursesState, loading: boolean) {
         state.loading = loading;

@@ -17,8 +17,6 @@ export default class UserAdminCourseComponent extends Vue {
     }
 
     async go(course: AdminCourseDescription) {
-        const mode = this.$store.getters.getCourseModeFromId(course.id);
-        await this.$store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: course.id, mode});
         this.$router.push({
             name: ADMIN_COURSE_ROUTES.editCourse,
             params: {

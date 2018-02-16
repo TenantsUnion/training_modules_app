@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import * as _ from 'underscore';
 import {AdminCourseDescription} from '@shared/courses';
-import {Action, ActionContext, ActionTree, GetterTree, Mutation, MutationTree} from 'vuex';
+import {Action, ActionContext, ActionTree, Mutation, MutationTree} from 'vuex';
 import {AppGetter, RootGetters, RootState} from '../../../state_store';
 import {Constant} from '@shared/typings/util_typings';
 import {userCoursesHttpService} from '../../../user/courses/course_http_service';
@@ -30,10 +30,10 @@ export const userCoursesListingState: UserCoursesListingState = {
  * Getters
  */
 export interface UserCoursesListingGetters {
-    getCourseIdFromSlug: (slug: string) => string;
+    getUserCourseIdFromSlug: (slug: string) => string;
     getSlugFromCourseId: (courseId: string) => string;
     getCourseModeFromId: (courseId: string) => CourseMode;
-    getCourseModeFromSlug: (slug: string) => CourseMode;
+    getUserCourseModeFromSlug: (slug: string) => CourseMode;
     adminCourseListingMap: { [index: string]: AdminCourseDescription }
 }
 
@@ -43,7 +43,7 @@ export type courseModeFn = (courseId: string) => CourseMode;
 
 
 export const userCoursesListingGetters: {[index in keyof UserCoursesListingGetters]: AppGetter<UserCoursesListingState>} = {
-    getCourseIdFromSlug (state, getters, rootState, rootGetters): getCourseIdFromSlugFn {
+    getUserCourseIdFromSlug (state, getters, rootState, rootGetters): getCourseIdFromSlugFn {
         return function (slug) {
             return state.courseSlugIdMap[slug];
         }
@@ -63,9 +63,11 @@ export const userCoursesListingGetters: {[index in keyof UserCoursesListingGette
             return getters.adminCourseListingMap[courseId] ? CourseMode.ADMIN : CourseMode.ENROLLED;
         }
     },
-    getCourseModeFromSlug (state, getters: RootGetters): courseModeFn {
+    getUserCourseModeFromSlug (state, getters: RootGetters): courseModeFn {
         return function (slug: string) {
-            return getters.getCourseModeFromId(getters.getCourseIdFromSlug(slug));
+            let courseId = getters.getUserCourseIdFromSlug(slug);
+            // if course id cannot be determine from admin slugs or enrolled slugs -- must be previewing course
+            return courseId ? getters.getCourseModeFromId(getters.getUserCourseIdFromSlug(slug)) : CourseMode.PREVIEW;
         }
     },
     adminCourseListingMap (state, getters): { [index: string]: AdminCourseDescription } {
@@ -113,7 +115,6 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
             return acc;
         }, {});
 
-        let adminCourseDescriptionsMap = adminCourses
         Vue.set(state, 'courseSlugIdMap', courseSlugToMap);
         Vue.set(state, 'adminCourseDescriptions', adminCourses);
     },

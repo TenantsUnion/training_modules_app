@@ -19,7 +19,7 @@ export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) 
         Route params :moduleSlug, :sectionSlug, :courseSlug must be defined`);
     }
     try {
-        const mode = store.getters.getCourseModeFromSlug(courseSlug);
+        const mode = store.getters.getUserCourseModeFromSlug(courseSlug);
         await store.dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE_FROM_SLUG, {slug: moduleSlug, mode});
         await store.dispatch(SECTION_ACTIONS.SET_CURRENT_SECTION_FROM_SLUG, {
             sectionSlug,

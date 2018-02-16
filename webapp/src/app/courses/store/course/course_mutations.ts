@@ -1,6 +1,6 @@
 import Vue from "vue";
 import {CourseState} from './course_state';
-import {CourseEntity, ViewCourseData} from '@shared/courses';
+import {ViewCourseData} from '@shared/courses';
 import {Mutation, MutationTree} from 'vuex';
 import {ViewModuleDescription} from "@shared/modules";
 

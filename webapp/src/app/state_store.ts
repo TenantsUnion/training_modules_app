@@ -16,7 +16,7 @@ import {userActions, userMutations, userState, UserState} from './courses/store/
 import {sectionActions} from './courses/store/section/section_actions';
 import {sectionMutations} from './courses/store/section/section_mutations';
 import {
-    availableCoursesActions, availableCoursesMutations,
+    availableCoursesActions, AvailableCoursesGetters, availableCoursesGetters, availableCoursesMutations,
     AvailableCoursesState,
     initAvailableCoursesState
 } from "./available_courses/available_courses_store";
@@ -67,7 +67,8 @@ export const store: Store<RootState> = new Vuex.Store({
         availableCourses: {
             state: initAvailableCoursesState,
             actions: availableCoursesActions,
-            mutations: availableCoursesMutations
+            mutations: availableCoursesMutations,
+            getters: availableCoursesGetters
         }
     }
 });
@@ -82,7 +83,7 @@ export interface RootState {
 
 }
 
-export type RootGetters = CourseGetters & UserCoursesListingGetters & ModuleGetters & SectionGetters;
+export type RootGetters = CourseGetters & UserCoursesListingGetters & ModuleGetters & SectionGetters & AvailableCoursesGetters;
 
 // getters and rootGetters are the same since the modules have the namespace option set to false
 export type AppGetter<S> = ((state: S, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => any);
