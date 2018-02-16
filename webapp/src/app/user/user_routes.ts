@@ -4,14 +4,14 @@ import CreateContentComponent from "./content/create_content/create_content_comp
 import ContentDescriptionListComponent from "./content/content_description_list/content_description_list_component.vue";
 import EditUserContentComponent from "./content/edit/edit_user_content_component.vue";
 import {store} from '../state_store';
-import {USER_ACTIONS} from '../courses/store/user/user_store';
+import {USER_ACTIONS} from './store/user_store';
 import {appRouter} from '../router';
 import {LOGIN_ROUTE} from '../account/account_routes';
 import AvailableCoursesComponent from "../available_courses/available_courses_component.vue";
 import UserEnrolledCoursesComponent from "./courses/enrolled/user_enrolled_courses_component.vue";
 import UserAdminCourseComponent from "./courses/admin/user_admin_courses_component.vue";
 import {USER_ROUTES} from "@global/routes";
-import {CourseRoutes} from "../courses/courses_routes";
+import {CourseRoutes} from "@course/courses_routes";
 
 /**
  * If vue route matches username param then check if user is logged or redirect to login page

@@ -35,7 +35,17 @@
       ],
       "@global/*": [
         "./src/app/global/*"
+      ],
+      "@course/*": [
+        "./src/app/course/*"
+      ],
+      "@module/*": [
+        "./src/app/module/*"
+      ],
+      "@section/*": [
+        "./src/app/section/*"
       ]
+
     }
   }
 }

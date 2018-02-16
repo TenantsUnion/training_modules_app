@@ -1,6 +1,6 @@
 import Component from "vue-class-component";
 import Vue from "vue";
-import {USER_ACTIONS} from '../../courses/store/user/user_store';
+import {USER_ACTIONS} from '../store/user_store';
 import {USER_ROUTES} from "@global/routes";
 
 @Component({

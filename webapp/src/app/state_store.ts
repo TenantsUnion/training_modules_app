@@ -1,20 +1,20 @@
-import Vuex, {Action, ActionContext, Getter, Store} from 'vuex';
+import Vuex, {Action, ActionContext, Store} from 'vuex';
 import Vue from 'vue';
-import {CourseGetters, courseGetters, CourseState, courseState} from './courses/store/course/course_state';
-import {ModuleGetters, moduleGetters, ModuleState, moduleState} from './courses/store/module/module_state';
-import {sectionGetters, SectionGetters, sectionState, SectionState} from './courses/store/section/section_state';
-import {coursesMutations} from './courses/store/course/course_mutations';
-import {courseActions} from './courses/store/course/course_actions';
-import {moduleMutations} from './courses/store/module/module_mutations';
-import {moduleActions} from './courses/store/module/module_actions';
+import {CourseGetters, courseGetters, CourseState, courseState} from '@course/store/course_state';
+import {ModuleGetters, moduleGetters, ModuleState, moduleState} from '@module/store/module_state';
+import {sectionGetters, SectionGetters, sectionState, SectionState} from '@section/store/section_state';
+import {coursesMutations} from '@course/store/course_mutations';
+import {courseActions} from '@course/store/course_actions';
+import {moduleMutations} from '@module/store/module_mutations';
+import {moduleActions} from '@module/store/module_actions';
 import {
     userCoursesListingActions, userCoursesListingGetters, UserCoursesListingGetters,
     userCoursesListingMutations, UserCoursesListingState,
     userCoursesListingState
-} from './courses/store/courses_listing/courses_listing_store';
-import {userActions, userMutations, userState, UserState} from './courses/store/user/user_store';
-import {sectionActions} from './courses/store/section/section_actions';
-import {sectionMutations} from './courses/store/section/section_mutations';
+} from './user/store/courses_listing_store';
+import {userActions, userMutations, userState, UserState} from './user/store/user_store';
+import {sectionActions} from '@section/store/section_actions';
+import {sectionMutations} from '@section/store/section_mutations';
 import {
     availableCoursesActions, AvailableCoursesGetters, availableCoursesGetters, availableCoursesMutations,
     AvailableCoursesState,

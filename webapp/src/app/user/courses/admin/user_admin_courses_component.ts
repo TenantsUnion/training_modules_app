@@ -2,7 +2,6 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {AdminCourseDescription} from "@shared/courses";
 import {mapState} from 'vuex';
-import {COURSE_ACTIONS} from '../../../courses/store/course/course_actions';
 import {ADMIN_COURSE_ROUTES} from "@global/routes";
 
 @Component({

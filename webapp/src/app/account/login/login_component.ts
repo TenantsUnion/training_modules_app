@@ -4,7 +4,7 @@ import Component from "vue-class-component";
 import {Watch} from "vue-property-decorator";
 import {AccountLoginFieldErrors} from "@shared/account";
 import {$} from "../../globals";
-import {USER_ACTIONS} from '../../courses/store/user/user_store';
+import {USER_ACTIONS} from '../../user/store/user_store';
 import {RawLocation} from "vue-router";
 import {AccountFormState} from "../account_routes";
 

@@ -54,7 +54,10 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
             '@shared': path.resolve(__dirname, '../../shared'),
-            '@global': path.resolve(__dirname, '../src/app/global')
+            '@global': path.resolve(__dirname, '../src/app/global'),
+            '@course': path.resolve(__dirname, '../src/app/course'),
+            '@module': path.resolve(__dirname, '../src/app/module'),
+            '@section': path.resolve(__dirname, '../src/app/section')
         }
     },
     performance: {
