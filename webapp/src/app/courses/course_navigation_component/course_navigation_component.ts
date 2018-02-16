@@ -8,25 +8,8 @@ import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from
 @Component({
     data: () => {
         return {
-            editCourse: {name: ADMIN_COURSE_ROUTES.editCourse},
             createModule: {name: ADMIN_COURSE_ROUTES.createModule},
             coursePreview: {name: PREVIEW_COURSE_ROUTES.coursePreview},
-            editModule (moduleSlug: string): Location {
-                return {
-                    name: ADMIN_COURSE_ROUTES.editModule, params: {
-                        moduleSlug: moduleSlug
-                    }
-                };
-            },
-            editSection (moduleSlug: string, sectionSlug: string): Location {
-                return {
-                    name: ADMIN_COURSE_ROUTES.editSection,
-                    params: {
-                        moduleSlug: moduleSlug,
-                        sectionSlug: sectionSlug
-                    }
-                }
-            },
             createSection (moduleSlug: string): Location {
                 return {
                     name: ADMIN_COURSE_ROUTES.createSection, params: {
@@ -65,6 +48,32 @@ import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from
 export default class CourseNavigationComponent extends Vue {
     course: ViewCourseData;
     isCourseAdmin: boolean;
+
+    courseRoute (): Location {
+        return {
+            name: this.isCourseAdmin ? ADMIN_COURSE_ROUTES.editCourse : PREVIEW_COURSE_ROUTES.coursePreview
+        }
+
+    }
+
+    moduleRoute (moduleSlug: string): Location {
+        return {
+            name: this.isCourseAdmin ? ADMIN_COURSE_ROUTES.editModule : PREVIEW_COURSE_ROUTES.modulePreview,
+            params: {
+                moduleSlug: moduleSlug
+            }
+        };
+    }
+
+    sectionRoute (moduleSlug: string, sectionSlug: string): Location {
+        return {
+            name: this.isCourseAdmin ? ADMIN_COURSE_ROUTES.editSection : PREVIEW_COURSE_ROUTES.sectionPreview,
+            params: {
+                moduleSlug: moduleSlug,
+                sectionSlug: sectionSlug
+            }
+        }
+    }
 
     get activeNavigation () {
         return {
