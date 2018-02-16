@@ -66,115 +66,101 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import {CreateCourseEntityPayload} from '../../../../../shared/courses';
-import {FormState} from '../../vue-form';
-import {Segment} from '../../../../../shared/segment';
-import {COURSE_ACTIONS} from '../../courses/store/course/course_actions';
-import {appRouter} from '../../router';
-import {Location} from "vue-router";
-import {PREVIEW_COURSE_ROUTES, USER_ROUTES} from "../../global/routes";
+    import Vue from "vue";
+    import Component from "vue-class-component";
+    import {CreateCourseEntityPayload} from '../../../../../shared/courses';
+    import {FormState} from '../../vue-form';
+    import {Segment} from '../../../../../shared/segment';
+    import {COURSE_ACTIONS} from '../../courses/store/course/course_actions';
+    import {Location} from "vue-router";
+    import {PREVIEW_COURSE_ROUTES, USER_ROUTES} from "../../global/routes";
 
-@Component({
-    data: () => {
-        return {
-            loading: false,
-            errorMessages: null,
-            course: {
-                active: true,
-                openEnrollment: true,
-                title: '',
-                description: '',
-                timeEstimate: undefined,
-                createdBy: '',
-            },
-            formstate: {},
-            contentQuestions: []
-        };
-    },
-})
-export default class CreateCourseComponent extends Vue {
-    errorMessages: {};
-    loading: boolean;
-    course: CreateCourseEntityPayload;
-    contentQuestions: Segment[] = [];
-    formstate: FormState;
+    @Component({
+        data: () => {
+            return {
+                loading: false,
+                errorMessages: null,
+                course: {
+                    active: true,
+                    openEnrollment: true,
+                    title: '',
+                    description: '',
+                    timeEstimate: undefined,
+                    createdBy: '',
+                },
+                formstate: {},
+                contentQuestions: []
+            };
+        },
+    })
+    export default class CreateCourseComponent extends Vue {
+        errorMessages: {};
+        loading: boolean;
+        course: CreateCourseEntityPayload;
+        contentQuestions: Segment[] = [];
+        formstate: FormState;
 
-
-    async createCourse() {
-        this.formstate._submit();
-        if (this.formstate.$invalid) {
-            return;
+        cancel () {
+            this.$router.push(<Location>{name: USER_ROUTES.adminCourses});
         }
-        this.loading = true;
-        this.errorMessages = null;
-        let createCoursePayload = this.getCoursePayload();
-        try {
-            await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
-            await this.$store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: null, isAdmin: false});
-            appRouter.push(<Location>{
-                name: USER_ROUTES.adminCourses
+
+        async createCourse () {
+            await this.dispatchCreateCourse(() => this.$router.push(<Location>{name: USER_ROUTES.adminCourses}));
+        }
+
+        async createCourseEdit () {
+            await this.dispatchCreateCourse(() => {
+                this.$router.push(<Location>{
+                    name: PREVIEW_COURSE_ROUTES.coursePreview,
+                    params: {
+                        courseSlug: this.$store.getters.getSlugFromCourseId(this.$store.state.course.currentCourseId)
+                    }
+                });
             });
-        } catch (msg) {
-            this.errorMessages = msg;
-        } finally {
-            this.loading = false
         }
-    }
 
-
-    async createCourseEdit () {
-        this.formstate._submit();
-        if (this.formstate.$invalid) {
-            return;
+        private async dispatchCreateCourse (onSuccess: Function) {
+            this.formstate._submit();
+            if (this.formstate.$invalid) {
+                return;
+            }
+            this.loading = true;
+            this.errorMessages = null;
+            let createCoursePayload = this.getCoursePayload();
+            try {
+                await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
+                onSuccess();
+            } catch (msg) {
+                this.errorMessages = msg;
+            } finally {
+                this.loading = false;
+            }
         }
-        this.loading = true;
-        this.errorMessages = null;
-        let createCoursePayload = this.getCoursePayload();
-        try {
-            await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
-            appRouter.push(<Location>{
-                name: PREVIEW_COURSE_ROUTES.coursePreview,
-                params: {
-                    courseSlug: this.$store.getters.getSlugFromCourseId(this.$store.state.course.currentCourseId)
-                }
-            });
-        } catch (msg) {
-            this.errorMessages = msg;
-        } finally {
-            this.loading = false
+
+
+        private getCoursePayload () {
+            let createCoursePayload: CreateCourseEntityPayload = {
+                title: this.course.title,
+                timeEstimate: this.course.timeEstimate,
+                answerImmediately: true,
+                active: this.course.active,
+                openEnrollment: this.course.openEnrollment,
+                contentQuestions: {
+                    quillChanges: {},
+                    questionChanges: {},
+                    orderedContentQuestionIds: [],
+                    orderedContentIds: [],
+                    orderedQuestionIds: []
+                },
+                description: this.course.description
+            };
+            return createCoursePayload;
         }
-    }
 
-    private getCoursePayload () {
-        let createCoursePayload: CreateCourseEntityPayload = {
-            title: this.course.title,
-            timeEstimate: this.course.timeEstimate,
-            answerImmediately: true,
-            active: this.course.active,
-            openEnrollment: this.course.openEnrollment,
-            contentQuestions: {
-                quillChanges: {},
-                questionChanges: {},
-                orderedContentQuestionIds: [],
-                orderedContentIds: [],
-                orderedQuestionIds: []
-            },
-            description: this.course.description
-        };
-        return createCoursePayload;
-    }
+        timeUpdated (time: number) {
+            this.course.timeEstimate = time;
+        }
 
-    timeUpdated (time: number) {
-        this.course.timeEstimate = time;
-    }
 
-    cancel() {
-        appRouter.push(<Location>{
-            name: PREVIEW_COURSE_ROUTES.coursePreview
-        });
     }
-
-}
 </script>

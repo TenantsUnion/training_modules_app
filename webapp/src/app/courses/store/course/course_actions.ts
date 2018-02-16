@@ -55,7 +55,6 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
             commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, updateAdminDescriptions);
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
             commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, courseEntity);
-            await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id: courseEntity.id, mode: CourseMode.ADMIN});
         } catch (e) {
             console.error(e);
             throw e;
