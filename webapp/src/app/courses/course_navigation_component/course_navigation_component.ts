@@ -34,15 +34,15 @@ import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from
                     }
                 };
             },
-            modulePreviewRoute (moduleTitle): Location {
+            previewModule (moduleSlug): Location {
                 return {
                     name: PREVIEW_COURSE_ROUTES.modulePreview,
                     params: {
-                        moduleSlug: moduleTitle
+                        moduleSlug: moduleSlug
                     }
                 };
             },
-            sectionPreviewRoute (moduleSlug, sectionSlug): Location {
+            previewSection (moduleSlug, sectionSlug): Location {
                 return {
                     name: PREVIEW_COURSE_ROUTES.sectionPreview,
                     params: {

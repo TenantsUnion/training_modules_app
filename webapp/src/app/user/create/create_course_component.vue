@@ -73,7 +73,7 @@
     import {Segment} from '../../../../../shared/segment';
     import {COURSE_ACTIONS} from '../../courses/store/course/course_actions';
     import {Location} from "vue-router";
-    import {PREVIEW_COURSE_ROUTES, USER_ROUTES} from "../../global/routes";
+    import {ADMIN_COURSE_ROUTES, USER_ROUTES} from "../../global/routes";
 
     @Component({
         data: () => {
@@ -111,7 +111,7 @@
         async createCourseEdit () {
             await this.dispatchCreateCourse(() => {
                 this.$router.push(<Location>{
-                    name: PREVIEW_COURSE_ROUTES.coursePreview,
+                    name: ADMIN_COURSE_ROUTES.editCourse,
                     params: {
                         courseSlug: this.$store.getters.getSlugFromCourseId(this.$store.state.course.currentCourseId)
                     }
