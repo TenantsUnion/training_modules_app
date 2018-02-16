@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {clearData} from '../../../test_db_util';
-import {createCourse, createUser, latestUser} from '../test_course_util';
+import {createCourse, createUser, latestUser} from '../../util/test_course_util';
 import {CreateCourseEntityPayload, ViewCourseData} from '@shared/courses';
 import {QuillEditorData} from '@shared/quill_editor';
 import {Delta} from '@shared/normalize_imports';

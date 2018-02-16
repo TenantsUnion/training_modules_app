@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {clearData} from '../../test_db_util';
-import {addModule, addSection, createCourse, createUser, DEFAULT_MODULE, EMPTY_CHANGES_OBJ} from '../courses/test_course_util';
+import {addModule, addSection, createCourse, createUser, DEFAULT_MODULE, EMPTY_CHANGES_OBJ} from '../util/test_course_util';
 import {moduleRepository, quillRepository} from '@server/config/repository_config';
 import {coursesHandler} from '@server/config/handler_config';
 import {ModuleEntity, SaveModuleEntityPayload} from '@shared/modules';

@@ -7,7 +7,7 @@ import {QuillEditorData} from '@shared/quill_editor';
 import * as Delta from 'quill-delta';
 import {clearData} from '../../test_db_util';
 import {IUserInfo} from '@shared/user';
-import {createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from './test_course_util';
+import {createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../util/test_course_util';
 import {getUTCNow} from "@server/repository";
 import {courseViewQuery} from "@server/config/query_service_config";
 
