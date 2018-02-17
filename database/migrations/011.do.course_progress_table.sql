@@ -8,7 +8,7 @@ CREATE TABLE tu.course_progress (
   correct_questions_ids   TEXT []                        NOT NULL DEFAULT ARRAY [] :: TEXT [],
   --references pk of question row
   submitted_questions_ids TEXT []                        NOT NULL DEFAULT ARRAY [] :: TEXT [],
-  last_view_at            TIMESTAMPTZ                    NOT NULL,
+  last_viewed_at          TIMESTAMPTZ                             DEFAULT NULL,
   last_modified_at        TIMESTAMPTZ                    NOT NULL,
   created_at              TIMESTAMPTZ                    NOT NULL,
   PRIMARY KEY (user_id, course_id)
