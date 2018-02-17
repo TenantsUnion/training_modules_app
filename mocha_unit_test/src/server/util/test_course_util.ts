@@ -83,13 +83,13 @@ export const DEFAULT_SECTION = {
     contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
 
-export const sectionEntity = (section = DEFAULT_SECTION, courseId = latestCourseId, moduleId = latestModuleId): CreateSectionEntityPayload => {
+export const sectionEntity = ({section = DEFAULT_SECTION, courseId = latestCourseId, moduleId = latestModuleId}): CreateSectionEntityPayload => {
     return {
         courseId, moduleId,
         ...DEFAULT_SECTION
     };
 };
-export const addSection = async (section: CreateSectionEntityPayload = sectionEntity()): Promise<string> => {
+export const addSection = async (section: CreateSectionEntityPayload = sectionEntity({})): Promise<string> => {
     let {sectionId} = await coursesHandler.createSection(section);
     return sectionId;
 };
