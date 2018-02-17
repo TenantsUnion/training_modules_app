@@ -1,6 +1,7 @@
 import {
-    accountRepository, coursesRepository, moduleRepository, questionOptionRepository,
-    questionRepository, quillRepository, sectionRepository, userRepository
+    accountRepository, courseProgressRepository, coursesRepository, moduleProgressRepository, moduleRepository,
+    questionOptionRepository,
+    questionRepository, quillRepository, sectionProgressRepository, sectionRepository, userRepository
 } from "./repository_config";
 import {UserHandler} from "../user/user_handler";
 import {AccountHandler} from "../account/account_handler";
@@ -10,6 +11,7 @@ import {TrainingEntityHandler} from '../training_entity/admin/training_entity_ha
 import {AdminModuleHandler} from "@module/admin/admin_module_handler";
 import {AdminCourseHandler} from "@course/admin/course_admin_handler";
 import {AdminSectionHandler} from "@section/admin/admin_section_handler";
+import {UserProgressHandler} from "../user_progress/user_progress_handler";
 
 export const quillHandler = new QuillHandler(quillRepository);
 export const questionHandler = new QuestionHandler(questionRepository, questionOptionRepository);
@@ -21,4 +23,5 @@ const sectionHandler = new AdminSectionHandler(sectionRepository, trainingEntity
 const moduleHandler = new AdminModuleHandler(moduleRepository, trainingEntityHandler);
 export const coursesHandler = new AdminCourseHandler(coursesRepository, quillHandler, trainingEntityHandler, userHandler,
     sectionHandler, moduleHandler);
-
+export const userProgresshandler = new UserProgressHandler(userRepository, courseProgressRepository, moduleProgressRepository,
+    sectionProgressRepository);
