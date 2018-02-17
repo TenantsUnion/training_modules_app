@@ -1,4 +1,6 @@
 import {getLogger} from "../../log";
+import {UserRepository} from "../../user/users_repository";
+import {CourseProgressRepository} from "@course/enrolled/course_progress_repository";
 
 export interface LoadAdminCourseParameters {
     username: string;
@@ -9,10 +11,14 @@ export interface LoadAdminCourseParameters {
 export class EnrolledCourseHandler {
     logger = getLogger('CourseHandler', 'info');
 
-    constructor() {
+    constructor(private userRepo: UserRepository,
+                private courseProgressRepo: CourseProgressRepository) {
     }
 
-    enrollInCourse(){}
+    async enrollInCourse(enrollInfo: {courseId: string, userId: string}){
+        await this.userRepo.addEnrolledCoursesId(enrollInfo);
+        await this.courseProgressRepo.createCourseProgress(enrollInfo);
+    }
 
     saveCourseProgress(){}
 }

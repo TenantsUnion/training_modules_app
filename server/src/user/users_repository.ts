@@ -24,11 +24,11 @@ export interface IUserRepository {
 export class UserRepository extends AbstractRepository implements IUserRepository {
     logger = getLogger('UserRepository', 'info');
 
-    constructor(private datasource: Datasource) {
+    constructor (private datasource: Datasource) {
         super('user_id_seq', datasource);
     }
 
-    async createUser(createUserInfo: CreateUserInfo): Promise<AccountInfo> {
+    async createUser (createUserInfo: CreateUserInfo): Promise<AccountInfo> {
         let {id, username, firstName, lastName} = createUserInfo;
         try {
             await this.datasource.query({
@@ -44,7 +44,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         }
     }
 
-    async getIdFromUsername(username: string): Promise<AccountInfo> {
+    async getIdFromUsername (username: string): Promise<AccountInfo> {
         try {
             let result = await this.datasource.query({
                 text: `SELECT id FROM tu.user WHERE username = $1`,
@@ -59,7 +59,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         }
     }
 
-    async loadUser(id: string): Promise<IUserInfo> {
+    async loadUser (id: string): Promise<IUserInfo> {
         try {
             let results = await this.datasource.query({
                     text: `SELECT * FROM tu.user u WHERE u.id = $1`,
@@ -77,7 +77,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         }
     }
 
-    async addToAdminOfCourseIds(userId: string | number, courseId: string): Promise<void> {
+    async addToAdminOfCourseIds (userId: string | number, courseId: string): Promise<void> {
         try {
             await this.datasource.query({
                 text: `UPDATE tu.user SET admin_of_course_ids =
@@ -92,7 +92,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
         }
     }
 
-    async addContentId(userId: string, contentId: string): Promise<void> {
+    async addContentId (userId: string, contentId: string): Promise<void> {
         try {
             await this.datasource.query({
                 text: `UPDATE tu.user SET created_content_ids =
@@ -105,6 +105,14 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
             this.logger.error(e);
             throw e;
         }
+    }
+
+    async addEnrolledCoursesId (enrollData: { userId: string, courseId: string }) {
+        await this.datasource.query({
+            // language=PostgreSQL
+            text: `UPDATE tu.user SET enrolled_in_course_ids = enrolled_in_course_ids || $1 :: TEXT WHERE id = $2`,
+            values: [enrollData.courseId, enrollData.userId]
+        });
     }
 }
 
