@@ -23,5 +23,5 @@ const sectionHandler = new AdminSectionHandler(sectionRepository, trainingEntity
 const moduleHandler = new AdminModuleHandler(moduleRepository, trainingEntityHandler);
 export const coursesHandler = new AdminCourseHandler(coursesRepository, quillHandler, trainingEntityHandler, userHandler,
     sectionHandler, moduleHandler);
-export const userProgresshandler = new UserProgressHandler(userRepository, courseProgressRepository, moduleProgressRepository,
+export const userProgressHandler = new UserProgressHandler(userRepository, courseProgressRepository, moduleProgressRepository,
     sectionProgressRepository);

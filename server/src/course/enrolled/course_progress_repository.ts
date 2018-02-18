@@ -18,13 +18,13 @@ export class CourseProgressRepository extends AbstractRepository {
         super('', sqlTemplate);
     }
 
-    async createCourseProgress ({courseId, userId}: CourseProgressId) {
+    async createCourseProgress ({userId, courseId}: CourseProgressId) {
         let time = getUTCNow();
         await this.sqlTemplate.query({
             text: `
-              INSERT INTO tu.course_progress (user_id, course_id, last_view_at, last_modified_at, created_at)
-                VALUES  ($1, $2, $3, $3, $3)`,
-            values: [courseId, userId, time]
+              INSERT INTO tu.course_progress (user_id, course_id, last_modified_at, created_at)
+                VALUES  ($1, $2, $3, $3)`,
+            values: [userId, courseId, time]
         });
     }
 
@@ -37,8 +37,8 @@ export class CourseProgressRepository extends AbstractRepository {
                            (SELECT m.id, m.ordered_section_ids, json_agg(s.*) AS sections FROM tu.module m
                   INNER JOIN LATERAL
                              (SELECT s.id FROM tu.section s WHERE s.id = ANY (m.ordered_section_ids)) s ON TRUE WHERE
-                  m.id = ANY (c.ordered_module_ids)) m ON TRUE
-              WHERE c.id = $1
+                  m.id = ANY (c.ordered_module_ids) GROUP BY m.id) m ON TRUE
+              WHERE c.id = $1 GROUP BY c.id;
             `,
             values: [courseId]
         });

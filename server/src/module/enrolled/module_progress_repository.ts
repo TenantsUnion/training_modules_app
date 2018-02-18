@@ -15,7 +15,7 @@ export class ModuleProgressRepository {
         let insertColumnsSql = 'INSERT INTO tu.module_progress (user_id, module_id, last_modified_at, created_at) values ';
 
         return this.sqlTemplate.query({
-            text: insertColumnsSql + moduleIds.map((id, index) => `($1, ${index + 3}, $2, $2)`).join(','),
+            text: insertColumnsSql + moduleIds.map((id, index) => `($1, $${index + 3}, $2, $2)`).join(','),
             values: [userId, time, ...moduleIds]
         });
     }
