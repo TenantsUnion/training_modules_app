@@ -1,16 +1,19 @@
-import {accountHandler, coursesHandler} from '../../../../server/src/config/handler_config';
+import {accountHandler, coursesHandler} from '@server/config/handler_config';
 import {
     CourseEntityCommandMetadata, CreateCourseEntityPayload, CreateCourseIdMap
-} from '../../../../shared/courses';
-import {IUserInfo} from '../../../../shared/user';
-import {CreateModuleEntityPayload} from '../../../../shared/modules';
-import {CreateSectionEntityPayload} from '../../../../shared/sections';
-import {ContentQuestionsDelta} from '../../../../shared/training_entity';
+} from '@shared/courses';
+import {IUserInfo} from '@shared/user';
+import {CreateModuleEntityPayload} from '@shared/modules';
+import {CreateSectionEntityPayload} from '@shared/sections';
+import {ContentQuestionsDelta} from '@shared/training_entity';
+import {appendUUID} from "@testcafe/src/util/uuid_generator";
 
 export let latestUser;
-export const createUser = async (username = 'user1'): Promise<IUserInfo> => {
-    latestUser = await accountHandler.signup({username});
-    return latestUser;
+export const createUser = async (username?: string): Promise<IUserInfo> => {
+    username = username ? username : appendUUID('username');
+    let userInfo = await accountHandler.signup({username});
+    latestUser = userInfo.id;
+    return userInfo;
 };
 
 export const DEFAULT_COMMAND_METADATA = (userId = latestUser.id): CourseEntityCommandMetadata => {

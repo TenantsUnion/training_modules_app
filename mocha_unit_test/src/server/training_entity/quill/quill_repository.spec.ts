@@ -11,14 +11,12 @@ describe('Quill Repository', function () {
     let now = new Date();
     let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
-        await clearData();
         MockDate.set(now);
     });
 
     it('should insert editor json', async function () {
-        let quillId = 'QD1';
         let quillData = new Delta().insert('Some text or whatever');
-        await quillRepository.insertEditorJson(quillId, quillData);
+        let quillId = await quillRepository.insertEditorJson(quillData);
         expect(await quillRepository.loadQuillData(quillId)).to.deep.eq({
             id: quillId,
             version: 0,
@@ -30,39 +28,33 @@ describe('Quill Repository', function () {
     });
 
     it('should load multiple quill data', async function () {
-        let quillData: { id: string, editorJson: Quill.DeltaStatic }[] = [{
-            id: 'QD1',
-            editorJson: new Delta().insert('The text of the first')
-        }, {
-            id: 'QD2',
-            editorJson: new Delta().insert('The text of the second')
-        }, {
-            id: 'QD3',
-            editorJson: new Delta().insert('The text of the third')
-        }];
+        let quillData: Quill.DeltaStatic[] = [
+            new Delta().insert('The text of the first'),
+            new Delta().insert('The text of the second'),
+            new Delta().insert('The text of the third')
+        ];
 
-        await Promise.all(quillData.map(({id, editorJson}) => quillRepository.insertEditorJson(id, editorJson)));
-        expect(await quillRepository.loadMultipleQuillData([quillData[0].id, quillData[2].id])).to.have.deep.members([{
-            id: quillData[0].id,
+        let quillIds = await Promise.all(quillData.map((editorJson) => quillRepository.insertEditorJson(editorJson)));
+        expect(await quillRepository.loadMultipleQuillData([quillIds[0], quillIds[2]])).to.have.deep.members([{
+            id: quillIds[0],
             version: 0,
             //use parse to remove functions attached to delta object which would fail comparison
-            editorJson: JSON.parse(JSON.stringify(quillData[0].editorJson)),
+            editorJson: JSON.parse(JSON.stringify(quillData[0])),
             lastModifiedAt: nowTimestamp,
             createdAt: nowTimestamp
         }, {
-            id: quillData[2].id,
+            id: quillIds[2],
             version: 0,
             //use parse to remove functions attached to delta object which would fail comparison
-            editorJson: JSON.parse(JSON.stringify(quillData[2].editorJson)),
+            editorJson: JSON.parse(JSON.stringify(quillData[2])),
             lastModifiedAt: nowTimestamp,
             createdAt: nowTimestamp
         }]);
     });
 
     it('should update quill data', async function () {
-        let quillId = 'QD1';
         let quillData = new Delta().insert('Some text or whatever');
-        await quillRepository.insertEditorJson(quillId, quillData);
+        let quillId = await quillRepository.insertEditorJson(quillData);
 
         let updated = Moment(now).add(1, 'hour').toDate();
         MockDate.set(updated);
@@ -70,9 +62,9 @@ describe('Quill Repository', function () {
 
         const updatedEditorJson = quillData.retain(4).delete(2).insert('other text');
         await quillRepository.updateEditorJson({
-           id: quillId,
-           version: 0,
-           editorJson: updatedEditorJson
+            id: quillId,
+            version: 0,
+            editorJson: updatedEditorJson
         });
         expect(await quillRepository.loadQuillData(quillId)).to.deep.eq({
             id: quillId,
@@ -85,16 +77,17 @@ describe('Quill Repository', function () {
     });
 
     it('should add two quill data entries and remove the first', async function () {
-        let quillId1 = 'QD1';
         let quillData1 = new Delta().insert('Some text or whatever');
+        let quillId1 = await quillRepository.insertEditorJson(quillData1);
 
-        let quillId2 = 'QD2';
         let quillData2 = new Delta().insert('Some text or whatever');
-        await quillRepository.insertEditorJson(quillId1, quillData1);
-        await quillRepository.insertEditorJson(quillId2, quillData2);
+        let quillId2 = await quillRepository.insertEditorJson(quillData2);
 
         await quillRepository.remove(quillId1);
-        let results = await postgresDb.query(`SELECT * from tu.quill_data`);
+        let results = await postgresDb.query({
+            text: `SELECT * from tu.quill_data qd where qd.id = ANY($1)`,
+            values: [[quillId1, quillId2]]
+        });
         expect(results.length).to.eq(1);
         expect(results[0].id).to.eq(quillId2);
     });

@@ -27,7 +27,6 @@ describe('Save module', function () {
     });
 
     beforeEach(async function () {
-        await clearData();
         await createUser();
         courseId = await createCourse();
         moduleId = await addModule();

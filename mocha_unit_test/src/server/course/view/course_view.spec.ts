@@ -27,7 +27,6 @@ describe('Course view', function () {
     let now = new Date();
     let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
-        await clearData();
         await createUser();
         MockDate.set(now);
     });

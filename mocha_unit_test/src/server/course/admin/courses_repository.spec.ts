@@ -6,14 +6,12 @@ import * as Moment from 'moment';
 import {Delta} from '@shared/normalize_imports';
 import {TIMESTAMP_FORMAT, toDbTimestampFormat} from "@server/repository";
 import {CourseInsertDbData} from "@course/admin/course_repository";
-import {clearData} from "../../../test_db_util";
 
 describe('Courses Repository', function () {
     let now = new Date();
     let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
         MockDate.set(now);
-        await clearData();
     });
 
     let courseData: CourseInsertDbData = {
@@ -79,20 +77,19 @@ describe('Courses Repository', function () {
         let updated = Moment(now).utc().add(1, 'hour');
         MockDate.set(updated);
 
-        let quillId = 'QD4';
         // create quill data to satisfy FK constraint on header_data_id column
-        await quillRepository.insertEditorJson(quillId, new Delta().insert('something or other'));
+        let quillId = await quillRepository.insertEditorJson(new Delta().insert('something or other'));
         let courseUpdate: CourseEntity = {
             id: courseId,
             version: 0,
-            headerDataId: 'QD4',
+            headerDataId: quillId,
             active: false,
             answerImmediately: true,
             timeEstimate: 100000,
             description: 'A very different description',
             title: 'This is a better title than before',
             openEnrollment: false,
-            orderedModuleIds: ['MO2'],
+            orderedModuleIds: ['MO2'], // fake ids since there aren't foreign key constraints enforced for arrays:w
             orderedContentIds: ['QD1', 'QD3', 'QD4'],
             orderedQuestionIds: ['QU1'],
             orderedContentQuestionIds: ['QU1', 'QD1', 'QD3', 'QD4']

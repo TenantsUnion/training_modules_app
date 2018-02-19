@@ -13,7 +13,6 @@ describe('Question Repository', function () {
     let now = new Date();
     let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
-        await clearData();
         MockDate.set(now);
     });
 
@@ -29,13 +28,12 @@ describe('Question Repository', function () {
 
     it('should create a question entity', async function () {
         const id = await questionRepository.getNextId();
-        const questionQuillId = await quillRepository.getNextId();
+        const questionQuillId = await quillRepository.insertEditorJson(new Delta().insert('the question???'));
         const questionInsertData: QuestionInsertDbData = {
             id: id,
             questionQuillId,
             ...defaultQuestionProps
         };
-        await quillRepository.insertEditorJson(questionQuillId, new Delta().insert('the question???'));
         await questionRepository.insertQuestion(questionInsertData);
         expect(await questionRepository.loadQuestionEntity(id)).to.deep.eq(<QuestionEntity>{
             version: 0,
@@ -46,13 +44,12 @@ describe('Question Repository', function () {
 
     it('should update a question entity', async function () {
         const id = await questionRepository.getNextId();
-        const questionQuillId = await quillRepository.getNextId();
+        const questionQuillId = await quillRepository.insertEditorJson(new Delta().insert('the question???'));
         const questionInsertData: QuestionInsertDbData = {
             id: id,
             questionQuillId,
             ...defaultQuestionProps
         };
-        await quillRepository.insertEditorJson(questionQuillId, new Delta().insert('the question???'));
         await questionRepository.insertQuestion(questionInsertData);
 
         let updated = Moment(now).add(1, 'hour').toDate();

@@ -9,7 +9,6 @@ describe('Create section', function () {
     let moduleId: string;
 
     beforeEach(async function () {
-        await clearData();
         await createUser('user1');
         courseId = (await createCourse()).courseId;
         moduleId = await addModule();

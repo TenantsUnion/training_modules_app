@@ -4,7 +4,6 @@ import {Delta} from '@shared/normalize_imports';
 import {
     questionOptionRepository, questionRepository
 } from '@server/config/repository_config';
-import {clearData} from '../../../test_db_util';
 import {QuillEditorData} from '@shared/quill_editor';
 import {QuestionOptionDto} from '@server/training_entity/admin/question/question_option_repository';
 import {
@@ -20,6 +19,7 @@ import {toDbTimestampFormat} from "@server/repository";
 import {postgresDb} from "@server/datasource";
 import {
     createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId,
+    isCreatedQuillPlaceholderId,
     isQuestionId, isQuestionOptionId
 } from "@shared/ids";
 
@@ -100,7 +100,6 @@ describe('Question handler create question', async function () {
     });
 
     before(async function () {
-        await clearData();
         try {
             placeholderIdMap = await trainingEntityHandler.handleContentQuestionDelta(contentQuestions);
         } catch (e) {
@@ -111,8 +110,14 @@ describe('Question handler create question', async function () {
         questionId = placeholderIdMap[questionPlaceholderId];
         correctOptionId = placeholderIdMap[correctOptionPlaceholderId];
         wrongOptionId = placeholderIdMap[wrongOptionPlaceholderId];
+        let quillIds = Object.keys(placeholderIdMap).filter(key => isCreatedQuillPlaceholderId(key))
+            .map(quillPlaceholderId => placeholderIdMap[quillPlaceholderId]);
 
-        quillDataMap = (await postgresDb.query(`SELECT * from tu.quill_data`))
+
+        quillDataMap = (await postgresDb.query({
+            text: `SELECT * FROM tu.quill_data qd WHERE qd.id = ANY($1)`,
+            values: [quillIds]
+        }))
             .map((row): QuillEditorData => {
                 return {...row, editorJson: new Delta(row.editorJson.ops)}
             }).reduce((acc, quillData) => {
@@ -120,7 +125,10 @@ describe('Question handler create question', async function () {
                 return acc;
             }, {});
 
-        createdQuestionOptions = await postgresDb.query(`SELECT * from tu.question_option`);
+        createdQuestionOptions = await postgresDb.query({
+            text: `SELECT * FROM tu.question_option qo WHERE qo.id = ANY($1)`,
+            values: [[correctOptionId, wrongOptionId]]
+        });
     });
 
     it('should create the question and options with the correct data properties', async function () {

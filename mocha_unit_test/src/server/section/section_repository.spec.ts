@@ -12,7 +12,6 @@ describe('Section Repository', function () {
     let now = new Date();
     let nowTimestamp = toDbTimestampFormat(now);
     beforeEach(async function () {
-        await clearData();
         MockDate.set(now);
     });
 
@@ -50,9 +49,8 @@ describe('Section Repository', function () {
         let updated = Moment(now).add(1, 'hour').toDate();
         MockDate.set(updated);
 
-        let quillId = 'QD4';
         // create quill data to satisfy FK constraint on header_data_id column
-        await quillRepository.insertEditorJson(quillId, new Delta().insert('something or other'));
+        let quillId = await quillRepository.insertEditorJson(new Delta().insert('something or other'));
         let sectionUpdate: SectionEntity = {
             id: sectionId,
             version: 0,

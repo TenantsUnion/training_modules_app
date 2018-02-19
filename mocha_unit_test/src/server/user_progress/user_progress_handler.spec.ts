@@ -15,7 +15,6 @@ describe('User progress handler', function () {
         let nowDate = new Date();
         now = toDbTimestampFormat(nowDate);
         MockDate.set(nowDate);
-        await clearData();
     });
 
     it('should create course, module, section progress entries for enrolling in course', async function () {

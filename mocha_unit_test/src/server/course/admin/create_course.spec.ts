@@ -31,7 +31,6 @@ describe('Course Handler: Create Course', function () {
     let metadata: CourseEntityCommandMetadata;
     let userInfo: IUserInfo;
     beforeEach(async function () {
-        await clearData();
         userInfo = await createUser();
         metadata = {
             type: 'CourseEntity',

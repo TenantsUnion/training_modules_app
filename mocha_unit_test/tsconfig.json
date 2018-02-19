@@ -24,6 +24,9 @@
       "@shared/*": [
         "../shared/*"
       ],
+      "@testcafe/*": [
+        "../testcafe_e2e_test/*"
+      ],
       "@course/*": [
         "../server/src/course/*"
       ],

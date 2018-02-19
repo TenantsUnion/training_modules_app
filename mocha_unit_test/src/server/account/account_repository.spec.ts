@@ -6,9 +6,7 @@ import {AccountInfo} from "@server/user/user_handler";
 
 describe('Account Repository', function () {
 
-    beforeEach(async function () {
-        await clearData();
-    });
+    beforeEach(async function () {});
 
     it('should create an account', async function () {
         let username = 'user_person';

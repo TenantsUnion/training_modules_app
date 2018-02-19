@@ -14,7 +14,6 @@ describe('Create module', function () {
     let courseId: string;
 
     beforeEach(async function () {
-        await clearData();
         await createUser();
         let courseIdMap = await createCourse();
         courseId = courseIdMap.courseId;

@@ -1,6 +1,6 @@
 import {expect} from 'chai';
-import {isEmptyQuestionChanges} from '../../../shared/questions';
-import {addDeltaArrOp} from '../../../shared/delta/diff_key_array';
+import {isEmptyQuestionChanges} from '@shared/questions';
+import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 
 describe('question utilities', function () {
     describe('isEmptyQuestionChanges', function () {
