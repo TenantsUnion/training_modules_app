@@ -1,8 +1,9 @@
 import {Datasource} from '../datasource';
-import {ViewModuleData} from '../../../shared/modules';
+import {ViewModuleData} from '@shared/modules';
 import {getLogger} from "../log";
-import {orderEntitiesByIds, processContentQuestions, toEntityMap} from "../course/view/course_view_row_processor";
-import {ViewTrainingEntityDescription} from "../../../shared/training_entity";
+import {processContentQuestions} from "@course/view/course_view_row_processor";
+import {ViewTrainingEntityDescription} from "@shared/training_entity";
+import {orderEntitiesByIds, toEntityMap} from "@util/id_entity";
 
 export class ModuleViewQuery {
     logger = getLogger('ModuleViewQuery', 'info');

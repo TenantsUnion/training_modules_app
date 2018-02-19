@@ -3,6 +3,7 @@ import {QuestionQuillData} from "@shared/questions";
 import {ViewTrainingEntityDescription} from "@shared/training_entity";
 import {QuillEditorData} from "@shared/quill_editor";
 import {QuestionOptionDbData, QuestionViewDbData} from "./view_database";
+import {orderEntitiesByIds, toEntityMap} from "@util/id_entity";
 
 export interface ViewTrainingEntityDescriptionDbData {
     id: string;
@@ -99,13 +100,3 @@ export const processContentQuestions = (row: ViewTrainingEntityDbData): (QuillEd
     return orderEntitiesByIds(row.orderedContentQuestionIds, toEntityMap([...content, ...questionsOptionsOrdered]))
 };
 
-export const toEntityMap = <T extends { id: string }> (objects: T[]): { [index: string]: T } => {
-    return objects.reduce((acc, el) => {
-        acc[el.id] = el;
-        return acc;
-    }, {});
-};
-
-export const orderEntitiesByIds = (orderedIds: string[], objectMap: { [p: string]: { id: string } }): any[] => {
-    return orderedIds.map((id) => objectMap[id]);
-};

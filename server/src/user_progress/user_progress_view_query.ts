@@ -19,7 +19,7 @@ export class UserProgressViewQuery {
                 INNER JOIN (SELECT * FROM tu.course_progress cp WHERE cp.user_id = $1) cp
                   ON c.id = cp.course_id
                 INNER JOIN LATERAL
-                           (SELECT m.*, mp.*, json_agg(s.*) AS sections
+                           (SELECT m.id, json_agg(mp.*), json_agg(s.*) AS sections
                             FROM tu.module m
                               INNER JOIN (SELECT * FROM tu.module_progress mp WHERE mp.user_id = $1) mp
                                 ON m.id = mp.module_id
@@ -31,11 +31,13 @@ export class UserProgressViewQuery {
                                           WHERE s.id = ANY (m.ordered_section_ids)
                                          ) s
                                 ON TRUE
-                            WHERE m.id = ANY (c.ordered_module_ids)) m ON TRUE
+                            WHERE m.id = ANY (c.ordered_module_ids) GROUP BY m.id) m ON TRUE
               WHERE C.id = $2;
             `,
             values: [userId, courseId]
         });
+
+       return result[0];
     }
 }
 

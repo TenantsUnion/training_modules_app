@@ -10,6 +10,7 @@ const moduleAlias = require("module-alias");
 // since the directory structure for tests doesn't match.
 moduleAlias.addAlias('@shared', __dirname + '/../shared');
 moduleAlias.addAlias('@server', __dirname + '/../server/src');
+moduleAlias.addAlias('@util', __dirname + '/../server/src/util');
 moduleAlias.addAlias('@course', __dirname + '/../server/src/course');
 moduleAlias.addAlias('@module', __dirname + '/../server/src/module');
 moduleAlias.addAlias('@section', __dirname + '/../server/src/section');

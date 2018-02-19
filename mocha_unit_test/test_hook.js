@@ -5,6 +5,7 @@ const moduleAlias = require("module-alias");
 moduleAlias.addAlias('@shared', __dirname + '/../shared');
 moduleAlias.addAlias('@testcafe', __dirname + '/../testcafe_e2e_test');
 moduleAlias.addAlias('@server', __dirname + '/../server/src');
+moduleAlias.addAlias('@util', __dirname + '/../server/src/util');
 moduleAlias.addAlias('@course', __dirname + '/../server/src/course');
 moduleAlias.addAlias('@module', __dirname + '/../server/src/module');
 moduleAlias.addAlias('@section', __dirname + '/../server/src/section');

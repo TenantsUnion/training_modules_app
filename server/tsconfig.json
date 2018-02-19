@@ -28,6 +28,9 @@
       "@section/*": [
         "./src/section/*"
       ],
+      "@util/*": [
+        "./src/util/*"
+      ],
       "*": [
         "*"
       ]

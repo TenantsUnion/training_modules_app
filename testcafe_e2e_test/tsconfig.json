@@ -36,6 +36,9 @@
       "@module/*": [
         "../server/src/module/*"
       ],
+      "@util/*": [
+        "../server/src/util/*"
+      ],
       "@server/*": [
         "../server/src/*"
       ],

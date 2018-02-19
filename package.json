@@ -48,7 +48,8 @@
     "@shared": "./server/dist/shared",
     "@course": "./server/dist/server/src/course",
     "@module": "./server/dist/server/src/module",
-    "@section": "./server/dist/server/src/section"
+    "@section": "./server/dist/server/src/section",
+    "@util": "./server/dist/server/src/util"
   },
   "dependencies": {
     "@std/esm": "0.16.0",
