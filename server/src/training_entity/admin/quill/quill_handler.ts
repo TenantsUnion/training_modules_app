@@ -54,18 +54,17 @@ export class QuillHandler {
             return {};
         }
 
-        let quillIds = await this.quillRepository.getNextIds(insertIds.length);
-        let insertAsync = insertIds.map((placeholderId, index) => {
-            return this.quillRepository.insertEditorJson(quillIds[index], new Delta(quillChanges[placeholderId].ops));
-        });
+        let quillIds = await Promise.all(insertIds.map((placeholderId) => {
+                return this.quillRepository.insertEditorJson(new Delta(quillChanges[placeholderId].ops));
+            }));
         let placeholderIdMap = insertIds.reduce((acc, placeholderId, index) => {
             acc[placeholderId] = quillIds[index];
             return acc;
         }, {});
 
-        await Promise.all(insertAsync);
         return placeholderIdMap;
     }
+
     loadQuillData (quillId: string): Promise<QuillEditorData> {
         return this.quillRepository.loadQuillData(quillId);
     }

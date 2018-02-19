@@ -30,12 +30,14 @@ export class QuillRepository extends AbstractRepository {
         return result;
     }
 
-    async insertEditorJson (quillId: string, editorJson: Quill.DeltaStatic): Promise<void> {
+    async insertEditorJson (editorJson: Quill.DeltaStatic): Promise<string> {
+        let quillId = await this.getNextId();
         await this.sqlTemplate.query({
             text: `INSERT INTO tu.quill_data (id, editor_json, last_modified_at, created_at)
                         VALUES ($1, $2, $3, $3)`,
             values: [quillId, editorJson, getUTCNow()]
         });
+        return quillId;
     }
 
     async updateEditorJson (quillData: QuillEditorData): Promise<void> {
