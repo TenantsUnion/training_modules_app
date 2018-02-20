@@ -13,6 +13,15 @@ export class AccountController {
     constructor(private accountHandler: IAccountHandler,
                 private userHandler: IUserHandler,
                 private accountRequestValidator: AccountRequestValidator) {
+        console.log('Account Controller Keys: ');
+        console.log(Object.getOwnPropertyNames(Object.getPrototypeOf(this)));
+        console.log('This signup method is called: ');
+        console.log(this.signup.name);
+        Object.keys(this).forEach((key) => {
+            if(typeof this[key] === 'function') {
+                console.log(`${key} is method on Account Controller`);
+            }
+        })
     }
 
     async signup(request: Request, response: Response) {

@@ -6,7 +6,8 @@ import {NavigationGuard} from "vue-router";
 import {store} from "../state_store";
 import {AVAILABLE_COURSES_ACTIONS} from "./available_courses_store";
 import {mapState} from "vuex";
-import {PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {USER_ACTIONS} from "../user/store/user_store";
 
 export const availableCoursesRouteGuard: NavigationGuard = async (to, from, next) => {
     try {
@@ -39,8 +40,7 @@ export default class AvailableCoursesComponent extends Vue {
     }
 
     async enroll (course: CourseDescription) {
-        await this.$store.dispatch(COURSE_ACTIONS.ENROLL_IN_COURSE, course.id);
-        this.$router.push('')
-        // dispatch vuex state action
+        await this.$store.dispatch(USER_ACTIONS.ENROLL_IN_COURSE, course.id);
+        // this.$router.push(ENROLLED_COURSE_ROUTES.enrolledCourse);
     }
 }

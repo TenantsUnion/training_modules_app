@@ -4,6 +4,7 @@ import {Constant} from '../../../../../shared/typings/util_typings';
 import {IUserInfo} from '../../../../../shared/user';
 import {accountHttpService} from '../../account/account_http_service';
 import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from './courses_listing_store';
+import {enrollUserInCourse} from "../user_http_service";
 
 
 /**
@@ -66,13 +67,15 @@ export interface UserActions {
     LOAD_INFO_FROM_USER_SESSION: UserAction<string>,
     LOGOUT: UserAction<any>,
     SIGNUP: UserAction<{ username: string }>
+    ENROLL_IN_COURSE: UserAction<string>;
 }
 
 export const USER_ACTIONS: Constant<UserActions> = {
     LOGIN: 'LOGIN',
     LOAD_INFO_FROM_USER_SESSION: 'LOAD_INFO_FROM_USER_SESSION',
     LOGOUT: 'LOGOUT',
-    SIGNUP: 'SIGNUP'
+    SIGNUP: 'SIGNUP',
+    ENROLL_IN_COURSE: 'ENROLL_IN_COURSE'
 };
 
 export const userActions: UserActions & ActionTree<UserState, RootState> = {
@@ -117,5 +120,8 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
         await accountHttpService.logout();
         commit(USER_MUTATIONS.USER_LOGOUT);
         commit(USER_COURSES_LISTING_MUTATIONS.CLEAR_USER_COURSES_LISTINGS);
+    },
+    async ENROLL_IN_COURSE ({commit, state, rootState}, courseId: string) {
+       await enrollUserInCourse({courseId, userId: state.userId});
     }
 };

@@ -16,7 +16,6 @@ export interface CourseActions {
     SET_CURRENT_COURSE: CourseAction<{ id: string, mode: CourseMode }>;
     SET_CURRENT_COURSE_FROM_SLUG: CourseAction<string>;
     SAVE_COURSE: CourseAction<SaveCourseEntityPayload>;
-    ENROLL_IN_COURSE: CourseAction<string>;
 }
 
 export type CourseAction<P> = TypedAction<CourseState, P>;
@@ -29,7 +28,6 @@ export const COURSE_ACTIONS: Constant<CourseActions> = {
     SET_CURRENT_COURSE: 'SET_CURRENT_COURSE',
     SET_CURRENT_COURSE_FROM_SLUG: 'SET_CURRENT_COURSE_FROM_SLUG',
     SAVE_COURSE: 'SAVE_COURSE',
-    ENROLL_IN_COURSE: 'ENROLL_IN_COURSE'
 };
 /**
  * Course store actions
@@ -102,8 +100,5 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
         } finally {
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: saveCourseEntityPayload.id, requesting: false});
         }
-    },
-    async ENROLL_IN_COURSE ({commit, dispatch, getters}, courseId: string) {
-        // todo get current user login id and make async call to http service to make POST for user to enroll in course
     }
 };

@@ -12,7 +12,10 @@ declare namespace user {
     interface IUserId {
         id: string
     }
+
+    interface EnrollCourseRequestPayload {
+        userId: string;
+        courseId: string;
+    }
 }
-
-
 export = user;

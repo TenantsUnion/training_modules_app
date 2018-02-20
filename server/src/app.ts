@@ -1,3 +1,5 @@
+import {userProgressWebController} from "./web/web_controller_config";
+
 const express = require("express");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
@@ -66,6 +68,7 @@ app.use(AccountRoutes);
 app.use(CoursesRoutes);
 app.use(QuillRoutes);
 app.use(AvailableCourseRoutes);
+userProgressWebController.registerRoutes(app);
 
 // has to go last so other routes can match, catch 404 and forward to error handler
 app.use(function (req, res, next) {
