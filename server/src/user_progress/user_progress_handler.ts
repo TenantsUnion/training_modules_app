@@ -13,10 +13,9 @@ export class UserProgressHandler {
 
     async enrollUserInCourse ({userId, courseId}: CourseProgressId) {
         let courseStructure = await this.courseProgressRepository.courseStructure(courseId);
-        let sectionIds = courseStructure.modules.reduce((acc, module) => {
-            acc.push(...module.orderedSectionIds);
-            return acc;
-        }, []);
+        let sectionIds = courseStructure.modules ? courseStructure.modules.reduce((acc, module) => {
+            return acc.concat(module.orderedSectionIds ? module.orderedSectionIds : []);
+        }, []) : [];
         await Promise.all([
             this.courseProgressRepository.createCourseProgress({userId, courseId}),
             this.moduleProgressRepository.createModuleProgress({userId, moduleIds: courseStructure.orderedModuleIds}),

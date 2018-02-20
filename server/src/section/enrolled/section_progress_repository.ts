@@ -11,6 +11,9 @@ export class SectionProgressRepository {
     }
 
     async createSectionProgress ({userId, sectionIds}: SectionProgressIds) {
+        if(!sectionIds || !sectionIds.length) {
+            return;
+        }
         let time = getUTCNow();
         let insertColumnsSql = 'INSERT INTO tu.section_progress (user_id, section_id, last_modified_at, created_at) values ';
 

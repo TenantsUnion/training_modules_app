@@ -41,7 +41,7 @@ describe('User Progress View Query', function () {
             orderedContentQuestionIds: [],
         };
 
-        expect(await userProgressViewQuery.enrolledUserProgress(userId, courseId)).to.deep.eq({
+        expect(await userProgressViewQuery.loadUserCourseProgress({userId, courseId})).to.deep.eq({
             id: courseId,
             version: 0,
             userId: userId,

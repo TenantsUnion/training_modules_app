@@ -1,5 +1,6 @@
 import {Datasource} from "../datasource";
 import {orderObjByIds, toIdObjMap} from "@util/id_entity";
+import {CourseProgressId} from "@shared/user_progress";
 
 export interface TrainingEntityProgressDbRow {
     userId: string;
@@ -97,7 +98,7 @@ export class UserProgressViewQuery {
     constructor (protected datasource: Datasource) {
     }
 
-    async enrolledUserProgress (userId, courseId): Promise<UserCourseProgressView> {
+    async loadUserCourseProgress ({userId, courseId}: CourseProgressId): Promise<UserCourseProgressView> {
         let {modules: unorderedModules, ...courseProps} =
             mapUserProgressView(await this.loadEnrolledUserCourseProgress(userId, courseId));
         let modules = unorderedModules ? orderObjByIds(courseProps.orderedModuleIds, toIdObjMap(unorderedModules))
