@@ -1,3 +1,5 @@
+import {AdminCourseDescription} from "@shared/courses";
+
 declare namespace user {
     interface IUserInfo {
         id: string,
@@ -16,6 +18,11 @@ declare namespace user {
     interface EnrollCourseRequestPayload {
         userId: string;
         courseId: string;
+    }
+
+    interface UserCoursesListingPayload {
+        admin: AdminCourseDescription[];
+        enrolled: AdminCourseDescription[];
     }
 }
 export = user;

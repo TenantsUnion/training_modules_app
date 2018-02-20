@@ -1,11 +1,11 @@
-import {AbstractRoutesController} from "./abstract_routes_controller";
+import {AbstractWebController} from "./abstract_routes_controller";
 import {getLogger} from "../log";
 import {Router, Request} from "express";
 import {UserProgressHandler} from "../user_progress/user_progress_handler";
 import {UserCourseProgressView, UserProgressViewQuery} from "../user_progress/user_progress_view_query";
 import {EnrollCourseRequestPayload} from "@shared/user";
 
-export class UserProgressWebController extends AbstractRoutesController {
+export class UserProgressWebController extends AbstractWebController {
 
 
     constructor (private userProgressHandler: UserProgressHandler,
@@ -27,7 +27,6 @@ export class UserProgressWebController extends AbstractRoutesController {
 
     registerRoutes (router: Router): Router {
         return router
-            .get('/user/:userId/course/:courseId/progress')
             .post('/user/course/enroll', this.handle(this.enrollInCourse));
     }
 }

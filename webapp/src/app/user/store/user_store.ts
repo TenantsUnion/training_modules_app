@@ -86,7 +86,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
                 password: ''
             });
             commit(USER_MUTATIONS.USER_LOGIN, userInfo);
-            dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
+            dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
         } catch (e) {
             console.error(e);
         }
@@ -97,7 +97,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
             password: ''
         });
         commit(USER_MUTATIONS.USER_LOGIN, userInfo);
-        await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
+        await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
     },
     async LOAD_INFO_FROM_USER_SESSION ({dispatch, state, commit}, username) {
         if (username === state.username && state.userInfo) {
@@ -113,7 +113,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
         let userInfo = await accountHttpService.getLoggedInUserInfo(username);
         if (userInfo) {
             commit(USER_MUTATIONS.USER_LOGIN, userInfo);
-            await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_USER_ADMIN_COURSES);
+            await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
         }
     },
     async LOGOUT ({commit, state, rootState}) {

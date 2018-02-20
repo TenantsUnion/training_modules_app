@@ -4,7 +4,7 @@ import {NextFunction, Request, Response, Router} from "express";
 
 export type RequestHandler<T> = (req: Request) => Promise<T>;
 
-export abstract class AbstractRoutesController {
+export abstract class AbstractWebController {
     constructor (protected logger: LoggerInstance) {
     }
 

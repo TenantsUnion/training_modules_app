@@ -1,18 +1,20 @@
 import Vue from 'vue';
 import * as _ from 'underscore';
-import {AdminCourseDescription} from '@shared/courses';
+import {AdminCourseDescription, EnrolledCourseDescription} from '@shared/courses';
 import {Action, ActionContext, ActionTree, Mutation, MutationTree} from 'vuex';
 import {AppGetter, RootGetters, RootState} from '../../state_store';
 import {Constant} from '@shared/typings/util_typings';
 import {userCoursesHttpService} from '../courses/course_http_service';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
 import {CourseMode} from "@course/store/course_mutations";
+import {loadUserCourses} from "../user_http_service";
 
 /**
  * State
  */
 export interface UserCoursesListingState {
     adminCourseDescriptions: AdminCourseDescription[];
+    enrolledCourseDescriptions: EnrolledCourseDescription[];
     courseSlugIdMap: { [index: string]: string };
     courseListingsLoaded: boolean;
     loading: boolean;
@@ -21,6 +23,7 @@ export interface UserCoursesListingState {
 export const userCoursesListingState: UserCoursesListingState = {
     // change with Vue.set since new properties will be set... or init as new object?
     adminCourseDescriptions: [],
+    enrolledCourseDescriptions: [],
     courseSlugIdMap: {},
     courseListingsLoaded: false,
     loading: false
@@ -85,30 +88,30 @@ export type UserCoursesListingMutation<P> = (state: UserCoursesListingState, pay
 
 export interface UserCoursesListingMutations {
     SET_ADMIN_COURSE_DESCRIPTIONS: UserCoursesListingMutation<AdminCourseDescription[]>,
-    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING: UserCoursesListingMutation<boolean>,
+    SET_ENROLLED_COURSE_DESCRIPTIONS: UserCoursesListingMutation<EnrolledCourseDescription[]>,
+    SET_COURSE_DESCRIPTIONS_LOADING: UserCoursesListingMutation<boolean>,
     SET_USER_COURSES_LISTINGS_LOADED: UserCoursesListingMutation<boolean>,
     CLEAR_USER_COURSES_LISTINGS: UserCoursesListingMutation<any>
 }
 
 export const USER_COURSES_LISTING_MUTATIONS: Constant<UserCoursesListingMutations> = {
     SET_ADMIN_COURSE_DESCRIPTIONS: 'SET_ADMIN_COURSE_DESCRIPTIONS',
-    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING: 'SET_ADMIN_COURSE_DESCRIPTIONS_LOADING',
+    SET_ENROLLED_COURSE_DESCRIPTIONS: 'SET_ENROLLED_COURSE_DESCRIPTIONS',
+    SET_COURSE_DESCRIPTIONS_LOADING: 'SET_COURSE_DESCRIPTIONS_LOADING',
     SET_USER_COURSES_LISTINGS_LOADED: 'SET_USER_COURSES_LISTINGS_LOADED',
     CLEAR_USER_COURSES_LISTINGS: 'CLEAR_USER_COURSES_LISTINGS'
 };
 
 export const userCoursesListingMutations: UserCoursesListingMutations & MutationTree<UserCoursesListingState> = {
-    SET_ADMIN_COURSE_DESCRIPTIONS (state: UserCoursesListingState, adminCourseDescriptions: AdminCourseDescription[]) {
-        let uniqueTitle = adminCourseDescriptions.reduce((acc, {title}: AdminCourseDescription) => {
-            acc[title] = _.isUndefined(acc[title]);
-            return acc;
-        }, {});
+    SET_ADMIN_COURSE_DESCRIPTIONS (state, adminCourseDescriptions: AdminCourseDescription[]) {
+        let uniqueTitle = adminCourseDescriptions.concat(state.enrolledCourseDescriptions)
+            .reduce((acc, {title}: AdminCourseDescription) => {
+                acc[title] = _.isUndefined(acc[title]);
+                return acc;
+            }, {});
         let adminCourses = adminCourseDescriptions.map((description: AdminCourseDescription) => {
             let {id, title} = description;
-            return {
-                slug: titleToSlug(title, !uniqueTitle[title], id),
-                ...description
-            };
+            return {slug: titleToSlug(title, !uniqueTitle[title], id), ...description};
         });
         let courseSlugToMap = adminCourses.reduce((acc, course) => {
             acc[course.slug] = course.id;
@@ -118,7 +121,25 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
         Vue.set(state, 'courseSlugIdMap', courseSlugToMap);
         Vue.set(state, 'adminCourseDescriptions', adminCourses);
     },
-    SET_ADMIN_COURSE_DESCRIPTIONS_LOADING (state: UserCoursesListingState, loading: boolean) {
+    SET_ENROLLED_COURSE_DESCRIPTIONS (state: UserCoursesListingState, enrolledDescriptions: EnrolledCourseDescription[]) {
+        let uniqueTitle = enrolledDescriptions.concat(state.adminCourseDescriptions)
+            .reduce((acc, {title}: AdminCourseDescription) => {
+                acc[title] = _.isUndefined(acc[title]);
+                return acc;
+            }, {});
+        let adminCourses = enrolledDescriptions.map((description: AdminCourseDescription) => {
+            let {id, title} = description;
+            return {slug: titleToSlug(title, !uniqueTitle[title], id), ...description};
+        });
+        let courseSlugToMap = adminCourses.reduce((acc, course) => {
+            acc[course.slug] = course.id;
+            return acc;
+        }, {});
+
+        Vue.set(state, 'courseSlugIdMap', courseSlugToMap);
+        Vue.set(state, 'enrolledCourseDescriptions', adminCourses);
+    },
+    SET_COURSE_DESCRIPTIONS_LOADING (state: UserCoursesListingState, loading: boolean) {
         state.loading = loading;
     },
     SET_USER_COURSES_LISTINGS_LOADED (state: UserCoursesListingState, coursesListing: boolean) {
@@ -139,24 +160,26 @@ export type UserCoursesListingAction<P> =
         | Action<UserCoursesListingState, RootState>;
 
 export interface UserCoursesListingActions {
-    LOAD_USER_ADMIN_COURSES: UserCoursesListingAction<void>
+    LOAD_COURSE_LISTINGS: UserCoursesListingAction<void>
 }
 
 export const USER_COURSES_LISTING_ACTIONS: Constant<UserCoursesListingActions> = {
-    LOAD_USER_ADMIN_COURSES: 'LOAD_USER_ADMIN_COURSES'
+    LOAD_COURSE_LISTINGS: 'LOAD_COURSE_LISTINGS'
 };
 
 export const userCoursesListingActions: UserCoursesListingActions & ActionTree<UserCoursesListingState, RootState> = {
-    LOAD_USER_ADMIN_COURSES: async ({commit, state, rootState}) => {
+    LOAD_COURSE_LISTINGS: async ({commit, state, rootState}) => {
         if (state.courseListingsLoaded || !rootState.user.loggedIn || state.loading) {
             return;
         }
 
-        let courseListingLoaded = userCoursesHttpService.getUserAdminCourses(rootState.user.userId);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS_LOADING, true);
+        let courseListingLoaded = loadUserCourses(rootState.user.userId);
+        commit(USER_COURSES_LISTING_MUTATIONS.SET_COURSE_DESCRIPTIONS_LOADING, true);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, false);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS_LOADING, false);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, await courseListingLoaded);
+        commit(USER_COURSES_LISTING_MUTATIONS.SET_COURSE_DESCRIPTIONS_LOADING, false);
+        let courseListing = await courseListingLoaded;
+        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, courseListing.admin);
+        commit(USER_COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, courseListing.enrolled);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, true);
     }
 };
