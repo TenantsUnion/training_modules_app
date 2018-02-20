@@ -26,7 +26,7 @@ Tenants Union training module application.
             npm run init_db
 * Develop with live reload:
 
-            npm run watch
+            npm run watch-dev
 * See the scripts section of [package.json](./package.json) for more build and run configurations.
 
  
