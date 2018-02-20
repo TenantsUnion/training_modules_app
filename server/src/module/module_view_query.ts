@@ -3,7 +3,7 @@ import {ViewModuleData} from '@shared/modules';
 import {getLogger} from "../log";
 import {processContentQuestions} from "@course/view/course_view_row_processor";
 import {ViewTrainingEntityDescription} from "@shared/training_entity";
-import {orderEntitiesByIds, toEntityMap} from "@util/id_entity";
+import {orderObjByIds, toIdObjMap} from "@util/id_entity";
 
 export class ModuleViewQuery {
     logger = getLogger('ModuleViewQuery', 'info');
@@ -59,7 +59,7 @@ export class ModuleViewQuery {
             return {
                 ...viewModule,
                 contentQuestions: processContentQuestions(row),
-                sections: orderEntitiesByIds(orderedSectionIds, toEntityMap(sections))
+                sections: orderObjByIds(orderedSectionIds, toIdObjMap(sections))
             };
         } catch (e) {
             this.logger.log('error', e);
@@ -91,7 +91,7 @@ export class ModuleViewQuery {
                 content, questions, orderedSectionIds, ...viewModule
             } = row;
 
-            return orderEntitiesByIds(orderedSectionIds, toEntityMap(sections))
+            return orderObjByIds(orderedSectionIds, toIdObjMap(sections))
         } catch (e) {
             this.logger.log('error', e);
             this.logger.log('error', e.stack);

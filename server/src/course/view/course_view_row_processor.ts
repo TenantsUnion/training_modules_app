@@ -3,7 +3,7 @@ import {QuestionQuillData} from "@shared/questions";
 import {ViewTrainingEntityDescription} from "@shared/training_entity";
 import {QuillEditorData} from "@shared/quill_editor";
 import {QuestionOptionDbData, QuestionViewDbData} from "./view_database";
-import {orderEntitiesByIds, toEntityMap} from "@util/id_entity";
+import {orderObjByIds, toIdObjMap} from "@util/id_entity";
 
 export interface ViewTrainingEntityDescriptionDbData {
     id: string;
@@ -69,10 +69,10 @@ export const processCourseView = (row: ViewCourseDbData): ViewCourseData => {
 };
 
 export const processModuleDescriptions = (orderedModuleIds: string[], modules: ViewModuleDescriptionDbData[]) => {
-    return orderEntitiesByIds(orderedModuleIds, toEntityMap(modules)).map((module) => {
+    return orderObjByIds(orderedModuleIds, toIdObjMap(modules)).map((module) => {
         let sections = module.sections ? module.sections : [];
         let orderedSections: ViewTrainingEntityDescription[] =
-            orderEntitiesByIds(module.orderedSectionIds, toEntityMap(sections))
+            orderObjByIds(module.orderedSectionIds, toIdObjMap(sections))
                 .map((section) => {
                     return section;
                 });
@@ -87,16 +87,16 @@ export const processContentQuestions = (row: ViewTrainingEntityDbData): (QuillEd
         .map((q) => {
             let {optionIds, questionQuillId, ...rest} = q;
             let options = q.options ? q.options : [];
-            let withoutQuillIds = orderEntitiesByIds(q.optionIds, toEntityMap(options)).map((option: QuestionOptionDbData) => {
+            let withoutQuillIds = orderObjByIds(q.optionIds, toIdObjMap(options)).map((option: QuestionOptionDbData) => {
                 let {explanationQuillId, optionQuillId, ...rest} = option;
                 return rest;
             });
             return {
-                ...rest, options: orderEntitiesByIds(q.optionIds, toEntityMap(withoutQuillIds))
+                ...rest, options: orderObjByIds(q.optionIds, toIdObjMap(withoutQuillIds))
             }
         }) : [];
     let content = row.content ? row.content : [];
 
-    return orderEntitiesByIds(row.orderedContentQuestionIds, toEntityMap([...content, ...questionsOptionsOrdered]))
+    return orderObjByIds(row.orderedContentQuestionIds, toIdObjMap([...content, ...questionsOptionsOrdered]))
 };
 
