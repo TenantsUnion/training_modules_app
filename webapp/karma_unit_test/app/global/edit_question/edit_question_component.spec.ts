@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import VueQuestionComponent from '@global/edit_question/question_component.vue';
+import VueQuestionComponent from '@global/edit_question/edit_question_component.vue';
 import {QuestionComponent} from '@global/edit_question/edit_question_component';
 import {AnswerType, QuestionChanges, QuestionOptionQuillData, QuestionQuillData, QuestionType} from '@shared/questions';
 import Quill from 'quill';

@@ -8,7 +8,7 @@ import TimeEstimateComponent from './global/time_estimate/time_estimate_componen
 import QuillComponent from './global/quill/quill_component.vue';
 import EditTrainingSegmentsComponent from './global/edit_training_segments/edit_training_segments_component.vue';
 import ViewTrainingSegmentsComponent from './global/view_training_segments/view_training_segments_component.vue';
-import QuestionComponent from "./global/edit_question/question_component.vue";
+import QuestionComponent from "./global/edit_question/edit_question_component.vue";
 import SwitchCheckBoxComponent from './global/switch_checkbox/switch_checkbox.vue';
 import AppHeader from './user/header/user_header_component.vue';
 import VueRouter from 'vue-router';

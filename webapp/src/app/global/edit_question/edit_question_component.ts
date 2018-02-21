@@ -10,7 +10,7 @@ import {Prop, Watch} from "vue-property-decorator";
 import {QuillDeltaMap} from "@shared/quill_editor";
 import DeltaStatic = Quill.DeltaStatic;
 import {SegmentArrayElement} from "@shared/segment";
-import VueQuestionOptionComponent from "./question_option_component.vue";
+import VueQuestionOptionComponent from "./edit_question_option_component.vue";
 import {QuestionOptionComponent} from '@global/edit_question/edit_question_option_component';
 import {FormState} from '../../vue-form';
 import QuillComponent from '@global/quill/quill_component';

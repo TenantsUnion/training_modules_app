@@ -45,4 +45,4 @@
         </button>
     </div>
 </template>
-<script lang="ts" src="./question_option_component.ts"></script>
+<script lang="ts" src="./edit_question_option_component.ts"></script>

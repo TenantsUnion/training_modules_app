@@ -46,6 +46,5 @@
     </div>
 </template>
 
-<style lang="scss" src="./question_component.scss" scoped></style>
-
-<script lang="ts" src="./question_component.ts"></script>
+<style lang="scss" src="./edit_question_component.scss" scoped></style>
+<script lang="ts" src="./edit_question_component.ts"></script>
