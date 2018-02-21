@@ -1,10 +1,9 @@
 import Vue from 'vue';
 import * as _ from 'underscore';
-import {AdminCourseDescription, EnrolledCourseDescription} from '@shared/courses';
+import {AdminCourseDescription, CourseDescription, EnrolledCourseDescription} from '@shared/courses';
 import {Action, ActionContext, ActionTree, Mutation, MutationTree} from 'vuex';
 import {AppGetter, RootGetters, RootState} from '../../state_store';
 import {Constant} from '@shared/typings/util_typings';
-import {userCoursesHttpService} from '../courses/course_http_service';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
 import {CourseMode} from "@course/store/course_mutations";
 import {loadUserCourses} from "../user_http_service";
@@ -109,11 +108,11 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
                 acc[title] = _.isUndefined(acc[title]);
                 return acc;
             }, {});
-        let adminCourses = adminCourseDescriptions.map((description: AdminCourseDescription) => {
+        let adminCourses: CourseDescription[] = adminCourseDescriptions.map((description: AdminCourseDescription) => {
             let {id, title} = description;
             return {slug: titleToSlug(title, !uniqueTitle[title], id), ...description};
         });
-        let courseSlugToMap = adminCourses.reduce((acc, course) => {
+        let courseSlugToMap = adminCourses.concat(state.enrolledCourseDescriptions).reduce((acc, course) => {
             acc[course.slug] = course.id;
             return acc;
         }, {});
@@ -121,23 +120,23 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
         Vue.set(state, 'courseSlugIdMap', courseSlugToMap);
         Vue.set(state, 'adminCourseDescriptions', adminCourses);
     },
-    SET_ENROLLED_COURSE_DESCRIPTIONS (state: UserCoursesListingState, enrolledDescriptions: EnrolledCourseDescription[]) {
-        let uniqueTitle = enrolledDescriptions.concat(state.adminCourseDescriptions)
+    SET_ENROLLED_COURSE_DESCRIPTIONS (state: UserCoursesListingState, incomingDescriptions: EnrolledCourseDescription[]) {
+        let uniqueTitle = incomingDescriptions.concat(state.adminCourseDescriptions)
             .reduce((acc, {title}: AdminCourseDescription) => {
                 acc[title] = _.isUndefined(acc[title]);
                 return acc;
             }, {});
-        let adminCourses = enrolledDescriptions.map((description: AdminCourseDescription) => {
+        let enrolledDescriptions: CourseDescription[] = incomingDescriptions.map((description: AdminCourseDescription) => {
             let {id, title} = description;
             return {slug: titleToSlug(title, !uniqueTitle[title], id), ...description};
         });
-        let courseSlugToMap = adminCourses.reduce((acc, course) => {
+        let courseSlugToMap = enrolledDescriptions.concat(state.adminCourseDescriptions).reduce((acc, course) => {
             acc[course.slug] = course.id;
             return acc;
         }, {});
 
         Vue.set(state, 'courseSlugIdMap', courseSlugToMap);
-        Vue.set(state, 'enrolledCourseDescriptions', adminCourses);
+        Vue.set(state, 'enrolledCourseDescriptions', enrolledDescriptions);
     },
     SET_COURSE_DESCRIPTIONS_LOADING (state: UserCoursesListingState, loading: boolean) {
         state.loading = loading;

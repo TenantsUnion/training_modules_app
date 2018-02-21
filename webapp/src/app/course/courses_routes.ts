@@ -10,16 +10,11 @@ import VueEditCourseComponent from "@course/edit_course_component/edit_course_co
 import CreateModuleComponent from "@module/create_module_component/create_module_component.vue";
 import EditSectionComponent from "@section/edit/edit_section_component.vue";
 
-export const CourseRoutes: RouteConfig = {
-    path: 'course',
+export const AdminCourseRoutes: RouteConfig = {
+    path: 'admin/course',
     props: true,
     component: CourseComponent,
     children: [
-        {
-            path: ':courseSlug',
-            name: PREVIEW_COURSE_ROUTES.coursePreview,
-            component: CourseDetailsComponent
-        },
         {
             path: ':courseSlug/edit',
             name: ADMIN_COURSE_ROUTES.editCourse,
@@ -31,10 +26,6 @@ export const CourseRoutes: RouteConfig = {
             props: true,
             component: CreateModuleComponent
         }, {
-            path: ':courseSlug/module/:moduleSlug',
-            name: PREVIEW_COURSE_ROUTES.modulePreview,
-            component: ModuleDetailsComponent
-        }, {
             path: ':courseSlug/module/:moduleSlug/edit',
             name: ADMIN_COURSE_ROUTES.editModule,
             props: true,
@@ -45,25 +36,52 @@ export const CourseRoutes: RouteConfig = {
             props: true,
             component: CreateSectionComponent
         }, {
-            path: ':courseSlug/module/:moduleSlug/section/:sectionSlug',
-            name: PREVIEW_COURSE_ROUTES.sectionPreview,
-            component: ViewSectionComponent
-        }, {
             path: ':courseSlug/module/:moduleSlug/section/:sectionSlug/edit',
             name: ADMIN_COURSE_ROUTES.editSection,
             props: true,
             component: EditSectionComponent
-        }, {
-            path: ':courseSlug/learning',
+        }]
+};
+
+
+export const EnrolledCourseRoutes: RouteConfig = {
+    path: 'learning/course',
+    props: true,
+    component: CourseComponent,
+    children: [
+        {
+            path: ':courseSlug',
             name: ENROLLED_COURSE_ROUTES.enrolledCourse,
             component: CourseDetailsComponent
         }, {
-            path: ':courseSlug/module/:moduleSlug/learning',
+            path: ':courseSlug/module/:moduleSlug',
             name: ENROLLED_COURSE_ROUTES.enrolledModule,
             component: ModuleDetailsComponent
         }, {
-            path: ':courseSlug/module/:moduleSlug/section/:sectionSlug/learning',
+            path: ':courseSlug/module/:moduleSlug/section/:sectionSlug',
             name: ENROLLED_COURSE_ROUTES.enrolledSection,
             component: ViewSectionComponent
-        }]
+        }
+    ]
+};
+
+export const PreviewCourseRoutes: RouteConfig = {
+    path: 'preview/course',
+    props: true,
+    component: CourseComponent,
+    children: [
+        {
+            path: ':courseSlug',
+            name: PREVIEW_COURSE_ROUTES.coursePreview,
+            component: CourseDetailsComponent
+        }, {
+            path: ':courseSlug/module/:moduleSlug',
+            name: PREVIEW_COURSE_ROUTES.modulePreview,
+            component: ModuleDetailsComponent
+        }, {
+            path: ':courseSlug/module/:moduleSlug/section/:sectionSlug',
+            name: PREVIEW_COURSE_ROUTES.sectionPreview,
+            component: ViewSectionComponent
+        }
+    ]
 };

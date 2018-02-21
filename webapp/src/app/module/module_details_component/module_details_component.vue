@@ -7,13 +7,8 @@
             <div class="row">
                 <div class="small-12 large-10 columns">
                     <div>
-                        <h2>{{module.title}}
-                            <button v-if="isCourseAdmin" class="button" v-on:click="createSection">Create Section
-                            </button>
-                        </h2>
-                        <h4>
-                            {{module.description}}
-                        </h4>
+                        <h2>{{module.title}}</h2>
+                        <h4>{{module.description}}</h4>
                         <time-estimate :time-estimate="module.timeEstimate"/>
                     </div>
                     <div v-for="section in module.sections">

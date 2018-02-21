@@ -38,8 +38,5 @@ export const currentModuleRouteGuard: NavigationGuard = async (to, from, next) =
 export default class ModuleDetailsComponent extends Vue {
     loading: boolean;
 
-    createSection() {
-        this.$router.push({name: ADMIN_COURSE_ROUTES.createSection});
-    }
 }
 

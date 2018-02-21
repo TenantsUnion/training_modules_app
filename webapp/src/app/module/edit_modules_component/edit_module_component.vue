@@ -55,9 +55,17 @@
                     </div>
                 </validate>
                 <div class="row">
-                    <div class="columns small-12 large-10">
+                    <div class="columns small-2">
                         <h3>Sections</h3>
                     </div>
+                    <div class="columns small-2">
+                        <button class="button" v-on:click="addSection">
+                            Add Section
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
                     <draggable v-model="sections" element="div" class="columns small-12 large-10">
                         <div v-for="section in sections">
                             <h4 v-bind:style="sectionTitleStyles(section)">

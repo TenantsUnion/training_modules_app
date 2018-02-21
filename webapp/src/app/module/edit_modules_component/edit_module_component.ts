@@ -14,7 +14,7 @@ import {MODULE_ACTIONS} from '@module/store/module_actions';
 import {getModuleSlugFromIdFn} from '@module/store/module_state';
 import {Watch} from 'vue-property-decorator';
 import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
-import {PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {ADMIN_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
 
 @Component({
     data: () => {
@@ -67,6 +67,10 @@ export class EditModuleComponent extends Vue {
             Vue.set(this, 'sections', [...module.sections]);
             Vue.set(this, 'module', module);
         }
+    }
+
+    addSection() {
+        this.$router.push({name: ADMIN_COURSE_ROUTES.createSection});
     }
 
     removeSection (section) {

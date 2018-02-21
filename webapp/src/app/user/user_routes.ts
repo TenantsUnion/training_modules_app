@@ -11,7 +11,7 @@ import AvailableCoursesComponent from "../available_courses/available_courses_co
 import UserEnrolledCoursesComponent from "./courses/enrolled/user_enrolled_courses_component.vue";
 import UserAdminCourseComponent from "./courses/admin/user_admin_courses_component.vue";
 import {USER_ROUTES} from "@global/routes";
-import {CourseRoutes} from "@course/courses_routes";
+import {AdminCourseRoutes, EnrolledCourseRoutes, PreviewCourseRoutes} from "@course/courses_routes";
 
 /**
  * If vue route matches username param then check if user is logged or redirect to login page
@@ -83,5 +83,5 @@ export const userRoutes: RouteConfig = {
     }
 };
 
-userRoutes.children = userRoutes.children.concat([CourseRoutes]);
+userRoutes.children = userRoutes.children.concat([AdminCourseRoutes, EnrolledCourseRoutes, PreviewCourseRoutes]);
 
