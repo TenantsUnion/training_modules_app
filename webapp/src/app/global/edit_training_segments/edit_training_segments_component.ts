@@ -13,7 +13,7 @@ import {
 import {isQuillEditorData, QuillEditorData} from "@shared/quill_editor";
 import {deltaMapArrayDiff} from "@shared/delta/diff_key_array";
 import {Watch} from "vue-property-decorator";
-import QuestionComponent from '../question/question_component';
+import QuestionComponent from '../edit_question/edit_question_component';
 import {createdQuestionPlaceholderId, createdQuillPlaceholderId, isCreatedQuestionPlaceholderId} from "@shared/ids";
 
 

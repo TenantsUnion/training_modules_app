@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Quill from 'quill';
-import QuestionComponent from '@global/question/question_component';
+import QuestionComponent from '@global/edit_question/edit_question_component';
 import SwitchCheckboxComponent from '@global/switch_checkbox/switch_checkbox';
 import QuillComponent from '@global/quill/quill_component';
 import {QuillDeltaMap} from '@shared/quill_editor';

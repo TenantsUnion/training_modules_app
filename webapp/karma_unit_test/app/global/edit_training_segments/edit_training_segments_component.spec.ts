@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import VueEditTrainingSegmentComponent from '@global/edit_training_segments/edit_training_segments_component.vue';
 import TrainingSegmentComponent from '@global/edit_training_segments/edit_training_segments_component';
 import {addQuestionText, QuestionTextObj, quillDeltaMapFromQuestionAndText} from '../../../util/test_question_util';
-import QuestionComponent from '@global/question/question_component';
+import QuestionComponent from '@global/edit_question/edit_question_component';
 import Quill from 'quill';
 import Vue from 'vue';
 import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';

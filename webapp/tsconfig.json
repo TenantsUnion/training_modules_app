@@ -2,7 +2,7 @@
   "include": [
     "./src/app/**/*.ts",
     "./src/app/**/*.vue",
-    "./test/**/*.ts",
+    "./karma_unit_test/**/*.ts",
     "../shared/**/*.ts",
     "../node_modules/@types"
   ],
