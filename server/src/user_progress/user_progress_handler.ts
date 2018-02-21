@@ -24,4 +24,8 @@ export class UserProgressHandler {
         ]);
     }
 
+    async recordCourseProgress({userId, courseId}: CourseProgressId) {
+
+    }
+
 }

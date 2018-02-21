@@ -1,3 +1,4 @@
+import {DeltaArrOp} from "@shared/delta/diff_key_array";
 
 export interface TrainingProgress {
     id: string;
@@ -9,6 +10,17 @@ export interface TrainingProgress {
     lastViewedAt: string | null;
     lastModifiedAt: string;
     createdAt: string;
+}
+
+export interface TrainingProgressUpdate {
+    viewedContentIds: DeltaArrOp<string>[];
+    questionSubmissions: QuestionSubmission[];
+}
+
+export interface QuestionSubmission {
+    questionId: string;
+    questionOptionId: string;
+    correct: boolean;
 }
 
 export interface ContentProgress {
@@ -39,3 +51,4 @@ export interface ModuleProgress extends TrainingProgress {
 }
 
 export interface SectionProgress extends TrainingProgress {}
+
