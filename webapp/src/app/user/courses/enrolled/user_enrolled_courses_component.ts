@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, USER_ROUTES} from "@global/routes";
+import {ENROLLED_COURSE_ROUTES, USER_ROUTES} from "@global/routes";
 import {mapState} from "vuex";
 
 @Component({
@@ -19,5 +19,8 @@ export default class UserEnrolledCoursesComponent extends Vue {
     }
 
     enrollInCourse () {
+        this.$router.push({
+           name: USER_ROUTES.availableCourses
+        });
     }
 }

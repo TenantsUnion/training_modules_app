@@ -29,13 +29,6 @@ let Delta: DeltaStatic = Quill.import('delta');
             showQuestion: true
         };
     },
-    props: {
-        viewOnly: {
-            type: Boolean,
-            required: false,
-            default: false
-        }
-    },
     components: {
         'question-option': VueQuestionOptionComponent
     }

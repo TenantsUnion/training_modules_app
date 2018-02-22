@@ -10,11 +10,71 @@ import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "@server/repository";
 
 describe('User progress handler', function () {
+    let progressEntryDefaults;
     let now: string;
     before(async function () {
         let nowDate = new Date();
         now = toDbTimestampFormat(nowDate);
         MockDate.set(nowDate);
+        progressEntryDefaults = {
+            correctQuestionsIds: [],
+            createdAt: now,
+            lastModifiedAt: now,
+            lastViewedAt: null,
+            submittedQuestionsIds: [],
+            version: 0,
+            viewedContentIds: []
+        };
+    });
+
+    it('should create a progress entry for a course', async function () {
+        let {id: userId} = await createUser();
+        let {courseId} = await createCourse();
+
+        await userProgressHandler.enrollUserInCourse({userId, courseId});
+        let {
+            0: user,
+            1: courseProgress,
+        } = await Promise.all([
+            userRepository.loadUser(userId),
+            courseProgressRepository.loadCourseProgress({userId, courseId}),
+        ]);
+
+        expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
+        expect(courseProgress).to.deep.eq({
+            courseId: courseId, userId, ...progressEntryDefaults
+        });
+    });
+
+    it('should create course and module progress entries', async function () {
+        let {id: userId} = await createUser();
+        let {courseId} = await createCourse();
+        let moduleId1 = await addModule();
+        let moduleId2 = await addModule();
+
+        await userProgressHandler.enrollUserInCourse({userId, courseId});
+        let {
+            0: user,
+            1: courseProgress,
+            2: module1Progress,
+            3: module2Progress,
+        } = await Promise.all([
+            userRepository.loadUser(userId),
+            courseProgressRepository.loadCourseProgress({userId, courseId}),
+            moduleProgressRepository.loadModuleProgress({userId, moduleId: moduleId1}),
+            moduleProgressRepository.loadModuleProgress({userId, moduleId: moduleId2}),
+        ]);
+
+        expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
+        expect(courseProgress).to.deep.eq({
+            courseId: courseId, userId, ...progressEntryDefaults
+        });
+        expect(module1Progress).to.deep.eq({
+            moduleId: moduleId1, userId, ...progressEntryDefaults
+        });
+        expect(module2Progress).to.deep.eq({
+            moduleId: moduleId2, userId, ...progressEntryDefaults
+        });
     });
 
     it('should create course, module, section progress entries for enrolling in course', async function () {
@@ -43,32 +103,21 @@ describe('User progress handler', function () {
         ]);
 
 
-        let defaults = {
-            correctQuestionsIds: [],
-            createdAt: now,
-            lastModifiedAt: now,
-            lastViewedAt: null,
-            submittedQuestionsIds: [],
-            userId,
-            version: 0,
-            viewedContentIds: []
-        };
-
         expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
         expect(courseProgress).to.deep.eq({
-            courseId: courseId, ...defaults
+            courseId: courseId, userId, ...progressEntryDefaults
         });
         expect(module1Progress).to.deep.eq({
-            moduleId: moduleId1, ...defaults
+            moduleId: moduleId1, userId, ...progressEntryDefaults
         });
         expect(module2Progress).to.deep.eq({
-            moduleId: moduleId2, ...defaults
+            moduleId: moduleId2, userId, ...progressEntryDefaults
         });
         expect(section1Progress).to.deep.eq({
-            sectionId: sectionId1, ...defaults
+            sectionId: sectionId1, userId, ...progressEntryDefaults
         });
         expect(section2Progress).to.deep.eq({
-            sectionId: sectionId2, ...defaults
+            sectionId: sectionId2, userId, ...progressEntryDefaults
         });
     });
 });

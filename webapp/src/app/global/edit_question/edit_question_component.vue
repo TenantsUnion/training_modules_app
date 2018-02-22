@@ -4,7 +4,7 @@
             <div class="cell small-11 large-9">
                 <h5 class="subheader">Question</h5>
             </div>
-            <div v-if="!viewOnly" class="cell small-1 large-3">
+            <div class="cell small-1 large-3">
                 <button type="button" class="minimize-button" title="Minimize Question"
                         v-on:click="showQuestion = !showQuestion" aria-label="Minimize Question">
                     <span aria-hidden="true">&ndash;</span>
@@ -25,13 +25,13 @@
                             </small>
                         </field-messages>
                         <quill-editor ref="questionQuill"
-                                      :read-only="viewOnly"
+                                      :read-only="false"
                                       :editor-json="question.questionQuill.editorJson"
                                       :editor-id="question.questionQuill.id"
                                       :toolbar-config="questionToolbarConfig"/>
                     </div>
                 </div>
-                <div v-if="!viewOnly" class="grix-x">
+                <div class="grix-x">
                     <div class="cell small-12">
                         <h6 class="subheader">Options
                             <button type="button" class="button" v-on:click="addOption" ref="addOptionBtn">Add Option
@@ -41,7 +41,7 @@
                 </div>
             </vue-form>
             <question-option v-for="option in options" :key="option.id" :stored-option="option" ref="optionRefs"
-                             :is-answer="isCorrectOption(option)" :view-only="viewOnly"></question-option>
+                             :is-answer="isCorrectOption(option)"></question-option>
         </div>
     </div>
 </template>

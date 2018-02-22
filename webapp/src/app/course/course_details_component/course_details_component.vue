@@ -6,7 +6,7 @@
         <div v-if="currentCourse" class="row">
             <div class="small-12 large-10 columns">
                 <div>
-                    <h2>{{currentCourse.title}}</h2>
+                    <h2>{{currentCourse.title}}!!!!</h2>
                     <p>{{currentCourse.description}}</p>
                     <time-estimate v-if="currentCourse.timeEstimate !== 0" :time-estimate="currentCourse.timeEstimate"/>
                 </div>

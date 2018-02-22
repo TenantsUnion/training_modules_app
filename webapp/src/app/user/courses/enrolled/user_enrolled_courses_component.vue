@@ -15,7 +15,7 @@
                     <td>{{ course.title }}</td>
                     <td>
                         <button class="button primary"
-                                @click="go(course.id)">
+                                @click="go(course.slug)">
                             Go to Course
                         </button>
                     </td>

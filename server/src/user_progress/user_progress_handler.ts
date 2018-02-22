@@ -12,14 +12,14 @@ export class UserProgressHandler {
     }
 
     async enrollUserInCourse ({userId, courseId}: CourseProgressId) {
-        let courseStructure = await this.courseProgressRepository.courseStructure(courseId);
-        let sectionIds = courseStructure.modules ? courseStructure.modules.reduce((acc, module) => {
+        let {modules, orderedModuleIds: moduleIds} = await this.courseProgressRepository.courseStructure(courseId);
+        let sectionIds = modules ? modules.filter(module => module).reduce((acc, module) => {
             return acc.concat(module.orderedSectionIds ? module.orderedSectionIds : []);
         }, []) : [];
         await Promise.all([
             this.courseProgressRepository.createCourseProgress({userId, courseId}),
-            this.moduleProgressRepository.createModuleProgress({userId, moduleIds: courseStructure.orderedModuleIds}),
-            this.sectionProgressRepository.createSectionProgress({userId, sectionIds}),
+            moduleIds.length ? this.moduleProgressRepository.createModuleProgress({userId, moduleIds}) : Promise.resolve(),
+            sectionIds.length ? this.sectionProgressRepository.createSectionProgress({userId, sectionIds}) : Promise.resolve(),
             this.userRepository.addEnrolledCoursesId({userId, courseId})
         ]);
     }
