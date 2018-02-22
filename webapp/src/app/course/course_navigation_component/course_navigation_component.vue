@@ -4,20 +4,21 @@
         <span class="menu-section__course-title" v-bind:class="{'is-active': activeNavigation.course}">
             <router-link :to="courseRoute()">{{course.title}}</router-link>
         </span>
-            <div class="buttons">
-                <router-link v-if="isCourseAdmin" :to="coursePreview">
+            <div v-if="isCourseAdmin" class="buttons">
+                <router-link :to="coursePreview">
                     <button title="Preview" class="button button__icon">
                         <i class="fa fa-eye fa-fw "></i>
                         <span class="sr-only">Preview</span>
                     </button>
                 </router-link>
-                <router-link v-if="isCourseAdmin" :to="createModule">
+                <router-link :to="createModule">
                     <button title="Create Module" v-if="isCourseAdmin" class="button button__icon">
                         <i class="fa fa-plus fa-fw "></i>
                         <span class="sr-only">Create Module</span>
                     </button>
                 </router-link>
             </div>
+
         </div>
         <div class="menu-section">
             <ul class="menu-section__inner">
