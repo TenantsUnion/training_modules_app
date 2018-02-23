@@ -5,7 +5,7 @@ import {CourseProgressId} from "@shared/user_progress";
 export interface TrainingEntityProgressDbRow {
     userId: string;
     active: true;
-    answerImmediately: false;
+    submitIndividually: false;
     correctQuestionsIds: string[];
     createdAt: string;
     description: string;
@@ -50,7 +50,7 @@ export interface TrainingProgressView {
     timeEstimate: number;
     headerDataId: string;
     active: boolean;
-    answerImmediately: boolean;
+    submitIndividually: boolean;
     correctQuestionsIds: string[];
     submittedQuestionsIds: string[];
     orderedContentIds: string[];
@@ -115,7 +115,7 @@ export class UserProgressViewQuery {
             // language=PostgreSQL
             text: `
               SELECT c.id, c.time_estimate, c.title, c.description, c.active, c.ordered_module_ids,
-                c.ordered_question_ids, c.answer_immediately, c.ordered_content_ids, c.ordered_content_question_ids,
+                c.ordered_question_ids, c.submit_individually, c.ordered_content_ids, c.ordered_content_question_ids,
                 cp.*, m.modules FROM
                 tu.course c
                 INNER JOIN tu.course_progress cp ON c.id = cp.course_id
@@ -124,7 +124,7 @@ export class UserProgressViewQuery {
                            SELECT json_agg(m.*) AS modules FROM
                              (
                                SELECT m.id, m.title, m.description, m.ordered_section_ids, m.ordered_content_ids,
-                                 m.time_estimate, m.answer_immediately, m.active, m.ordered_question_ids,
+                                 m.time_estimate, m.submit_individually, m.active, m.ordered_question_ids,
                                  m.ordered_content_question_ids, mp.*, s.sections FROM
                                  tu.module m
                                  INNER JOIN tu.module_progress mp
@@ -134,7 +134,7 @@ export class UserProgressViewQuery {
                                             SELECT json_agg(s.*) AS sections FROM
                                               (
                                                 SELECT s.id, s.title, s.description, s.ordered_content_ids, s.active,
-                                                  s.answer_immediately, s.ordered_question_ids, s.time_estimate,
+                                                  s.submit_individually, s.ordered_question_ids, s.time_estimate,
                                                   s.ordered_content_question_ids, sp.* FROM
                                                   tu.section s INNER JOIN tu.section_progress sp
                                                     ON s.id = sp.section_id WHERE

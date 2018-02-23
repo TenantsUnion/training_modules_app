@@ -45,7 +45,7 @@ export default class CreateModuleComponent extends Vue {
                 description: this.description,
                 timeEstimate: this.timeEstimate,
                 active: this.active,
-                answerImmediately: true,
+                submitIndividually: true,
                 courseId: <string> this.$store.state.course.currentCourseId,
                 contentQuestions: {
                     quillChanges: {},

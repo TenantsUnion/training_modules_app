@@ -35,12 +35,12 @@ describe('Save module', function () {
     describe('basic property changes', function () {
         beforeEach(async function () {
             // assert that the modules properties are set to the DEFAULT_MODULE property values
-            let {active, title, timeEstimate, description, answerImmediately} = DEFAULT_MODULE;
+            let {active, title, timeEstimate, description, submitIndividually} = DEFAULT_MODULE;
             let defaultModule: ModuleEntity = {
                 id: moduleId,
                 headerDataId: null,
                 version: 0,
-                active, title, timeEstimate, description, answerImmediately,
+                active, title, timeEstimate, description, submitIndividually,
                 orderedContentQuestionIds: [],
                 orderedContentIds: [],
                 orderedQuestionIds: [],

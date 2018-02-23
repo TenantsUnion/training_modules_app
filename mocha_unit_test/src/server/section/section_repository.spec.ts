@@ -19,7 +19,7 @@ describe('Section Repository', function () {
         title: 'The best course',
         description: 'A descriptive description',
         active: true,
-        answerImmediately: false,
+        submitIndividually: false,
         timeEstimate: 60,
         orderedContentIds: ['c1', 'c2', 'c3'],
         orderedQuestionIds: ['q1', 'cq', 'q3'],
@@ -29,7 +29,7 @@ describe('Section Repository', function () {
     let defaultSectionProps = {
         createdAt: nowTimestamp,
         lastModifiedAt: nowTimestamp,
-        answerImmediately: false,
+        submitIndividually: false,
         headerDataId: null,
         version: 0,
     };
@@ -56,7 +56,7 @@ describe('Section Repository', function () {
             version: 0,
             headerDataId: 'QD4',
             active: false,
-            answerImmediately: true,
+            submitIndividually: true,
             timeEstimate: 100000,
             description: 'A very different description',
             title: 'This is a better title than before',

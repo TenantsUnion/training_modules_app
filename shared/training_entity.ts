@@ -14,7 +14,7 @@ export interface ViewTrainingEntity {
     description?: string;
     timeEstimate?: number;
     active: boolean;
-    answerImmediately?: boolean;
+    submitIndividually?: boolean;
     // orderedContentIds?: string[],
     // orderedQuestionIds?: string[],
     // orderedContentQuestionIds?: string[],
@@ -53,7 +53,7 @@ export const isQuillContentDiff = (obj: any): obj is QuillChangesObj => {
  */
 export interface ContentQuestionEntity {
     headerDataId?: string;
-    answerImmediately?: boolean;
+    submitIndividually?: boolean;
     orderedContentIds: string[];
     orderedQuestionIds: string[];
     orderedContentQuestionIds: string[];
@@ -92,7 +92,7 @@ export interface CreateTrainingEntityPayload {
     title: string;
     description?: string;
     timeEstimate?: number;
-    answerImmediately: boolean;
+    submitIndividually: boolean;
     active: boolean;
     contentQuestions: ContentQuestionsDelta;
 }

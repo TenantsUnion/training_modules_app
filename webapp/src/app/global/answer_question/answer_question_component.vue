@@ -36,7 +36,7 @@
         </div>
     </div>
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
     button.submit-question {
         margin: 0;
     }

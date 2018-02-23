@@ -8,7 +8,7 @@ export type SectionInsertDbData = {
     description?: string;
     timeEstimate?: number;
     headerDataId?: string;
-    answerImmediately: boolean;
+    submitIndividually: boolean;
     orderedContentIds: string[];
     orderedQuestionIds: string[];
     orderedContentQuestionIds: string[];
@@ -26,18 +26,18 @@ export class SectionRepository extends AbstractRepository {
         let sectionId = await this.getNextId();
         let {
             title, description, timeEstimate, orderedContentIds, orderedQuestionIds,
-            orderedContentQuestionIds, headerDataId, active, answerImmediately
+            orderedContentQuestionIds, headerDataId, active, submitIndividually
         } = data;
         await this.sqlTemplate.query({
             // language=PostgreSQL
             text: `
               INSERT INTO tu.section (
                 id, title, description, time_estimate, ordered_content_ids, ordered_question_ids,
-                ordered_content_question_ids, created_at, last_modified_at, header_data_id, active, answer_immediately)
+                ordered_content_question_ids, created_at, last_modified_at, header_data_id, active, submit_individually)
               VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $8, $9, $10, $11)`,
             values: [sectionId, title, description, timeEstimate,
                 orderedContentIds, orderedQuestionIds, orderedContentQuestionIds, getUTCNow(), headerDataId, active,
-                answerImmediately]
+                submitIndividually]
         });
         return sectionId;
     }
@@ -45,7 +45,7 @@ export class SectionRepository extends AbstractRepository {
     async updateSection (data: SectionEntity): Promise<void> {
         let {
             id, title, description, timeEstimate, active, orderedContentIds, orderedQuestionIds,
-            orderedContentQuestionIds, headerDataId, answerImmediately
+            orderedContentQuestionIds, headerDataId, submitIndividually
         } = data;
         await this.sqlTemplate.query({
             // language=PostgreSQL
@@ -60,10 +60,10 @@ export class SectionRepository extends AbstractRepository {
                 ordered_content_question_ids = $7,
                 last_modified_at             = $8,
                 header_data_id               = $9,
-                answer_immediately           = $10
+                submit_individually           = $10
               WHERE S.id = $11`,
             values: [title, description, timeEstimate, active, orderedContentIds, orderedQuestionIds,
-                orderedContentQuestionIds, getUTCNow(), headerDataId, answerImmediately, id]
+                orderedContentQuestionIds, getUTCNow(), headerDataId, submitIndividually, id]
         });
     }
 

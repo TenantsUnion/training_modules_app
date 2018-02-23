@@ -12,7 +12,7 @@ export interface ViewTrainingEntityDescriptionDbData {
     description?: string;
     timeEstimate?: number;
     active: boolean;
-    answerImmediately?: boolean;
+    submitIndividually?: boolean;
     lastModifiedAt: string;
     createdAt: string;
 }
@@ -24,7 +24,7 @@ export interface ViewTrainingEntityDbData {
     description?: string;
     timeEstimate?: number;
     active: boolean;
-    answerImmediately?: boolean;
+    submitIndividually?: boolean;
     orderedContentIds: string[],
     orderedQuestionIds: string[],
     orderedContentQuestionIds: string[],

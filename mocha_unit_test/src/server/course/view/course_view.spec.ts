@@ -36,7 +36,7 @@ describe('Course view', function () {
         title: "Course title",
         active: true,
         timeEstimate: 60,
-        answerImmediately: false,
+        submitIndividually: false,
         openEnrollment: true
     };
 

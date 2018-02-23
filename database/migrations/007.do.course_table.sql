@@ -7,7 +7,7 @@ CREATE TABLE tu.course (
   time_estimate                INTEGER,
   open_enrollment              BOOLEAN      NOT NULL DEFAULT FALSE,
   active                       BOOLEAN      NOT NULL DEFAULT FALSE,
-  answer_immediately           BOOLEAN      NOT NULL DEFAULT TRUE,
+  submit_individually           BOOLEAN      NOT NULL DEFAULT TRUE,
   --references id pk column of tu.modules
   ordered_module_ids           TEXT []      NOT NULL DEFAULT ARRAY [] :: TEXT [],
   --references id pk column of tu.quill_data

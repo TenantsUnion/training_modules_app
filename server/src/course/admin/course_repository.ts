@@ -10,7 +10,7 @@ export type CourseInsertDbData = {
     timeEstimate?: number;
     active: boolean;
     openEnrollment: boolean;
-    answerImmediately?: boolean;
+    submitIndividually?: boolean;
     headerDataId?: string;
     orderedContentIds: string[],
     orderedQuestionIds: string[],
@@ -31,7 +31,7 @@ export class CourseRepository extends AbstractRepository {
         let {
             title, description, timeEstimate, active, openEnrollment,
             orderedContentIds, orderedQuestionIds, orderedContentQuestionIds, headerDataId,
-            answerImmediately
+            submitIndividually
         } = courseData;
 
         let courseId = await this.getNextId();
@@ -40,12 +40,12 @@ export class CourseRepository extends AbstractRepository {
                     INSERT INTO tu.course (
                         id, title, description, time_estimate, active, open_enrollment,
                         ordered_content_ids, ordered_question_ids, ordered_content_question_ids,
-                        created_at, last_modified_at, header_data_id, answer_immediately
+                        created_at, last_modified_at, header_data_id, submit_individually
                     ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $10, $11, $12)`,
             values: [
                 courseId, title, description, timeEstimate, active, openEnrollment,
                 orderedContentIds, orderedQuestionIds, orderedContentQuestionIds, getUTCNow(), headerDataId,
-                answerImmediately
+                submitIndividually
             ]
         });
         return courseId;
@@ -69,7 +69,7 @@ export class CourseRepository extends AbstractRepository {
     async saveCourse (course: CourseEntity): Promise<void> {
         let {
             id, version, active, title, description, timeEstimate, openEnrollment, orderedModuleIds,
-            orderedContentIds, orderedQuestionIds, orderedContentQuestionIds, headerDataId, answerImmediately
+            orderedContentIds, orderedQuestionIds, orderedContentQuestionIds, headerDataId, submitIndividually
         } = course;
         await this.sqlTemplate.query({
             // language=PostgreSQL
@@ -77,13 +77,13 @@ export class CourseRepository extends AbstractRepository {
               UPDATE tu.course SET title     = $1, description = $2, time_estimate = $3, active = $4,
                 ordered_module_ids           = $5, ordered_content_ids = $6, ordered_question_ids = $7,
                 ordered_content_question_ids = $8, last_modified_at = $9, version = $10, open_enrollment = $11,
-                header_data_id               = $12, answer_immediately = $13
+                header_data_id               = $12, submit_individually = $13
               WHERE id = $14
             `,
             values: [
                 title, description, timeEstimate, active, orderedModuleIds, orderedContentIds, orderedQuestionIds,
                 orderedContentQuestionIds, getUTCNow(), version, openEnrollment, headerDataId,
-                answerImmediately, id]
+                submitIndividually, id]
         })
     }
 

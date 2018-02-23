@@ -20,7 +20,7 @@ describe('Create section', function () {
             timeEstimate: 60,
             title: 'first section',
             active: true,
-            answerImmediately: true,
+            submitIndividually: true,
             contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             courseId, moduleId
         };
@@ -29,7 +29,7 @@ describe('Create section', function () {
             description: 'section 2 description',
             timeEstimate: 120,
             title: 'second section',
-            answerImmediately: false,
+            submitIndividually: false,
             active: true,
             contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA,
             courseId, moduleId

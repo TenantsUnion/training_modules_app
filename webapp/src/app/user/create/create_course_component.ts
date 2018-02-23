@@ -74,7 +74,7 @@ export default class CreateCourseComponent extends Vue {
         let createCoursePayload: CreateCourseEntityPayload = {
             title: this.course.title,
             timeEstimate: this.course.timeEstimate,
-            answerImmediately: true,
+            submitIndividually: true,
             active: this.course.active,
             openEnrollment: this.course.openEnrollment,
             contentQuestions: {
