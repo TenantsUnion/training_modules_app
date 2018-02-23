@@ -11,14 +11,14 @@
                       ref="segment"
                       :remove-callback="segment.removeCallback" :stored-question="segment.question"/>
         </div>
-        <div v-if="!viewOnly" class="row">
-            <div class="columns small-12 medium-6">
+        <div v-if="!viewOnly" class="grid-x">
+            <div class="cell small-12 medium-6">
                 <button title="Add Content" type="button" class="button" v-on:click="addContent" ref="addContentBtn">
                     Add Content
                     <i class="fa fa-plus fa-fw" aria-hidden="true"></i>
                 </button>
             </div>
-            <div class="columns small-12 medium-6">
+            <div class="cell small-12 medium-6">
                 <button title="Add Question" type="button" class="button" v-on:click="addQuestion" ref="addQuestionBtn">
                     Add Question
                     <i class="fa fa-plus fa-fw" aria-hidden="true"></i>

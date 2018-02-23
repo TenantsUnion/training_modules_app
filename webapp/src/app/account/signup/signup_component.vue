@@ -1,15 +1,15 @@
 <template>
     <div style="justify-content: center;">
-        <div class="row align-center">
-            <div class="columns small-6">
+        <div class="grid-x align-center">
+            <div class="cell small-6">
                 <div class="callout float-center">
                     <h1>Signup</h1>
                     <loading v-if="loading"></loading>
                 </div>
             </div>
         </div>
-        <div class="row align-center">
-            <div class="columns small-6">
+        <div class="grid-x align-center">
+            <div class="cell small-6">
                 <div class="callout float-center">
                     <vue-form :state="formstate" @submit.prevent="signup">
                         <validate>

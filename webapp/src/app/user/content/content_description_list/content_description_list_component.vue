@@ -3,8 +3,8 @@
 
         <div id="page-content-wrapper">
             <div class="main">
-                <div class="row">
-                    <div class="small-12 columns">
+                <div class="grid-x">
+                    <div class="small-12 cell">
                         <h4>Your Content
                             <button class="button primary"
                                     @click="createNewContent">

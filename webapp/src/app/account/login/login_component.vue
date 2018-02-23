@@ -1,7 +1,7 @@
 <template>
     <div style="justify-content: center;">
-        <div class="row align-center">
-            <div class="columns small-6">
+        <div class="grid-x align-center">
+            <div class="cell small-6">
                 <div class="callout float-center">
                     <h1>Login</h1>
                     <p>Please enter your username
@@ -10,8 +10,8 @@
                 </div>
             </div>
         </div>
-        <div class="row align-center">
-            <div class="columns small-6">
+        <div class="grid-x align-center">
+            <div class="cell small-6">
                 <div class="callout float-center">
                     <vue-form :state="formstate" @submit.prevent="login">
                         <validate>

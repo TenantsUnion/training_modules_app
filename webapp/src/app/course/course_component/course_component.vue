@@ -1,7 +1,7 @@
 <template>
     <div id="wrapper" class="wrapper">
         <div id="sidebar-wrapper" class="sidebar-wrapper">
-            <div class="menu-icon-container row align-right">
+            <div class="menu-icon-container grid-x align-right">
                 <a class="menu-icon" id="menu-toggle"></a>
             </div>
             <loading v-if="currentCourseLoading"></loading>

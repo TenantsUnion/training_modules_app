@@ -1,7 +1,7 @@
 <template>
     <div class="main">
-        <div class="row">
-            <div class="columns small-12 large-10">
+        <div class="grid-x">
+            <div class="cell small-12 large-10">
                 <div class="callout float-center">
                     <h1>Edit Course</h1>
                     <loading v-if="loading || saving"/>
@@ -10,16 +10,16 @@
         </div>
         <template v-if="course">
             <vue-form :state="formstate" @submit.prevent="save">
-                <div class="row">
-                    <div class="columns small-12 large-10">
+                <div class="grid-x">
+                    <div class="cell small-12 large-10">
                         <small class="error" v-if="errorMessages">
                             {{errorMessages}}
                         </small>
                     </div>
                 </div>
                 <validate>
-                    <div class="row">
-                        <div class="columns small-12 large-10">
+                    <div class="grid-x">
+                        <div class="cell small-12 large-10">
                             <field-messages name="title" show="$submitted || $dirty">
                                 <small class="error" slot="required">
                                     A title is needed in order to update the course
@@ -36,8 +36,8 @@
                     </div>
                 </validate>
                 <validate>
-                    <div class="row">
-                        <div class="columns small-12 large-10">
+                    <div class="grid-x">
+                        <div class="cell small-12 large-10">
                             <time-estimate :time-estimate="course.timeEstimate"
                                            :updated="timeEstimateUpdated"
                                            :is-input="true"/>
@@ -45,8 +45,8 @@
                     </div>
                 </validate>
                 <validate>
-                    <div class="row">
-                        <div class="columns small-12 large-10">
+                    <div class="grid-x">
+                        <div class="cell small-12 large-10">
                             <label for="course-description">Description</label>
                             <textarea v-model="course.description" type="text"
                                       placeholder="Course description"
@@ -54,13 +54,13 @@
                         </div>
                     </div>
                 </validate>
-                <div class="row">
-                    <div class="small-12 large-10 columns">
+                <div class="grid-x">
+                    <div class="small-12 large-10 cell">
                         <edit-training-segments :content-questions="course.contentQuestions" ref="trainingSegment"/>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="columns small-2">
+                <div class="grid-x">
+                    <div class="cell small-2">
                         <button v-bind:disabled="saving || loading" @click="save" class="button" type="button">Save
                         </button>
                         <button @click="cancel" class="button secondary">Cancel</button>

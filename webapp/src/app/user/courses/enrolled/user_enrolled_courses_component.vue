@@ -1,7 +1,7 @@
 <template>
     <div class="user-main">
         <div class="inner-narrow">
-            <div class="row section-header">
+            <div class="grid-x section-header">
                 <h4>Enrolled in courses</h4>
                 <button class="button primary"
                         @click="enrollInCourse">

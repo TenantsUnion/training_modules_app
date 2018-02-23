@@ -1,17 +1,17 @@
 <template>
     <div class="main">
-        <div v-if="currentCourseLoading" class="row">
+        <div v-if="currentCourseLoading" class="grid-x">
             <loading></loading>
         </div>
-        <div v-if="currentCourse" class="row">
-            <div class="small-12 large-10 columns">
+        <div v-if="currentCourse" class="grid-x">
+            <div class="small-12 large-10 cell">
                 <div>
                     <h2>{{currentCourse.title}}!!!!</h2>
                     <p>{{currentCourse.description}}</p>
                     <time-estimate v-if="currentCourse.timeEstimate !== 0" :time-estimate="currentCourse.timeEstimate"/>
                 </div>
-                <div class="row">
-                    <div class="columns small-12 large-10">
+                <div class="grid-x">
+                    <div class="cell small-12 large-10">
                         <view-training-segments :submit-individual-questions="true"
                                                 :content-questions="currentCourse.contentQuestions" ref="trainingSegment"/>
                     </div>

@@ -1,7 +1,7 @@
 <template>
     <div class="user-main">
         <div class="inner-narrow">
-            <div class="row section-header">
+            <div class="grid-x section-header">
                 <h4>Admin Courses</h4>
                 <button class="create-course-btn button primary"
                         @click="createCourse">Create a Course

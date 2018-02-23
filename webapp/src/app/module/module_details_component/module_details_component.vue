@@ -1,11 +1,11 @@
 <template>
     <div class="main">
-        <div v-if="loading" class="row">
+        <div v-if="loading" class="grid-x">
             <loading></loading>
         </div>
         <template v-if="!loading">
-            <div class="row">
-                <div class="small-12 large-10 columns">
+            <div class="grid-x">
+                <div class="small-12 large-10 cell">
                     <div>
                         <h2>{{module.title}}</h2>
                         <h4>{{module.description}}</h4>
@@ -15,8 +15,8 @@
                         <h3>{{section.title}}</h3>
                         <p>{{section.description}}</p>
                     </div>
-                    <div class="row">
-                        <div class="columns small-12 large-10">
+                    <div class="grid-x">
+                        <div class="cell small-12 large-10">
                             <view-training-segments :content-questions="module.contentQuestions"
                                                     ref="trainingSegment"/>
                         </div>

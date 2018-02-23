@@ -1,18 +1,18 @@
 <template>
     <div class="user-main">
-        <div class="row">
-            <div class="small-8 columns">
+        <div class="grid-x">
+            <div class="small-8 cell">
                 <div>
                     <h2>Create Content</h2>
                     <loading v-if="loading"></loading>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="small-8 columns">
+        <div class="grid-x">
+            <div class="small-8 cell">
                 <vue-form :state="formstate" @submit.prevent="create">
                     <validate>
-                        <div class="row">
+                        <div class="grid-x">
                             <field-messages name="title"
                                             show="$submitted || $dirty">
                                 <small class="error" slot="required">
@@ -20,7 +20,7 @@
                                 </small>
                             </field-messages>
 
-                            <div class="small-8 columns">
+                            <div class="small-8 cell">
                                 <label for="content-title">Title
                                     <input v-model="title" type="text"
                                            required
@@ -29,15 +29,15 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="small-8 columns">
+                        <div class="grid-x">
+                            <div class="small-8 cell">
                                 <label>Content</label>
                                 <quill-editor ref="editor"></quill-editor>
                             </div>
                         </div>
                     </validate>
-                    <div class="row">
-                        <div class="small-8 columns">
+                    <div class="grid-x">
+                        <div class="small-8 cell">
                             <button @click="create" class="button primary" :disabled="loading">Create</button>
                             <button @click="cancel" type="button"
                                     class="button secondary" :disabled="loading">

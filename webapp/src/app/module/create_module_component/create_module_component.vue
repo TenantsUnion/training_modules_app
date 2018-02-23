@@ -1,15 +1,15 @@
 <template>
     <div class="main">
-        <div class="row">
-            <div class="small-12 large-10 columns">
+        <div class="grid-x">
+            <div class="small-12 large-10 cell">
                 <h1>Create Module</h1>
                 <loading v-if="loading"/>
             </div>
         </div>
         <vue-form :state="formstate" @submit.prevent="createModule">
             <validate>
-                <div class="row">
-                    <div class="columns small-12 large-10">
+                <div class="grid-x">
+                    <div class="cell small-12 large-10">
                         <field-messages name="title"
                                         show="$submitted || $dirty">
                             <small class="error" slot="required">
@@ -31,13 +31,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="columns small-12 large-10">
+                <div class="grid-x">
+                    <div class="cell small-12 large-10">
                         <time-estimate :is-input="true" :time-estimate="timeEstimate" :updated="timeEstimateUpdated"/>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="columns small-12 large-10">
+                <div class="grid-x">
+                    <div class="cell small-12 large-10">
                         <label for="module-description">Description</label>
                         <textarea v-model="description" type="text"
                                   placeholder="Course description"
@@ -45,8 +45,8 @@
                     </div>
                 </div>
             </validate>
-            <div class="row">
-                <div class="columns small-2">
+            <div class="grid-x">
+                <div class="cell small-2">
                     <button @click="createModule" class="button" type="button">Create</button>
                 </div>
             </div>

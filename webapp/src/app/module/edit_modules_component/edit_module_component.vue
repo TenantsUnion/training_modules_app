@@ -1,8 +1,8 @@
 <template>
 
     <div class="main">
-        <div class="row">
-            <div class="columns small-12 large-10">
+        <div class="grid-x">
+            <div class="cell small-12 large-10">
                 <h1>Edit Module</h1>
                 <loading v-if="loading || saving"/>
             </div>
@@ -15,8 +15,8 @@
                     </small>
                 </validate>
                 <validate>
-                    <div class="row">
-                        <div class="columns small-8">
+                    <div class="grid-x">
+                        <div class="cell small-8">
                             <field-messages name="title"
                                             show="$submitted || $dirty">
                                 <small class="error" slot="required">
@@ -36,8 +36,8 @@
                     </div>
                 </validate>
                 <validate>
-                    <div class="row">
-                        <div class="columns small-12 large-10">
+                    <div class="grid-x">
+                        <div class="cell small-12 large-10">
                             <time-estimate :is-input="true"
                                            :time-estimate="module.timeEstimate"
                                            :updated="timeEstimateUpdated"/>
@@ -45,8 +45,8 @@
                     </div>
                 </validate>
                 <validate>
-                    <div class="row">
-                        <div class="columns small-12 large-10">
+                    <div class="grid-x">
+                        <div class="cell small-12 large-10">
                             <label for="module-description">Description</label>
                             <textarea v-model="module.description" type="text"
                                       placeholder="Course description"
@@ -54,19 +54,19 @@
                         </div>
                     </div>
                 </validate>
-                <div class="row">
-                    <div class="columns small-2">
+                <div class="grid-x">
+                    <div class="cell small-2">
                         <h3>Sections</h3>
                     </div>
-                    <div class="columns small-2">
+                    <div class="cell small-2">
                         <button class="button" v-on:click="addSection">
                             Add Section
                         </button>
                     </div>
                 </div>
 
-                <div class="row">
-                    <draggable v-model="sections" element="div" class="columns small-12 large-10">
+                <div class="grid-x">
+                    <draggable v-model="sections" element="div" class="cell small-12 large-10">
                         <div v-for="section in sections">
                             <h4 v-bind:style="sectionTitleStyles(section)">
                                 {{section.title}}
@@ -88,13 +88,13 @@
                         </div>
                     </draggable>
                 </div>
-                <div class="row">
-                    <div class="columns small-12 large-10">
+                <div class="grid-x">
+                    <div class="cell small-12 large-10">
                         <edit-training-segments :content-questions="module.contentQuestions" ref="trainingSegment"/>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="columns small-2">
+                <div class="grid-x">
+                    <div class="cell small-2">
                         <button @click="saveModule" class="button" type="button">
                             Save
                         </button>

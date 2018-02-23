@@ -1,7 +1,7 @@
 <template>
     <div class="main">
-        <div class="row">
-            <div class="columns small-12 large-10">
+        <div class="grid-x">
+            <div class="cell small-12 large-10">
                 <h1>Edit Section</h1>
                 <loading v-if="loading || saving"/>
             </div>
@@ -14,8 +14,8 @@
                     </small>
                 </validate>
                 <validate>
-                    <div class="row">
-                        <div class="columns small-12 large-10">
+                    <div class="grid-x">
+                        <div class="cell small-12 large-10">
                             <field-messages name="title" show="$submitted || $dirty">
                                 <small class="error" slot="required">
                                     A title is need to create a section
@@ -32,8 +32,8 @@
                     </div>
                 </validate>
                 <validate>
-                    <div class="row">
-                        <div class="columns small-12 large-10">
+                    <div class="grid-x">
+                        <div class="cell small-12 large-10">
                             <time-estimate :isInput="true"
                                            :timeEstimate="section.timeEstimate"
                                            :updated="timeEstimateUpdated"/>
@@ -41,8 +41,8 @@
                     </div>
                 </validate>
                 <validate>
-                    <div class="row">
-                        <div class="columns small-12 large-10">
+                    <div class="grid-x">
+                        <div class="cell small-12 large-10">
                             <label for="section-description">Description</label>
                             <textarea v-model="section.description" type="text"
                                       name="description"
@@ -51,13 +51,13 @@
                         </div>
                     </div>
                 </validate>
-                <div class="row">
-                    <div class="small-12 large-10 columns">
+                <div class="grid-x">
+                    <div class="small-12 large-10 cell">
                         <edit-training-segments :content-questions="section.contentQuestions" ref="trainingSegment"/>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="columns small-2">
+                <div class="grid-x">
+                    <div class="cell small-2">
                         <button v-bind:disabled="saving || loading" @click="saveSection" class="button" type="button">
                             Save
                         </button>

@@ -1,26 +1,26 @@
 <template>
     <div class="main">
-        <div class="row" v-if="loading">
-            <div class="columns small-12 large-10">
+        <div class="grid-x" v-if="loading">
+            <div class="cell small-12 large-10">
                 <loading></loading>
             </div>
         </div>
         <template v-if="!loading">
-            <div class="row">
-                <div class="columns small-12 large-10">
+            <div class="grid-x">
+                <div class="cell small-12 large-10">
                     <h2>{{section.title}}</h2>
                     <time-estimate :time-estimate="section.timeEstimate"/>
                 </div>
             </div>
-            <div class="row">
-                <div class="columns small-12 large-10">
-                    <div class="small-12 columns">
+            <div class="grid-x">
+                <div class="cell small-12 large-10">
+                    <div class="small-12 cell">
                         <view-training-segments :content-questions="section.contentQuestions"/>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="columns small-12 large-10">
+            <div class="grid-x">
+                <div class="cell small-12 large-10">
                     <button v-if="previousSectionId" @click="back" type="button"
                             class="button secondary" :disabled="loading">
                         Back

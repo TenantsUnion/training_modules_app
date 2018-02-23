@@ -1,7 +1,7 @@
 <template>
     <div class="user-main">
         <div class="inner">
-            <div class="row section-header">
+            <div class="grid-x section-header">
                 <h4>Available Courses</h4>
             </div>
             <table v-if="courses.length"

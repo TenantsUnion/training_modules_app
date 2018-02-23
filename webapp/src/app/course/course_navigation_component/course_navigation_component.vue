@@ -1,6 +1,6 @@
 <template>
     <nav class="sidebar-nav">
-        <div class="row menu-section__row menu-header">
+        <div class="grid-x menu-section__row menu-header">
         <span class="menu-section__course-title" v-bind:class="{'is-active': activeNavigation.course}">
             <router-link :to="courseRoute()">{{course.title}}</router-link>
         </span>
@@ -23,7 +23,7 @@
         <div class="menu-section">
             <ul class="menu-section__inner">
                 <li class="menu-section__item" v-for="module in course.modules">
-                    <div class="row menu-section__row">
+                    <div class="grid-x menu-section__row">
                         <span class="menu-section__module-title"
                               v-bind:class="{'is-active': activeNavigation.module === module.title}">
                             <router-link :to="moduleRoute(module.slug)">{{module.title}}</router-link>
@@ -45,7 +45,7 @@
                     </div>
                     <ul>
                         <li class="menu-section__item" v-for="section in module.sections">
-                            <div class="row menu-section__row">
+                            <div class="grid-x menu-section__row">
                                 <span class="menu-section__section-title"
                                       v-bind:class="{'is-active': isActiveSection(module.slug, section.slug)}">
                                     <router-link :to="sectionRoute(module.slug, section.slug)">

@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <div class="row">
+        <div class="grid-x">
             <div class="small-12 large-10">
                 <h1>Create Section</h1>
                 <loading v-if="loading"></loading>
@@ -8,8 +8,8 @@
         </div>
         <vue-form :state="formstate" @submit.prevent="createSection">
             <validate>
-                <div class="row">
-                    <div class="columns small-12 large-10">
+                <div class="grid-x">
+                    <div class="cell small-12 large-10">
                         <field-messages name="title"
                                         show="$submitted || $dirty">
                             <small class="error" slot="required">
@@ -31,15 +31,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="columns small-12 large-10">
+                <div class="grid-x">
+                    <div class="cell small-12 large-10">
                         <time-estimate :is-input="true"
                                        :time-estimate="timeEstimate"
                                        :updated="timeEstimateUpdated"/>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="columns small-12 large-10">
+                <div class="grid-x">
+                    <div class="cell small-12 large-10">
                         <label for="section-description">Description</label>
                         <textarea v-model="description" type="text"
                                   placeholder="Section description"
@@ -47,8 +47,8 @@
                     </div>
                 </div>
             </validate>
-            <div class="row">
-                <div class="columns small-2">
+            <div class="grid-x">
+                <div class="cell small-2">
                     <button @click="createSection" class="button" type="button">
                         Create
                     </button>

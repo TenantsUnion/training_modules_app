@@ -1,8 +1,8 @@
 <template>
     <div v-show="displayQuillEditor" class="scrolling-container">
         <div v-if="!readOnly" ref="toolbar">
-            <div class="row relative">
-                <div class="quill-toolbar-buttons columns small-11">
+            <div class="grid-x relative">
+                <div class="quill-toolbar-buttons cell small-11">
                         <span v-for="formatGrp in toolbarConfig" class="ql-formats">
                             <span v-for="qlFormat in formatGrp">
                                 <button v-if="isBtnObj(qlFormat)"
@@ -15,7 +15,7 @@
                             </span>
                         </span>
                 </div>
-                <div v-if="onRemove && !readOnly" class="columns small-1">
+                <div v-if="onRemove && !readOnly" class="cell small-1">
                     <button type="button" class="close-button" title="Remove Content"
                             aria-label="Remove Content" v-on:click="onRemove">
                         <span aria-hidden="true">&times;</span>
