@@ -9,41 +9,36 @@
                         v-on:click="showQuestion = !showQuestion" aria-label="Minimize Question">
                     <span aria-hidden="true">&ndash;</span>
                 </button>
-                <button type="button" class="close-button" title="Remove Question"
-                        v-on:click="removeCallback" aria-label="Remove Question">
-                    <span aria-hidden="true">&times;</span>
-                </button>
             </div>
         </div>
         <div class="question-container" v-show="showQuestion">
-            <vue-form :state="formstate">
-                <div class="grid-x">
-                    <div class="cell small-12">
-                        <field-messages name="question" show="$submitted || $dirty">
-                            <small class="error" slot="required">
-                                Question content needed
-                            </small>
-                        </field-messages>
-                        <quill-editor ref="questionQuill"
-                                      :read-only="false"
-                                      :editor-json="question.questionQuill.editorJson"
-                                      :editor-id="question.questionQuill.id"
-                                      :toolbar-config="questionToolbarConfig"/>
+            <div class="grid-x grid-padding-y">
+                <div class="cell full width">
+                    <quill-editor ref="questionQuill"
+                                  :read-only="true"
+                                  :editor-json="question.questionQuill.editorJson"
+                                  :editor-id="question.questionQuill.id"/>
+                </div>
+            </div>
+            <div class="grid-x callout" v-bind:class="answerCorrectClasses">
+                <div class="cell full width">
+                    <answer-question-option v-for="option in question.options" :key="option.id" ref="optionRefs"
+                                            :option="option" :is-correct="isCorrectOption(option)"
+                                            :submitted="submitted"/>
+                </div>
+                <div class="grid-x grid-padding-y" v-if="individualSubmit">
+                    <div class="cell shrink">
+                        <button class="button submit-question" type="button" v-on:click="submit()">Submit</button>
+                        <button class="button submit-question secondary" type="button" v-on:click="reset()">Reset</button>
                     </div>
                 </div>
-                <div class="grix-x">
-                    <div class="cell small-12">
-                        <h6 class="subheader">Options
-                            <button type="button" class="button" v-on:click="addOption" ref="addOptionBtn">Add Option
-                            </button>
-                        </h6>
-                    </div>
-                </div>
-            </vue-form>
-            <question-option v-for="option in options" :key="option.id" :stored-option="option" ref="optionRefs"
-                             :is-answer="isCorrectOption(option)"></question-option>
+            </div>
         </div>
     </div>
 </template>
-<style lang="scss" src="./answer_question_component.scss"></style>
+<style lang="scss">
+    button.submit-question {
+        margin: 0;
+    }
+</style>
 <script lang="ts" src="./answer_question_component.ts"></script>

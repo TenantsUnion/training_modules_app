@@ -12,7 +12,8 @@
                 </div>
                 <div class="row">
                     <div class="columns small-12 large-10">
-                        <view-training-segments :content-questions="currentCourse.contentQuestions" ref="trainingSegment"/>
+                        <view-training-segments :submit-individual-questions="true"
+                                                :content-questions="currentCourse.contentQuestions" ref="trainingSegment"/>
                     </div>
                 </div>
                 <div v-for="module in currentCourse.modules">
