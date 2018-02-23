@@ -41,17 +41,17 @@ export default class CreateCourseComponent extends Vue {
     }
 
     async createCourseEdit () {
-        await this.dispatchCreateCourse(() => {
+        await this.dispatchCreateCourse((courseId: string) => {
             this.$router.push(<Location>{
                 name: ADMIN_COURSE_ROUTES.editCourse,
                 params: {
-                    courseSlug: this.$store.getters.getSlugFromCourseId(this.$store.state.course.currentCourseId)
+                    courseSlug: this.$store.getters.getSlugFromCourseId(courseId)
                 }
             });
         });
     }
 
-    private async dispatchCreateCourse (onSuccess: Function) {
+    private async dispatchCreateCourse (onSuccess: (courseId?:string) => any) {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
@@ -60,8 +60,8 @@ export default class CreateCourseComponent extends Vue {
         this.errorMessages = null;
         let createCoursePayload = this.getCoursePayload();
         try {
-            await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
-            onSuccess();
+            let courseId = await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
+            onSuccess(courseId);
         } catch (msg) {
             this.errorMessages = msg;
         } finally {
@@ -92,6 +92,4 @@ export default class CreateCourseComponent extends Vue {
     timeUpdated (time: number) {
         this.course.timeEstimate = time;
     }
-
-
 }

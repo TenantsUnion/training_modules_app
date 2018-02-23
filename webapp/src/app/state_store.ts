@@ -26,12 +26,12 @@ Vue.use(Vuex);
 /**
  * Type for vuex action that generically types the payload (default definition has payload typed to 'any')
  */
-export type TypedAction<S, P> = (context: ActionContext<S, RootState>, payload: P) => Promise<any> | Action<S, RootState>;
+export type TypedAction<S, P, V> = (context: ActionContext<S, RootState>, payload: P) => Promise<V> | Action<S, RootState>;
 /**
  * Stronger typing than vuex ActionTree that only enforces string keys and Action properties.
  * This goes one step further by being able to enforce an interface I with each property an action with a typed payload
  */
-export type TypedActionTree<I extends {}, S> = {[index in keyof I]: TypedAction<S, any>} & I;
+export type TypedActionTree<I extends {}, S> = {[index in keyof I]: TypedAction<S, any, any>} & I;
 export const store: Store<RootState> = new Vuex.Store({
     strict: process.env.NODE_ENV !== 'production',
     modules: {
