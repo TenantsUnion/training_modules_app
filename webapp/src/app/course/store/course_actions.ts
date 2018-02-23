@@ -3,22 +3,22 @@ import {COURSE_MUTATIONS, CourseMode} from './course_mutations';
 import {
     AdminCourseDescription, CourseEntity, CreateCourseEntityCommand, CreateCourseEntityPayload,
     SaveCourseEntityPayload, SaveCourseResponse, ViewCourseData
-} from '../../../../../shared/courses';
-import {getCorrelationId} from '../../../../../shared/correlation_id_generator';
+} from '@shared/courses';
+import {getCorrelationId} from '@shared/correlation_id_generator';
 import {coursesService} from '../courses_service';
 import {subscribeCourse} from '../subscribe_course';
 import {RootGetters, TypedAction, TypedActionTree} from '../../state_store';
-import {Constant} from '../../../../../shared/typings/util_typings';
+import {Constant} from '@shared/typings/util_typings';
 import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../../user/store/courses_listing_store';
 
 export interface CourseActions {
-    CREATE_COURSE: CourseAction<CreateCourseEntityPayload>,
-    SET_CURRENT_COURSE: CourseAction<{ id: string, mode: CourseMode }>;
-    SET_CURRENT_COURSE_FROM_SLUG: CourseAction<string>;
-    SAVE_COURSE: CourseAction<SaveCourseEntityPayload>;
+    CREATE_COURSE: CourseAction<CreateCourseEntityPayload, string>,
+    SET_CURRENT_COURSE: CourseAction<{ id: string, mode: CourseMode }, void>;
+    SET_CURRENT_COURSE_FROM_SLUG: CourseAction<string, void>;
+    SAVE_COURSE: CourseAction<SaveCourseEntityPayload, void>;
 }
 
-export type CourseAction<P> = TypedAction<CourseState, P>;
+export type CourseAction<P, V> = TypedAction<CourseState, P, V>;
 
 /**
  * Const for using course mutation type values
@@ -32,8 +32,11 @@ export const COURSE_ACTIONS: Constant<CourseActions> = {
 /**
  * Course store actions
  */
-export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = {
-    async CREATE_COURSE ({commit, dispatch, rootState, state}, course: CreateCourseEntityPayload) {
+export const courseActions: TypedActionTree<CourseActions, CourseAction<any, any>> = {
+    /**
+     * @returns {Promise<string>} the created course id
+     */
+    async CREATE_COURSE ({commit, dispatch, rootState, state}, course: CreateCourseEntityPayload): Promise<string> {
         let CREATE_ID = 'CREATING';
         try {
             let createCourseCommand: CreateCourseEntityCommand = {
@@ -53,6 +56,7 @@ export const courseActions: TypedActionTree<CourseActions, CourseAction<any>> = 
             commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, updateAdminDescriptions);
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
             commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, courseEntity);
+            return courseEntity.id;
         } catch (e) {
             console.error(e);
             throw e;
