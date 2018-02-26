@@ -8,7 +8,7 @@ const logger = getLogger('SQL File Executor');
 
 export const postgresClient = () => {
     let client = new Client({
-        user: 'chelsealee',
+        user: 'postgres',
         password: 'postgres',
         host: config.get("database.db_host"),
         port: config.get("database.db_port"),
