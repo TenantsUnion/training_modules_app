@@ -6,6 +6,7 @@ import {MODULE_ACTIONS} from "@module/store/module_actions";
 import {Location} from 'vue-router';
 import {CreateModuleEntityPayload} from "@shared/modules";
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
 
 @Component({
     data: () => {
@@ -56,7 +57,8 @@ export default class CreateModuleComponent extends Vue {
                 }
             };
             await this.$store.dispatch(MODULE_ACTIONS.CREATE_MODULE, createModulePayload);
-
+            let message: TitleMessagesObj = {message: `Module: ${this.title} created successfully`};
+            this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             this.$router.push(<Location>{
                 name: PREVIEW_COURSE_ROUTES.modulePreview,
                 params: {moduleSlug: this.$store.getters.getModuleSlugFromId(this.$store.state.module.currentModuleId)}

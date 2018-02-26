@@ -9,6 +9,7 @@ import {diffBasicPropsCourseProps, SaveCourseEntityPayload, ViewCourseData} from
 import {getSlugFromCourseIdFn} from '../../user/store/courses_listing_store';
 import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
 
 @Component({
     data: () => {
@@ -68,6 +69,8 @@ export class EditCourseComponent extends Vue {
         try {
             this.saving = true;
             await this.$store.dispatch(COURSE_ACTIONS.SAVE_COURSE, saveCoursePayload);
+            let message: TitleMessagesObj = {message: `Course: ${this.course.title} saved successfully`};
+            this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
         } catch (error) {
             console.error(error.stack);
             this.errorMessages = error.message;

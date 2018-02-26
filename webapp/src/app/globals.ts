@@ -13,6 +13,7 @@ import SwitchCheckBoxComponent from './global/switch_checkbox/switch_checkbox.vu
 import AppHeader from './user/header/user_header_component.vue';
 import VueRouter from 'vue-router';
 import VueForm from 'vue-form';
+import StatusMessageComponentVue from "@global/status_messages/status_messages_component.vue";
 
 //put jquery on global window for debugging,
 //workaround for webpack doing this with module number prefixes
@@ -27,6 +28,7 @@ if (process.env.NODE_ENV !== 'production') {
 export const registerGlobalComponents = () => {
     Vue.component('loading', LoadingComponent);
     Vue.component('time-estimate', TimeEstimateComponent);
+    Vue.component('status-message', StatusMessageComponentVue);
     Vue.component('quill-editor', QuillComponent);
     Vue.component('question', QuestionComponent);
     Vue.component('edit-training-segments', EditTrainingSegmentsComponent);

@@ -77,6 +77,7 @@ export const userRoutes: RouteConfig = {
         template: `
             <div>
                 <app-header :username="username"></app-header>
+                <status-message></status-message>
                 <router-view></router-view>
             </div>
         `

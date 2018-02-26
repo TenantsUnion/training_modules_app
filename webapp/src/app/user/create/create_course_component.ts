@@ -6,6 +6,7 @@ import {Segment} from '@shared/segment';
 import {COURSE_ACTIONS} from '@course/store/course_actions';
 import {Location} from "vue-router";
 import {ADMIN_COURSE_ROUTES, USER_ROUTES} from "@global/routes";
+import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
 
 @Component({
     data: () => {
@@ -32,12 +33,17 @@ export default class CreateCourseComponent extends Vue {
     contentQuestions: Segment[] = [];
     formstate: FormState;
 
+    created () {
+    }
+
     cancel () {
         this.$router.push(<Location>{name: USER_ROUTES.adminCourses});
     }
 
     async createCourse () {
-        await this.dispatchCreateCourse(() => this.$router.push(<Location>{name: USER_ROUTES.adminCourses}));
+        await this.dispatchCreateCourse(() => {
+            this.$router.push(<Location>{name: USER_ROUTES.adminCourses})
+        });
     }
 
     async createCourseEdit () {
@@ -51,7 +57,7 @@ export default class CreateCourseComponent extends Vue {
         });
     }
 
-    private async dispatchCreateCourse (onSuccess: (courseId?:string) => any) {
+    private async dispatchCreateCourse (onSuccess: (courseId?: string) => any) {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
@@ -61,6 +67,8 @@ export default class CreateCourseComponent extends Vue {
         let createCoursePayload = this.getCoursePayload();
         try {
             let courseId = await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
+            let message: TitleMessagesObj = {message: `Course: ${this.course.title} created successfully`};
+            this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             onSuccess(courseId);
         } catch (msg) {
             this.errorMessages = msg;

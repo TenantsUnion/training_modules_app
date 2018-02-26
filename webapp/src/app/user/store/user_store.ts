@@ -28,7 +28,6 @@ export const userState: UserState = {
 /**
  * Mutations
  */
-// todo document/figure out how to access/use these commit mutations from component, within action handler, other mutation, same/different modules
 export type UserMutation<P> = (state: UserState, payload: P) => any | Mutation<UserState>;
 
 export interface UserMutations {

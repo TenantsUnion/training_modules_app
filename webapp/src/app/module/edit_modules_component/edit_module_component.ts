@@ -15,6 +15,7 @@ import {getModuleSlugFromIdFn} from '@module/store/module_state';
 import {Watch} from 'vue-property-decorator';
 import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
 import {ADMIN_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
 
 @Component({
     data: () => {
@@ -111,6 +112,8 @@ export class EditModuleComponent extends Vue {
         try {
             this.saving = true;
             await this.$store.dispatch(MODULE_ACTIONS.SAVE_MODULE, moduleEntityPayload);
+            let message: TitleMessagesObj = {message: `Module: ${this.module.title} saved successfully`};
+            this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             this.$router.push({
                 name: PREVIEW_COURSE_ROUTES.modulePreview,
                 params: {

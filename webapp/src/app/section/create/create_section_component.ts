@@ -6,6 +6,7 @@ import {SECTION_ACTIONS} from '@section/store/section_actions';
 import {CreateSectionEntityPayload} from '@shared/sections';
 import {currentModuleRouteGuard} from '@module/module_details_component/module_details_component';
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
 
 @Component({
     data: () => {
@@ -58,6 +59,8 @@ export default class CreateSectionComponent extends Vue {
                 },
             };
             await this.$store.dispatch(SECTION_ACTIONS.CREATE_SECTION, createSectionPayload);
+            let message: TitleMessagesObj = {message: `Section: ${this.title} created successfully`};
+            this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
 
             let {getSectionSlugFromId} = this.$store.getters;
             let {currentSectionId} = this.$store.state.section;

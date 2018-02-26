@@ -13,6 +13,7 @@ import {TrainingEntityDiffDelta} from '@shared/training_entity';
 import {getSectionSlugFromIdFn} from '@section/store/section_state';
 import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
 
 @Component({
     data: () => {
@@ -79,6 +80,8 @@ export default class EditSectionComponent extends Vue {
         try {
             this.saving = true;
             await this.$store.dispatch(SECTION_ACTIONS.SAVE_SECTION, saveSectionPayload);
+            let message: TitleMessagesObj = {message: `Section: ${this.section.title} saved successfully`};
+            this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             this.$router.push({
                 name: PREVIEW_COURSE_ROUTES.sectionPreview,
                 params: {
