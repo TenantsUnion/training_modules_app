@@ -49,7 +49,7 @@ export interface CourseDescription {
     id: string;
     slug?: string;
     title: string;
-    description: string;
+    description?: string;
     timeEstimate?: number;
     admins?: string[]
 }

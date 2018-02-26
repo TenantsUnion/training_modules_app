@@ -3,6 +3,7 @@ import {CourseState} from './course_state';
 import {ViewCourseData} from '@shared/courses';
 import {Mutation, MutationTree} from 'vuex';
 import {ViewModuleDescription} from "@shared/modules";
+import {Constant} from "@shared/typings/util_typings";
 
 export enum CourseMode {
     ADMIN = 'ADMIN',
@@ -14,7 +15,7 @@ export type CourseMutation<P> = (state: CourseState, payload: P) => any | Mutati
 /**
  * Const for using course mutation type values
  */
-export const COURSE_MUTATIONS: {[index in keyof  CourseMutations]: keyof CourseMutations} = {
+export const COURSE_MUTATIONS: Constant<CourseMutations> = {
     SET_CURRENT_COURSE: 'SET_CURRENT_COURSE',
     SET_COURSE_REQUEST_STAGE: 'SET_COURSE_REQUEST_STAGE',
     SET_MODE: 'SET_MODE',

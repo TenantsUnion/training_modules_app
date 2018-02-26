@@ -7,18 +7,18 @@ import {
 import {getCorrelationId} from '@shared/correlation_id_generator';
 import {coursesService} from '../courses_service';
 import {subscribeCourse} from '../subscribe_course';
-import {RootGetters, TypedAction, TypedActionTree} from '../../state_store';
+import {RootGetters, RootState, TypedAction} from '../../state_store';
 import {Constant} from '@shared/typings/util_typings';
 import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../../user/store/courses_listing_store';
+import {ActionTree} from "vuex";
 
-export interface CourseActions {
+export type CourseAction<P, V> = TypedAction<CourseState, P, V>;
+export interface CourseActions extends ActionTree<CourseState, RootState> {
     CREATE_COURSE: CourseAction<CreateCourseEntityPayload, string>,
     SET_CURRENT_COURSE: CourseAction<{ id: string, mode: CourseMode }, void>;
     SET_CURRENT_COURSE_FROM_SLUG: CourseAction<string, void>;
     SAVE_COURSE: CourseAction<SaveCourseEntityPayload, void>;
 }
-
-export type CourseAction<P, V> = TypedAction<CourseState, P, V>;
 
 /**
  * Const for using course mutation type values
@@ -32,7 +32,7 @@ export const COURSE_ACTIONS: Constant<CourseActions> = {
 /**
  * Course store actions
  */
-export const courseActions: TypedActionTree<CourseActions, CourseAction<any, any>> = {
+export const courseActions: CourseActions = {
     /**
      * @returns {Promise<string>} the created course id
      */
