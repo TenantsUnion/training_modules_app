@@ -11,7 +11,8 @@
                               :editor-json="option.option.editorJson"/>
             </div>
             <div class="cell full width">
-                <div class="explanation-container" v-show="submitted">
+                <div class="explanation-container" v-if="notBlank(option.explanation.editorJson)"
+                     v-show="submitted">
                     <quill-editor ref="explanationQuill"
                                   :read-only="true"
                                   :editor-id="option.explanation.id"
