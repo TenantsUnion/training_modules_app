@@ -24,6 +24,10 @@ import {
     statusMessageActions, statusMessagesMutations, StatusMessagesState,
     statusMessagesState
 } from "@global/status_messages/status_messages_store";
+import {
+    userProgressActions, userProgressGetters, UserProgressGetters, userProgressMutations, UserProgressState,
+    userProgressState
+} from "./user_progress/user_progress_store";
 
 Vue.use(Vuex);
 
@@ -53,6 +57,12 @@ export const store: Store<RootState> = new Vuex.Store({
             getters: userCoursesListingGetters,
             actions: userCoursesListingActions,
             mutations: userCoursesListingMutations
+        },
+        userProgress: {
+            state: userProgressState,
+            getters: userProgressGetters,
+            actions: userProgressActions,
+            mutations: userProgressMutations
         },
         course: {
             state: courseState,
@@ -87,16 +97,13 @@ export interface RootState {
     module: ModuleState,
     section: SectionState,
     userCourses: UserCoursesListingState,
+    userProgress: UserProgressState,
     availableCourses: AvailableCoursesState
     statusMessages: StatusMessagesState
 }
 
-export type RootGetters =
-    CourseGetters
-    & UserCoursesListingGetters
-    & ModuleGetters
-    & SectionGetters
-    & AvailableCoursesGetters;
+export type RootGetters = CourseGetters & UserCoursesListingGetters & ModuleGetters
+    & SectionGetters & AvailableCoursesGetters & UserProgressGetters;
 
 // getters and rootGetters are the same since the modules have the namespace option set to false
 export type AppGetter<S> = ((state: S, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => any);

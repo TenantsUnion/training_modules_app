@@ -12,10 +12,24 @@ export interface TrainingProgress {
     createdAt: string;
 }
 
-export interface TrainingProgressUpdate {
+export interface TrainingProgressUpdateData {
+    id: string; // course, module, or section id
     viewedContentIds: DeltaArrOp<string>[];
     questionSubmissions: QuestionSubmission[];
 }
+
+export enum TrainingProgressUpdateType {
+    COURSE = 'COURSE', MODULE = 'MODULE', SECTION = 'SECTION'
+}
+
+export interface TrainingProgressUpdate extends TrainingProgressUpdateData {
+    userId: string;
+    type: TrainingProgressUpdateType
+}
+
+export type CourseTrainingProgressUpdate = TrainingProgressUpdate & {type: TrainingProgressUpdateType.COURSE};
+export type ModuleTrainingProgressUpdate = TrainingProgressUpdate & {type: TrainingProgressUpdateType.MODULE};
+export type SectionTrainingProgressUpdate = TrainingProgressUpdate & {type: TrainingProgressUpdateType.SECTION};
 
 export interface QuestionSubmission {
     questionId: string;
