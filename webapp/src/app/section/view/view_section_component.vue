@@ -15,7 +15,8 @@
             <div class="grid-x">
                 <div class="cell small-12 large-10">
                     <div class="small-12 cell">
-                        <view-training-segments :content-questions="section.contentQuestions"/>
+                        <view-training-segments :content-questions="section.contentQuestions"
+                            :submit-individual-questions="true"/>
                     </div>
                 </div>
             </div>
