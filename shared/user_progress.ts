@@ -72,3 +72,33 @@ export interface ModuleProgress extends TrainingProgress {
 export interface SectionProgress extends TrainingProgress {
 }
 
+export interface TrainingProgressView {
+    id: string;
+    version: number;
+    title: string;
+    description: string;
+    timeEstimate: number;
+    headerDataId: string;
+    active: boolean;
+    submitIndividually: boolean;
+    correctQuestionsIds: string[];
+    submittedQuestionsIds: string[];
+    orderedContentIds: string[];
+    orderedQuestionIds: string[];
+    orderedContentQuestionIds: string[];
+    viewedContentIds: string[]
+    createdAt: string;
+    lastModifiedAt: string;
+    lastViewedAt: string;
+}
+
+export interface UserModuleProgressView extends TrainingProgressView {
+    orderedSectionIds: string[],
+    sections: TrainingProgressView[]
+}
+
+export interface UserCourseProgressView extends TrainingProgressView {
+    userId: string;
+    orderedModuleIds: string[],
+    modules: UserModuleProgressView[],
+}

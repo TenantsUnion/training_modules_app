@@ -2,9 +2,10 @@ import {AbstractWebController} from "./abstract_routes_controller";
 import {getLogger} from "../log";
 import {Router, Request} from "express";
 import {UserProgressHandler} from "../user_progress/user_progress_handler";
-import {UserCourseProgressView, UserProgressViewQuery} from "../user_progress/user_progress_view_query";
 import {EnrollCourseRequestPayload, EnrollCourseResponse} from "@shared/user";
 import {UserCoursesListingViewQuery} from "../user/user_courses_listing_view_query";
+import {UserProgressViewQuery} from "../user_progress/user_progress_view_query";
+import {UserCourseProgressView} from "@shared/user_progress";
 
 export class UserProgressWebController extends AbstractWebController {
 

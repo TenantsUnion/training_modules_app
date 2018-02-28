@@ -1,6 +1,6 @@
 import {Datasource} from "../datasource";
 import {orderObjByIds, toIdObjMap} from "@util/id_entity";
-import {CourseProgressId} from "@shared/user_progress";
+import {CourseProgressId, UserCourseProgressView, UserModuleProgressView} from "@shared/user_progress";
 
 export interface TrainingEntityProgressDbRow {
     userId: string;
@@ -42,36 +42,6 @@ export type UserCourseProgressDbRow = TrainingEntityProgressDbRow & {
 }
 
 
-export interface TrainingProgressView {
-    id: string;
-    version: number;
-    title: string;
-    description: string;
-    timeEstimate: number;
-    headerDataId: string;
-    active: boolean;
-    submitIndividually: boolean;
-    correctQuestionsIds: string[];
-    submittedQuestionsIds: string[];
-    orderedContentIds: string[];
-    orderedQuestionIds: string[];
-    orderedContentQuestionIds: string[];
-    viewedContentIds: string[]
-    createdAt: string;
-    lastModifiedAt: string;
-    lastViewedAt: string;
-}
-
-export interface UserModuleProgressView extends TrainingProgressView {
-    orderedSectionIds: string[],
-    sections: TrainingProgressView[]
-}
-
-export interface UserCourseProgressView extends TrainingProgressView {
-    userId: string;
-    orderedModuleIds: string[],
-    modules: UserModuleProgressView[],
-}
 
 
 type mapRow<R, V> = (row: R) => V;

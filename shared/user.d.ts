@@ -1,5 +1,5 @@
 import {AdminCourseDescription, EnrolledCourseDescription} from "@shared/courses";
-import {UserCourseProgressView} from "../server/src/user_progress/user_progress_view_query";
+import {UserCourseProgressView} from "@shared/user_progress";
 
 declare namespace user {
     interface IUserInfo {

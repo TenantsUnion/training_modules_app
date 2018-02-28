@@ -39,6 +39,9 @@
       "@server/*": [
         "../server/src/*"
       ],
+      "@util/*": [
+        "../server/src/util/*"
+      ],
       "*": [
         "*"
       ]
