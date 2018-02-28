@@ -42,8 +42,6 @@ export type UserCourseProgressDbRow = TrainingEntityProgressDbRow & {
 }
 
 
-
-
 type mapRow<R, V> = (row: R) => V;
 type processView<V> = (view: V) => V;
 
@@ -51,7 +49,7 @@ const mapUserProgressView: mapRow<UserCourseProgressDbRow, UserCourseProgressVie
     let {courseId, modules, ...courseView} = userProgressRow;
     return {
         ...courseView,
-        modules: userProgressRow.modules.map((module: UserModuleProgressDbRow): UserModuleProgressView => {
+        modules: modules ? modules.map((module: UserModuleProgressDbRow): UserModuleProgressView => {
             let {userId, moduleId, sections, ...moduleView} = module;
             return {
                 ...moduleView,
@@ -60,7 +58,7 @@ const mapUserProgressView: mapRow<UserCourseProgressDbRow, UserCourseProgressVie
                     return sectionView;
                 }) : []
             };
-        })
+        }) : []
     }
 };
 
