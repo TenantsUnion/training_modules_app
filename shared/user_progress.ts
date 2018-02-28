@@ -27,14 +27,19 @@ export interface TrainingProgressUpdate extends TrainingProgressUpdateData {
     type: TrainingProgressUpdateType
 }
 
-export type CourseTrainingProgressUpdate = TrainingProgressUpdate & {type: TrainingProgressUpdateType.COURSE};
-export type ModuleTrainingProgressUpdate = TrainingProgressUpdate & {type: TrainingProgressUpdateType.MODULE};
-export type SectionTrainingProgressUpdate = TrainingProgressUpdate & {type: TrainingProgressUpdateType.SECTION};
+export type CourseTrainingProgressUpdate = TrainingProgressUpdate & { type: TrainingProgressUpdateType.COURSE };
+export type ModuleTrainingProgressUpdate = TrainingProgressUpdate & { type: TrainingProgressUpdateType.MODULE };
+export type SectionTrainingProgressUpdate = TrainingProgressUpdate & { type: TrainingProgressUpdateType.SECTION };
 
 export interface QuestionSubmission {
     questionId: string;
-    questionOptionId: string;
-    correct: boolean;
+    chosenOptionIds: string[];
+    possibleOptionIds: string[];
+    correct?: boolean;
+}
+
+export interface UserQuestionSubmission extends QuestionSubmission {
+    userId: string;
 }
 
 export interface ContentProgress {
@@ -64,5 +69,6 @@ export interface ModuleProgress extends TrainingProgress {
     sections: SectionProgress;
 }
 
-export interface SectionProgress extends TrainingProgress {}
+export interface SectionProgress extends TrainingProgress {
+}
 

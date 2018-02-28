@@ -44,8 +44,10 @@
       ],
       "@section/*": [
         "./src/app/section/*"
+      ],
+      "@user_progress/*": [
+       "./src/app/user_progress/*"
       ]
-
     }
   }
 }

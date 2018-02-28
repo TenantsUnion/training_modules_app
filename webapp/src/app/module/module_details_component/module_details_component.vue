@@ -18,6 +18,7 @@
                     <div class="grid-x">
                         <div class="cell small-12 large-10">
                             <view-training-segments :content-questions="module.contentQuestions"
+                                                    :individual-submit="module.submitIndividually"
                                                     ref="trainingSegment"/>
                         </div>
                     </div>

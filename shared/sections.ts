@@ -2,8 +2,7 @@ import {
     CreateTrainingEntityPayload, SaveTrainingEntityPayload, TrainingEntityDiffDelta,
     TrainingEntity, ViewTrainingEntity, ContentQuestionsDelta, ViewTrainingEntityDescription
 } from './training_entity';
-import {ViewCourseDelta} from '@shared/courses';
-import {ViewModuleDelta, ViewModuleDescription} from '@shared/modules';
+import {ViewModuleDescription} from '@shared/modules';
 
 export type SectionEntityType = 'SectionEntity';
 export type SectionEntity = TrainingEntity;

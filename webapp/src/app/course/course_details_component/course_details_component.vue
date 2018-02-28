@@ -30,16 +30,4 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-    import Vue from 'vue';
-    import Component from "vue-class-component";
-    import {mapGetters} from 'vuex';
-
-    @Component({
-        computed: {
-            ...mapGetters(['currentCourse', 'currentCourseLoading'])
-        }
-    })
-    export default class CourseDetailsComponent extends Vue {
-    }
-</script>
+<script lang="ts" src="./course_details_component.ts"></script>

@@ -121,6 +121,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
         commit(USER_COURSES_LISTING_MUTATIONS.CLEAR_USER_COURSES_LISTINGS);
     },
     async ENROLL_IN_COURSE ({commit, state, rootState}, courseId: string) {
-       await enrollUserInCourse({courseId, userId: state.userId});
+       let {enrolledCourses, courseProgress} = await enrollUserInCourse({courseId, userId: state.userId});
+       commit(USER_COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, enrolledCourses);
     }
 };

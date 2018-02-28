@@ -41,6 +41,11 @@ export default class AvailableCoursesComponent extends Vue {
 
     async enroll (course: CourseDescription) {
         await this.$store.dispatch(USER_ACTIONS.ENROLL_IN_COURSE, course.id);
-        // this.$router.push(ENROLLED_COURSE_ROUTES.enrolledCourse);
+        this.$router.push({
+            name: ENROLLED_COURSE_ROUTES.enrolledCourse,
+            params: {
+                courseSlug: this.$store.getters.getSlugFromCourseId(course.id)
+            }
+        });
     }
 }

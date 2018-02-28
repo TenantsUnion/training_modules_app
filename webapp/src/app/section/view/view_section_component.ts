@@ -7,6 +7,12 @@ import {RootGetters, RootState, store} from '../../state_store';
 import {MODULE_ACTIONS} from '@module/store/module_actions';
 import {mapGetters, mapState} from 'vuex';
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {
+    QuestionSubmission, TrainingProgress, TrainingProgressUpdate,
+    TrainingProgressUpdateData
+} from "@shared/user_progress";
+import {ViewSectionData} from "@shared/sections";
+import {USER_PROGRESS_ACTIONS} from "../../user_progress/user_progress_store";
 
 export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) => {
     let courseSlug = to.params.courseSlug;
@@ -53,6 +59,26 @@ export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) 
     extends: CourseRefreshComponent,
 })
 export default class ViewSectionComponent extends Vue {
+    section: ViewSectionData;
+
+    async individualSubmitCb (submission: QuestionSubmission) {
+        let progress: TrainingProgressUpdateData = {
+            id: this.section.id,
+            questionSubmissions: [submission],
+            viewedContentIds: []
+        };
+        await this.$store.dispatch(USER_PROGRESS_ACTIONS.SAVE_SECTION_PROGRESS, progress);
+    }
+
+    async submitCb (submissions: QuestionSubmission[]) {
+        let progress: TrainingProgressUpdateData = {
+            id: this.section.id,
+            questionSubmissions: submissions,
+            viewedContentIds: []
+        };
+        await this.$store.dispatch(USER_PROGRESS_ACTIONS.SAVE_SECTION_PROGRESS, progress);
+    }
+
     async next () {
         let moduleId = this.$store.state.module.currentModuleId;
         let nextId = this.$store.getters.nextSectionIdInModule;

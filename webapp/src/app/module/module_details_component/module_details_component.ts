@@ -6,6 +6,9 @@ import {ADMIN_COURSE_ROUTES} from "@global/routes";
 import {store} from "../../state_store";
 import {MODULE_ACTIONS} from "../store/module_actions";
 import {CourseMode} from "@course/store/course_mutations";
+import {QuestionSubmission, TrainingProgressUpdateData} from "@shared/user_progress";
+import {ViewModuleData} from "@shared/modules";
+import {USER_PROGRESS_ACTIONS} from "../../user_progress/user_progress_store";
 
 export const currentModuleRouteGuard: NavigationGuard = async (to, from, next) => {
     let slug = to.params.moduleSlug;
@@ -36,7 +39,25 @@ export const currentModuleRouteGuard: NavigationGuard = async (to, from, next) =
     beforeRouteEnter: currentModuleRouteGuard
 })
 export default class ModuleDetailsComponent extends Vue {
+    module: ViewModuleData;
     loading: boolean;
 
+    async individualSubmitCb (submission: QuestionSubmission) {
+        let progress: TrainingProgressUpdateData = {
+            id: this.module.id,
+            questionSubmissions: [submission],
+            viewedContentIds: []
+        };
+        await this.$store.dispatch(USER_PROGRESS_ACTIONS.SAVE_MODULE_PROGRESS, progress);
+    }
+
+    async submitCb (submissions: QuestionSubmission[]) {
+        let progress: TrainingProgressUpdateData = {
+            id: this.module.id,
+            questionSubmissions: submissions,
+            viewedContentIds: []
+        };
+        await this.$store.dispatch(USER_PROGRESS_ACTIONS.SAVE_MODULE_PROGRESS, progress);
+    }
 }
 

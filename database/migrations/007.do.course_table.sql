@@ -7,7 +7,7 @@ CREATE TABLE tu.course (
   time_estimate                INTEGER,
   open_enrollment              BOOLEAN      NOT NULL DEFAULT FALSE,
   active                       BOOLEAN      NOT NULL DEFAULT FALSE,
-  submit_individually           BOOLEAN      NOT NULL DEFAULT TRUE,
+  submit_individually          BOOLEAN      NOT NULL DEFAULT TRUE,
   --references id pk column of tu.modules
   ordered_module_ids           TEXT []      NOT NULL DEFAULT ARRAY [] :: TEXT [],
   --references id pk column of tu.quill_data
@@ -16,8 +16,8 @@ CREATE TABLE tu.course (
   ordered_question_ids         TEXT []      NOT NULL DEFAULT ARRAY [] :: TEXT [],
   --ordering of content and questions together -- ids from ordered_module_ids and ordered_content_ids
   ordered_content_question_ids TEXT []      NOT NULL DEFAULT ARRAY [] :: TEXT [],
-  last_modified_at             TIMESTAMPTZ   NOT NULL,
-  created_at                   TIMESTAMPTZ   NOT NULL
+  last_modified_at             TIMESTAMPTZ  NOT NULL,
+  created_at                   TIMESTAMPTZ  NOT NULL
 );
 
 CREATE SEQUENCE tu.course_id_seq;

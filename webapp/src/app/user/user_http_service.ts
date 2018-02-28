@@ -1,8 +1,8 @@
 import axios from 'axios';
-import {EnrollCourseRequestPayload, UserCoursesListingPayload} from "@shared/user";
+import {EnrollCourseRequestPayload, EnrollCourseResponse, UserCoursesListingPayload} from "@shared/user";
 
-export const enrollUserInCourse = async (userCourse: EnrollCourseRequestPayload) => {
-    return axios.post(`user/course/enroll`, userCourse);
+export const enrollUserInCourse = async (userCourse: EnrollCourseRequestPayload): Promise<EnrollCourseResponse> => {
+    return (await axios.post(`user/course/enroll`, userCourse)).data;
 };
 
 export const loadUserCourses = async (userId: string): Promise<UserCoursesListingPayload> => {

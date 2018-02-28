@@ -11,7 +11,7 @@ import {UserWebController} from "./user_web_controller";
 
 export const accountController = new AccountController(accountHandler, userHandler, accountRequestValidator);
 export const coursesController = new CourseCommandController(coursesHandler, courseViewQuery, moduleViewQuery, sectionViewQuery);
-export const userProgressWebController = new UserProgressWebController(userProgressHandler, userProgressViewQuery);
+export const userProgressWebController = new UserProgressWebController(userProgressHandler, userProgressViewQuery, userCoursesListingViewQuery);
 export const userWebController = new UserWebController(userCoursesListingViewQuery);
 
 // todo add error handlers to express

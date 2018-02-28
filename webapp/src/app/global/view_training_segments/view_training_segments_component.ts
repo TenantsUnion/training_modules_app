@@ -6,40 +6,30 @@ import QuillComponent from '../quill/quill_component';
 import {
     ContentSegment, isContentSegment, isQuestionSegment, QuestionSegment, SegmentArrayElement
 } from '@shared/segment';
-import {
-    AnswerType, isQuestionData, QuestionQuillData, QuestionType
-} from '@shared/questions';
+import {isQuestionData, QuestionQuillData} from '@shared/questions';
 import {isQuillEditorData, QuillEditorData} from "@shared/quill_editor";
-import {Watch} from "vue-property-decorator";
+import {Prop} from "vue-property-decorator";
 import AnswerQuestionComponentVue from '@global/answer_question/answer_question_component.vue';
-import {createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
 import AnswerQuestionComponent from "@global/answer_question/answer_question_component";
-
-
-const Delta = Quill.import('delta');
 
 @Component({
     components: {
         'answer-question': AnswerQuestionComponentVue
     },
-    props: {
-        contentQuestions: {
-            type: Array,
-            required: true,
-        },
-        submitIndividualQuestions: {
-            type: Boolean,
-            required: true
-        }
-    }
+    props: {}
 })
 export default class ViewTrainingSegmentsComponent extends Vue {
+    @Prop({type: Boolean, required: true})
+    individualSubmit: boolean;
+    @Prop({type: Function, required: false, default: () => null})
+    individualSubmitCb: () => any;
+    @Prop({type: Function, required: false, default: () => null})
+    submitCb: () => any;
+    @Prop({type: Array, required: true})
     contentQuestions: (QuillEditorData | QuestionQuillData)[];
-    currentSegments: ((ContentSegment | QuestionSegment) & SegmentArrayElement)[] = [];
 
-    @Watch('contentQuestions', {immediate: true})
-    syncCurrentSegments (incomingContentQuestions: (QuillEditorData | QuestionQuillData)[]) {
-        this.currentSegments = incomingContentQuestions ? incomingContentQuestions.map((contentQuestion) => {
+    get currentSegments (): ((ContentSegment | QuestionSegment) & SegmentArrayElement)[] {
+        return this.contentQuestions ? this.contentQuestions.map((contentQuestion) => {
             if (isQuillEditorData(contentQuestion)) {
                 return <ContentSegment>{
                     id: contentQuestion.id,
@@ -54,7 +44,7 @@ export default class ViewTrainingSegmentsComponent extends Vue {
                 }
             }
         }) : [];
-    }
+    };
 
     isContent (segment: ContentSegment | QuestionSegment): boolean {
         return isContentSegment(segment);
@@ -62,53 +52,6 @@ export default class ViewTrainingSegmentsComponent extends Vue {
 
     isQuestion (segment: ContentSegment | QuestionSegment): boolean {
         return isQuestionSegment(segment);
-    }
-
-    addContent () {
-        let addContentId = createdQuillPlaceholderId();
-        this.currentSegments.push({
-            id: addContentId,
-            type: 'CONTENT',
-            content: {
-                id: addContentId,
-                version: 0,
-                editorJson: new Delta()
-            },
-            removeCallback: () => {
-                let rmIndex = this.currentSegments.findIndex((el) => el.id === addContentId);
-                this.currentSegments.splice(rmIndex, 1);
-            }
-        });
-    }
-
-    addQuestion () {
-        let questionId = createdQuestionPlaceholderId();
-        let questionQuillId = createdQuillPlaceholderId();
-        this.currentSegments.push(<QuestionSegment>{
-            id: questionId,
-            type: 'QUESTION',
-            removeCallback: () => {
-                let rmIndex = this.currentSegments.findIndex((el) => el.id === questionId);
-                this.currentSegments.splice(rmIndex, 1);
-            },
-            question: {
-                id: questionId,
-                version: 0,
-                questionType: QuestionType.DEFAULT,
-                answerType: AnswerType.DEFAULT,
-                answerInOrder: false,
-                canPickMultiple: false,
-                randomizeOptionOrder: true,
-                questionQuill: {
-                    id: questionQuillId,
-                    version: 0,
-                    editorJson: new Delta(),
-                },
-                correctOptionIds: [],
-                optionIds: [],
-                options: [],
-            }
-        });
     }
 
     get questionRefs (): AnswerQuestionComponent[] {

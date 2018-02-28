@@ -18,14 +18,19 @@ export class UserProgressHandler {
         }, []) : [];
         await Promise.all([
             this.courseProgressRepository.createCourseProgress({userId, courseId}),
-            moduleIds.length ? this.moduleProgressRepository.createModuleProgress({userId, moduleIds}) : Promise.resolve(),
-            sectionIds.length ? this.sectionProgressRepository.createSectionProgress({userId, sectionIds}) : Promise.resolve(),
+            moduleIds.length ? this.moduleProgressRepository.createModuleProgress({
+                userId,
+                moduleIds
+            }) : Promise.resolve(),
+            sectionIds.length ? this.sectionProgressRepository.createSectionProgress({
+                userId,
+                sectionIds
+            }) : Promise.resolve(),
             this.userRepository.addEnrolledCoursesId({userId, courseId})
         ]);
     }
 
-    async recordCourseProgress({userId, courseId}: CourseProgressId) {
+    async recordCourseTrainingProgress ({userId, courseId}: CourseProgressId) {
 
     }
-
 }

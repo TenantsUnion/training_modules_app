@@ -2,10 +2,14 @@ import * as _ from 'underscore';
 import {isQuillEditorData, QuillEditorData} from './quill_editor';
 import {DeltaStatic} from 'quill';
 import {isDeltaStatic} from './delta/typeguards_delta';
-import {applyDeltaArrOps, deltaArrayDiff, DeltaArrOp} from './delta/diff_key_array';
+import {applyDeltaArrOps, DeltaArrOp} from './delta/diff_key_array';
 
 export enum QuestionType {
-    DEFAULT = 'DEFAULT'
+    DEFAULT = 'DEFAULT',
+    /**
+     * Survey questions will not have explanations or correct options
+     */
+    SURVEY = 'SURVEY'
 }
 
 export enum AnswerType {

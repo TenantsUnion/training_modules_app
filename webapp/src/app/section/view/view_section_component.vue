@@ -16,7 +16,9 @@
                 <div class="cell small-12 large-10">
                     <div class="small-12 cell">
                         <view-training-segments :content-questions="section.contentQuestions"
-                            :submit-individual-questions="true"/>
+                                                :individiual-submit-cb="individualSubmitCb"
+                                                :submit-cb="submitCb"
+                                                :individual-submit="section.submitIndividually"/>
                     </div>
                 </div>
             </div>

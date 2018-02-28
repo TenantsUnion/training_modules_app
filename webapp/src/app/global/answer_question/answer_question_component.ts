@@ -7,6 +7,7 @@ import {
 import {Prop} from "vue-property-decorator";
 import VueAnswerQuestionOptionComponent from "./answer_question_option_component.vue";
 import AnswerQuestionOptionComponent from "@global/answer_question/answer_question_option_component";
+import {QuestionSubmission} from "@shared/user_progress";
 
 @Component({
     components: {
@@ -14,27 +15,48 @@ import AnswerQuestionOptionComponent from "@global/answer_question/answer_questi
     }
 })
 export class AnswerQuestionComponent extends Vue {
-    correctAnswer: boolean = false;
     showQuestion: boolean = true;
     submitted: boolean = false;
     @Prop({type: Object, required: true})
     question: QuestionQuillData;
-    @Prop({type: Boolean, required: true})
+    @Prop({type: Boolean, required: true, default: () => null})
     individualSubmit: boolean;
+    @Prop({type: Function, required: false})
+    individualSubmitCb: (submission: QuestionSubmission) => any;
 
     isCorrectOption (option: QuestionOptionQuillData) {
         return this.question.correctOptionIds.indexOf(option.id) !== -1;
     }
 
     submit () {
-        this.submitted = true;
-        // compare user selected answers with those correct
-        let userAnswer = this.optionRefs
+        this.markSubmitted();
+        this.individualSubmitCb(this.submission());
+    }
+
+    submission (): QuestionSubmission {
+        return {
+            questionId: this.question.id,
+            chosenOptionIds: this.selectedOptions(),
+            possibleOptionIds: this.question.options.map(({id}) => id),
+            correct: this.isCorrect()
+        };
+    }
+
+    selectedOptions () {
+        return this.optionRefs
             .filter(({optionSelected}) => optionSelected)
             .map(({option: {id}}) => id);
+    }
 
-        this.correctAnswer = (userAnswer.length === this.question.correctOptionIds.length)
-        && this.question.correctOptionIds.every(optionId => userAnswer.indexOf(optionId) !== -1);
+    isCorrect () {
+        let userAnswer = this.selectedOptions();
+        return userAnswer.length === this.question.correctOptionIds.length
+            && this.question.correctOptionIds.every(optionId => userAnswer.indexOf(optionId) !== -1);
+
+    }
+
+    markSubmitted () {
+        this.submitted = true;
     }
 
     reset () {
@@ -43,8 +65,8 @@ export class AnswerQuestionComponent extends Vue {
 
     get answerCorrectClasses (): {} {
         return {
-            primary: this.submitted && this.correctAnswer,
-            alert: this.submitted && !this.correctAnswer
+            primary: this.submitted && this.isCorrect(),
+            alert: this.submitted && !this.isCorrect()
         }
     }
 

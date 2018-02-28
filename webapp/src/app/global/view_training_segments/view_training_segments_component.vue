@@ -6,7 +6,8 @@
                           :editor-json="segment.content.editorJson"
                           :editor-id="segment.id"/>
             <answer-question v-if="isQuestion(segment)"
-                             :individual-submit="true"
+                             :individual-submit="individualSubmit"
+                             :individual-submit-cb="individualSubmitCb"
                              :question="segment.question"/>
         </div>
     </div>
