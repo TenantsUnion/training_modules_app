@@ -17,8 +17,11 @@ export class CourseProgressRepository extends TrainingProgressRepository {
         super(sqlTemplate);
     }
 
-    table () {
-        return 'course_progress'
+    get tableNames () {
+        return {
+            progress: 'course_progress',
+            training: 'course'
+        }
     }
 
     async courseStructure (courseId: string): Promise<CourseStructure> {

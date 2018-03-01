@@ -27,7 +27,7 @@ export class UserProgressWebController extends AbstractWebController {
 
     async saveTrainingProgress (req: Request): Promise<any> {
         let payload: TrainingProgressUpdate = req.body;
-        await this.userProgressHandler.recordCourseTrainingProgress(payload);
+        await this.userProgressHandler.recordTrainingProgress(payload);
         // todo what to return?
     }
 

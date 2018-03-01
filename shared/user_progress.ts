@@ -14,7 +14,7 @@ export interface TrainingProgress {
 
 export interface TrainingProgressUpdateData {
     id: string; // course, module, or section id
-    viewedContentIds: DeltaArrOp<string>[];
+    viewedContentIds: string[];
     questionSubmissions: QuestionSubmission[];
 }
 

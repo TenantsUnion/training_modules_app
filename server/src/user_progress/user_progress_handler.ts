@@ -1,8 +1,9 @@
-import {CourseProgressId, TrainingProgressUpdate} from "@shared/user_progress";
+import {CourseProgressId, TrainingProgressUpdate, TrainingProgressUpdateType} from "@shared/user_progress";
 import {UserRepository} from "../user/users_repository";
 import {CourseProgressRepository} from "./course_progress_repository";
 import {ModuleProgressRepository} from "./module_progress_repository";
 import {SectionProgressRepository} from "./section_progress_repository";
+import {TrainingProgressRepository, TrainingProgressRowUpdate} from "./training_progress_repository";
 
 export class UserProgressHandler {
     constructor (private userRepository: UserRepository,
@@ -28,8 +29,31 @@ export class UserProgressHandler {
         ]);
     }
 
-    async recordCourseTrainingProgress (trainingProgressUpdate: TrainingProgressUpdate) {
-        // load and deduplicate saving?
+    async recordTrainingProgress (trainingProgressUpdate: TrainingProgressUpdate) {
+        let trainingRepo = this.trainingProgressRepo(trainingProgressUpdate.type);
+        let rowUpdate: TrainingProgressRowUpdate = {
+            id: trainingProgressUpdate.id,
+            userId: trainingProgressUpdate.userId,
+            viewedContentIds: trainingProgressUpdate.viewedContentIds,
+            correctQuestionIds: trainingProgressUpdate.questionSubmissions
+                .filter(({correct}) => correct).map(({questionId}) => questionId),
+            submittedQuestionIds: trainingProgressUpdate.questionSubmissions.map(({questionId}) => questionId)
+        };
+        await trainingRepo.saveTrainingProgress(rowUpdate);
+        await trainingRepo.markCompleted(rowUpdate);
+    }
+
+    private trainingProgressRepo (type: TrainingProgressUpdateType): TrainingProgressRepository {
+        switch (type) {
+            case TrainingProgressUpdateType.COURSE:
+                return this.courseProgressRepository;
+            case TrainingProgressUpdateType.MODULE:
+                return this.moduleProgressRepository;
+            case TrainingProgressUpdateType.SECTION:
+                return this.sectionProgressRepository;
+            default:
+                throw new Error(`No repository to match TrainingProgressUpdateType: ${type}`);
+        }
 
     }
 }

@@ -6,7 +6,11 @@ export class SectionProgressRepository extends TrainingProgressRepository {
         super(sqlTemplate)
     }
 
-    table () {
-        return 'section_progress';
+    get tableNames () {
+       return {
+           progress: 'section_progress',
+           training: 'section'
+       }
     }
 }
+
