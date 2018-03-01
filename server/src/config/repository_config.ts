@@ -8,9 +8,9 @@ import {SectionRepository} from '@section/admin/section_repository';
 import {QuestionRepository} from '../training_entity/admin/question/question_repository';
 import {QuestionOptionRepository} from '../training_entity/admin/question/question_option_repository';
 import {CourseRepository} from "@course/admin/course_repository";
-import {CourseProgressRepository} from "@course/enrolled/course_progress_repository";
-import {ModuleProgressRepository} from "@module/enrolled/module_progress_repository";
-import {SectionProgressRepository} from "@section/enrolled/section_progress_repository";
+import {CourseProgressRepository} from "@course/../user_progress/course_progress_repository";
+import {ModuleProgressRepository} from "@module/../user_progress/module_progress_repository";
+import {SectionProgressRepository} from "@section/../user_progress/section_progress_repository";
 
 export const coursesRepository = new CourseRepository(postgresDb);
 export const userRepository = new UserRepository(postgresDb);

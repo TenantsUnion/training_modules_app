@@ -5,7 +5,7 @@ import {UserProgressHandler} from "../user_progress/user_progress_handler";
 import {EnrollCourseRequestPayload, EnrollCourseResponse} from "@shared/user";
 import {UserCoursesListingViewQuery} from "../user/user_courses_listing_view_query";
 import {UserProgressViewQuery} from "../user_progress/user_progress_view_query";
-import {UserCourseProgressView} from "@shared/user_progress";
+import {TrainingProgressUpdate, UserCourseProgressView} from "@shared/user_progress";
 
 export class UserProgressWebController extends AbstractWebController {
 
@@ -25,6 +25,12 @@ export class UserProgressWebController extends AbstractWebController {
         };
     }
 
+    async saveTrainingProgress (req: Request): Promise<any> {
+        let payload: TrainingProgressUpdate = req.body;
+        await this.userProgressHandler.recordCourseTrainingProgress(payload);
+        // todo what to return?
+    }
+
     async loadUserCourseProgress (req: Request): Promise<UserCourseProgressView> {
         let courseId = req.params.courseId;
         let userId = req.params.userId;
@@ -33,6 +39,7 @@ export class UserProgressWebController extends AbstractWebController {
 
     registerRoutes (router: Router): Router {
         return router
-            .post('/user/course/enroll', this.handle(this.enrollInCourse));
+            .post('/user/course/enroll', this.handle(this.enrollInCourse))
+            .post('/user/progress/save', this.handle(this.saveTrainingProgress));
     }
 }

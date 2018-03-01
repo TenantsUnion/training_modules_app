@@ -12,7 +12,7 @@ export abstract class AbstractWebController {
         return async (req, res, next) => {
             this.logger.info(`${handler.name}() ${req.method}-${req.originalUrl}`);
             try {
-                // rebind this attribute since reference to this is lost when passing class method
+                // rebind this since reference is lost when passing class instance method due to nested functional scoping rules
                 let responsePayload = await handler.bind(this)(req);
                 res.status(200).send(responsePayload);
             } catch (e) {
