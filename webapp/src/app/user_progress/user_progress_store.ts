@@ -29,8 +29,8 @@ export interface UserProgressGetters {
 
 export const userProgressGetters: {[index in keyof UserProgressGetters]} & GetterTree<UserProgressState, RootState> = {
     savingUserProgress ({savingCourseProgress, savingModuleProgress, savingSectionProgress}: UserProgressState): boolean {
-        return !!(Object.keys(savingCourseProgress).length || Object.keys(savingModuleProgress).length
-            || Object.keys(savingSectionProgress).length);
+        return !!(Object.keys(savingCourseProgress).length ||
+            Object.keys(savingModuleProgress).length || Object.keys(savingSectionProgress).length);
     }
 };
 
@@ -68,26 +68,26 @@ export const userProgressMutations: UserProgressMutations = {
         Vue.set(savingModuleProgress, update.id, savingProgress);
     },
     ADD_SAVING_SECTION_PROGRESS ({savingSectionProgress}, update: SectionTrainingProgressUpdate) {
-        let savingProgress = savingSectionProgress[update.id] ? savingSectionProgress.push(update) : [update];
+        let savingProgress = savingSectionProgress[update.id] ? [...savingSectionProgress, update] : [update];
         Vue.set(savingSectionProgress, update.id, savingProgress);
     },
     REMOVE_SAVING_COURSE_PROGRESS ({savingCourseProgress}, update: CourseTrainingProgressUpdate) {
         let saving = savingCourseProgress[update.id];
         let index = saving.indexOf(update);
-        saving.splice(index, 0);
-        Vue.set(savingCourseProgress, update.id, saving.length ? saving : undefined);
+        saving.splice(index, 1);
+        saving.length ? Vue.set(savingCourseProgress, update.id,  saving) : Vue.delete(savingCourseProgress, update.id);
     },
     REMOVE_SAVING_MODULE_PROGRESS ({savingModuleProgress}, update: ModuleTrainingProgressUpdate) {
         let saving = savingModuleProgress[update.id];
         let index = saving.indexOf(update);
-        saving.splice(index, 0);
-        Vue.set(savingModuleProgress, update.id, saving.length ? saving : undefined);
+        saving.splice(index, 1);
+        saving.length ? Vue.set(savingModuleProgress, update.id,  saving) : Vue.delete(savingModuleProgress, update.id);
     },
     REMOVE_SAVING_SECTION_PROGRESS ({savingSectionProgress}, update: SectionTrainingProgressUpdate) {
         let saving = savingSectionProgress[update.id];
         let index = saving.indexOf(update);
-        saving.splice(index, 0);
-        Vue.set(savingSectionProgress, update.id, saving.length ? saving : undefined);
+        saving.splice(index, 1);
+        saving.length ? Vue.set(savingSectionProgress, update.id,  saving) : Vue.delete(savingSectionProgress, update.id);
     }
 };
 

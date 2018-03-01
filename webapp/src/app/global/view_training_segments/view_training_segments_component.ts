@@ -11,6 +11,7 @@ import {isQuillEditorData, QuillEditorData} from "@shared/quill_editor";
 import {Prop} from "vue-property-decorator";
 import AnswerQuestionComponentVue from '@global/answer_question/answer_question_component.vue';
 import AnswerQuestionComponent from "@global/answer_question/answer_question_component";
+import {QuestionSubmission} from "@shared/user_progress";
 
 @Component({
     components: {
@@ -24,7 +25,7 @@ export default class ViewTrainingSegmentsComponent extends Vue {
     @Prop({type: Function, required: false, default: () => null})
     individualSubmitCb: () => any;
     @Prop({type: Function, required: false, default: () => null})
-    submitCb: () => any;
+    submitCb: (submissions: QuestionSubmission[]) => Promise<any>;
     @Prop({type: Array, required: true})
     contentQuestions: (QuillEditorData | QuestionQuillData)[];
 
@@ -57,7 +58,9 @@ export default class ViewTrainingSegmentsComponent extends Vue {
     get questionRefs (): AnswerQuestionComponent[] {
         if (_.isArray(this.$refs.segment)) {
             return (<(AnswerQuestionComponent | QuillComponent)[]> this.$refs.segment).filter((segment, index) => {
-                return isQuestionSegment(this.currentSegments[index]);
+                let questionSegment = isQuestionSegment(this.currentSegments[index]);
+                console.log('element: ' + index + ' is question segment ' + questionSegment);
+                return questionSegment;
             }).map((questionComponent) => <AnswerQuestionComponent>questionComponent);
         } else if (isQuestionSegment(this.currentSegments[0])) {
             return [<AnswerQuestionComponent> this.$refs.segment];
@@ -76,6 +79,18 @@ export default class ViewTrainingSegmentsComponent extends Vue {
         } else {
             return [];
         }
+    }
+
+    contentIds (): string[] {
+        return this.currentSegments
+            .filter((segment) => this.isContent(segment))
+            .map((contentSegment) => contentSegment.id);
+    }
+
+    async submit () {
+        this.questionRefs.forEach((question) => question.markSubmitted());
+        let submissions = this.questionRefs.map((question) => question.submission());
+        await this.submitCb(submissions);
     }
 }
 
