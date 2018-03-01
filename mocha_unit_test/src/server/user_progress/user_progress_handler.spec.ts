@@ -17,13 +17,13 @@ describe('User progress handler', function () {
         now = toDbTimestampFormat(nowDate);
         MockDate.set(nowDate);
         progressEntryDefaults = {
-            correctQuestionsIds: [],
+            correctQuestionsIds: {},
             createdAt: now,
             lastModifiedAt: now,
             lastViewedAt: null,
-            submittedQuestionsIds: [],
+            submittedQuestionsIds: {},
             version: 0,
-            viewedContentIds: []
+            viewedContentIds:{}
         };
     });
 

@@ -1,10 +1,12 @@
 CREATE TABLE tu.question_submission (
-  id                         TEXT PRIMARY KEY,
-  question_id                TEXT REFERENCES tu.question (id) NOT NULL,
-  user_id                    TEXT REFERENCES tu.user (id)     NOT NULL,
-  created_at                 TIMESTAMPTZ                      NOT NULL,
-  chosen_question_option_ids TEXT []                          NOT NULL DEFAULT ARRAY [] :: TEXT [],
-  correct                    BOOLEAN                          NOT NULL
+  id                           TEXT PRIMARY KEY,
+  question_id                  TEXT REFERENCES tu.question (id) NOT NULL,
+  question_type                TEXT,
+  user_id                      TEXT REFERENCES tu.user (id)     NOT NULL,
+  created_at                   TIMESTAMPTZ                      NOT NULL,
+  chosen_question_option_ids   TEXT []                          NOT NULL DEFAULT ARRAY [] :: TEXT [],
+  possible_question_option_ids TEXT []                          NOT NULL DEFAULT ARRAY [] :: TEXT [],
+  correct                      BOOLEAN                          NOT NULL
 );
 
 CREATE SEQUENCE tu.question_submission_id_seq;
