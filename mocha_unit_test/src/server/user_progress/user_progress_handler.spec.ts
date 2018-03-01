@@ -31,13 +31,13 @@ describe('User progress handler', function () {
         let {id: userId} = await createUser();
         let {courseId} = await createCourse();
 
-        await userProgressHandler.enrollUserInCourse({userId, courseId});
+        await userProgressHandler.enrollUserInCourse({userId, courseId: courseId});
         let {
             0: user,
             1: courseProgress,
         } = await Promise.all([
             userRepository.loadUser(userId),
-            courseProgressRepository.loadCourseProgress({userId, courseId}),
+            courseProgressRepository.loadTrainingProgress({userId, id: courseId}),
         ]);
 
         expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
@@ -60,9 +60,9 @@ describe('User progress handler', function () {
             3: module2Progress,
         } = await Promise.all([
             userRepository.loadUser(userId),
-            courseProgressRepository.loadCourseProgress({userId, courseId}),
-            moduleProgressRepository.loadModuleProgress({userId, moduleId: moduleId1}),
-            moduleProgressRepository.loadModuleProgress({userId, moduleId: moduleId2}),
+            courseProgressRepository.loadTrainingProgress({userId, id: courseId}),
+            moduleProgressRepository.loadTrainingProgress({userId, id: moduleId1}),
+            moduleProgressRepository.loadTrainingProgress({userId, id: moduleId2}),
         ]);
 
         expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
@@ -95,11 +95,11 @@ describe('User progress handler', function () {
             5: section2Progress
         } = await Promise.all([
             userRepository.loadUser(userId),
-            courseProgressRepository.loadCourseProgress({userId, courseId}),
-            moduleProgressRepository.loadModuleProgress({userId, moduleId: moduleId1}),
-            moduleProgressRepository.loadModuleProgress({userId, moduleId: moduleId2}),
-            sectionProgressRepository.loadSectionProgress({userId, sectionId: sectionId1}),
-            sectionProgressRepository.loadSectionProgress({userId, sectionId: sectionId2})
+            courseProgressRepository.loadTrainingProgress({userId, id: courseId}),
+            moduleProgressRepository.loadTrainingProgress({userId, id: moduleId1}),
+            moduleProgressRepository.loadTrainingProgress({userId, id: moduleId2}),
+            sectionProgressRepository.loadTrainingProgress({userId, id: sectionId1}),
+            sectionProgressRepository.loadTrainingProgress({userId, id: sectionId2})
         ]);
 
 

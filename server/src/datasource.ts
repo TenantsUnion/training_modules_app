@@ -19,7 +19,7 @@ import DeltaOperation = Quill.DeltaOperation;
 export interface IQueryConfig {
     text: string,
     values: (string | number | boolean | number | (number | string)[] | string[] | number[] | Quill.DeltaStatic
-        | { ops: DeltaOperation[] } | Date | Moment)[]
+        | { ops: DeltaOperation[] } | Date | Moment | {})[]
 }
 
 declare type ParameterizedSql = string | IQueryConfig;

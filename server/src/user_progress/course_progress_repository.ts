@@ -1,6 +1,5 @@
-import {AbstractRepository, getUTCNow} from "../repository";
 import {Datasource} from "../datasource";
-import {CourseProgressId} from "@shared/user_progress";
+import {TrainingProgressRepository} from "./training_progress_repository";
 
 
 export interface CourseStructure {
@@ -13,19 +12,13 @@ export interface CourseStructure {
 
 }
 
-export class CourseProgressRepository extends AbstractRepository {
+export class CourseProgressRepository extends TrainingProgressRepository {
     constructor (sqlTemplate: Datasource) {
-        super('', sqlTemplate);
+        super(sqlTemplate);
     }
 
-    async createCourseProgress ({userId, courseId}: CourseProgressId) {
-        let time = getUTCNow();
-        await this.sqlTemplate.query({
-            text: `
-              INSERT INTO tu.course_progress (user_id, id, last_modified_at, created_at)
-                VALUES  ($1, $2, $3, $3)`,
-            values: [userId, courseId, time]
-        });
+    table () {
+        return 'course_progress'
     }
 
     async courseStructure (courseId: string): Promise<CourseStructure> {
@@ -43,16 +36,5 @@ export class CourseProgressRepository extends AbstractRepository {
             values: [courseId]
         });
         return result[0];
-    }
-
-    async loadCourseProgress ({courseId, userId}: CourseProgressId) {
-        let results = await this.sqlTemplate.query({
-            // language=PostgreSQL
-            text: `
-              SELECT * FROM tu.course_progress cp WHERE cp.id = $1 AND cp.user_id = $2;
-            `,
-            values: [courseId, userId]
-        });
-        return results[0];
     }
 }

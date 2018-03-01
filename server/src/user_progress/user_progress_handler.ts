@@ -17,15 +17,13 @@ export class UserProgressHandler {
             return acc.concat(module.orderedSectionIds ? module.orderedSectionIds : []);
         }, []) : [];
         await Promise.all([
-            this.courseProgressRepository.createCourseProgress({userId, courseId}),
-            moduleIds.length ? this.moduleProgressRepository.createModuleProgress({
-                userId,
-                moduleIds
-            }) : Promise.resolve(),
-            sectionIds.length ? this.sectionProgressRepository.createSectionProgress({
-                userId,
-                sectionIds
-            }) : Promise.resolve(),
+            this.courseProgressRepository.createTrainingProgress({userId, id: courseId}),
+            moduleIds.length ?
+                this.moduleProgressRepository.bulkCreateTrainingProgress({userId, ids: moduleIds})
+                : Promise.resolve(),
+            sectionIds.length ?
+                this.sectionProgressRepository.bulkCreateTrainingProgress({userId, ids: sectionIds})
+                : Promise.resolve(),
             this.userRepository.addEnrolledCoursesId({userId, courseId})
         ]);
     }
