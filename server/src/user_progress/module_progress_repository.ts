@@ -1,5 +1,5 @@
-import {Datasource} from "../../datasource";
-import {getUTCNow} from "../../repository";
+import {Datasource} from "../datasource";
+import {getUTCNow} from "../repository";
 
 export type ModuleProgressIds = {
     moduleIds: string[];

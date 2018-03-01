@@ -1,8 +1,8 @@
-import {CourseProgressRepository} from "@course/enrolled/course_progress_repository";
-import {ModuleProgressRepository} from "@module/enrolled/module_progress_repository";
-import {SectionProgressRepository} from "@section/enrolled/section_progress_repository";
-import {CourseProgressId} from "@shared/user_progress";
+import {CourseProgressId, TrainingProgressUpdate} from "@shared/user_progress";
 import {UserRepository} from "../user/users_repository";
+import {CourseProgressRepository} from "./course_progress_repository";
+import {ModuleProgressRepository} from "./module_progress_repository";
+import {SectionProgressRepository} from "./section_progress_repository";
 
 export class UserProgressHandler {
     constructor (private userRepository: UserRepository,
@@ -30,7 +30,8 @@ export class UserProgressHandler {
         ]);
     }
 
-    async recordCourseTrainingProgress ({userId, courseId}: CourseProgressId) {
+    async recordCourseTrainingProgress (trainingProgressUpdate: TrainingProgressUpdate) {
+        // load and deduplicate saving?
 
     }
 }

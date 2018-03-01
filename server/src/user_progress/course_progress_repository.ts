@@ -1,5 +1,5 @@
-import {AbstractRepository, getUTCNow} from "../../repository";
-import {Datasource} from "../../datasource";
+import {AbstractRepository, getUTCNow} from "../repository";
+import {Datasource} from "../datasource";
 import {CourseProgressId} from "@shared/user_progress";
 
 
