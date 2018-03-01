@@ -86,7 +86,7 @@ export class UserProgressViewQuery {
                 c.ordered_question_ids, c.submit_individually, c.ordered_content_ids, c.ordered_content_question_ids,
                 cp.*, m.modules FROM
                 tu.course c
-                INNER JOIN tu.course_progress cp ON c.id = cp.course_id
+                INNER JOIN tu.course_progress cp ON c.id = cp.id
                 INNER JOIN LATERAL
                            (
                            SELECT json_agg(m.*) AS modules FROM
@@ -96,7 +96,7 @@ export class UserProgressViewQuery {
                                  m.ordered_content_question_ids, mp.*, s.sections FROM
                                  tu.module m
                                  INNER JOIN tu.module_progress mp
-                                   ON m.id = mp.module_id
+                                   ON m.id = mp.id
                                  INNER JOIN LATERAL
                                             (
                                             SELECT json_agg(s.*) AS sections FROM
@@ -105,7 +105,7 @@ export class UserProgressViewQuery {
                                                   s.submit_individually, s.ordered_question_ids, s.time_estimate,
                                                   s.ordered_content_question_ids, sp.* FROM
                                                   tu.section s INNER JOIN tu.section_progress sp
-                                                    ON s.id = sp.section_id WHERE
+                                                    ON s.id = sp.id WHERE
                                                   s.id = ANY (m.ordered_section_ids) AND sp.user_id = $1
                                               ) s
                                             ) s ON TRUE

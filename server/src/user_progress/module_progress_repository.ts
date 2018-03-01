@@ -12,7 +12,7 @@ export class ModuleProgressRepository {
 
     async createModuleProgress ({moduleIds, userId}: ModuleProgressIds) {
         let time = getUTCNow();
-        let insertColumnsSql = 'INSERT INTO tu.module_progress (user_id, module_id, last_modified_at, created_at) values ';
+        let insertColumnsSql = 'INSERT INTO tu.module_progress (user_id, id, last_modified_at, created_at) values ';
 
         return this.sqlTemplate.query({
             text: insertColumnsSql + moduleIds.map((id, index) => `($1, $${index + 3}, $2, $2)`).join(','),
@@ -22,7 +22,7 @@ export class ModuleProgressRepository {
 
     async loadModuleProgress ({userId, moduleId}: {userId: string, moduleId: string}) {
         let results = await this.sqlTemplate.query({
-            text: `SELECT * FROM tu.module_progress mp WHERE mp.user_id = $1 AND mp.module_id = $2`,
+            text: `SELECT * FROM tu.module_progress mp WHERE mp.user_id = $1 AND mp.id = $2`,
             values: [userId, moduleId]
         });
         return results[0];

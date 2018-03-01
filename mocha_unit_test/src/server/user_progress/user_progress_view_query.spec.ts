@@ -30,12 +30,13 @@ describe('User Progress View Query', function () {
         await userProgressHandler.enrollUserInCourse({userId, courseId});
         let defaultEmpty = {
             version: 0,
+            trainingCompleted: null,
             lastViewedAt: null,
             createdAt: now,
             lastModifiedAt: now,
             viewedContentIds: {},
-            submittedQuestionsIds: {},
-            correctQuestionsIds: {},
+            submittedQuestionIds: {},
+            correctQuestionIds: {},
             orderedContentIds: [],
             orderedQuestionIds: [],
             orderedContentQuestionIds: [],

@@ -22,7 +22,7 @@ export class CourseProgressRepository extends AbstractRepository {
         let time = getUTCNow();
         await this.sqlTemplate.query({
             text: `
-              INSERT INTO tu.course_progress (user_id, course_id, last_modified_at, created_at)
+              INSERT INTO tu.course_progress (user_id, id, last_modified_at, created_at)
                 VALUES  ($1, $2, $3, $3)`,
             values: [userId, courseId, time]
         });
@@ -34,9 +34,9 @@ export class CourseProgressRepository extends AbstractRepository {
             text: `
               SELECT c.id, c.ordered_module_ids, json_agg(m.*) AS modules FROM tu.course c
                 LEFT JOIN LATERAL
-                           (SELECT m.id, m.ordered_section_ids, json_agg(s.*) AS sections FROM tu.module m
+                          (SELECT m.id, m.ordered_section_ids, json_agg(s.*) AS sections FROM tu.module m
                   LEFT JOIN LATERAL
-                             (SELECT s.id FROM tu.section s WHERE s.id = ANY (m.ordered_section_ids)) s ON TRUE WHERE
+                            (SELECT s.id FROM tu.section s WHERE s.id = ANY (m.ordered_section_ids)) s ON TRUE WHERE
                   m.id = ANY (c.ordered_module_ids) GROUP BY m.id) m ON TRUE
               WHERE c.id = $1 GROUP BY c.id;
             `,
@@ -47,8 +47,9 @@ export class CourseProgressRepository extends AbstractRepository {
 
     async loadCourseProgress ({courseId, userId}: CourseProgressId) {
         let results = await this.sqlTemplate.query({
+            // language=PostgreSQL
             text: `
-            SELECT * FROM tu.course_progress cp WHERE cp.course_id = $1 AND cp.user_id = $2; 
+              SELECT * FROM tu.course_progress cp WHERE cp.id = $1 AND cp.user_id = $2;
             `,
             values: [courseId, userId]
         });

@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import {clearData} from "../../test_db_util";
 import {addModule, addSection, createCourse, createUser, sectionEntity} from "../util/test_course_util";
 import {userProgressHandler} from "@server/config/handler_config";
 import {
@@ -17,11 +16,12 @@ describe('User progress handler', function () {
         now = toDbTimestampFormat(nowDate);
         MockDate.set(nowDate);
         progressEntryDefaults = {
-            correctQuestionsIds: {},
+            correctQuestionIds: {},
             createdAt: now,
             lastModifiedAt: now,
+            trainingCompleted: null,
             lastViewedAt: null,
-            submittedQuestionsIds: {},
+            submittedQuestionIds: {},
             version: 0,
             viewedContentIds:{}
         };
@@ -42,7 +42,7 @@ describe('User progress handler', function () {
 
         expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
         expect(courseProgress).to.deep.eq({
-            courseId: courseId, userId, ...progressEntryDefaults
+            id: courseId, userId, ...progressEntryDefaults
         });
     });
 
@@ -67,13 +67,13 @@ describe('User progress handler', function () {
 
         expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
         expect(courseProgress).to.deep.eq({
-            courseId: courseId, userId, ...progressEntryDefaults
+            id: courseId, userId, ...progressEntryDefaults
         });
         expect(module1Progress).to.deep.eq({
-            moduleId: moduleId1, userId, ...progressEntryDefaults
+            id: moduleId1, userId, ...progressEntryDefaults
         });
         expect(module2Progress).to.deep.eq({
-            moduleId: moduleId2, userId, ...progressEntryDefaults
+            id: moduleId2, userId, ...progressEntryDefaults
         });
     });
 
@@ -105,19 +105,19 @@ describe('User progress handler', function () {
 
         expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
         expect(courseProgress).to.deep.eq({
-            courseId: courseId, userId, ...progressEntryDefaults
+            id: courseId, userId, ...progressEntryDefaults
         });
         expect(module1Progress).to.deep.eq({
-            moduleId: moduleId1, userId, ...progressEntryDefaults
+            id: moduleId1, userId, ...progressEntryDefaults
         });
         expect(module2Progress).to.deep.eq({
-            moduleId: moduleId2, userId, ...progressEntryDefaults
+            id: moduleId2, userId, ...progressEntryDefaults
         });
         expect(section1Progress).to.deep.eq({
-            sectionId: sectionId1, userId, ...progressEntryDefaults
+            id: sectionId1, userId, ...progressEntryDefaults
         });
         expect(section2Progress).to.deep.eq({
-            sectionId: sectionId2, userId, ...progressEntryDefaults
+            id: sectionId2, userId, ...progressEntryDefaults
         });
     });
 });
