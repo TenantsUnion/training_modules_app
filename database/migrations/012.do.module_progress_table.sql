@@ -5,9 +5,9 @@ CREATE TABLE tu.module_progress (
   --key references pk of viewed_content row, timestamptz
   viewed_content_ids      JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
   --key references pk of question row, timestamptz
-  correct_questions_ids   JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
+  correct_question_ids   JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
   --key references pk of question row, timestamptz
-  submitted_questions_ids JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
+  submitted_question_ids JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
   last_viewed_at          TIMESTAMPTZ                             DEFAULT NULL,
   last_modified_at        TIMESTAMPTZ                    NOT NULL,
   created_at              TIMESTAMPTZ                    NOT NULL,
