@@ -11,9 +11,10 @@ import {
 import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "@server/repository";
 import {ContentQuestionsDelta} from "@shared/training_entity";
-import {createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
+import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
 import {toAddDeltaArrOps} from "@shared/delta/diff_key_array";
 import {TrainingProgressUpdateType} from "@shared/user_progress";
+import {AnswerType, QuestionType} from "@shared/questions";
 
 describe('User progress handler', function () {
     let nowDate = new Date();
@@ -59,8 +60,8 @@ describe('User progress handler', function () {
 
     it('should create course and module progress entries', async function () {
         let {courseId} = await createCourse(adminId);
-        let moduleId1 = await addModule();
-        let moduleId2 = await addModule();
+        let {moduleId: moduleId1} = await addModule();
+        let {moduleId: moduleId2} = await addModule();
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
         let {
@@ -89,10 +90,10 @@ describe('User progress handler', function () {
 
     it('should create course, module, section progress entries for enrolling in course', async function () {
         let {courseId} = await createCourse(adminId);
-        let moduleId1 = await addModule();
-        let sectionId1 = await addSection(sectionEntity({moduleId: moduleId1}));
-        let sectionId2 = await addSection(sectionEntity({moduleId: moduleId1}));
-        let moduleId2 = await addModule();
+        let {moduleId: moduleId1} = await addModule();
+        let {sectionId: sectionId1} = await addSection(sectionEntity({moduleId: moduleId1}));
+        let {sectionId: sectionId2} = await addSection(sectionEntity({moduleId: moduleId1}));
+        let {moduleId: moduleId2} = await addModule();
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
         let {
@@ -133,9 +134,12 @@ describe('User progress handler', function () {
 
     it('should save course training progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
-        let {courseId} = await createCourse(adminId, {
+        let idMap = await createCourse(adminId, {
             ...DEFAULT_COURSE_ENTITY, contentQuestions
         });
+        let courseId = idMap.courseId;
+        questionId1 = idMap[questionId1];
+        questionId2 = idMap[questionId2];
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
         await userProgressHandler.recordTrainingProgress({
             userId: studentId, id: courseId,
@@ -156,7 +160,10 @@ describe('User progress handler', function () {
 
     it('should save and mark complete course progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
-        let {courseId} = await createCourse(adminId, {...DEFAULT_COURSE_ENTITY, contentQuestions});
+        let idMap = await createCourse(adminId, {...DEFAULT_COURSE_ENTITY, contentQuestions});
+        let courseId = idMap.courseId;
+        questionId1 = idMap[questionId1];
+        questionId2 = idMap[questionId2];
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
         await userProgressHandler.recordTrainingProgress({
             userId: studentId, id: courseId,
@@ -180,7 +187,10 @@ describe('User progress handler', function () {
     it('should save module training progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
         let {courseId} = await createCourse(adminId);
-        let moduleId = await addModule({...DEFAULT_MODULE, contentQuestions, courseId});
+        let idMap = await addModule({...DEFAULT_MODULE, contentQuestions, courseId});
+        let moduleId = idMap.moduleId;
+        questionId1 = idMap[questionId1];
+        questionId2 = idMap[questionId2];
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
         await userProgressHandler.recordTrainingProgress({
@@ -204,7 +214,10 @@ describe('User progress handler', function () {
     it('should save and mark complete module progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
         let {courseId} = await createCourse(adminId);
-        let moduleId = await addModule({...DEFAULT_MODULE, contentQuestions, courseId});
+        let idMap = await addModule({...DEFAULT_MODULE, contentQuestions, courseId});
+        let moduleId = idMap.moduleId;
+        questionId1 = idMap[questionId1];
+        questionId2 = idMap[questionId2];
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
         await userProgressHandler.recordTrainingProgress({
@@ -228,8 +241,11 @@ describe('User progress handler', function () {
     it('should save section progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
         let {courseId} = await createCourse(adminId);
-        let moduleId = await addModule();
-        let sectionId = await addSection({...DEFAULT_MODULE, contentQuestions, courseId, moduleId});
+        let {moduleId} = await addModule();
+        let idMap = await addSection({...DEFAULT_MODULE, contentQuestions, courseId, moduleId});
+        let sectionId = idMap.sectionId;
+        questionId1 = idMap[questionId1];
+        questionId2 = idMap[questionId2];
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
         await userProgressHandler.recordTrainingProgress({
@@ -255,8 +271,11 @@ describe('User progress handler', function () {
     it('should save and mark complete a section progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
         let {courseId} = await createCourse(adminId);
-        let moduleId = await addModule();
-        let sectionId = await addSection({...DEFAULT_MODULE, contentQuestions, courseId, moduleId});
+        let {moduleId} = await addModule();
+        let idMap = await addSection({...DEFAULT_MODULE, contentQuestions, courseId, moduleId});
+        let sectionId = idMap.sectionId;
+        questionId1 = idMap[questionId1];
+        questionId2 = idMap[questionId2];
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
         await userProgressHandler.recordTrainingProgress({
@@ -289,22 +308,45 @@ describe('User progress handler', function () {
         let contentId2 = createdQuillPlaceholderId();
         let questionId1 = createdQuestionPlaceholderId();
         let questionId2 = createdQuestionPlaceholderId();
+        let optionId1 = createdQuestionOptionPlaceholderId();
+        let optionId2 = createdQuestionOptionPlaceholderId();
         let contentQuestions: ContentQuestionsDelta = {
             quillChanges: {},
-            questionChanges: {},
+            questionChanges: {
+                [questionId1]: {
+                    answerInOrder: true,
+                    answerType: AnswerType.DEFAULT,
+                    questionType: QuestionType.DEFAULT,
+                    canPickMultiple: true,
+                    correctOptionIds: toAddDeltaArrOps([optionId2]),
+                    optionIds: toAddDeltaArrOps([optionId1, optionId2]),
+                    randomizeOptionOrder: true,
+                    optionChangesObject: {}
+                },
+                [questionId2]: {
+                    answerInOrder: true,
+                    answerType: AnswerType.DEFAULT,
+                    questionType: QuestionType.DEFAULT,
+                    canPickMultiple: true,
+                    correctOptionIds: toAddDeltaArrOps([optionId2]),
+                    optionIds: toAddDeltaArrOps([optionId1, optionId2]),
+                    randomizeOptionOrder: true,
+                    optionChangesObject: {}
+                }
+            },
             orderedContentIds: toAddDeltaArrOps([contentId1, contentId2]),
             orderedQuestionIds: toAddDeltaArrOps([questionId1, questionId2]),
             orderedContentQuestionIds: toAddDeltaArrOps([contentId1, contentId2, questionId1, questionId2])
         };
-        return {contentId1, contentId2, questionId1, questionId2, contentQuestions};
+        return {contentId1, contentId2, questionId1, questionId2, optionId1, optionId2, contentQuestions};
     }
 
     function questionSubmission (questionId: string, correct: boolean = false) {
         return {
             questionId,
             correct,
-            chosenOptionIds: [],
-            possibleOptionIds: []
+            chosenQuestionOptionIds: [],
+            possibleQuestionOptionIds: []
         }
     }
 

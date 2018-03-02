@@ -36,8 +36,8 @@ export class AnswerQuestionComponent extends Vue {
     submission (): QuestionSubmission {
         return {
             questionId: this.question.id,
-            chosenOptionIds: this.selectedOptions(),
-            possibleOptionIds: this.question.options.map(({id}) => id),
+            chosenQuestionOptionIds: this.selectedOptions(),
+            possibleQuestionOptionIds: this.question.options.map(({id}) => id),
             correct: this.isCorrect()
         };
     }

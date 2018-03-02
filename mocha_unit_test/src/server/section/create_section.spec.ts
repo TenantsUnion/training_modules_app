@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import {clearData} from '../../test_db_util';
 import {addModule, createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../util/test_course_util';
 import {coursesHandler} from "@server/config/handler_config";
 import {courseViewQuery} from "@server/config/query_service_config";
@@ -11,7 +10,7 @@ describe('Create section', function () {
     beforeEach(async function () {
         await createUser('user1');
         courseId = (await createCourse()).courseId;
-        moduleId = await addModule();
+        moduleId = (await addModule()).moduleId;
     });
 
     it('should create two section under a module in a course', async function () {

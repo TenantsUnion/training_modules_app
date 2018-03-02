@@ -4,9 +4,12 @@ import {CourseProgressRepository} from "./course_progress_repository";
 import {ModuleProgressRepository} from "./module_progress_repository";
 import {SectionProgressRepository} from "./section_progress_repository";
 import {TrainingProgressRepository, TrainingProgressRowUpdate} from "./training_progress_repository";
+import {QuestionSubmissionRepository} from "../training_entity/question/question_submission_repository";
+import {questionSubmissionRepository} from "../config/repository_config";
 
 export class UserProgressHandler {
     constructor (private userRepository: UserRepository,
+                 private questionSubmissionRepository: QuestionSubmissionRepository,
                  private courseProgressRepository: CourseProgressRepository,
                  private moduleProgressRepository: ModuleProgressRepository,
                  private sectionProgressRepository: SectionProgressRepository) {
@@ -30,17 +33,22 @@ export class UserProgressHandler {
     }
 
     async recordTrainingProgress (trainingProgressUpdate: TrainingProgressUpdate) {
-        let trainingRepo = this.trainingProgressRepo(trainingProgressUpdate.type);
+        let {id, userId, viewedContentIds, questionSubmissions} = trainingProgressUpdate;
         let rowUpdate: TrainingProgressRowUpdate = {
-            id: trainingProgressUpdate.id,
-            userId: trainingProgressUpdate.userId,
-            viewedContentIds: trainingProgressUpdate.viewedContentIds,
-            correctQuestionIds: trainingProgressUpdate.questionSubmissions
+            id, userId, viewedContentIds,
+            correctQuestionIds: questionSubmissions
                 .filter(({correct}) => correct).map(({questionId}) => questionId),
-            submittedQuestionIds: trainingProgressUpdate.questionSubmissions.map(({questionId}) => questionId)
+            submittedQuestionIds: questionSubmissions.map(({questionId}) => questionId)
         };
+
+        let trainingRepo = this.trainingProgressRepo(trainingProgressUpdate.type);
+
+        let insertQuestionAsync = questionSubmissionRepository.insertQuestionSubmissions(userId, questionSubmissions);
         await trainingRepo.saveTrainingProgress(rowUpdate);
-        await trainingRepo.markCompleted(rowUpdate);
+        await Promise.all([ // markCompleted has to happen after save training to use update to date progress data
+            trainingRepo.markCompleted(rowUpdate),
+            insertQuestionAsync
+        ]);
     }
 
     private trainingProgressRepo (type: TrainingProgressUpdateType): TrainingProgressRepository {
@@ -54,6 +62,5 @@ export class UserProgressHandler {
             default:
                 throw new Error(`No repository to match TrainingProgressUpdateType: ${type}`);
         }
-
     }
 }

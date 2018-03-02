@@ -3,8 +3,8 @@ import {
     CourseEntityCommandMetadata, CreateCourseEntityPayload, CreateCourseIdMap
 } from '@shared/courses';
 import {IUserInfo} from '@shared/user';
-import {CreateModuleEntityPayload} from '@shared/modules';
-import {CreateSectionEntityPayload} from '@shared/sections';
+import {CreateModuleEntityPayload, CreateModuleIdMap} from '@shared/modules';
+import {CreateSectionEntityPayload, SectionIdMap} from '@shared/sections';
 import {ContentQuestionsDelta} from '@shared/training_entity';
 import {appendUUID} from "@testcafe/src/util/uuid_generator";
 
@@ -71,10 +71,10 @@ export const moduleEntity = (module = DEFAULT_MODULE, courseId = latestCourseId)
     };
 };
 let latestModuleId;
-export const addModule = async (module: CreateModuleEntityPayload = moduleEntity()): Promise<string> => {
-    let {moduleId} = await coursesHandler.createModule(module);
-    latestModuleId = moduleId;
-    return moduleId;
+export const addModule = async (module: CreateModuleEntityPayload = moduleEntity()): Promise<CreateModuleIdMap> => {
+    let idMap = await coursesHandler.createModule(module);
+    latestModuleId = idMap.moduleId;
+    return idMap;
 };
 
 export const DEFAULT_SECTION = {
@@ -92,9 +92,8 @@ export const sectionEntity = ({section = DEFAULT_SECTION, courseId = latestCours
         ...DEFAULT_SECTION
     };
 };
-export const addSection = async (section: CreateSectionEntityPayload = sectionEntity({})): Promise<string> => {
-    let {sectionId} = await coursesHandler.createSection(section);
-    return sectionId;
+export const addSection = async (section: CreateSectionEntityPayload = sectionEntity({})): Promise<SectionIdMap> => {
+     return await coursesHandler.createSection(section);
 };
 
 export const EMPTY_CHANGES_OBJ = {

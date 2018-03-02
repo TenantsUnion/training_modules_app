@@ -33,13 +33,15 @@ export type SectionTrainingProgressUpdate = TrainingProgressUpdate & { type: Tra
 
 export interface QuestionSubmission {
     questionId: string;
-    chosenOptionIds: string[];
-    possibleOptionIds: string[];
+    chosenQuestionOptionIds: string[];
+    possibleQuestionOptionIds: string[];
     correct?: boolean;
+    textAnswer?: string;
 }
 
 export interface UserQuestionSubmission extends QuestionSubmission {
     userId: string;
+    createdAt: string;
 }
 
 export interface ContentProgress {

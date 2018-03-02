@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import {clearData} from '../../test_db_util';
 import {addModule, addSection, createCourse, createUser, DEFAULT_MODULE, EMPTY_CHANGES_OBJ} from '../util/test_course_util';
 import {moduleRepository, quillRepository} from '@server/config/repository_config';
 import {coursesHandler} from '@server/config/handler_config';
@@ -28,8 +27,8 @@ describe('Save module', function () {
 
     beforeEach(async function () {
         await createUser();
-        courseId = await createCourse();
-        moduleId = await addModule();
+        courseId = (await createCourse()).courseId;
+        moduleId = (await addModule()).moduleId;
     });
 
     describe('basic property changes', function () {
@@ -104,8 +103,8 @@ describe('Save module', function () {
 
     describe('sections', function () {
         it('should add two sections and swap their order', async function () {
-            let section1Id = await addSection();
-            let section2Id = await addSection();
+            let {sectionId: section1Id} = await addSection();
+            let {sectionId: section2Id} = await addSection();
 
             const swappedArr = [section2Id, section1Id];
             let swapOrder: DeltaArrOp<string>[] = deltaArrayDiff([section1Id, section2Id], swappedArr);
@@ -126,8 +125,8 @@ describe('Save module', function () {
         });
 
         it('should add two sections and remove the first one', async function () {
-            let section1Id = await addSection();
-            let section2Id = await addSection();
+            let {sectionId: section1Id} = await addSection();
+            let {sectionId: section2Id} = await addSection();
 
             const updatedArr = [section2Id];
             let updateOps: DeltaArrOp<string>[] = deltaArrayDiff([section1Id, section2Id], updatedArr);
@@ -149,9 +148,9 @@ describe('Save module', function () {
 
 
         it('should add three sections, make the third section first, and delete the section that was created second', async function () {
-            let section1Id = await addSection();
-            let section2Id = await addSection();
-            let section3Id = await addSection();
+            let {sectionId: section1Id} = await addSection();
+            let {sectionId: section2Id} = await addSection();
+            let {sectionId: section3Id} = await addSection();
 
             const updatedArr = [section3Id, section1Id];
             let updateOps: DeltaArrOp<string>[] = deltaArrayDiff([section1Id, section2Id, section3Id], updatedArr);

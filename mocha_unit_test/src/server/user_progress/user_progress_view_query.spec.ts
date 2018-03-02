@@ -9,23 +9,27 @@ import {toDbTimestampFormat} from "@server/repository";
 import {userProgressViewQuery} from "@server/config/query_service_config";
 
 describe('User Progress View Query', function () {
-    let now;
+    let nowDate = new Date();
+    let now = toDbTimestampFormat(nowDate);
+    // unused destructuring assignment is used to remove properties from ...(rest) assignment
     let {contentQuestions, openEnrollment, ...DEFAULT_USER_COURSE_PROGRESS} = DEFAULT_COURSE_ENTITY;
     let {contentQuestions: rmModProp, ...DEFAULT_USER_MODULE_PROGRESS} = DEFAULT_MODULE;
     let {contentQuestions: rmSecProp, ...DEFAULT_USER_SECTION_PROGRESS} = DEFAULT_SECTION;
     beforeEach(function () {
-        let nowDate = new Date();
-        now = toDbTimestampFormat(nowDate);
         MockDate.set(now);
+    });
+
+    after(function(){
+        MockDate.reset();
     });
 
     it('should load a view of an enrolled user\'s course progress', async function () {
         let {id: userId} = await createUser();
         let {courseId} = await createCourse();
-        let moduleId1 = await addModule();
-        let sectionId1 = await addSection(sectionEntity({moduleId: moduleId1}));
-        let sectionId2 = await addSection(sectionEntity({moduleId: moduleId1}));
-        let moduleId2 = await addModule();
+        let {moduleId: moduleId1} = await addModule();
+        let {sectionId: sectionId1} = await addSection(sectionEntity({moduleId: moduleId1}));
+        let {sectionId: sectionId2} = await addSection(sectionEntity({moduleId: moduleId1}));
+        let {moduleId: moduleId2} = await addModule();
 
         await userProgressHandler.enrollUserInCourse({userId, courseId});
         let defaultEmpty = {
