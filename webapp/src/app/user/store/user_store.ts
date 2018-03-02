@@ -1,10 +1,11 @@
 import {Action, ActionContext, ActionTree, Mutation, MutationTree} from 'vuex';
 import {RootState} from '../../state_store';
-import {Constant} from '../../../../../shared/typings/util_typings';
-import {IUserInfo} from '../../../../../shared/user';
+import {Constant} from '@shared/typings/util_typings';
+import {IUserInfo} from '@shared/user';
 import {accountHttpService} from '../../account/account_http_service';
 import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from './courses_listing_store';
-import {enrollUserInCourse} from "../user_http_service";
+import {enrollUserInCourse} from "@user_progress/user_progress_requests";
+import {AVAILABLE_COURSES_MUTATIONS} from "../../available_courses/available_courses_store";
 
 
 /**
@@ -119,6 +120,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
         await accountHttpService.logout();
         commit(USER_MUTATIONS.USER_LOGOUT);
         commit(USER_COURSES_LISTING_MUTATIONS.CLEAR_USER_COURSES_LISTINGS);
+        commit(AVAILABLE_COURSES_MUTATIONS.CLEAR_COURSES)
     },
     async ENROLL_IN_COURSE ({commit, state, rootState}, courseId: string) {
        let {enrolledCourses, courseProgress} = await enrollUserInCourse({courseId, userId: state.userId});

@@ -1,103 +1,95 @@
 import {RootState, TypedAction} from "../state_store";
 import {
     CourseTrainingProgressUpdate, ModuleTrainingProgressUpdate, SectionTrainingProgressUpdate, TrainingProgressUpdate,
-    TrainingProgressUpdateData, TrainingProgressUpdateType
+    TrainingProgressUpdateData, TrainingProgressUpdateType, UserCourseProgressView
 } from "@shared/user_progress";
 import {ActionTree, GetterTree, Mutation, MutationTree} from "vuex";
 import {CourseMode} from "@course/store/course_mutations";
-import {saveUserProgress} from "./user_progress_requests";
+import {loadUserProgress, saveUserProgress} from "./user_progress_requests";
 import {Constant} from "@shared/typings/util_typings";
 import Vue from 'vue';
 
 export interface UserProgressState {
-    savingCourseProgress: { [index: string]: TrainingProgressUpdate[] };
-    savingModuleProgress: { [index: string]: TrainingProgressUpdate[] };
-    savingSectionProgress: { [index: string]: TrainingProgressUpdate[] };
+    savingProgress: { [index: string]: TrainingProgressUpdate[] };
     saveSuccess: boolean;
+    progressRequests: { [courseId: string]: boolean }
+    courseProgressMap: { [courseId: string]: UserCourseProgressView }
 }
 
 export const userProgressState: UserProgressState = {
-    savingCourseProgress: {},
-    savingModuleProgress: {},
-    savingSectionProgress: {},
-    saveSuccess: false
+    savingProgress: {},
+    saveSuccess: false,
+    progressRequests: {},
+    courseProgressMap: {},
 };
 
 export interface UserProgressGetters {
     savingUserProgress: boolean;
+    loadingCourseProgress: boolean;
 }
 
 export const userProgressGetters: {[index in keyof UserProgressGetters]} & GetterTree<UserProgressState, RootState> = {
-    savingUserProgress ({savingCourseProgress, savingModuleProgress, savingSectionProgress}: UserProgressState): boolean {
-        return !!(Object.keys(savingCourseProgress).length ||
-            Object.keys(savingModuleProgress).length || Object.keys(savingSectionProgress).length);
+    savingUserProgress ({savingProgress}: UserProgressState): boolean {
+        return !!Object.keys(savingProgress).length;
+    },
+    loadingCourseProgress ({progressRequests}: UserProgressState, {course: {currentCourseId}}: RootState) {
+        return progressRequests[currentCourseId];
     }
 };
 
-export type UserProgressMutation<P> = Mutation<UserProgressState> & ((state: UserProgressState, payload: P) => void);
+export type UserProgressMutation<P> = ((state: UserProgressState, payload: P) => void) & Mutation<UserProgressState>;
 
 export interface UserProgressMutations extends MutationTree<UserProgressState> {
     SET_SAVE_SUCCESS: UserProgressMutation<boolean>;
-    ADD_SAVING_COURSE_PROGRESS: UserProgressMutation<TrainingProgressUpdate>;
-    ADD_SAVING_MODULE_PROGRESS: UserProgressMutation<TrainingProgressUpdate>;
-    ADD_SAVING_SECTION_PROGRESS: UserProgressMutation<TrainingProgressUpdate>;
-    REMOVE_SAVING_COURSE_PROGRESS: UserProgressMutation<TrainingProgressUpdate>;
-    REMOVE_SAVING_MODULE_PROGRESS: UserProgressMutation<TrainingProgressUpdate>;
-    REMOVE_SAVING_SECTION_PROGRESS: UserProgressMutation<TrainingProgressUpdate>;
+    ADD_SAVING_PROGRESS: UserProgressMutation<TrainingProgressUpdate>;
+    REMOVE_SAVING_PROGRESS: UserProgressMutation<TrainingProgressUpdate>;
+    SET_COURSE_PROGRESS: UserProgressMutation<UserCourseProgressView>;
+    ADD_COURSE_PROGRESS_REQUEST: UserProgressMutation<string>
+    REMOVE_COURSE_PROGRESS_REQUEST: UserProgressMutation<string>
 }
 
 export const USER_PROGRESS_MUTATIONS: Constant<UserProgressMutations> = {
     SET_SAVE_SUCCESS: 'SET_SAVE_SUCCESS',
-    ADD_SAVING_COURSE_PROGRESS: 'ADD_SAVING_COURSE_PROGRESS',
-    ADD_SAVING_MODULE_PROGRESS: 'ADD_SAVING_MODULE_PROGRESS',
-    ADD_SAVING_SECTION_PROGRESS: 'ADD_SAVING_SECTION_PROGRESS',
-    REMOVE_SAVING_COURSE_PROGRESS: 'REMOVE_SAVING_COURSE_PROGRESS',
-    REMOVE_SAVING_MODULE_PROGRESS: 'REMOVE_SAVING_MODULE_PROGRESS',
-    REMOVE_SAVING_SECTION_PROGRESS: 'REMOVE_SAVING_SECTION_PROGRESS'
+    ADD_SAVING_PROGRESS: 'ADD_SAVING_PROGRESS',
+    REMOVE_SAVING_PROGRESS: 'REMOVE_SAVING_PROGRESS',
+    SET_COURSE_PROGRESS: 'SET_COURSE_PROGRESS',
+    ADD_COURSE_PROGRESS_REQUEST: 'ADD_COURSE_PROGRESS_REQUEST',
+    REMOVE_COURSE_PROGRESS_REQUEST: 'REMOVE_COURSE_PROGRESS_REQUEST',
 };
+
 export const userProgressMutations: UserProgressMutations = {
     SET_SAVE_SUCCESS (state, success: boolean) {
         state.saveSuccess = success;
     },
-    ADD_SAVING_COURSE_PROGRESS ({savingCourseProgress}, update: CourseTrainingProgressUpdate) {
-        let savingProgress = savingCourseProgress[update.id] ? savingCourseProgress.push(update) : [update];
-        Vue.set(savingCourseProgress, update.id, savingProgress);
+    ADD_SAVING_PROGRESS ({savingProgress}: UserProgressState, update: TrainingProgressUpdate) {
+        let requests = savingProgress[update.id] ? [...savingProgress[update.id], update] : [update];
+        Vue.set(savingProgress, update.id, requests);
     },
-    ADD_SAVING_MODULE_PROGRESS ({savingModuleProgress}, update: ModuleTrainingProgressUpdate) {
-        let savingProgress = savingModuleProgress[update.id] ? savingModuleProgress.push(update) : [update];
-        Vue.set(savingModuleProgress, update.id, savingProgress);
+    REMOVE_SAVING_PROGRESS ({savingProgress}: UserProgressState, update: TrainingProgressUpdate) {
+        let requests = savingProgress[update.id];
+        let index = requests.indexOf(update);
+        requests.splice(index, 1);
+        // if there are no more requests delete training(course/module/section) id from requests object
+        requests.length ? Vue.set(savingProgress, update.id, requests) : Vue.delete(savingProgress, update.id);
     },
-    ADD_SAVING_SECTION_PROGRESS ({savingSectionProgress}, update: SectionTrainingProgressUpdate) {
-        let savingProgress = savingSectionProgress[update.id] ? [...savingSectionProgress, update] : [update];
-        Vue.set(savingSectionProgress, update.id, savingProgress);
+    SET_COURSE_PROGRESS ({courseProgressMap}: UserProgressState, courseProgress: UserCourseProgressView) {
+       Vue.set(courseProgressMap, courseProgress.id, courseProgress);
     },
-    REMOVE_SAVING_COURSE_PROGRESS ({savingCourseProgress}, update: CourseTrainingProgressUpdate) {
-        let saving = savingCourseProgress[update.id];
-        let index = saving.indexOf(update);
-        saving.splice(index, 1);
-        saving.length ? Vue.set(savingCourseProgress, update.id,  saving) : Vue.delete(savingCourseProgress, update.id);
+    ADD_COURSE_PROGRESS_REQUEST ({progressRequests}: UserProgressState, courseId: string) {
+        Vue.set(progressRequests, courseId, true);
     },
-    REMOVE_SAVING_MODULE_PROGRESS ({savingModuleProgress}, update: ModuleTrainingProgressUpdate) {
-        let saving = savingModuleProgress[update.id];
-        let index = saving.indexOf(update);
-        saving.splice(index, 1);
-        saving.length ? Vue.set(savingModuleProgress, update.id,  saving) : Vue.delete(savingModuleProgress, update.id);
-    },
-    REMOVE_SAVING_SECTION_PROGRESS ({savingSectionProgress}, update: SectionTrainingProgressUpdate) {
-        let saving = savingSectionProgress[update.id];
-        let index = saving.indexOf(update);
-        saving.splice(index, 1);
-        saving.length ? Vue.set(savingSectionProgress, update.id,  saving) : Vue.delete(savingSectionProgress, update.id);
+    REMOVE_COURSE_PROGRESS_REQUEST ({progressRequests}: UserProgressState, courseId: string) {
+        Vue.delete(progressRequests, courseId);
     }
 };
 
 type UserProgressAction<P, V> = TypedAction<UserProgressState, P, V>
 
 export interface UserProgressActions extends ActionTree<UserProgressState, RootState> {
-    SAVE_COURSE_PROGRESS: UserProgressAction<TrainingProgressUpdateData, void>;
-    SAVE_MODULE_PROGRESS: UserProgressAction<TrainingProgressUpdateData, void>;
-    SAVE_SECTION_PROGRESS: UserProgressAction<ModuleTrainingProgressUpdate, void>;
-    LOAD_USER_PROGRESS: UserProgressAction<{ courseId: string, userId: string }, void>;
+    SAVE_COURSE_PROGRESS: UserProgressAction<CourseTrainingProgressUpdate, void>;
+    SAVE_MODULE_PROGRESS: UserProgressAction<ModuleTrainingProgressUpdate, void>;
+    SAVE_SECTION_PROGRESS: UserProgressAction<SectionTrainingProgressUpdate, void>;
+    LOAD_USER_PROGRESS: UserProgressAction<string, void>;
 }
 
 export const USER_PROGRESS_ACTIONS: Constant<UserProgressActions> = {
@@ -116,9 +108,9 @@ export const userProgressActions: UserProgressActions = {
             ...update,
             userId: rootState.user.userId, type: TrainingProgressUpdateType.COURSE,
         };
-        commit(USER_PROGRESS_MUTATIONS.ADD_SAVING_COURSE_PROGRESS, courseProgress);
+        commit(USER_PROGRESS_MUTATIONS.ADD_SAVING_PROGRESS, courseProgress);
         await saveUserProgress(courseProgress);
-        commit(USER_PROGRESS_MUTATIONS.REMOVE_SAVING_COURSE_PROGRESS, courseProgress);
+        commit(USER_PROGRESS_MUTATIONS.REMOVE_SAVING_PROGRESS, courseProgress);
     },
     async SAVE_MODULE_PROGRESS ({rootState, commit}, update: TrainingProgressUpdateData) {
         if (rootState.course.mode !== CourseMode.ENROLLED || !rootState.user.loggedIn) {
@@ -128,9 +120,9 @@ export const userProgressActions: UserProgressActions = {
             ...update,
             userId: rootState.user.userId, type: TrainingProgressUpdateType.MODULE,
         };
-        commit(USER_PROGRESS_MUTATIONS.ADD_SAVING_MODULE_PROGRESS, moduleProgress);
+        commit(USER_PROGRESS_MUTATIONS.ADD_SAVING_PROGRESS, moduleProgress);
         await saveUserProgress(moduleProgress);
-        commit(USER_PROGRESS_MUTATIONS.REMOVE_SAVING_MODULE_PROGRESS, moduleProgress);
+        commit(USER_PROGRESS_MUTATIONS.REMOVE_SAVING_PROGRESS, moduleProgress);
     },
     async SAVE_SECTION_PROGRESS ({rootState, commit}, update: TrainingProgressUpdateData) {
         if (rootState.course.mode !== CourseMode.ENROLLED || !rootState.user.loggedIn) {
@@ -140,11 +132,21 @@ export const userProgressActions: UserProgressActions = {
             ...update,
             userId: rootState.user.userId, type: TrainingProgressUpdateType.SECTION,
         };
-        commit(USER_PROGRESS_MUTATIONS.ADD_SAVING_SECTION_PROGRESS, sectionProgress);
+        commit(USER_PROGRESS_MUTATIONS.ADD_SAVING_PROGRESS, sectionProgress);
         await saveUserProgress(sectionProgress);
-        commit(USER_PROGRESS_MUTATIONS.REMOVE_SAVING_SECTION_PROGRESS, sectionProgress);
+        commit(USER_PROGRESS_MUTATIONS.REMOVE_SAVING_PROGRESS, sectionProgress);
     },
-    async LOAD_USER_PROGRESS ({rootState}, {courseId, userId}) {
+    async LOAD_USER_PROGRESS ({state: {progressRequests, courseProgressMap}, commit, rootState}, courseId: string) {
+        if(!rootState.user.loggedIn) {
+            throw new Error('Cannot load course progress when user is not logged in');
+        }
 
+        if(progressRequests[courseId] || courseProgressMap[courseId]){
+            return;// already loaded
+        }
+
+        commit(USER_PROGRESS_MUTATIONS.SET_COURSE_PROGRESS, await loadUserProgress({
+            courseId, userId: rootState.user.userId
+        }));
     }
 };

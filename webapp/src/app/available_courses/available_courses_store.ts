@@ -8,12 +8,15 @@ import {courseSlugToIdMap, determineSlugs} from "@global/course_description_util
 export interface AvailableCoursesState {
     courses: CourseDescription[];
     slugToIdMap: { [p: string]: string };
+    loaded: boolean;
     loading: boolean;
 }
 
 export const initAvailableCoursesState = {
-    courses: null,
-    loading: false
+    courses: [],
+    loading: false,
+    loaded: false,
+    slugToIdMap: {}
 };
 
 export interface AvailableCoursesGetters {
@@ -30,12 +33,16 @@ export type AvailableCoursesMutation<P> = (state: AvailableCoursesState, payload
 
 export interface AvailableCoursesMutations {
     SET_COURSES: AvailableCoursesMutation<CourseDescription[]>;
+    CLEAR_COURSES: AvailableCoursesMutation<void>
     SET_LOADING: AvailableCoursesMutation<boolean>;
+    SET_LOADED: AvailableCoursesMutation<boolean>;
 }
 
 export const AVAILABLE_COURSES_MUTATIONS: Constant<AvailableCoursesMutations> = {
     SET_COURSES: 'SET_COURSES',
-    SET_LOADING: 'SET_LOADING'
+    CLEAR_COURSES: 'CLEAR_COURSES',
+    SET_LOADING: 'SET_LOADING',
+    SET_LOADED: 'SET_LOADED'
 };
 
 export const availableCoursesMutations: AvailableCoursesMutations & MutationTree<AvailableCoursesState> = {
@@ -43,9 +50,17 @@ export const availableCoursesMutations: AvailableCoursesMutations & MutationTree
         state.slugToIdMap = courseSlugToIdMap(courses);
         state.courses = determineSlugs(courses);
     },
+    CLEAR_COURSES (state: AvailableCoursesState) {
+        state.slugToIdMap = {};
+        state.courses = [];
+        state.loaded = false;
+    },
     SET_LOADING (state: AvailableCoursesState, loading: boolean) {
         state.loading = loading;
-    }
+    },
+    SET_LOADED (state: AvailableCoursesState, loading: boolean) {
+        state.loaded = loading;
+    },
 };
 
 export type AvailableCoursesAction<P> =
@@ -62,7 +77,7 @@ export const AVAILABLE_COURSES_ACTIONS: Constant<AvailableCoursesActions> = {
 
 export const availableCoursesActions: AvailableCoursesActions & ActionTree<AvailableCoursesState, RootState> = {
     async LOAD_AVAILABLE_COURSES ({commit, state, rootState}) {
-        if (state.courses || state.loading) {
+        if (state.loaded || state.loading) {
             return;
         }
 
@@ -70,5 +85,6 @@ export const availableCoursesActions: AvailableCoursesActions & ActionTree<Avail
         commit(AVAILABLE_COURSES_MUTATIONS.SET_LOADING, true);
         commit(AVAILABLE_COURSES_MUTATIONS.SET_COURSES, await availableCoursesAsync);
         commit(AVAILABLE_COURSES_MUTATIONS.SET_LOADING, false);
+        commit(AVAILABLE_COURSES_MUTATIONS.SET_LOADED, true);
     }
 };

@@ -148,6 +148,7 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
         state.courseListingsLoaded = null;
         state.loading = false;
         state.adminCourseDescriptions = [];
+        state.enrolledCourseDescriptions = [];
     }
 };
 
@@ -172,11 +173,10 @@ export const userCoursesListingActions: UserCoursesListingActions & ActionTree<U
             return;
         }
 
-        let courseListingLoaded = loadUserCourses(rootState.user.userId);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_COURSE_DESCRIPTIONS_LOADING, true);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, false);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_COURSE_DESCRIPTIONS_LOADING, false);
-        let courseListing = await courseListingLoaded;
+        let courseListing = await loadUserCourses(rootState.user.userId);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, courseListing.admin);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, courseListing.enrolled);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, true);
