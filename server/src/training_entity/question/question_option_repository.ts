@@ -1,7 +1,7 @@
 import {LoggerInstance} from 'winston';
-import {getLogger} from '../../../log';
-import {Datasource} from '../../../datasource';
-import {AbstractRepository} from '../../../repository';
+import {getLogger} from '../../log';
+import {Datasource} from '../../datasource';
+import {AbstractRepository} from '../../repository';
 
 /**
  * Question Option Data Transfer Object

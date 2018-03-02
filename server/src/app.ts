@@ -8,7 +8,7 @@ const session = require("express-session");
 import {config} from "@shared/normalize_imports";
 import {HttpResponse} from '@shared/http_responses';
 import {AccountRoutes} from "./web/account_routes";
-import {QuillRoutes} from './training_entity/admin/quill/quill_routes_controller';
+import {QuillRoutes} from './training_entity/quill/quill_routes_controller';
 import {getLogger, LOG_LEVELS} from './log';
 import {Express} from 'express';
 import {AvailableCourseRoutes} from "./web/available_courses_routes";

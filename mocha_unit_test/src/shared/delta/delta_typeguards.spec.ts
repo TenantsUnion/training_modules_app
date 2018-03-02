@@ -9,9 +9,9 @@ describe('Delta typeguard functions', () => {
 
    it('should evaluate DeltaObj object as type DeltaObj', function() {
       expect(isDeltaObj({
-          a: 'text a',
-          b: 'text b',
-          c: new Delta().insert('text c')
+          a: 'textAnswer a',
+          b: 'textAnswer b',
+          c: new Delta().insert('textAnswer c')
       })).to.be.true;
    });
 });

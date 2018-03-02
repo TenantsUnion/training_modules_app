@@ -12,7 +12,7 @@ import DeltaOperation = Quill.DeltaOperation;
  * @see https://node-postgres.com/features/queries
  * e.g:
  *  const query = {
- *      text: 'INSERT INTO users(name, email) VALUES($1, $2)',
+ *      textAnswer: 'INSERT INTO users(name, email) VALUES($1, $2)',
  *      values: ['brianc', 'brian.m.carlson@gmail.com'],
  *  }
  */

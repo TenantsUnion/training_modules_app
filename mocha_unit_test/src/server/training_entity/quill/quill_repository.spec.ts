@@ -15,7 +15,7 @@ describe('Quill Repository', function () {
     });
 
     it('should insert editor json', async function () {
-        let quillData = new Delta().insert('Some text or whatever');
+        let quillData = new Delta().insert('Some textAnswer or whatever');
         let quillId = await quillRepository.insertEditorJson(quillData);
         expect(await quillRepository.loadQuillData(quillId)).to.deep.eq({
             id: quillId,
@@ -29,9 +29,9 @@ describe('Quill Repository', function () {
 
     it('should load multiple quill data', async function () {
         let quillData: Quill.DeltaStatic[] = [
-            new Delta().insert('The text of the first'),
-            new Delta().insert('The text of the second'),
-            new Delta().insert('The text of the third')
+            new Delta().insert('The textAnswer of the first'),
+            new Delta().insert('The textAnswer of the second'),
+            new Delta().insert('The textAnswer of the third')
         ];
 
         let quillIds = await Promise.all(quillData.map((editorJson) => quillRepository.insertEditorJson(editorJson)));
@@ -53,14 +53,14 @@ describe('Quill Repository', function () {
     });
 
     it('should update quill data', async function () {
-        let quillData = new Delta().insert('Some text or whatever');
+        let quillData = new Delta().insert('Some textAnswer or whatever');
         let quillId = await quillRepository.insertEditorJson(quillData);
 
         let updated = Moment(now).add(1, 'hour').toDate();
         MockDate.set(updated);
 
 
-        const updatedEditorJson = quillData.retain(4).delete(2).insert('other text');
+        const updatedEditorJson = quillData.retain(4).delete(2).insert('other textAnswer');
         await quillRepository.updateEditorJson({
             id: quillId,
             version: 0,
@@ -77,10 +77,10 @@ describe('Quill Repository', function () {
     });
 
     it('should add two quill data entries and remove the first', async function () {
-        let quillData1 = new Delta().insert('Some text or whatever');
+        let quillData1 = new Delta().insert('Some textAnswer or whatever');
         let quillId1 = await quillRepository.insertEditorJson(quillData1);
 
-        let quillData2 = new Delta().insert('Some text or whatever');
+        let quillData2 = new Delta().insert('Some textAnswer or whatever');
         let quillId2 = await quillRepository.insertEditorJson(quillData2);
 
         await quillRepository.remove(quillId1);

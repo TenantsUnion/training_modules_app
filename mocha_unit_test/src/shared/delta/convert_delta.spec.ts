@@ -12,11 +12,11 @@ describe('convertObjectValuesToDeltas function', function () {
     it('should not affect properties that aren\'t deltas', function () {
         expect(convertToDeltaObj({
             a: 1,
-            b: 'Some text',
+            b: 'Some textAnswer',
             c: false
         })).to.deep.equal({
             a: 1,
-            b: 'Some text',
+            b: 'Some textAnswer',
             c: false
         })
     });
@@ -30,7 +30,7 @@ describe('convertObjectValuesToDeltas function', function () {
                     'Some Stuff'
                 ]
             ],
-            b: 'top level text'
+            b: 'top level textAnswer'
         })).to.deep.equal({
             a: [
                 1,
@@ -39,14 +39,14 @@ describe('convertObjectValuesToDeltas function', function () {
                     'Some Stuff'
                 ]
             ],
-            b: 'top level text'
+            b: 'top level textAnswer'
         });
     });
 
     it('should exclude properties from being being converted with a predicate', function () {
         expect(convertToDeltaObj({
             a: 1,
-            b: 'Some text',
+            b: 'Some textAnswer',
             c: false
         }, (key) => key !== 'b')).to.deep.equal({
             a: 1,

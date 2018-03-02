@@ -5,7 +5,7 @@ import {
     questionOptionRepository, questionRepository
 } from '@server/config/repository_config';
 import {QuillEditorData} from '@shared/quill_editor';
-import {QuestionOptionDto} from '@server/training_entity/admin/question/question_option_repository';
+import {QuestionOptionDto} from '@server/training_entity/question/question_option_repository';
 import {
     AnswerType, QuestionChangesObj, QuestionEntity,
     QuestionType

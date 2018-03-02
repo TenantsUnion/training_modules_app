@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import * as MockDate from 'mockdate';
 import {clearData} from "../../../test_db_util";
-import {QuestionOptionDto} from "@server/training_entity/admin/question/question_option_repository";
+import {QuestionOptionDto} from "@server/training_entity/question/question_option_repository";
 import {
     questionOptionRepository, quillRepository
 } from "@server/config/repository_config";
@@ -19,8 +19,8 @@ describe('Question Option Repository', function () {
 
     it('should create a question option', async function () {
         let {0: optionQuillId, 1: explanationQuillId} = await Promise.all([
-            quillRepository.insertEditorJson(new Delta().insert('option text')),
-            quillRepository.insertEditorJson(new Delta().insert('explanation text'))
+            quillRepository.insertEditorJson(new Delta().insert('option textAnswer')),
+            quillRepository.insertEditorJson(new Delta().insert('explanation textAnswer'))
         ]);
 
         const id = await questionOptionRepository.getNextId();
@@ -42,10 +42,10 @@ describe('Question Option Repository', function () {
             0: optionQuillId1, 1: explanationQuillId1,
             2: optionQuillId2, 3: explanationQuillId2
         } = await Promise.all([
-            quillRepository.insertEditorJson(new Delta().insert('option 1 text')),
-            quillRepository.insertEditorJson(new Delta().insert('explanation 1 text')),
-            quillRepository.insertEditorJson(new Delta().insert('option 2 text')),
-            quillRepository.insertEditorJson(new Delta().insert('explanation 2 text'))
+            quillRepository.insertEditorJson(new Delta().insert('option 1 textAnswer')),
+            quillRepository.insertEditorJson(new Delta().insert('explanation 1 textAnswer')),
+            quillRepository.insertEditorJson(new Delta().insert('option 2 textAnswer')),
+            quillRepository.insertEditorJson(new Delta().insert('explanation 2 textAnswer'))
         ]);
 
         const {0: questionId1, 1: questionId2} = await questionOptionRepository.getNextIds(2);

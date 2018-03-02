@@ -8,7 +8,7 @@ import {
     CourseEntity,
     CreateCourseEntityCommand, CreateCourseEntityPayload, CreateCourseIdMap, SaveCourseEntityPayload
 } from '@shared/courses';
-import {QuillHandler} from '../../training_entity/admin/quill/quill_handler';
+import {QuillHandler} from '../../training_entity/quill/quill_handler';
 import {applyDeltaDiff} from '@shared/delta/apply_delta';
 import {TrainingEntityHandler} from '../../training_entity/admin/training_entity_handler';
 import {ContentQuestionEntity} from '@shared/training_entity';

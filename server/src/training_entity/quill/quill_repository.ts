@@ -1,8 +1,8 @@
-import {Datasource} from '../../../datasource';
-import {getLogger} from "../../../log";
-import {AbstractRepository, getUTCNow} from "../../../repository";
+import {Datasource} from '../../datasource';
+import {getLogger} from "../../log";
+import {AbstractRepository, getUTCNow} from "../../repository";
 import {LoggerInstance} from 'winston';
-import {QuillEditorData} from '../../../../../shared/quill_editor';
+import {QuillEditorData} from '../../../../shared/quill_editor';
 
 
 export class QuillRepository extends AbstractRepository {

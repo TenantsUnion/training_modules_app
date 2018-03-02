@@ -5,8 +5,8 @@ import {
 } from "./repository_config";
 import {UserHandler} from "../user/user_handler";
 import {AccountHandler} from "../account/account_handler";
-import {QuillHandler} from '../training_entity/admin/quill/quill_handler';
-import {QuestionHandler} from '../training_entity/admin/question/question_handler';
+import {QuillHandler} from '../training_entity/quill/quill_handler';
+import {QuestionHandler} from '../training_entity/question/question_handler';
 import {TrainingEntityHandler} from '../training_entity/admin/training_entity_handler';
 import {AdminModuleHandler} from "@module/admin/admin_module_handler";
 import {AdminCourseHandler} from "@course/admin/course_admin_handler";

@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
-import {QuillHandler} from './quill/quill_handler';
-import {QuestionHandler} from './question/question_handler';
+import {QuillHandler} from '../quill/quill_handler';
+import {QuestionHandler} from '../question/question_handler';
 import {CreateContentQuestion, ContentQuestionsDelta, ContentQuestionEntity} from '../../../../shared/training_entity';
 import {LoggerInstance} from 'winston';
 import {getLogger, LOG_LEVELS} from '../../log';

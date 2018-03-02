@@ -8,7 +8,7 @@ describe('diff delta spec', function () {
     it('should return an empty object when there are no differences', function () {
         let delta = convertToDeltaObj({
             a: 1,
-            b: 'Some text',
+            b: 'Some textAnswer',
             c: false
         });
         expect(diffDeltaObj(delta, delta)).to.deep.equal({});
@@ -45,13 +45,13 @@ describe('diff delta spec', function () {
     it('should return a deltaObject indicating the changed property', function () {
         let delta1 = convertToDeltaObj({
             a: 1,
-            b: 'Some text',
+            b: 'Some textAnswer',
             c: false
         });
 
         let delta2 = convertToDeltaObj({
             a: 2,
-            b: 'Some text',
+            b: 'Some textAnswer',
             c: false
         });
 

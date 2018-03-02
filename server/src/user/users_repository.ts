@@ -25,7 +25,7 @@ export class UserRepository extends AbstractRepository implements IUserRepositor
     logger = getLogger('UserRepository', 'info');
 
     constructor (private datasource: Datasource) {
-        super('user_id_seq', datasource);
+        super('user_id', datasource);
     }
 
     async createUser (createUserInfo: CreateUserInfo): Promise<AccountInfo> {

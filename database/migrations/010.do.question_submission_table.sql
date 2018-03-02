@@ -1,12 +1,12 @@
 CREATE TABLE tu.question_submission (
   id                           TEXT PRIMARY KEY,
   question_id                  TEXT REFERENCES tu.question (id) NOT NULL,
-  question_type                TEXT,
   user_id                      TEXT REFERENCES tu.user (id)     NOT NULL,
   created_at                   TIMESTAMPTZ                      NOT NULL,
   chosen_question_option_ids   TEXT []                          NOT NULL DEFAULT ARRAY [] :: TEXT [],
   possible_question_option_ids TEXT []                          NOT NULL DEFAULT ARRAY [] :: TEXT [],
-  correct                      BOOLEAN                          NOT NULL
+  correct                      BOOLEAN                          NOT NULL,
+  text_answer                  TEXT                                      DEFAULT NULL
 );
 
 CREATE SEQUENCE tu.question_submission_id_seq;
@@ -17,7 +17,7 @@ $$ LANGUAGE SQL;
 CREATE INDEX question_submission_question_id_correct_idx
   ON tu.question_submission (question_id, correct);
 CREATE INDEX question_submission_user_id_idx
-  ON tu.question_submission (user_id);
+  ON tu.question_submission (user_id, question_id);
 CREATE INDEX question_submission_created_at_idx
   ON tu.question_submission (created_at);
 
