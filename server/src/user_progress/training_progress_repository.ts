@@ -46,13 +46,15 @@ export abstract class TrainingProgressRepository extends AbstractRepository {
               UPDATE tu.${this.tableNames.progress} SET
                 correct_question_ids   = $1 :: JSONB || correct_question_ids,
                 viewed_content_ids     = $2 :: JSONB || viewed_content_ids,
-                submitted_question_ids = $3 :: JSONB || submitted_question_ids
-              WHERE user_id = $4 AND id = $5
+                submitted_question_ids = $3 :: JSONB || submitted_question_ids,
+                last_viewed_at = $4, last_modified_at = $4
+              WHERE user_id = $5 AND id = $6
             `,
             values: [
                 toIdTimestampObj(correctQuestionIds),
                 toIdTimestampObj(viewedContentIds),
                 toIdTimestampObj(submittedQuestionIds),
+                getUTCNow(),
                 userId, id
             ]
         });
@@ -66,7 +68,7 @@ export abstract class TrainingProgressRepository extends AbstractRepository {
               FROM tu.${this.tableNames.training} t
               WHERE p.id = t.id 
               AND t.id = $2
-              and p.id = $2
+              AND p.id = $2
               AND p.training_completed IS NULL 
                     AND p.user_id = $3
                     AND p.correct_question_ids ?& t.ordered_question_ids

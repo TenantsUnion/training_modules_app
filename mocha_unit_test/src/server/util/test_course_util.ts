@@ -46,7 +46,7 @@ export const DEFAULT_COURSE_ENTITY = {
 };
 
 let latestCourseId;
-export const createCourse = async (userId = latestUser.id, course: CreateCourseEntityPayload = DEFAULT_COURSE_ENTITY): Promise<CreateCourseIdMap> => {
+export const createCourse = async (userId: string = latestUser.id, course: CreateCourseEntityPayload = DEFAULT_COURSE_ENTITY): Promise<CreateCourseIdMap> => {
     let createCourseCommand = {
         metadata: DEFAULT_COMMAND_METADATA(userId),
         payload: course
@@ -73,7 +73,7 @@ export const moduleEntity = (module = DEFAULT_MODULE, courseId = latestCourseId)
 let latestModuleId;
 export const addModule = async (module: CreateModuleEntityPayload = moduleEntity()): Promise<string> => {
     let {moduleId} = await coursesHandler.createModule(module);
-    latestModuleId = moduleId
+    latestModuleId = moduleId;
     return moduleId;
 };
 
