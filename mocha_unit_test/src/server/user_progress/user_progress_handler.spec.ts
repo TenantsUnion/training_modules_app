@@ -141,7 +141,7 @@ describe('User progress handler', function () {
         questionId1 = idMap[questionId1];
         questionId2 = idMap[questionId2];
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
-        await userProgressHandler.recordTrainingProgress({
+        await userProgressHandler.saveTrainingProgress({
             userId: studentId, id: courseId,
             questionSubmissions: [questionSubmission(questionId1), questionSubmission(questionId2, true)],
             type: TrainingProgressUpdateType.COURSE,
@@ -165,7 +165,7 @@ describe('User progress handler', function () {
         questionId1 = idMap[questionId1];
         questionId2 = idMap[questionId2];
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
-        await userProgressHandler.recordTrainingProgress({
+        await userProgressHandler.saveTrainingProgress({
             userId: studentId, id: courseId,
             type: TrainingProgressUpdateType.COURSE,
             questionSubmissions: [questionSubmission(questionId1, true), questionSubmission(questionId2, true)],
@@ -193,7 +193,7 @@ describe('User progress handler', function () {
         questionId2 = idMap[questionId2];
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
-        await userProgressHandler.recordTrainingProgress({
+        await userProgressHandler.saveTrainingProgress({
             userId: studentId, id: moduleId,
             questionSubmissions: [questionSubmission(questionId1), questionSubmission(questionId2, true)],
             type: TrainingProgressUpdateType.MODULE,
@@ -220,7 +220,7 @@ describe('User progress handler', function () {
         questionId2 = idMap[questionId2];
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
-        await userProgressHandler.recordTrainingProgress({
+        await userProgressHandler.saveTrainingProgress({
             userId: studentId, id: moduleId,
             questionSubmissions: [questionSubmission(questionId1, true), questionSubmission(questionId2, true)],
             type: TrainingProgressUpdateType.MODULE,
@@ -248,7 +248,7 @@ describe('User progress handler', function () {
         questionId2 = idMap[questionId2];
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
-        await userProgressHandler.recordTrainingProgress({
+        await userProgressHandler.saveTrainingProgress({
             userId: studentId, id: sectionId,
             questionSubmissions: [questionSubmission(questionId1), questionSubmission(questionId2, true)],
             type: TrainingProgressUpdateType.SECTION,
@@ -278,7 +278,7 @@ describe('User progress handler', function () {
         questionId2 = idMap[questionId2];
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
-        await userProgressHandler.recordTrainingProgress({
+        await userProgressHandler.saveTrainingProgress({
             userId: studentId, id: sectionId,
             questionSubmissions: [questionSubmission(questionId1, true), questionSubmission(questionId2, true)],
             type: TrainingProgressUpdateType.SECTION,

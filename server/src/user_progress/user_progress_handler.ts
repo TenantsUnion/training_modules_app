@@ -32,7 +32,7 @@ export class UserProgressHandler {
         ]);
     }
 
-    async recordTrainingProgress (trainingProgressUpdate: TrainingProgressUpdate) {
+    async saveTrainingProgress (trainingProgressUpdate: TrainingProgressUpdate) {
         let {id, userId, viewedContentIds, questionSubmissions} = trainingProgressUpdate;
         let rowUpdate: TrainingProgressRowUpdate = {
             id, userId, viewedContentIds,

@@ -9,7 +9,6 @@ import {TrainingProgressUpdate, UserCourseProgressView} from "@shared/user_progr
 
 export class UserProgressWebController extends AbstractWebController {
 
-
     constructor (private userProgressHandler: UserProgressHandler,
                  private userProgressViewQuery: UserProgressViewQuery,
                  private coursesListingViewQuery: UserCoursesListingViewQuery) {
@@ -27,8 +26,7 @@ export class UserProgressWebController extends AbstractWebController {
 
     async saveTrainingProgress (req: Request): Promise<any> {
         let payload: TrainingProgressUpdate = req.body;
-        await this.userProgressHandler.recordTrainingProgress(payload);
-        // todo what to return?
+        await this.userProgressHandler.saveTrainingProgress(payload);
     }
 
     async loadUserCourseProgress (req: Request): Promise<UserCourseProgressView> {
@@ -39,7 +37,8 @@ export class UserProgressWebController extends AbstractWebController {
 
     registerRoutes (router: Router): Router {
         return router
-            .post('/user/course/enroll', this.handle(this.enrollInCourse))
-            .post('/user/progress/save', this.handle(this.saveTrainingProgress));
+            .post('/user/:userId/course/:courseId/enroll', this.handle(this.enrollInCourse))
+            .get('/user/:userId/course/:courseId/progress', this.handle(this.loadUserCourseProgress))
+            .post('/user/:userId/training/progress/:trainingType/:id/save', this.handle(this.saveTrainingProgress))
     }
 }
