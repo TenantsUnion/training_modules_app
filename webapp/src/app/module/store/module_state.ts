@@ -1,5 +1,5 @@
 import {RootGetters, RootState} from '../../state_store';
-import {ViewModuleData} from '../../../../../shared/modules';
+import {ViewModuleData} from '@shared/modules';
 
 export interface ModuleState {
     currentModuleTitle: string;

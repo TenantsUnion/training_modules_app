@@ -15,7 +15,7 @@ import {ActionTree} from "vuex";
 export type CourseAction<P, V> = TypedAction<CourseState, P, V>;
 export interface CourseActions extends ActionTree<CourseState, RootState> {
     CREATE_COURSE: CourseAction<CreateCourseEntityPayload, string>,
-    SET_CURRENT_COURSE: CourseAction<{ id: string, mode: CourseMode }, void>;
+    SET_CURRENT_COURSE: CourseAction<string, void>;
     SET_CURRENT_COURSE_FROM_SLUG: CourseAction<string, void>;
     SAVE_COURSE: CourseAction<SaveCourseEntityPayload, void>;
 }
@@ -62,14 +62,13 @@ export const courseActions: CourseActions = {
             throw e;
         }
     },
-    async SET_CURRENT_COURSE ({state, rootGetters, commit, dispatch}, {id, mode}): Promise<void> {
+    async SET_CURRENT_COURSE ({state, rootGetters, commit, dispatch}, id): Promise<void> {
         try {
-            if (id === state.currentCourseId && mode === state.mode) {
+            if (id === state.currentCourseId) {
                 // current state matches, no changes
                 return;
             }
 
-            commit(COURSE_MUTATIONS.SET_MODE, mode);
             commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, {id});
             if (!rootGetters.currentCourseLoaded) {
                 commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id, requesting: true});
