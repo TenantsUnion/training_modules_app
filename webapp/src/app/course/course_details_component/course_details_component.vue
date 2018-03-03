@@ -12,8 +12,10 @@
                 </div>
                 <div class="grid-x">
                     <div class="cell small-12 large-10">
-                        <view-training-segments :submit-individual-questions="true"
-                                                :content-questions="currentCourse.contentQuestions" ref="trainingSegment"/>
+                        <view-training-segments :content-questions="currentCourse.contentQuestions"
+                                                :individual-submit="currentCourse.submitIndividually"
+                                                :submit-cb="submitCb"
+                                                :individual-submit-cb="individualSubmitCb"/>
                     </div>
                 </div>
                 <div v-for="module in currentCourse.modules">

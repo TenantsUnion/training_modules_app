@@ -32,7 +32,7 @@ export const userProgressGetters: {[index in keyof UserProgressGetters]} & Gette
     savingUserProgress ({savingProgress}: UserProgressState): boolean {
         return !!Object.keys(savingProgress).length;
     },
-    loadingCourseProgress ({progressRequests}: UserProgressState, {course: {currentCourseId}}: RootState) {
+    loadingCourseProgress ({progressRequests}: UserProgressState, getters, {course: {currentCourseId}}: RootState) {
         return progressRequests[currentCourseId];
     }
 };

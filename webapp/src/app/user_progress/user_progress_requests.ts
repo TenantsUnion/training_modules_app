@@ -4,7 +4,7 @@ import {EnrollCourseRequestPayload, EnrollCourseResponse} from "@shared/user";
 
 export const enrollUserInCourse = async (userCourse: EnrollCourseRequestPayload): Promise<EnrollCourseResponse> => {
     let {userId, courseId} = userCourse;
-    return (await axios.post(`'/user/${userId}/course/${courseId}/enroll'`, userCourse)).data;
+    return (await axios.post(`/user/${userId}/course/${courseId}/enroll`, userCourse)).data;
 };
 export const loadUserProgress = async ({userId, courseId}: {userId: string, courseId: string}): Promise<UserCourseProgressView> => {
     return (await axios.get(`/user/${userId}/course/${courseId}/progress`)).data;

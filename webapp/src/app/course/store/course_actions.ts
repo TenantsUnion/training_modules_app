@@ -62,7 +62,7 @@ export const courseActions: CourseActions = {
             throw e;
         }
     },
-    async SET_CURRENT_COURSE ({state, rootGetters, commit}, {id, mode}): Promise<void> {
+    async SET_CURRENT_COURSE ({state, rootGetters, commit, dispatch}, {id, mode}): Promise<void> {
         try {
             if (id === state.currentCourseId && mode === state.mode) {
                 // current state matches, no changes
@@ -78,7 +78,13 @@ export const courseActions: CourseActions = {
                 commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, course);
             }
 
-            subscribeCourse(id);
+            if(mode === CourseMode.ENROLLED) {
+                await dispatch
+            }
+
+
+
+            // subscribeCourse(id);
         } catch (e) {
             console.error(e);
             throw e;
