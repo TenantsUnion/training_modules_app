@@ -2,8 +2,9 @@ import Vue from 'vue';
 import Component from "vue-class-component";
 import {ViewCourseData} from '@shared/courses';
 import {Location} from 'vue-router/types/router';
-import {mapGetters} from 'vuex';
+import {mapGetters, mapState} from 'vuex';
 import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
+import {RootGetters, RootState} from "../../state_store";
 
 @Component({
     data: () => {
@@ -40,6 +41,11 @@ import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from
         isCourseAdmin: Boolean
     },
     computed: {
+        ...mapState({
+            isAdmin: function(state: RootState, getters: RootGetters){
+                return getters.currentCourseMode === CourseMode.ADMIN;
+            }
+        }),
         ...mapGetters({
             course: 'courseNavigationDescription'
         })

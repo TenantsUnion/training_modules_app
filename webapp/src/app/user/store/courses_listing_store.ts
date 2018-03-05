@@ -36,7 +36,9 @@ export interface UserCoursesListingGetters {
     getSlugFromCourseId: (courseId: string) => string;
     getCourseModeFromId: (courseId: string) => CourseMode;
     getUserCourseModeFromSlug: (slug: string) => CourseMode;
-    adminCourseListingMap: { [index: string]: AdminCourseDescription }
+    adminCourseListingMap: { [index: string]: AdminCourseDescription };
+    enrolledCourseListingMap: { [index: string]: EnrolledCourseDescription };
+    currentCourseMode: CourseMode;
 }
 
 export type getCourseIdFromSlugFn = (slug: string) => string;
@@ -45,6 +47,12 @@ export type courseModeFn = (courseId: string) => CourseMode;
 
 
 export const userCoursesListingGetters: {[index in keyof UserCoursesListingGetters]: AppGetter<UserCoursesListingState>} = {
+    currentCourseMode (state, getters, {course: {currentCourseId}}, rootGetters): CourseMode {
+        if (!currentCourseId || !state.courseListingsLoaded || state.loading) {
+            return null;
+        }
+        return getters.getCourseModeFromId(currentCourseId);
+    },
     getUserCourseIdFromSlug (state, getters, rootState, rootGetters): getCourseIdFromSlugFn {
         return function (slug) {
             return state.courseSlugIdMap[slug];
@@ -62,7 +70,8 @@ export const userCoursesListingGetters: {[index in keyof UserCoursesListingGette
     },
     getCourseModeFromId (state, getters): courseModeFn {
         return function (courseId: string): CourseMode {
-            return getters.adminCourseListingMap[courseId] ? CourseMode.ADMIN : CourseMode.ENROLLED;
+            return getters.adminCourseListingMap[courseId] ? CourseMode.ADMIN :
+                getters.enrolledCourseListingMap[courseId] ? CourseMode.ENROLLED : CourseMode.PREVIEW;
         }
     },
     getUserCourseModeFromSlug (state, getters: RootGetters): courseModeFn {
@@ -74,6 +83,12 @@ export const userCoursesListingGetters: {[index in keyof UserCoursesListingGette
     },
     adminCourseListingMap (state, getters): { [index: string]: AdminCourseDescription } {
         return state.adminCourseDescriptions.reduce((acc, desc) => {
+            acc[desc.id] = desc;
+            return acc;
+        }, {});
+    },
+    enrolledCourseListingMap (state, getters): { [index: string]: EnrolledCourseDescription } {
+        return state.enrolledCourseDescriptions.reduce((acc, desc) => {
             acc[desc.id] = desc;
             return acc;
         }, {});

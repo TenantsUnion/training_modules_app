@@ -6,7 +6,6 @@ import {
 } from '@shared/courses';
 import {getCorrelationId} from '@shared/correlation_id_generator';
 import {coursesService} from '../courses_service';
-import {subscribeCourse} from '../subscribe_course';
 import {RootGetters, RootState, TypedAction} from '../../state_store';
 import {Constant} from '@shared/typings/util_typings';
 import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../../user/store/courses_listing_store';
@@ -65,25 +64,16 @@ export const courseActions: CourseActions = {
     async SET_CURRENT_COURSE ({state, rootGetters, commit, dispatch}, id): Promise<void> {
         try {
             if (id === state.currentCourseId) {
-                // current state matches, no changes
-                return;
+                return; // current state matches, no changes
             }
 
-            commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, {id});
+            commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, id);
             if (!rootGetters.currentCourseLoaded) {
                 commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id, requesting: true});
                 let course = await coursesService.loadAdminCourse(id);
                 commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id, requesting: false});
                 commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, course);
             }
-
-            if(mode === CourseMode.ENROLLED) {
-                await dispatch
-            }
-
-
-
-            // subscribeCourse(id);
         } catch (e) {
             console.error(e);
             throw e;
@@ -94,7 +84,7 @@ export const courseActions: CourseActions = {
         let mode = (<RootGetters> getters).getUserCourseModeFromSlug(slug);
         let id = mode === CourseMode.PREVIEW ? (<RootGetters> getters).getAvailableCourseIdFromSlug(slug) :
             (<RootGetters> getters).getUserCourseIdFromSlug(slug);
-        await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, {id, mode});
+        await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, id);
     },
     async SAVE_COURSE ({commit, dispatch}, saveCourseEntityPayload: SaveCourseEntityPayload) {
         commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: saveCourseEntityPayload.id, requesting: true});

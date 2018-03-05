@@ -14,10 +14,10 @@ export type SectionAction<P> = Action<SectionState, RootState>;
 
 export type CreateSectionAction = SectionAction<CreateSectionEntityPayload>;
 
-export interface SectionActions {
+export interface SectionActions extends ActionTree<SectionState, RootState> {
     CREATE_SECTION: CreateSectionAction,
-    SET_CURRENT_SECTION: SectionAction<{ sectionId: string, moduleId: string, mode: CourseMode }>;
-    SET_CURRENT_SECTION_FROM_SLUG: SectionAction<{ slug: string, moduleId: string, mode: CourseMode}>;
+    SET_CURRENT_SECTION: SectionAction<{ sectionId: string, moduleId: string}>;
+    SET_CURRENT_SECTION_FROM_SLUG: SectionAction<{ slug: string, moduleId: string}>;
     NEXT_SECTION: SectionAction<void>;
     PREVIOUS_SECTION: SectionAction<void>;
     SAVE_SECTION: SectionAction<SaveSectionEntityPayload>;
@@ -41,7 +41,7 @@ export const CREATE_ID = 'CREATING';
 /**
  * Section store actions
  */
-export const sectionActions: ActionTree<SectionState, RootState> & SectionActions = {
+export const sectionActions: SectionActions = {
     CREATE_SECTION: async ({dispatch, commit, getters, rootState}, createSectionData: CreateSectionEntityPayload) => {
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
         let {courseModuleDescriptions, sectionId, moduleSectionDescriptions, section}
@@ -53,7 +53,7 @@ export const sectionActions: ActionTree<SectionState, RootState> & SectionAction
         commit(MODULE_MUTATIONS.SET_MODULE_SECTION_DESCRIPTIONS, {moduleId, moduleSectionDescriptions});
 
         commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, section);
-        commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, {sectionId, mode: getters.mode});
+        commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, {sectionId});
     },
     async SET_CURRENT_SECTION ({state, getters, commit}, {sectionId, moduleId}) {
         try {

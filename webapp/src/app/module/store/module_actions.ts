@@ -10,8 +10,8 @@ import {loadModule, createModule, saveModule} from '@module/modules_requests';
 export type ModuleAction<P> = Action<ModuleState, RootState>;
 
 export type CreateModuleAction = ModuleAction<CreateModuleEntityPayload>;
-export type SetCurrentModuleAction = ModuleAction<{id: string, mode: CourseMode}>;
-export type SetCurrentModuleFromSlugAction = ModuleAction<{ slug: string, mode: CourseMode}>
+export type SetCurrentModuleAction = ModuleAction<string>;
+export type SetCurrentModuleFromSlugAction = ModuleAction<string>
 
 export interface ModuleActions {
     CREATE_MODULE: CreateModuleAction,
@@ -46,9 +46,9 @@ export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions =
         let {courseId} = createModulePayload;
         commit(COURSE_MUTATIONS.SET_COURSE_MODULE_DESCRIPTIONS, {courseId, courseModuleDescriptions});
     },
-    async SET_CURRENT_MODULE({state, getters, dispatch, commit}, {id, mode}) {
+    async SET_CURRENT_MODULE({state, getters, dispatch, commit}, id) {
         try {
-            if (id === state.currentModuleId && mode === getters.mode) {
+            if (id === state.currentModuleId) {
                 // no change, state already matches
                 return;
             }
@@ -62,9 +62,9 @@ export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions =
             throw e;
         }
     },
-    async SET_CURRENT_MODULE_FROM_SLUG({getters, dispatch},{slug, mode}) {
+    async SET_CURRENT_MODULE_FROM_SLUG({getters, dispatch}, slug) {
         let id = (<RootGetters> getters).getModuleIdFromSlug(slug);
-        dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE, {id, mode});
+        dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE, id);
     },
     async LOAD_MODULE_ENTITY({commit, getters}, id: string) {
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id, requesting: true});

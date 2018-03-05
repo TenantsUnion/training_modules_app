@@ -10,6 +10,7 @@ export enum CourseMode {
     ENROLLED = 'ENROLLED',
     PREVIEW = 'PREVIEW'
 }
+
 export type CourseMutation<P> = (state: CourseState, payload: P) => any | Mutation<CourseState>;
 
 /**
@@ -18,31 +19,26 @@ export type CourseMutation<P> = (state: CourseState, payload: P) => any | Mutati
 export const COURSE_MUTATIONS: Constant<CourseMutations> = {
     SET_CURRENT_COURSE: 'SET_CURRENT_COURSE',
     SET_COURSE_REQUEST_STAGE: 'SET_COURSE_REQUEST_STAGE',
-    SET_MODE: 'SET_MODE',
     SET_COURSE_ENTITY: 'SET_COURSE_ENTITY',
     SET_COURSE_MODULE_DESCRIPTIONS: 'SET_COURSE_MODULE_DESCRIPTIONS'
 };
 
-export interface CourseMutations {
-    SET_CURRENT_COURSE: CourseMutation<{id}>;
-    SET_COURSE_REQUEST_STAGE: CourseMutation<{id: string; requesting: boolean}>,
-    SET_MODE: CourseMutation<CourseMode>;
+export interface CourseMutations extends MutationTree<CourseState> {
+    SET_CURRENT_COURSE: CourseMutation<string>;
+    SET_COURSE_REQUEST_STAGE: CourseMutation<{ id: string; requesting: boolean }>,
     SET_COURSE_ENTITY: CourseMutation<ViewCourseData>;
-    SET_COURSE_MODULE_DESCRIPTIONS: CourseMutation<{courseId: string, courseModuleDescriptions: ViewModuleDescription[]}>;
+    SET_COURSE_MODULE_DESCRIPTIONS: CourseMutation<{ courseId: string, courseModuleDescriptions: ViewModuleDescription[] }>;
 }
 
 /**
  * Store mutations
  */
-export const coursesMutations: CourseMutations & MutationTree<CourseState> = {
-    SET_CURRENT_COURSE: (state: CourseState, {id}) => {
+export const coursesMutations: CourseMutations = {
+    SET_CURRENT_COURSE: (state: CourseState, id) => {
         state.currentCourseId = id;
     },
     SET_COURSE_REQUEST_STAGE: (state: CourseState, {id, requesting}) => {
         Vue.set(state.courseRequests, id, requesting);
-    },
-    SET_MODE: (state: CourseState, mode: CourseMode) => {
-        state.mode = mode;
     },
     SET_COURSE_ENTITY: (state: CourseState, courseView: ViewCourseData) => {
         Vue.set(state.courses, courseView.id, courseView);
