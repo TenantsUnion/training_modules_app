@@ -3,7 +3,6 @@
         <div class="cell small-11">
             <div class="grid-x">
                 <div class="cell small-12">
-                    <h6 class="subheader">Option</h6>
                     <div v-if="!viewOnly" class="cell small-4 large-3">
                         <switch-checkbox ref="correctSwitch" switch-text="Correct" :checked="isAnswer"/>
                     </div>

@@ -1,7 +1,7 @@
 <template>
     <div class="grid-x">
         <div class="choose-option cell small-1">
-            <input type="checkbox" v-model="optionSelected"/>
+            <input type="checkbox" :disabled="submitted" v-model="optionSelected"/>
         </div>
         <div class="cell small-11 option" v-bind:class="optionClasses">
             <div class="cell full width">
@@ -12,7 +12,7 @@
             </div>
             <div class="cell full width">
                 <div class="explanation-container" v-if="notBlank(option.explanation.editorJson)"
-                     v-show="submitted">
+                     v-show="submitted && optionSelected">
                     <quill-editor ref="explanationQuill"
                                   :read-only="true"
                                   :editor-id="option.explanation.id"
