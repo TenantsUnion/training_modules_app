@@ -34,7 +34,7 @@ const allTestSpecFiles = (dir, regexMatch) => {
     }, [])
 };
 
-export const runTests = async (t?) => {
+export const runTests = async (t?, browsers?: string[]) => {
     // delete old test files
     await new Promise((resolve, reject) => {
         rimraf(compileTestDir, err => {
@@ -56,8 +56,7 @@ export const runTests = async (t?) => {
     try {
         let testsFailed = await t.createRunner()
             .src(tests)
-            .host
-            .browsers(['chrome'])
+            .browsers(browsers)
             .concurrency(3)
             .reporter('spec')
             .run({

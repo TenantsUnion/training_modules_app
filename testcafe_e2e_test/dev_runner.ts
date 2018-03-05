@@ -8,7 +8,7 @@ process.env.NODE_ENV = 'test_dev';
 
 
 createTestCafeServer()
-    .then((t) => runTests(t))
+    .then((t) => runTests(t, ['chrome']))
     .then(() => {
         process.exit(0);
     })

@@ -20,7 +20,7 @@ Promise.all([
 ])
     .then(({1: testCafeServer}) => {
         spinner.stop();
-        return runTests(testCafeServer)
+        return runTests(testCafeServer, ['chrome:headless'])
     })
     .then(() => {
         console.log(chalk.cyan('Process exit'));
