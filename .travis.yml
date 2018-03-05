@@ -8,6 +8,7 @@ cache:
   - "node_modules"
 addons:
   firefox: latest
+  chrome: stable
   apt:
     sources:
      - google-chrome
@@ -16,8 +17,9 @@ addons:
   postgresql: "9.6"
 branches:
   only: "master"
-beforeInstall:
+beforeScript:
    - "export DISPLAY=:99.0"
    # starts Virtual X-Frame Buffer (xvfb)
    - "sh -e /etc/init.d/xvfb start"
    - fluxbox >/dev/null 2>&1 &
+   - sleep 3

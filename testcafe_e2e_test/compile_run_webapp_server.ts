@@ -18,7 +18,7 @@ import {app} from '@server/app';
 
 
 export const buildWebpack = async () => {
-    console.log(chalk.cyan('\tBuilding webpack...'));
+    console.log(chalk.cyan('\n\tBuilding webpack...'));
     return await new Promise((resolve, reject) => {
         rimraf(config.get('webapp.dist'), err => {
             if (err) reject(err);
@@ -37,7 +37,7 @@ export const buildWebpack = async () => {
                     process.exit(1);
                 }
 
-                console.log(chalk.cyan('    Webapp build complete.\n'));
+                console.log(chalk.greenBright('\tWebapp build complete.\n'));
                 resolve();
             });
         });
@@ -45,13 +45,14 @@ export const buildWebpack = async () => {
 
 };
 export const runServer = async () => {
+    console.log(chalk.cyan('\tInitializing app server...'));
     app.set('port', config.get('server.port'));
     let server = http.createServer(app);
 
     return new Promise((resolve, reject) => {
         server.listen(config.get('server.port'));
         server.once('listening', function () {
-            console.log(chalk.cyan('\nServing listening on ' + server.address().port));
+            console.log(chalk.cyan('\tServing listening on ' + server.address().port));
             resolve();
         });
     });
