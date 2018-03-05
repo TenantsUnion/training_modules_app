@@ -3,7 +3,7 @@ import {ViewCourseData} from '@shared/courses';
 import {AppGetter, RootGetters} from '../../state_store';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
 import {ViewModuleDescription} from '@shared/modules';
-import {ViewTrainingEntityDescription} from '@shared/training_entity';
+import {ViewTrainingEntity, ViewTrainingEntityDescription} from '@shared/training_entity';
 import {CourseMode} from "./course_mutations";
 
 export interface NavigationDescription {
@@ -21,12 +21,12 @@ export interface CourseState {
     currentCourseTitle: string;
     currentCourseId: string;
     courses: { [id: string]: ViewCourseData };
-    mode: CourseMode;
+    trainings: {[id: string]: ViewTrainingEntity}; // id can be course(CO), module(MO), section(SE)
 }
 
 export interface CourseGetters {
     currentCourse: ViewCourseData,
-    currentCourseLoaded: boolean,
+    currentCourseTrainingLoaded: boolean,
     currentCourseLoading: boolean,
     courseNavigationDescription: CourseNavigationDescription,
     getModuleDescription: (moduleId: string) => ViewModuleDescription,
@@ -44,12 +44,12 @@ export const courseState: CourseState = {
     currentCourseId: '',
     currentCourseTitle: '',
     courses: {},
-    mode: null,
+    trainings: {}
 };
 
 export const courseGetters: {[index in keyof CourseGetters]: AppGetter<CourseState>} = {
     currentCourse: (state) => state.courses[state.currentCourseId],
-    currentCourseLoaded: (state) => !!state.courses[state.currentCourseId],
+    currentCourseTrainingLoaded: (state) => !!state.courses[state.currentCourseId],
     currentCourseLoading: (state) => state.courseRequests[state.currentCourseId],
     getModuleDescription: (state, getters) => {
         return function (moduleId) {

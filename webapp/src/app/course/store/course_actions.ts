@@ -68,7 +68,7 @@ export const courseActions: CourseActions = {
             }
 
             commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, id);
-            if (!rootGetters.currentCourseLoaded) {
+            if (!rootGetters.currentCourseTrainingLoaded) {
                 commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id, requesting: true});
                 let course = await coursesService.loadAdminCourse(id);
                 commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id, requesting: false});

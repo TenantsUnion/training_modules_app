@@ -100,8 +100,8 @@ export const USER_PROGRESS_ACTIONS: Constant<UserProgressActions> = {
 };
 
 export const userProgressActions: UserProgressActions = {
-    async SAVE_COURSE_PROGRESS ({rootState, commit}, update: TrainingProgressUpdateData) {
-        if (rootState.course.mode !== CourseMode.ENROLLED || !rootState.user.loggedIn) {
+    async SAVE_COURSE_PROGRESS ({rootState, rootGetters, commit}, update: TrainingProgressUpdateData) {
+        if (rootGetters.currentCourseMode !== CourseMode.ENROLLED || !rootState.user.loggedIn) {
             return; // don't record progress in preview or admin mode
         }
         let courseProgress: CourseTrainingProgressUpdate = {
@@ -112,8 +112,8 @@ export const userProgressActions: UserProgressActions = {
         await saveUserProgress(courseProgress);
         commit(USER_PROGRESS_MUTATIONS.REMOVE_SAVING_PROGRESS, courseProgress);
     },
-    async SAVE_MODULE_PROGRESS ({rootState, commit}, update: TrainingProgressUpdateData) {
-        if (rootState.course.mode !== CourseMode.ENROLLED || !rootState.user.loggedIn) {
+    async SAVE_MODULE_PROGRESS ({rootState, commit, rootGetters}, update: TrainingProgressUpdateData) {
+        if (rootGetters.currentCourseMode !== CourseMode.ENROLLED || !rootState.user.loggedIn) {
             return; // don't record progress in preview or admin mode
         }
         let moduleProgress: ModuleTrainingProgressUpdate = {
@@ -124,8 +124,8 @@ export const userProgressActions: UserProgressActions = {
         await saveUserProgress(moduleProgress);
         commit(USER_PROGRESS_MUTATIONS.REMOVE_SAVING_PROGRESS, moduleProgress);
     },
-    async SAVE_SECTION_PROGRESS ({rootState, commit}, update: TrainingProgressUpdateData) {
-        if (rootState.course.mode !== CourseMode.ENROLLED || !rootState.user.loggedIn) {
+    async SAVE_SECTION_PROGRESS ({rootState, commit, rootGetters}, update: TrainingProgressUpdateData) {
+        if (rootGetters.currentCourseMode !== CourseMode.ENROLLED || !rootState.user.loggedIn) {
             return; // don't record progress in preview or admin mode
         }
         let sectionProgress: SectionTrainingProgressUpdate = {
