@@ -31,6 +31,7 @@
     "test-server": "npm run test-init-db && npm run test-mocha",
     "test-server-dev": "cross-env COMMAND='mocha mocha_unit_test/**/*.spec.ts --opts mocha_unit_test/mocha.opts -R min --watch --watch-extensions ts' npm run test-command",
     "test-karma-dev": "cross-env COMMAND='karma start webapp/karma_unit_test/karma.unit.js' npm run test-command",
+    "test-e2e": "cross-env COMMAND='ts-node testcafe_e2e_test/build_runner.ts -P testcafe_e2e_test/tsconfig.json' npm run test-command",
     "test": "npm run test-server && npm run test-karma",
     "rm-ide-compiled-ts": "./bin/rm_ide_compiled_ts.sh"
   },

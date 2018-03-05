@@ -1,12 +1,15 @@
 import chalk from 'chalk';
 import * as path from 'path';
-import {run} from './compile_run_testcafe';
+import {runTests} from './compile_run_testcafe';
+import {buildWebpack} from "./compile_run_webapp_server";
 
 process.env.NODE_CONFIG_DIR = path.resolve(__dirname, '../config');
 // will run against live reload webpack dev server on localhost:8080
 process.env.NODE_ENV = 'test_dev';
 
-run()
+
+buildWebpack()
+    .then(runTests)
     .then(() => {
         process.exit(0);
     })

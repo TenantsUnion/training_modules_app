@@ -8,17 +8,17 @@ const createTestCafe = require('testcafe');
 const moduleAlias = require("module-alias");
 // Override module path alias set in package.json for running server
 // since the directory structure for tests doesn't match.
-moduleAlias.addAlias('@shared', __dirname + '/../shared');
-moduleAlias.addAlias('@server', __dirname + '/../server/src');
-moduleAlias.addAlias('@util', __dirname + '/../server/src/util');
-moduleAlias.addAlias('@course', __dirname + '/../server/src/course');
-moduleAlias.addAlias('@module', __dirname + '/../server/src/module');
-moduleAlias.addAlias('@section', __dirname + '/../server/src/section');
-moduleAlias.addAlias('@mochatest', __dirname + '/../mocha_unit_test');
+moduleAlias.addAlias('@shared', path.resolve(__dirname,  '../shared'));
+moduleAlias.addAlias('@server', path.resolve(__dirname, '../server/src'));
+moduleAlias.addAlias('@util', path.resolve(__dirname, '../server/src/util'));
+moduleAlias.addAlias('@course',path.resolve( __dirname,  '../server/src/course'));
+moduleAlias.addAlias('@module',path.resolve( __dirname, '../server/src/module'));
+moduleAlias.addAlias('@section', path.resolve(__dirname, '../server/src/section'));
+moduleAlias.addAlias('@mochatest', path.resolve(__dirname, '../mocha_unit_test'));
 
 
-const testTsConfig = require('./tsconfig.json');
-let compileTestDir = "./.compiled";
+const testTsConfig = require(path.resolve(__dirname, './tsconfig.json'));
+let compileTestDir = path.resolve(__dirname, "./.compiled");
 
 
 const allTestSpecFiles = (dir, regexMatch) => {
@@ -34,7 +34,7 @@ const allTestSpecFiles = (dir, regexMatch) => {
     }, [])
 };
 
-export const run = async () => {
+export const runTests = async (t?) => {
     // delete old test files
     await new Promise((resolve, reject) => {
         rimraf(compileTestDir, err => {
@@ -51,9 +51,7 @@ export const run = async () => {
     });
     program.emit(); // outputs files
 
-    console.log(chalk.cyan('\tCreating testcafe server...'));
-    let t = await createTestCafe('localhost', 1337, 1338);
-
+    t = t ? t : await createTestCafeServer();
     let tests = allTestSpecFiles(__dirname + '/.compiled/testcafe_e2e_test', /\.spec\.js$/);
     try {
         let testsFailed = await t.createRunner()
@@ -71,4 +69,9 @@ export const run = async () => {
     } finally {
         t.close();
     }
+};
+
+export const createTestCafeServer = async () => {
+    console.log(chalk.cyan('\tCreating testcafe server...'));
+    return createTestCafe('localhost', 1337, 1338);
 };
