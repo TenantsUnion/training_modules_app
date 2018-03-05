@@ -4,7 +4,7 @@
         <span class="menu-section__course-title" v-bind:class="{'is-active': activeNavigation.course}">
             <router-link :to="courseRoute()">{{course.title}}</router-link>
         </span>
-            <div v-if="isCourseAdmin" class="buttons">
+            <div v-if="isAdmin" class="buttons">
                 <router-link :to="coursePreview">
                     <button title="Preview" class="button button__icon">
                         <i class="fa fa-eye fa-fw "></i>
@@ -12,7 +12,7 @@
                     </button>
                 </router-link>
                 <router-link :to="createModule">
-                    <button title="Create Module" v-if="isCourseAdmin" class="button button__icon">
+                    <button title="Create Module" v-if="isAdmin" class="button button__icon">
                         <i class="fa fa-plus fa-fw "></i>
                         <span class="sr-only">Create Module</span>
                     </button>
@@ -28,7 +28,7 @@
                               v-bind:class="{'is-active': activeNavigation.module === module.title}">
                             <router-link :to="moduleRoute(module.slug)">{{module.title}}</router-link>
                         </span>
-                        <div v-if="isCourseAdmin" class="buttons">
+                        <div v-if="isAdmin" class="buttons">
                             <router-link :to="previewModule(module.slug)">
                                 <button title="Preview" class="button button__icon">
                                     <i class="fa fa-eye fa-fw "></i>
@@ -52,7 +52,7 @@
                                         {{section.title}}
                                     </router-link>
                                 </span>
-                                <div v-if="isCourseAdmin" class="buttons">
+                                <div v-if="isAdmin" class="buttons">
                                     <router-link :to="previewSection(module.slug, section.slug)">
                                         <button title="Preview" class="button button__icon">
                                             <i class="fa fa-eye fa-fw "></i>

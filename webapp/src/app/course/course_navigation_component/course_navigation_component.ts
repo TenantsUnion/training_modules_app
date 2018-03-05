@@ -5,6 +5,7 @@ import {Location} from 'vue-router/types/router';
 import {mapGetters, mapState} from 'vuex';
 import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {RootGetters, RootState} from "../../state_store";
+import {CourseMode} from "@course/store/course_mutations";
 
 @Component({
     data: () => {
@@ -53,18 +54,18 @@ import {RootGetters, RootState} from "../../state_store";
 })
 export default class CourseNavigationComponent extends Vue {
     course: ViewCourseData;
-    isCourseAdmin: boolean;
+    isAdmin: boolean;
 
     courseRoute (): Location {
         return {
-            name: this.isCourseAdmin ? ADMIN_COURSE_ROUTES.editCourse : PREVIEW_COURSE_ROUTES.coursePreview
+            name: this.isAdmin ? ADMIN_COURSE_ROUTES.editCourse : PREVIEW_COURSE_ROUTES.coursePreview
         }
 
     }
 
     moduleRoute (moduleSlug: string): Location {
         return {
-            name: this.isCourseAdmin ? ADMIN_COURSE_ROUTES.editModule : PREVIEW_COURSE_ROUTES.modulePreview,
+            name: this.isAdmin ? ADMIN_COURSE_ROUTES.editModule : PREVIEW_COURSE_ROUTES.modulePreview,
             params: {
                 moduleSlug: moduleSlug
             }
@@ -73,7 +74,7 @@ export default class CourseNavigationComponent extends Vue {
 
     sectionRoute (moduleSlug: string, sectionSlug: string): Location {
         return {
-            name: this.isCourseAdmin ? ADMIN_COURSE_ROUTES.editSection : PREVIEW_COURSE_ROUTES.sectionPreview,
+            name: this.isAdmin ? ADMIN_COURSE_ROUTES.editSection : PREVIEW_COURSE_ROUTES.sectionPreview,
             params: {
                 moduleSlug: moduleSlug,
                 sectionSlug: sectionSlug
