@@ -1,6 +1,6 @@
 import {NavigationGuard} from 'vue-router';
-import {store} from '../state_store';
 import {MODULE_ACTIONS} from '@module/store/module_actions';
+import {store} from "@webapp_root/app";
 
 /**
  * Triggers a refresh of the current course when the route changes needed in order to update components that aren't

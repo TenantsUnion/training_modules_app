@@ -3,7 +3,6 @@ import {NavigationGuard, RouteConfig} from "vue-router";
 import CreateContentComponent from "./content/create_content/create_content_component.vue";
 import ContentDescriptionListComponent from "./content/content_description_list/content_description_list_component.vue";
 import EditUserContentComponent from "./content/edit/edit_user_content_component.vue";
-import {store} from '../state_store';
 import {USER_ACTIONS} from './store/user_store';
 import {appRouter} from '../router';
 import {LOGIN_ROUTE} from '../account/account_routes';
@@ -12,6 +11,7 @@ import UserEnrolledCoursesComponent from "./courses/enrolled/user_enrolled_cours
 import UserAdminCourseComponent from "./courses/admin/user_admin_courses_component.vue";
 import {USER_ROUTES} from "@global/routes";
 import {AdminCourseRoutes, EnrolledCourseRoutes, PreviewCourseRoutes} from "@course/courses_routes";
+import {store} from "@webapp_root/app";
 
 /**
  * If vue route matches username param then check if user is logged or redirect to login page

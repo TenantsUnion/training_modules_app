@@ -6,7 +6,7 @@ import {AppGetter, RootGetters, RootState} from '../../state_store';
 import {Constant} from '@shared/typings/util_typings';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
 import {CourseMode} from "@course/store/course_mutations";
-import {loadUserCourses} from "../user_http_service";
+import {userHttpService} from "@user/user_http_service";
 
 /**
  * State
@@ -191,7 +191,7 @@ export const userCoursesListingActions: UserCoursesListingActions & ActionTree<U
         commit(USER_COURSES_LISTING_MUTATIONS.SET_COURSE_DESCRIPTIONS_LOADING, true);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, false);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_COURSE_DESCRIPTIONS_LOADING, false);
-        let courseListing = await loadUserCourses(rootState.user.userId);
+        let courseListing = await userHttpService.loadUserCourses(rootState.user.userId);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, courseListing.admin);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, courseListing.enrolled);
         commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, true);

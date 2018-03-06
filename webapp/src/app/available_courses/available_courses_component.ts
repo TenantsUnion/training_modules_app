@@ -1,13 +1,12 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import {CourseDescription} from "@shared/courses";
-import {COURSE_ACTIONS} from '@course/store/course_actions';
 import {NavigationGuard} from "vue-router";
-import {store} from "../state_store";
 import {AVAILABLE_COURSES_ACTIONS} from "./available_courses_store";
 import {mapState} from "vuex";
 import {ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
-import {USER_ACTIONS} from "../user/store/user_store";
+import {USER_ACTIONS} from "@user/store/user_store";
+import {store} from "@webapp_root/app";
 
 export const availableCoursesRouteGuard: NavigationGuard = async (to, from, next) => {
     try {

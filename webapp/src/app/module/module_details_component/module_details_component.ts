@@ -2,13 +2,12 @@ import Vue from 'vue';
 import Component from "vue-class-component";
 import {mapGetters, mapState} from 'vuex';
 import {NavigationGuard} from 'vue-router';
-import {ADMIN_COURSE_ROUTES} from "@global/routes";
-import {store} from "../../state_store";
-import {MODULE_ACTIONS} from "../store/module_actions";
+import {MODULE_ACTIONS} from "@module/store/module_actions";
 import {CourseMode} from "@course/store/course_mutations";
 import {QuestionSubmission, TrainingProgressUpdateData} from "@shared/user_progress";
 import {ViewModuleData} from "@shared/modules";
-import {USER_PROGRESS_ACTIONS} from "../../user_progress/user_progress_store";
+import {USER_PROGRESS_ACTIONS} from "@user_progress/user_progress_store";
+import {store} from "@webapp_root/app";
 
 export const currentModuleRouteGuard: NavigationGuard = async (to, from, next) => {
     let slug = to.params.moduleSlug;

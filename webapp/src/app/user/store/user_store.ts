@@ -4,8 +4,8 @@ import {Constant} from '@shared/typings/util_typings';
 import {IUserInfo} from '@shared/user';
 import {accountHttpService} from '../../account/account_http_service';
 import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from './courses_listing_store';
-import {enrollUserInCourse} from "@user_progress/user_progress_requests";
-import {AVAILABLE_COURSES_MUTATIONS} from "../../available_courses/available_courses_store";
+import {userHttpService} from "@user/user_http_service";
+import {AVAILABLE_COURSES_MUTATIONS} from "@webapp_root/available_courses/available_courses_store";
 
 
 /**
@@ -123,7 +123,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
         commit(AVAILABLE_COURSES_MUTATIONS.CLEAR_COURSES)
     },
     async ENROLL_IN_COURSE ({commit, state, rootState}, courseId: string) {
-       let {enrolledCourses, courseProgress} = await enrollUserInCourse({courseId, userId: state.userId});
+       let {enrolledCourses, courseProgress} = await userHttpService.enrollUserInCourse({courseId, userId: state.userId});
        commit(USER_COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, enrolledCourses);
     }
 };

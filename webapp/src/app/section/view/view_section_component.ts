@@ -3,16 +3,16 @@ import Component from 'vue-class-component';
 import {CourseRefreshComponent} from '@global/refresh_route';
 import {NavigationGuard} from 'vue-router';
 import {SECTION_ACTIONS} from '@section/store/section_actions';
-import {RootGetters, RootState, store} from '../../state_store';
 import {MODULE_ACTIONS} from '@module/store/module_actions';
 import {mapGetters, mapState} from 'vuex';
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {
-    QuestionSubmission, TrainingProgress, TrainingProgressUpdate,
-    TrainingProgressUpdateData
+    QuestionSubmission, TrainingProgressUpdateData
 } from "@shared/user_progress";
 import {ViewSectionData} from "@shared/sections";
-import {USER_PROGRESS_ACTIONS} from "../../user_progress/user_progress_store";
+import {USER_PROGRESS_ACTIONS} from "@user_progress/user_progress_store";
+import {store} from "@webapp_root/app";
+import {RootGetters, RootState} from "@webapp_root/state_store";
 
 export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) => {
     let courseSlug = to.params.courseSlug;

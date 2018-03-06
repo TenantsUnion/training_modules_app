@@ -1,5 +1,4 @@
-import Vuex, {Action, ActionContext, Store} from 'vuex';
-import Vue from 'vue';
+import Vuex, {Action, ActionContext} from 'vuex';
 import {CourseGetters, courseGetters, CourseState, courseState} from '@course/store/course_state';
 import {ModuleGetters, moduleGetters, ModuleState, moduleState} from '@module/store/module_state';
 import {sectionGetters, SectionGetters, sectionState, SectionState} from '@section/store/section_state';
@@ -11,8 +10,8 @@ import {
     userCoursesListingActions, userCoursesListingGetters, UserCoursesListingGetters,
     userCoursesListingMutations, UserCoursesListingState,
     userCoursesListingState
-} from './user/store/courses_listing_store';
-import {userActions, userMutations, userState, UserState} from './user/store/user_store';
+} from '@user/store/courses_listing_store';
+import {userActions, userMutations, userState, UserState} from '@user/store/user_store';
 import {sectionActions} from '@section/store/section_actions';
 import {sectionMutations} from '@section/store/section_mutations';
 import {
@@ -27,19 +26,16 @@ import {
 import {
     userProgressActions, userProgressGetters, UserProgressGetters, userProgressMutations, UserProgressState,
     userProgressState
-} from "./user_progress/user_progress_store";
-
-Vue.use(Vuex);
+} from "@user_progress/user_progress_store";
 
 /**
  * Type for vuex action that generically types the payload (default definition has payload typed to 'any')
- */
-export type TypedAction<S, P, V> = (context: ActionContext<S, RootState>, payload: P) => (Promise<V> | V) | Action<S, RootState>;
-/**
  * Stronger typing than vuex ActionTree that only enforces string keys and Action properties.
  * This goes one step further by being able to enforce an interface I with each property an action with a typed payload
  */
-export const store: Store<RootState> = new Vuex.Store({
+export type TypedAction<S, P, V> = (context: ActionContext<S, RootState>, payload: P) => (Promise<V> | V) | Action<S, RootState>;
+
+export const storeConfig = {
     strict: process.env.NODE_ENV !== 'production',
     modules: {
         statusMessages: {
@@ -89,7 +85,7 @@ export const store: Store<RootState> = new Vuex.Store({
             getters: availableCoursesGetters
         }
     }
-});
+};
 
 export interface RootState {
     user: UserState,
