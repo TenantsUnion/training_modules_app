@@ -1,3 +1,5 @@
+const path = require('path');
+process.env.NODE_CONFIG_DIR = path.resolve(__dirname, '../../config');
 const puppeteer = require('puppeteer');
 console.log(`
     CHROME_BIN executable path ${process.env.CHROME_BIN}
@@ -17,7 +19,8 @@ module.exports = function (config) {
             require('karma-mocha'),
             require('karma-webpack'),
             require('karma-chrome-launcher'),
-            require('karma-mocha-reporter')
+            require('karma-mocha-reporter'),
+            require('karma-sourcemap-loader')
         ],
         files: ['karma_unit_test/index.ts',
             {
@@ -27,7 +30,7 @@ module.exports = function (config) {
                 served: true
             },
             {
-                pattern: './karma_unit_test/**/*.ts',
+                pattern: './karma_unit_test/**/*',
                 watched: false,
                 included: false,
                 served: true
@@ -39,7 +42,7 @@ module.exports = function (config) {
         },
         reporters: ['mocha'],
         preprocessors: {
-            'karma_unit_test/index.ts': ['webpack']
+            'karma_unit_test/index.ts': ['webpack', 'sourcemap']
         },
         webpack: webpackConfig,
         webpackServer: {noInfo: true},
@@ -54,6 +57,9 @@ module.exports = function (config) {
             ChromeHeadlessNoSandbox: {
                 base: 'ChromeHeadless',
                 flags: ['--no-sandbox']
+            },
+            Chrome: {
+                base: 'Chrome'
             }
         },
         mime: {
