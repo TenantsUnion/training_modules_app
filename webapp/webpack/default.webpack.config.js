@@ -58,7 +58,9 @@ module.exports = {
             '@course': path.resolve(__dirname, '../src/app/course'),
             '@module': path.resolve(__dirname, '../src/app/module'),
             '@section': path.resolve(__dirname, '../src/app/section'),
-            '@user_progress': path.resolve(__dirname, '../src/app/user_progress')
+            '@user_progress': path.resolve(__dirname, '../src/app/user_progress'),
+            '@user': path.resolve(__dirname, '../src/app/user'),
+            '@webapp_root': path.resolve(__dirname, '../src/app')
         }
     },
     performance: {

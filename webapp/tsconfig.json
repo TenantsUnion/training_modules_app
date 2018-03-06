@@ -46,7 +46,13 @@
         "./src/app/section/*"
       ],
       "@user_progress/*": [
-       "./src/app/user_progress/*"
+        "./src/app/user_progress/*"
+      ],
+      "@user/*": [
+        "./src/app/user/*"
+      ],
+      "@webapp_root/*": [
+        "./src/app/*"
       ]
     }
   }
