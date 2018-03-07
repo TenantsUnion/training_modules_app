@@ -5,7 +5,7 @@ import * as VueForm from '../../vue-form';
 import {SaveModuleEntityPayload, ViewModuleData} from '@shared/modules';
 import {CourseRefreshComponent} from '@global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
-import {RootGetters, RootState} from '../../state_store';
+import {RootGetters, RootState} from '@webapp_root/store';
 import {currentModuleRouteGuard} from '../module_details_component/module_details_component';
 import {TrainingEntityDiffDelta, ViewTrainingEntityDescription} from '@shared/training_entity';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';

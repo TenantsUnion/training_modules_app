@@ -1,4 +1,4 @@
-import {RootGetters, RootState} from '../../state_store';
+import {RootGetters, RootState} from '@webapp_root/store';
 import {ViewModuleData} from '@shared/modules';
 
 export interface ModuleState {

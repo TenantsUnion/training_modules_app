@@ -1,6 +1,6 @@
-import {ActionTree, Mutation, MutationTree} from "vuex";
-import {RootState, TypedAction} from "../../state_store";
+import {ActionTree, GetterTree, Mutation, MutationTree} from "vuex";
 import {Constant} from "@shared/typings/util_typings";
+import {RootState, TypedAction, VuexModuleConfig} from "@webapp_root/store";
 
 export interface StatusMessage {
     title?: string;
@@ -11,10 +11,6 @@ export interface StatusMessage {
 export interface StatusMessagesState {
     messages: StatusMessage[];
 }
-
-export const statusMessagesState = {
-    messages: [],
-};
 
 
 export type StatusMessagesMutation<P> = (state: StatusMessagesState, payload: P) => any | Mutation<StatusMessagesState>;
@@ -47,7 +43,7 @@ export type StatusMessagesAction<P, V> = TypedAction<StatusMessagesState, P, V>;
 
 export type TitleMessagesObj = { title?: string, message?: string };
 
-export interface StatusMessagesActions {
+export interface StatusMessagesActions extends ActionTree<StatusMessagesState, RootState> {
     SET_MESSAGE_TIMEOUT_CLEAR: StatusMessagesAction<{ message: StatusMessage, msTimeout: number }, void>;
     // times out and dismissable
     SET_SUCCESS_MESSAGE: StatusMessagesAction<TitleMessagesObj, void>;
@@ -65,7 +61,7 @@ export const STATUS_MESSAGES_ACTIONS: Constant<StatusMessagesActions> = {
 
 };
 
-export const statusMessageActions: StatusMessagesActions & ActionTree<StatusMessagesState, RootState> = {
+export const statusMessageActions: StatusMessagesActions = {
     SET_MESSAGE_TIMEOUT_CLEAR ({commit}, {message, msTimeout}) {
         commit(STATUS_MESSAGES_MUTATIONS.PUSH_STATUS_MESSAGE, message);
         setTimeout(() => commit(STATUS_MESSAGES_MUTATIONS.DISMISS_MESSAGE, message), msTimeout)
@@ -83,6 +79,25 @@ export const statusMessageActions: StatusMessagesActions & ActionTree<StatusMess
         commit(STATUS_MESSAGES_MUTATIONS.PUSH_STATUS_MESSAGE, message);
     }
 };
+
+export class StatusMessageModuleConfig implements VuexModuleConfig
+    <StatusMessagesState, GetterTree<StatusMessagesState, RootState>, StatusMessagesActions, StatusMessagesMutations> {
+    initState (): StatusMessagesState {
+        return {
+            messages: []
+        };
+    }
+
+    module () {
+        return {
+            state: this.initState,
+            actions: statusMessageActions,
+            mutations: statusMessagesMutations,
+        };
+    }
+}
+
+export const statusMessageModuleConfig = new StatusMessageModuleConfig();
 
 
 

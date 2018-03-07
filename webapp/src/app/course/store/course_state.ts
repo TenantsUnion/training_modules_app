@@ -1,6 +1,6 @@
 import * as _ from 'underscore';
 import {ViewCourseData} from '@shared/courses';
-import {AppGetter, RootGetters} from '../../state_store';
+import {AppGetter, RootGetters} from '@webapp_root/store';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
 import {ViewModuleDescription} from '@shared/modules';
 import {ViewTrainingEntity, ViewTrainingEntityDescription} from '@shared/training_entity';

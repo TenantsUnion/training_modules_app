@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
 import {mapState} from "vuex";
-import {RootState} from "../../state_store";
+import {RootState} from "@webapp_root/store";
 import {STATUS_MESSAGES_MUTATIONS, StatusMessage} from "@global/status_messages/status_messages_store";
 
 @Component({

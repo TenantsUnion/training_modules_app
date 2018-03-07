@@ -1,5 +1,5 @@
-import {RootGetters, RootState} from '../../state_store';
-import {ViewSectionData} from '../../../../../shared/sections';
+import {RootGetters, RootState} from '@webapp_root/store';
+import {ViewSectionData} from '@shared/sections';
 
 export interface SectionState {
     currentSectionTitle: string;

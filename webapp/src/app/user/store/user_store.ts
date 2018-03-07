@@ -1,5 +1,5 @@
 import {Action, ActionContext, ActionTree, Mutation, MutationTree} from 'vuex';
-import {RootState} from '../../state_store';
+import {RootState} from '@webapp_root/store';
 import {Constant} from '@shared/typings/util_typings';
 import {IUserInfo} from '@shared/user';
 import {accountHttpService} from '../../account/account_http_service';

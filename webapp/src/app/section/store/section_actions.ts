@@ -1,7 +1,7 @@
 import {SECTION_MUTATIONS} from './section_mutations';
 import {COURSE_MUTATIONS, CourseMode} from '@course/store/course_mutations';
 import {coursesService} from '@course/courses_service';
-import {RootGetters, RootState} from '../../state_store';
+import {RootGetters, RootState} from '@webapp_root/store';
 import {SectionState} from './section_state';
 import {Action, ActionTree} from 'vuex';
 import {

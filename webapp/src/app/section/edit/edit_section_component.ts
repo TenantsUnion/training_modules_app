@@ -4,7 +4,7 @@ import * as VueForm from '../../vue-form';
 import {SaveSectionEntityPayload, ViewSectionData} from '@shared/sections';
 import {CourseRefreshComponent} from '@global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
-import {RootGetters, RootState} from '../../state_store';
+import {RootGetters, RootState} from '@webapp_root/store';
 import {currentSectionRouteGuard} from '../view/view_section_component';
 import {Watch} from 'vue-property-decorator';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';

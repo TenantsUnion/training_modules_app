@@ -2,7 +2,7 @@ import {CreateModuleEntityPayload, SaveModuleEntityPayload} from '@shared/module
 import {MODULE_MUTATIONS} from './module_mutations';
 import {ModuleState} from './module_state';
 import {Action, ActionTree} from 'vuex';
-import {RootGetters, RootState} from '../../state_store';
+import {RootGetters, RootState} from '@webapp_root/store';
 import {Constant} from '@shared/typings/util_typings';
 import {COURSE_MUTATIONS, CourseMode} from '@course/store/course_mutations';
 import {loadModule, createModule, saveModule} from '@module/modules_requests';

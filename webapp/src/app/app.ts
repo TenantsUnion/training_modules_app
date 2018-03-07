@@ -7,7 +7,8 @@ import {registerGlobalComponents} from './globals';
 import App from './app.vue';
 import {availableCoursesRoutes} from "./available_courses/available_courses_routes";
 import {Store} from "vuex";
-import {RootState, storeConfig} from "@webapp_root/state_store";
+import {RootState} from "@webapp_root/store";
+import {storeConfig} from "@webapp_root/state_store";
 
 // load javascript functionality for foundation
 require('foundation-sites');

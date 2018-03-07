@@ -2,7 +2,7 @@ import Vue from 'vue';
 import * as _ from 'underscore';
 import {AdminCourseDescription, CourseDescription, EnrolledCourseDescription} from '@shared/courses';
 import {Action, ActionContext, ActionTree, Mutation, MutationTree} from 'vuex';
-import {AppGetter, RootGetters, RootState} from '../../state_store';
+import {AppGetter, RootGetters, RootState} from '@webapp_root/store';
 import {Constant} from '@shared/typings/util_typings';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
 import {CourseMode} from "@course/store/course_mutations";

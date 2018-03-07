@@ -1,9 +1,9 @@
 import {CourseDescription} from "@shared/courses";
 import {Action, ActionContext, ActionTree, Mutation, MutationTree} from "vuex";
 import {Constant} from "@shared/typings/util_typings";
-import {AppGetter, RootState} from "../state_store";
 import {getAvailableCourses} from "./available_courses_requests";
 import {courseSlugToIdMap, determineSlugs} from "@global/course_description_util";
+import {AppGetter, RootState} from "@webapp_root/store";
 
 export interface AvailableCoursesState {
     courses: CourseDescription[];

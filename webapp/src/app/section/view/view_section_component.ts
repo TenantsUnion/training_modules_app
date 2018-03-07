@@ -12,7 +12,7 @@ import {
 import {ViewSectionData} from "@shared/sections";
 import {USER_PROGRESS_ACTIONS} from "@user_progress/user_progress_store";
 import {store} from "@webapp_root/app";
-import {RootGetters, RootState} from "@webapp_root/state_store";
+import {RootGetters, RootState} from "@webapp_root/store";
 
 export const currentSectionRouteGuard: NavigationGuard = async (to, from, next) => {
     let courseSlug = to.params.courseSlug;

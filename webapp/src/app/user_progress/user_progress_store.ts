@@ -1,4 +1,3 @@
-import {RootState, TypedAction} from "../state_store";
 import {
     CourseTrainingProgressUpdate, ModuleTrainingProgressUpdate, SectionTrainingProgressUpdate, TrainingProgressUpdate,
     TrainingProgressUpdateData, TrainingProgressUpdateType, UserCourseProgressView
@@ -8,6 +7,7 @@ import {CourseMode} from "@course/store/course_mutations";
 import {loadUserProgress, saveUserProgress} from "./user_progress_requests";
 import {Constant} from "@shared/typings/util_typings";
 import Vue from 'vue';
+import {RootState, TypedAction} from "@webapp_root/store";
 
 export interface UserProgressState {
     savingProgress: { [index: string]: TrainingProgressUpdate[] };

@@ -6,9 +6,9 @@ import {
 } from '@shared/courses';
 import {getCorrelationId} from '@shared/correlation_id_generator';
 import {coursesService} from '../courses_service';
-import {RootGetters, RootState, TypedAction} from '../../state_store';
+import {RootGetters, RootState, TypedAction} from '@webapp_root/store';
 import {Constant} from '@shared/typings/util_typings';
-import {COURSES_LISTING_ACTIONS, COURSES_LISTING_MUTATIONS} from '../../user/store/courses_listing_store';
+import {COURSES_LISTING_ACTIONS, COURSES_LISTING_MUTATIONS} from '@user/store/courses_listing_store';
 import {ActionTree} from "vuex";
 
 export type CourseAction<P, V> = TypedAction<CourseState, P, V>;

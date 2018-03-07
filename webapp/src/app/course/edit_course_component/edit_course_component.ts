@@ -1,12 +1,12 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import {mapGetters, mapState} from 'vuex';
-import {RootGetters, RootState} from '../../state_store';
+import {RootGetters, RootState} from '@webapp_root/store';
 import {Watch} from 'vue-property-decorator';
 import * as VueForm from '../../vue-form';
 import {COURSE_ACTIONS} from '../store/course_actions';
 import {diffBasicPropsCourseProps, SaveCourseEntityPayload, ViewCourseData} from '@shared/courses';
-import {getSlugFromCourseIdFn} from '../../user/store/courses_listing_store';
+import {getSlugFromCourseIdFn} from '@user/store/courses_listing_store';
 import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
