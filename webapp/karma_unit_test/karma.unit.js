@@ -1,15 +1,7 @@
 const path = require('path');
+const webpackConfig = require('../webpack/karma_unit_test.webpack.config');
 process.env.NODE_CONFIG_DIR = path.resolve(__dirname, '../../config');
-const puppeteer = require('puppeteer');
-console.log(`
-    CHROME_BIN executable path ${process.env.CHROME_BIN}
-    Puppeteer executable path ${puppeteer.executablePath()}
-    Setting CHROME_BIN to ${puppeteer.executablePath()}
-`);
-process.env.CHROME_BIN = puppeteer.executablePath();
-
-var webpackConfig = require('../webpack/karma_unit_test.webpack.config');
-// reset entry since path would be wrong and it doesn't apply
+process.env.NODE_ENV = 'test';
 
 module.exports = function (config) {
     config.set({
@@ -19,8 +11,7 @@ module.exports = function (config) {
             require('karma-mocha'),
             require('karma-webpack'),
             require('karma-chrome-launcher'),
-            require('karma-mocha-reporter'),
-            require('karma-sourcemap-loader')
+            require('karma-mocha-reporter')
         ],
         files: ['karma_unit_test/index.ts',
             {
@@ -30,7 +21,7 @@ module.exports = function (config) {
                 served: true
             },
             {
-                pattern: './karma_unit_test/**/*',
+                pattern: './karma_unit_test/**/*.ts',
                 watched: false,
                 included: false,
                 served: true
@@ -42,7 +33,7 @@ module.exports = function (config) {
         },
         reporters: ['mocha'],
         preprocessors: {
-            'karma_unit_test/index.ts': ['webpack', 'sourcemap']
+            'karma_unit_test/index.ts': ['webpack']
         },
         webpack: webpackConfig,
         webpackServer: {noInfo: true},
@@ -57,9 +48,6 @@ module.exports = function (config) {
             ChromeHeadlessNoSandbox: {
                 base: 'ChromeHeadless',
                 flags: ['--no-sandbox']
-            },
-            Chrome: {
-                base: 'Chrome'
             }
         },
         mime: {
