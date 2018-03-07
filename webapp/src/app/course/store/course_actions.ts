@@ -8,7 +8,7 @@ import {getCorrelationId} from '@shared/correlation_id_generator';
 import {coursesService} from '../courses_service';
 import {RootGetters, RootState, TypedAction} from '../../state_store';
 import {Constant} from '@shared/typings/util_typings';
-import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from '../../user/store/courses_listing_store';
+import {COURSES_LISTING_ACTIONS, COURSES_LISTING_MUTATIONS} from '../../user/store/courses_listing_store';
 import {ActionTree} from "vuex";
 
 export type CourseAction<P, V> = TypedAction<CourseState, P, V>;
@@ -52,7 +52,7 @@ export const courseActions: CourseActions = {
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
             let courseEntity: ViewCourseData = await coursesService.createCourse(createCourseCommand);
             let updateAdminDescriptions: AdminCourseDescription[] = [courseEntity, ...rootState.userCourses.adminCourseDescriptions];
-            commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, updateAdminDescriptions);
+            commit(COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, updateAdminDescriptions);
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
             commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, courseEntity);
             return courseEntity.id;
@@ -80,7 +80,7 @@ export const courseActions: CourseActions = {
         }
     },
     async SET_CURRENT_COURSE_FROM_SLUG ({getters, dispatch, rootState}, slug) {
-        await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
+        await dispatch(COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
         let mode = (<RootGetters> getters).getUserCourseModeFromSlug(slug);
         let id = mode === CourseMode.PREVIEW ? (<RootGetters> getters).getAvailableCourseIdFromSlug(slug) :
             (<RootGetters> getters).getUserCourseIdFromSlug(slug);
@@ -93,8 +93,8 @@ export const courseActions: CourseActions = {
             commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
             if (saveCourseEntityPayload.changes.title) {
                 // title change means slug changed -- reload admin courses to recalculate slug
-                commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, false);
-                await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
+                commit(COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, false);
+                await dispatch(COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
             }
         } finally {
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: saveCourseEntityPayload.id, requesting: false});

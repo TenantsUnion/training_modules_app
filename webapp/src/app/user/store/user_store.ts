@@ -3,7 +3,7 @@ import {RootState} from '../../state_store';
 import {Constant} from '@shared/typings/util_typings';
 import {IUserInfo} from '@shared/user';
 import {accountHttpService} from '../../account/account_http_service';
-import {USER_COURSES_LISTING_ACTIONS, USER_COURSES_LISTING_MUTATIONS} from './courses_listing_store';
+import {COURSES_LISTING_ACTIONS, COURSES_LISTING_MUTATIONS} from './courses_listing_store';
 import {userHttpService} from "@user/user_http_service";
 import {AVAILABLE_COURSES_MUTATIONS} from "@webapp_root/available_courses/available_courses_store";
 
@@ -86,7 +86,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
                 password: ''
             });
             commit(USER_MUTATIONS.USER_LOGIN, userInfo);
-            dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
+            dispatch(COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
         } catch (e) {
             console.error(e);
         }
@@ -97,7 +97,7 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
             password: ''
         });
         commit(USER_MUTATIONS.USER_LOGIN, userInfo);
-        await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
+        await dispatch(COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
     },
     async LOAD_INFO_FROM_USER_SESSION ({dispatch, state, commit}, username) {
         if (username === state.username && state.userInfo) {
@@ -113,17 +113,17 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
         let userInfo = await accountHttpService.getLoggedInUserInfo(username);
         if (userInfo) {
             commit(USER_MUTATIONS.USER_LOGIN, userInfo);
-            await dispatch(USER_COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
+            await dispatch(COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
         }
     },
     async LOGOUT ({commit, state, rootState}) {
         await accountHttpService.logout();
         commit(USER_MUTATIONS.USER_LOGOUT);
-        commit(USER_COURSES_LISTING_MUTATIONS.CLEAR_USER_COURSES_LISTINGS);
+        commit(COURSES_LISTING_MUTATIONS.CLEAR_USER_COURSES_LISTINGS);
         commit(AVAILABLE_COURSES_MUTATIONS.CLEAR_COURSES)
     },
     async ENROLL_IN_COURSE ({commit, state, rootState}, courseId: string) {
        let {enrolledCourses, courseProgress} = await userHttpService.enrollUserInCourse({courseId, userId: state.userId});
-       commit(USER_COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, enrolledCourses);
+       commit(COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, enrolledCourses);
     }
 };

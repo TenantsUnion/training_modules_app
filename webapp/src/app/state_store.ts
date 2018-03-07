@@ -1,4 +1,4 @@
-import Vuex, {Action, ActionContext} from 'vuex';
+import {Action, ActionContext} from 'vuex';
 import {CourseGetters, courseGetters, CourseState, courseState} from '@course/store/course_state';
 import {ModuleGetters, moduleGetters, ModuleState, moduleState} from '@module/store/module_state';
 import {sectionGetters, SectionGetters, sectionState, SectionState} from '@section/store/section_state';
@@ -7,9 +7,8 @@ import {courseActions} from '@course/store/course_actions';
 import {moduleMutations} from '@module/store/module_mutations';
 import {moduleActions} from '@module/store/module_actions';
 import {
-    userCoursesListingActions, userCoursesListingGetters, UserCoursesListingGetters,
-    userCoursesListingMutations, UserCoursesListingState,
-    userCoursesListingState
+    coursesListingActions, CoursesListingGetters, coursesListingGetters, coursesListingMutations, CoursesListingState,
+    coursesListingState
 } from '@user/store/courses_listing_store';
 import {userActions, userMutations, userState, UserState} from '@user/store/user_store';
 import {sectionActions} from '@section/store/section_actions';
@@ -35,8 +34,10 @@ import {
  */
 export type TypedAction<S, P, V> = (context: ActionContext<S, RootState>, payload: P) => (Promise<V> | V) | Action<S, RootState>;
 
+
 export const storeConfig = {
-    strict: process.env.NODE_ENV !== 'production',
+    // slows down production app and creating new vue stores triggers mutating outside of handlers warning when testing
+    strict: process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
     modules: {
         statusMessages: {
             state: statusMessagesState,
@@ -49,10 +50,10 @@ export const storeConfig = {
             mutations: userMutations
         },
         userCourses: {
-            state: userCoursesListingState,
-            getters: userCoursesListingGetters,
-            actions: userCoursesListingActions,
-            mutations: userCoursesListingMutations
+            state: coursesListingState,
+            getters: coursesListingGetters,
+            actions: coursesListingActions,
+            mutations: coursesListingMutations
         },
         userProgress: {
             state: userProgressState,
@@ -92,13 +93,13 @@ export interface RootState {
     course: CourseState
     module: ModuleState,
     section: SectionState,
-    userCourses: UserCoursesListingState,
+    userCourses: CoursesListingState,
     userProgress: UserProgressState,
     availableCourses: AvailableCoursesState
     statusMessages: StatusMessagesState
 }
 
-export type RootGetters = CourseGetters & UserCoursesListingGetters & ModuleGetters
+export type RootGetters = CourseGetters & CoursesListingGetters & ModuleGetters
     & SectionGetters & AvailableCoursesGetters & UserProgressGetters;
 
 // getters and rootGetters are the same since the modules have the namespace option set to false

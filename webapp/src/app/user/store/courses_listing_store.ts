@@ -11,7 +11,7 @@ import {userHttpService} from "@user/user_http_service";
 /**
  * State
  */
-export interface UserCoursesListingState {
+export interface CoursesListingState {
     adminCourseDescriptions: AdminCourseDescription[];
     enrolledCourseDescriptions: EnrolledCourseDescription[];
     courseSlugIdMap: { [index: string]: string };
@@ -19,7 +19,7 @@ export interface UserCoursesListingState {
     loading: boolean;
 }
 
-export const userCoursesListingState: UserCoursesListingState = {
+export const coursesListingState: CoursesListingState = {
     // change with Vue.set since new properties will be set... or init as new object?
     adminCourseDescriptions: [],
     enrolledCourseDescriptions: [],
@@ -31,7 +31,7 @@ export const userCoursesListingState: UserCoursesListingState = {
 /**
  * Getters
  */
-export interface UserCoursesListingGetters {
+export interface CoursesListingGetters {
     getUserCourseIdFromSlug: (slug: string) => string;
     getSlugFromCourseId: (courseId: string) => string;
     getCourseModeFromId: (courseId: string) => CourseMode;
@@ -46,7 +46,7 @@ export type getSlugFromCourseIdFn = (id: string) => string;
 export type courseModeFn = (courseId: string) => CourseMode;
 
 
-export const userCoursesListingGetters: {[index in keyof UserCoursesListingGetters]: AppGetter<UserCoursesListingState>} = {
+export const coursesListingGetters: {[index in keyof CoursesListingGetters]: AppGetter<CoursesListingState>} = {
     currentCourseMode (state, getters, {course: {currentCourseId}}, rootGetters): CourseMode {
         if (!currentCourseId || !state.courseListingsLoaded || state.loading) {
             return null;
@@ -98,17 +98,17 @@ export const userCoursesListingGetters: {[index in keyof UserCoursesListingGette
 /**
  * Mutations
  */
-export type UserCoursesListingMutation<P> = (state: UserCoursesListingState, payload: P) => any | Mutation<UserCoursesListingState>;
+export type CoursesListingMutation<P> = (state: CoursesListingState, payload: P) => any | Mutation<CoursesListingState>;
 
-export interface UserCoursesListingMutations {
-    SET_ADMIN_COURSE_DESCRIPTIONS: UserCoursesListingMutation<AdminCourseDescription[]>,
-    SET_ENROLLED_COURSE_DESCRIPTIONS: UserCoursesListingMutation<EnrolledCourseDescription[]>,
-    SET_COURSE_DESCRIPTIONS_LOADING: UserCoursesListingMutation<boolean>,
-    SET_USER_COURSES_LISTINGS_LOADED: UserCoursesListingMutation<boolean>,
-    CLEAR_USER_COURSES_LISTINGS: UserCoursesListingMutation<any>
+export interface CoursesListingMutations {
+    SET_ADMIN_COURSE_DESCRIPTIONS: CoursesListingMutation<AdminCourseDescription[]>,
+    SET_ENROLLED_COURSE_DESCRIPTIONS: CoursesListingMutation<EnrolledCourseDescription[]>,
+    SET_COURSE_DESCRIPTIONS_LOADING: CoursesListingMutation<boolean>,
+    SET_USER_COURSES_LISTINGS_LOADED: CoursesListingMutation<boolean>,
+    CLEAR_USER_COURSES_LISTINGS: CoursesListingMutation<any>
 }
 
-export const USER_COURSES_LISTING_MUTATIONS: Constant<UserCoursesListingMutations> = {
+export const COURSES_LISTING_MUTATIONS: Constant<CoursesListingMutations> = {
     SET_ADMIN_COURSE_DESCRIPTIONS: 'SET_ADMIN_COURSE_DESCRIPTIONS',
     SET_ENROLLED_COURSE_DESCRIPTIONS: 'SET_ENROLLED_COURSE_DESCRIPTIONS',
     SET_COURSE_DESCRIPTIONS_LOADING: 'SET_COURSE_DESCRIPTIONS_LOADING',
@@ -116,7 +116,7 @@ export const USER_COURSES_LISTING_MUTATIONS: Constant<UserCoursesListingMutation
     CLEAR_USER_COURSES_LISTINGS: 'CLEAR_USER_COURSES_LISTINGS'
 };
 
-export const userCoursesListingMutations: UserCoursesListingMutations & MutationTree<UserCoursesListingState> = {
+export const coursesListingMutations: CoursesListingMutations & MutationTree<CoursesListingState> = {
     SET_ADMIN_COURSE_DESCRIPTIONS (state, adminCourseDescriptions: AdminCourseDescription[]) {
         let uniqueTitle = adminCourseDescriptions.concat(state.enrolledCourseDescriptions)
             .reduce((acc, {title}: AdminCourseDescription) => {
@@ -135,7 +135,7 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
         Vue.set(state, 'courseSlugIdMap', courseSlugToMap);
         Vue.set(state, 'adminCourseDescriptions', adminCourses);
     },
-    SET_ENROLLED_COURSE_DESCRIPTIONS (state: UserCoursesListingState, incomingDescriptions: EnrolledCourseDescription[]) {
+    SET_ENROLLED_COURSE_DESCRIPTIONS (state: CoursesListingState, incomingDescriptions: EnrolledCourseDescription[]) {
         let uniqueTitle = incomingDescriptions.concat(state.adminCourseDescriptions)
             .reduce((acc, {title}: AdminCourseDescription) => {
                 acc[title] = _.isUndefined(acc[title]);
@@ -153,13 +153,13 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
         Vue.set(state, 'courseSlugIdMap', courseSlugToMap);
         Vue.set(state, 'enrolledCourseDescriptions', enrolledDescriptions);
     },
-    SET_COURSE_DESCRIPTIONS_LOADING (state: UserCoursesListingState, loading: boolean) {
+    SET_COURSE_DESCRIPTIONS_LOADING (state: CoursesListingState, loading: boolean) {
         state.loading = loading;
     },
-    SET_USER_COURSES_LISTINGS_LOADED (state: UserCoursesListingState, coursesListing: boolean) {
+    SET_USER_COURSES_LISTINGS_LOADED (state: CoursesListingState, coursesListing: boolean) {
         Vue.set(state, 'courseListingsLoaded', coursesListing);
     },
-    CLEAR_USER_COURSES_LISTINGS (state: UserCoursesListingState) {
+    CLEAR_USER_COURSES_LISTINGS (state: CoursesListingState) {
         state.courseListingsLoaded = null;
         state.loading = false;
         state.adminCourseDescriptions = [];
@@ -171,29 +171,29 @@ export const userCoursesListingMutations: UserCoursesListingMutations & Mutation
  * Actions
  */
 export type UserCoursesListingAction<P> =
-    (context: ActionContext<UserCoursesListingState, RootState>, payload: P) => Promise<any>
-        | Action<UserCoursesListingState, RootState>;
+    (context: ActionContext<CoursesListingState, RootState>, payload?: P) => Promise<any>
+        | Action<CoursesListingState, RootState>;
 
-export interface UserCoursesListingActions {
-    LOAD_COURSE_LISTINGS: UserCoursesListingAction<void>
+export interface CoursesListingActions extends ActionTree<CoursesListingState, RootState> {
+    LOAD_COURSE_LISTINGS: UserCoursesListingAction<Promise<void>>
 }
 
-export const USER_COURSES_LISTING_ACTIONS: Constant<UserCoursesListingActions> = {
+export const COURSES_LISTING_ACTIONS: Constant<CoursesListingActions> = {
     LOAD_COURSE_LISTINGS: 'LOAD_COURSE_LISTINGS'
 };
 
-export const userCoursesListingActions: UserCoursesListingActions & ActionTree<UserCoursesListingState, RootState> = {
+export const coursesListingActions: CoursesListingActions = {
     LOAD_COURSE_LISTINGS: async ({commit, state, rootState}) => {
         if (state.courseListingsLoaded || !rootState.user.loggedIn || state.loading) {
             return;
         }
 
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_COURSE_DESCRIPTIONS_LOADING, true);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, false);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_COURSE_DESCRIPTIONS_LOADING, false);
+        commit(COURSES_LISTING_MUTATIONS.SET_COURSE_DESCRIPTIONS_LOADING, true);
+        commit(COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, false);
+        commit(COURSES_LISTING_MUTATIONS.SET_COURSE_DESCRIPTIONS_LOADING, false);
         let courseListing = await userHttpService.loadUserCourses(rootState.user.userId);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, courseListing.admin);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, courseListing.enrolled);
-        commit(USER_COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, true);
+        commit(COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, courseListing.admin);
+        commit(COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, courseListing.enrolled);
+        commit(COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, true);
     }
 };
