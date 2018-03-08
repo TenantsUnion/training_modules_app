@@ -1,5 +1,8 @@
-import {RootGetters, RootState} from '@webapp_root/store';
+import {RootGetters, RootState, VuexModule, VuexModuleConfig} from '@webapp_root/store';
 import {ViewSectionData} from '@shared/sections';
+import {ModuleGetterFn, ModuleState} from "@module/store/module_state";
+import {sectionActions, SectionActions} from "@section/store/section_actions";
+import {sectionMutations, SectionMutations} from "@section/store/section_mutations";
 
 export interface SectionState {
     currentSectionTitle: string;
@@ -10,7 +13,7 @@ export interface SectionState {
 
 export type SectionGetterFn = (state: SectionState, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => any;
 
-export interface SectionGetters {
+export interface SectionAccessors {
     currentSection: ViewSectionData;
     currentSectionLoading: boolean;
     currentSectionLoaded: boolean;
@@ -20,11 +23,12 @@ export interface SectionGetters {
 
 export type getSectionSlugFromIdFn = (slugInfo: { moduleId: string, sectionId: string }) => string;
 export type getSectionIdFromSlugFn = (slugInfo: { moduleId: string, sectionSlug: string }) => string;
-export const sectionGetters: {[index in keyof SectionGetters]: SectionGetterFn} = {
+type SectionGetters = {[index in keyof SectionAccessors]: SectionGetterFn};
+export const sectionGetters: SectionGetters = {
     currentSection: ({sections, currentSectionId}): ViewSectionData => sections[currentSectionId],
     currentSectionLoaded: ({sections, currentSectionId}) => !!sections[currentSectionId],
     currentSectionLoading: ({currentSectionId, sectionRequests}) => !!currentSectionId && sectionRequests[currentSectionId],
-    getSectionIdFromSlug(state, {courseNavigationDescription}): getSectionIdFromSlugFn {
+    getSectionIdFromSlug (state, {courseNavigationDescription}): getSectionIdFromSlugFn {
         if (!courseNavigationDescription) {
             return function () {
                 throw new Error('Cannot determine section id when courseNavigationDescription is null');
@@ -36,7 +40,7 @@ export const sectionGetters: {[index in keyof SectionGetters]: SectionGetterFn} 
             return section && section.id;
         }
     },
-    getSectionSlugFromId(state, {courseNavigationDescription}): getSectionSlugFromIdFn {
+    getSectionSlugFromId (state, {courseNavigationDescription}): getSectionSlugFromIdFn {
         if (!courseNavigationDescription) {
             return function () {
                 throw new Error('Cannot determine section slug when courseNavigationDescription is null');
@@ -50,9 +54,22 @@ export const sectionGetters: {[index in keyof SectionGetters]: SectionGetterFn} 
     }
 };
 
-export const sectionState: SectionState = {
-    currentSectionTitle: '',
-    currentSectionId: '',
-    sections: {},
-    sectionRequests: {}
+export type SectionStoreConfig = VuexModuleConfig<SectionState, SectionGetters, SectionActions, SectionMutations>;
+export const sectionStoreConfig: SectionStoreConfig = {
+    initState (): SectionState {
+        return {
+            currentSectionTitle: '',
+            currentSectionId: '',
+            sections: {},
+            sectionRequests: {}
+        };
+    },
+    module (): VuexModule<SectionState, SectionActions, SectionGetters, SectionMutations> {
+        return {
+            actions: sectionActions,
+            mutations: sectionMutations,
+            getters: sectionGetters,
+            state: this.initState
+        };
+    }
 };

@@ -124,17 +124,16 @@ export const userActions: UserActions = {
     }
 };
 
-export class UserStoreConfig implements VuexModuleConfig<UserState, GetterTree<UserState, RootState>, UserActions, UserMutations> {
+export type UserStoreConfig = VuexModuleConfig<UserState, GetterTree<UserState, RootState>, UserActions, UserMutations>;
+export const userStoreConfig: UserStoreConfig = {
     initState (): UserState {
         return {
             userId: '',
             username: '',
             loggedIn: false,
-            // change with Vue.set since new properties will be set... or init as new object?
             userInfo: null,
         };
-    }
-
+    },
     module (): VuexModule<UserState, UserActions, GetterTree<UserState, RootState>, UserMutations> {
         return {
             actions: userActions,
@@ -143,6 +142,4 @@ export class UserStoreConfig implements VuexModuleConfig<UserState, GetterTree<U
         };
     }
 
-}
-
-export const userStoreConfig = new UserStoreConfig();
+};

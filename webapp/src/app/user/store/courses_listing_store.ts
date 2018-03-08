@@ -189,7 +189,8 @@ export const coursesListingActions: CoursesListingActions = {
     }
 };
 
-export class CoursesListingStoreConfig implements VuexModuleConfig<CoursesListingState, CoursesListingGetters, CoursesListingActions, CoursesListingMutations> {
+export type CoursesListingStoreConfig = VuexModuleConfig<CoursesListingState, CoursesListingGetters, CoursesListingActions, CoursesListingMutations>;
+export const coursesListingStoreConfig: CoursesListingStoreConfig = {
     initState (): CoursesListingState {
         return {
             adminCourseDescriptions: [],
@@ -198,8 +199,7 @@ export class CoursesListingStoreConfig implements VuexModuleConfig<CoursesListin
             courseListingsLoaded: false,
             loading: false
         };
-    }
-
+    },
     module (): VuexModule<CoursesListingState, CoursesListingActions, CoursesListingGetters, CoursesListingMutations> {
         return {
             actions: coursesListingActions,
@@ -209,6 +209,4 @@ export class CoursesListingStoreConfig implements VuexModuleConfig<CoursesListin
         };
     }
 
-}
-
-export const coursesListingStoreConfig = new CoursesListingStoreConfig();
+};

@@ -1,5 +1,7 @@
-import {RootGetters, RootState} from '@webapp_root/store';
+import {RootGetters, RootState, VuexModule, VuexModuleConfig} from '@webapp_root/store';
 import {ViewModuleData} from '@shared/modules';
+import {ModuleActions} from "@module/store/module_actions";
+import {ModuleMutations} from "@module/store/module_mutations";
 
 export interface ModuleState {
     currentModuleTitle: string;
@@ -10,7 +12,7 @@ export interface ModuleState {
 
 export type ModuleGetterFn = (state: ModuleState, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => any;
 
-export interface ModuleGetters {
+export interface ModuleAccessors {
     currentModule: ViewModuleData;
     currentModuleLoading: boolean;
     currentModuleLoaded: boolean;
@@ -19,13 +21,14 @@ export interface ModuleGetters {
     currentModuleSlug: string;
 }
 
-export type getModuleSlugFromIdFn = (id:string) => string;
+export type getModuleSlugFromIdFn = (id: string) => string;
 
-export const moduleGetters: { [index in keyof ModuleGetters]: ModuleGetterFn } = {
+type ModuleGetters = { [index in keyof ModuleAccessors]: ModuleGetterFn };
+export const moduleGetters: ModuleGetters = {
     currentModule: ({modules, currentModuleId}): ViewModuleData => modules[currentModuleId],
     currentModuleLoaded: ({modules, currentModuleId}) => !!modules[currentModuleId],
     currentModuleLoading: ({currentModuleId, moduleRequests}) => !!(currentModuleId && moduleRequests[currentModuleId]),
-    getModuleIdFromSlug(state: ModuleState, {courseNavigationDescription}): (string) => string {
+    getModuleIdFromSlug (state: ModuleState, {courseNavigationDescription}): (string) => string {
         if (!courseNavigationDescription) {
             return function (string) {
                 // noop
@@ -40,7 +43,7 @@ export const moduleGetters: { [index in keyof ModuleGetters]: ModuleGetterFn } =
             return moduleSlugIdMap[id];
         }
     },
-    getModuleSlugFromId(state, {courseNavigationDescription}): getModuleSlugFromIdFn {
+    getModuleSlugFromId (state, {courseNavigationDescription}): getModuleSlugFromIdFn {
         if (!courseNavigationDescription) {
             return function (x: string) {
                 // noop
@@ -58,9 +61,12 @@ export const moduleGetters: { [index in keyof ModuleGetters]: ModuleGetterFn } =
     currentModuleSlug: ({currentModuleId}, {getModuleSlugFromId}) => getModuleSlugFromId(currentModuleId)
 };
 
-export const moduleState: ModuleState = {
-    currentModuleTitle: '',
-    currentModuleId: '',
-    modules: {},
-    moduleRequests: {}
+export type ModuleStoreConfig = VuexModuleConfig<ModuleState, ModuleGetters, ModuleActions, ModuleMutations>
+export const moduleStoreConfig: ModuleStoreConfig = {
+    initState (): ModuleState {
+        return undefined;
+    },
+    module (): VuexModule<ModuleState, ModuleActions, ModuleGetters, ModuleMutations> {
+        return undefined;
+    }
 };

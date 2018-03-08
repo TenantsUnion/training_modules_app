@@ -1,11 +1,11 @@
 import {Action, ActionContext, ActionTree, GetterTree, Module, MutationTree} from "vuex";
 import {UserState} from "@user/store/user_store";
-import {CourseGetters, CourseState} from "@course/store/course_state";
-import {ModuleGetters, ModuleState} from "@module/store/module_state";
-import {SectionGetters, SectionState} from "@section/store/section_state";
+import {CourseAccessors, CourseState} from "@course/store/course_state";
+import {ModuleAccessors, ModuleState} from "@module/store/module_state";
+import {SectionAccessors, SectionState} from "@section/store/section_state";
 import {CoursesListingAccessors, CoursesListingState} from "@user/store/courses_listing_store";
 import {UserProgressAccessors, UserProgressState} from "@user_progress/user_progress_store";
-import {AvailableCoursesGetters, AvailableCoursesState} from "@webapp_root/available_courses/available_courses_store";
+import {AvailableCoursesAccessors, AvailableCoursesState} from "@webapp_root/available_courses/available_courses_store";
 import {StatusMessagesState} from "@global/status_messages/status_messages_store";
 
 
@@ -40,8 +40,8 @@ interface RootState {
     statusMessages: StatusMessagesState
 }
 
-type RootGetters = CourseGetters & CoursesListingAccessors & ModuleGetters
-    & SectionGetters & AvailableCoursesGetters & UserProgressAccessors;
+type RootGetters = CourseAccessors & CoursesListingAccessors & ModuleAccessors
+    & SectionAccessors & AvailableCoursesAccessors & UserProgressAccessors;
 
 // getters and rootGetters are the same since the modules have the namespace option set to false
 type AppGetter<S> = ((state: S, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => any);

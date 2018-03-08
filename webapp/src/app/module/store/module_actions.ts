@@ -4,7 +4,7 @@ import {ModuleState} from './module_state';
 import {Action, ActionTree} from 'vuex';
 import {RootGetters, RootState} from '@webapp_root/store';
 import {Constant} from '@shared/typings/util_typings';
-import {COURSE_MUTATIONS, CourseMode} from '@course/store/course_mutations';
+import {COURSE_MUTATIONS} from '@course/store/course_mutations';
 import {loadModule, createModule, saveModule} from '@module/modules_requests';
 
 export type ModuleAction<P> = Action<ModuleState, RootState>;
@@ -13,7 +13,7 @@ export type CreateModuleAction = ModuleAction<CreateModuleEntityPayload>;
 export type SetCurrentModuleAction = ModuleAction<string>;
 export type SetCurrentModuleFromSlugAction = ModuleAction<string>
 
-export interface ModuleActions {
+export interface ModuleActions extends ActionTree<ModuleState, RootState> {
     CREATE_MODULE: CreateModuleAction,
     SET_CURRENT_MODULE: SetCurrentModuleAction;
     SET_CURRENT_MODULE_FROM_SLUG: SetCurrentModuleFromSlugAction;
@@ -36,7 +36,7 @@ export const CREATE_ID = 'CREATING';
 /**
  * Module store actions
  */
-export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions = {
+export const moduleActions: ModuleActions = {
     CREATE_MODULE: async ({commit, getters}, createModulePayload: CreateModuleEntityPayload) => {
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
         let {courseModuleDescriptions, moduleId, module} = await createModule(createModulePayload);
@@ -46,7 +46,7 @@ export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions =
         let {courseId} = createModulePayload;
         commit(COURSE_MUTATIONS.SET_COURSE_MODULE_DESCRIPTIONS, {courseId, courseModuleDescriptions});
     },
-    async SET_CURRENT_MODULE({state, getters, dispatch, commit}, id) {
+    async SET_CURRENT_MODULE ({state, getters, dispatch, commit}, id) {
         try {
             if (id === state.currentModuleId) {
                 // no change, state already matches
@@ -62,16 +62,16 @@ export const moduleActions: ActionTree<ModuleState, RootState> & ModuleActions =
             throw e;
         }
     },
-    async SET_CURRENT_MODULE_FROM_SLUG({getters, dispatch}, slug) {
+    async SET_CURRENT_MODULE_FROM_SLUG ({getters, dispatch}, slug) {
         let id = (<RootGetters> getters).getModuleIdFromSlug(slug);
         dispatch(MODULE_ACTIONS.SET_CURRENT_MODULE, id);
     },
-    async LOAD_MODULE_ENTITY({commit, getters}, id: string) {
+    async LOAD_MODULE_ENTITY ({commit, getters}, id: string) {
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id, requesting: true});
         commit(MODULE_MUTATIONS.SET_MODULE_ENTITY, await loadModule(id));
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id, requesting: false});
     },
-    async SAVE_MODULE({commit, dispatch}, saveModuleEntity: SaveModuleEntityPayload){
+    async SAVE_MODULE ({commit, dispatch}, saveModuleEntity: SaveModuleEntityPayload) {
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: saveModuleEntity.id, requesting: true});
         let {courseModuleDescriptions, module} = await saveModule(saveModuleEntity);
         commit(MODULE_MUTATIONS.SET_MODULE_REQUEST_STAGE, {id: saveModuleEntity.id, requesting: false});

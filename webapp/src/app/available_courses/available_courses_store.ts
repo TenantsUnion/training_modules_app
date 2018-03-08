@@ -3,7 +3,7 @@ import {Action, ActionContext, ActionTree, Mutation, MutationTree} from "vuex";
 import {Constant} from "@shared/typings/util_typings";
 import {getAvailableCourses} from "./available_courses_requests";
 import {courseSlugToIdMap, determineSlugs} from "@global/course_description_util";
-import {AppGetter, RootState} from "@webapp_root/store";
+import {AppGetter, RootState, VuexModule, VuexModuleConfig} from "@webapp_root/store";
 
 export interface AvailableCoursesState {
     courses: CourseDescription[];
@@ -12,18 +12,13 @@ export interface AvailableCoursesState {
     loading: boolean;
 }
 
-export const initAvailableCoursesState = {
-    courses: [],
-    loading: false,
-    loaded: false,
-    slugToIdMap: {}
-};
-
-export interface AvailableCoursesGetters {
+export interface AvailableCoursesAccessors {
     getAvailableCourseIdFromSlug: (slug: string) => string;
 }
 
-export const availableCoursesGetters: {[p in keyof AvailableCoursesGetters]: AppGetter<AvailableCoursesState>} = {
+
+type  AvailableCoursesGetters = {[p in keyof AvailableCoursesAccessors]: AppGetter<AvailableCoursesState>};
+export const availableCoursesGetters: AvailableCoursesGetters = {
     getAvailableCourseIdFromSlug ({slugToIdMap}) {
         return (slug: string) => slugToIdMap[slug];
     }
@@ -31,7 +26,7 @@ export const availableCoursesGetters: {[p in keyof AvailableCoursesGetters]: App
 
 export type AvailableCoursesMutation<P> = (state: AvailableCoursesState, payload: P) => any | Mutation<AvailableCoursesState>;
 
-export interface AvailableCoursesMutations {
+export interface AvailableCoursesMutations extends MutationTree<AvailableCoursesState> {
     SET_COURSES: AvailableCoursesMutation<CourseDescription[]>;
     CLEAR_COURSES: AvailableCoursesMutation<void>
     SET_LOADING: AvailableCoursesMutation<boolean>;
@@ -45,7 +40,7 @@ export const AVAILABLE_COURSES_MUTATIONS: Constant<AvailableCoursesMutations> = 
     SET_LOADED: 'SET_LOADED'
 };
 
-export const availableCoursesMutations: AvailableCoursesMutations & MutationTree<AvailableCoursesState> = {
+export const availableCoursesMutations: AvailableCoursesMutations = {
     SET_COURSES (state: AvailableCoursesState, courses: CourseDescription[]) {
         state.slugToIdMap = courseSlugToIdMap(courses);
         state.courses = determineSlugs(courses);
@@ -67,7 +62,7 @@ export type AvailableCoursesAction<P> =
     (context: ActionContext<AvailableCoursesState, RootState>, payload: P) => Promise<any>
         | Action<AvailableCoursesState, RootState>;
 
-export interface AvailableCoursesActions {
+export interface AvailableCoursesActions extends ActionTree<AvailableCoursesState, RootState> {
     LOAD_AVAILABLE_COURSES: AvailableCoursesAction<void>
 }
 
@@ -75,7 +70,7 @@ export const AVAILABLE_COURSES_ACTIONS: Constant<AvailableCoursesActions> = {
     LOAD_AVAILABLE_COURSES: 'LOAD_AVAILABLE_COURSES'
 };
 
-export const availableCoursesActions: AvailableCoursesActions & ActionTree<AvailableCoursesState, RootState> = {
+export const availableCoursesActions: AvailableCoursesActions = {
     async LOAD_AVAILABLE_COURSES ({commit, state, rootState}) {
         if (state.loaded || state.loading) {
             return;
@@ -86,5 +81,27 @@ export const availableCoursesActions: AvailableCoursesActions & ActionTree<Avail
         commit(AVAILABLE_COURSES_MUTATIONS.SET_COURSES, await availableCoursesAsync);
         commit(AVAILABLE_COURSES_MUTATIONS.SET_LOADING, false);
         commit(AVAILABLE_COURSES_MUTATIONS.SET_LOADED, true);
+    }
+};
+
+export type AvailableCoursesStoreConfig = VuexModuleConfig<AvailableCoursesState, AvailableCoursesGetters,
+    AvailableCoursesActions, AvailableCoursesMutations>
+export const availableCoursesStoreConfig: AvailableCoursesStoreConfig = {
+    initState (): AvailableCoursesState {
+        return {
+            courses: [],
+            loading: false,
+            loaded: false,
+            slugToIdMap: {}
+        };
+    },
+    module (): VuexModule<AvailableCoursesState, AvailableCoursesActions,
+        AvailableCoursesGetters, AvailableCoursesMutations> {
+        return {
+            mutations: availableCoursesMutations,
+            actions: availableCoursesActions,
+            getters: availableCoursesGetters,
+            state: this.initState()
+        };
     }
 };

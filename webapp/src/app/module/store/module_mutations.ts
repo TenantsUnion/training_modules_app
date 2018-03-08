@@ -6,11 +6,12 @@ import {Constant} from '../../../../../shared/typings/util_typings';
 import {TrainingEntity, ViewTrainingEntityDescription} from "../../../../../shared/training_entity";
 
 export type ModuleMutation<P> = (state: ModuleState, payload: P) => any & Mutation<ModuleState>;
-export interface ModuleMutations {
+
+export interface ModuleMutations extends MutationTree<ModuleState> {
     SET_CURRENT_MODULE: ModuleMutation<String>;
-    SET_MODULE_REQUEST_STAGE: ModuleMutation<{id: string; requesting: boolean}>
+    SET_MODULE_REQUEST_STAGE: ModuleMutation<{ id: string; requesting: boolean }>
     SET_MODULE_ENTITY: ModuleMutation<ModuleEntity>;
-    SET_MODULE_SECTION_DESCRIPTIONS: ModuleMutation<{moduleId: string, moduleSectionDescriptions: ViewTrainingEntityDescription[]}>;
+    SET_MODULE_SECTION_DESCRIPTIONS: ModuleMutation<{ moduleId: string, moduleSectionDescriptions: ViewTrainingEntityDescription[] }>;
 }
 
 /**
@@ -27,7 +28,7 @@ export const MODULE_MUTATIONS: Constant<ModuleMutations> = {
 /**
  * Store mutations
  */
-export const moduleMutations: ModuleMutations & MutationTree<ModuleState>= {
+export const moduleMutations: ModuleMutations = {
     SET_CURRENT_MODULE: (state: ModuleState, moduleId: string) => {
         state.currentModuleId = moduleId;
     },

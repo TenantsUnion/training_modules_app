@@ -75,13 +75,13 @@ export const userProgressMutations: UserProgressMutations = {
         requests.length ? Vue.set(savingProgress, update.id, requests) : Vue.delete(savingProgress, update.id);
     },
     SET_COURSE_PROGRESS ({courseProgressMap}: UserProgressState, courseProgress: UserCourseProgressView) {
-       Vue.set(courseProgressMap, courseProgress.id, courseProgress);
+        Vue.set(courseProgressMap, courseProgress.id, courseProgress);
     },
-    ADD_COURSE_PROGRESS_REQUEST ({progressRequests}: UserProgressState, courseId: string){
-         Vue.set(progressRequests, courseId, true);
+    ADD_COURSE_PROGRESS_REQUEST ({progressRequests}: UserProgressState, courseId: string) {
+        Vue.set(progressRequests, courseId, true);
     },
-    REMOVE_COURSE_PROGRESS_REQUEST ({progressRequests}: UserProgressState, courseId: string){
-         Vue.delete(progressRequests, courseId);
+    REMOVE_COURSE_PROGRESS_REQUEST ({progressRequests}: UserProgressState, courseId: string) {
+        Vue.delete(progressRequests, courseId);
     }
 };
 
@@ -139,11 +139,11 @@ export const userProgressActions: UserProgressActions = {
         commit(USER_PROGRESS_MUTATIONS.REMOVE_SAVING_PROGRESS, sectionProgress);
     },
     async LOAD_USER_PROGRESS ({state: {progressRequests, courseProgressMap}, commit, rootState}, courseId: string) {
-        if(!rootState.user.loggedIn) {
+        if (!rootState.user.loggedIn) {
             throw new Error('Cannot load course progress when user is not logged in');
         }
 
-        if(progressRequests[courseId] || courseProgressMap[courseId]){
+        if (progressRequests[courseId] || courseProgressMap[courseId]) {
             return;// already loaded
         }
 
@@ -153,8 +153,8 @@ export const userProgressActions: UserProgressActions = {
     }
 };
 
-export class UserProgressStoreConfig implements VuexModuleConfig
-    <UserProgressState, UserProgressGetters, UserProgressActions, UserProgressMutations> {
+export type UserProgressStoreConfig = VuexModuleConfig<UserProgressState, UserProgressGetters, UserProgressActions, UserProgressMutations>;
+export const userProgressStoreConfig: UserProgressStoreConfig = {
     initState (): UserProgressState {
         return {
             savingProgress: {},
@@ -162,8 +162,7 @@ export class UserProgressStoreConfig implements VuexModuleConfig
             progressRequests: {},
             courseProgressMap: {},
         };
-    }
-
+    },
     module (): VuexModule<UserProgressState, UserProgressActions, UserProgressGetters, UserProgressMutations> {
         return {
             actions: userProgressActions,
@@ -173,6 +172,4 @@ export class UserProgressStoreConfig implements VuexModuleConfig
         };
     }
 
-}
-
-export const userProgressStoreConfig: UserProgressStoreConfig = new UserProgressStoreConfig();
+};

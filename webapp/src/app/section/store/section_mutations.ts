@@ -6,7 +6,7 @@ import {Constant} from '../../../../../shared/typings/util_typings';
 
 export type SectionMutation<P> = (state: SectionState, payload: P) => any & Mutation<SectionState>;
 
-export interface SectionMutations {
+export interface SectionMutations extends MutationTree<SectionState> {
     SET_CURRENT_SECTION: SectionMutation<String>;
     SET_SECTION_REQUEST_STAGE: SectionMutation<{ id: string; requesting: boolean }>
     SET_SECTION_ENTITY: SectionMutation<SectionEntity>;
@@ -24,7 +24,7 @@ export const SECTION_MUTATIONS: Constant<SectionMutations> = {
 /**
  * Store mutations
  */
-export const sectionMutations: SectionMutations & MutationTree<SectionState> = {
+export const sectionMutations: SectionMutations = {
     SET_CURRENT_SECTION: (state: SectionState, sectionId: string) => {
         state.currentSectionId = sectionId;
     },

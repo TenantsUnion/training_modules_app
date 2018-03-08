@@ -1,18 +1,9 @@
 import {StoreOptions} from 'vuex';
-import {courseGetters, courseState} from '@course/store/course_state';
-import {moduleGetters, moduleState} from '@module/store/module_state';
-import {sectionGetters, sectionState} from '@section/store/section_state';
-import {coursesMutations} from '@course/store/course_mutations';
-import {courseActions} from '@course/store/course_actions';
-import {moduleMutations} from '@module/store/module_mutations';
-import {moduleActions} from '@module/store/module_actions';
+import {courseStoreConfig} from '@course/store/course_state';
+import {moduleStoreConfig} from '@module/store/module_state';
+import {sectionStoreConfig} from '@section/store/section_state';
 import {coursesListingStoreConfig} from '@user/store/courses_listing_store';
-import {sectionActions} from '@section/store/section_actions';
-import {sectionMutations} from '@section/store/section_mutations';
-import {
-    availableCoursesActions, availableCoursesGetters, availableCoursesMutations,
-    initAvailableCoursesState
-} from "./available_courses/available_courses_store";
+import {availableCoursesStoreConfig} from "./available_courses/available_courses_store";
 import {statusMessageStoreConfig} from "@global/status_messages/status_messages_store";
 import {RootState} from "@webapp_root/store";
 import {userStoreConfig} from "@user/store/user_store";
@@ -27,30 +18,10 @@ export const storeConfig: StoreOptions<RootState> = {
         user: userStoreConfig.module(),
         coursesListing: coursesListingStoreConfig.module(),
         userProgress: userProgressStoreConfig.module(),
-        course: {
-            state: courseState,
-            actions: courseActions,
-            mutations: coursesMutations,
-            getters: courseGetters
-        },
-        module: {
-            state: moduleState,
-            actions: moduleActions,
-            mutations: moduleMutations,
-            getters: moduleGetters
-        },
-        section: {
-            state: sectionState,
-            actions: sectionActions,
-            mutations: sectionMutations,
-            getters: sectionGetters
-        },
-        availableCourses: {
-            state: initAvailableCoursesState,
-            actions: availableCoursesActions,
-            mutations: availableCoursesMutations,
-            getters: availableCoursesGetters
-        }
+        course: courseStoreConfig.module(),
+        module: moduleStoreConfig.module(),
+        section: sectionStoreConfig.module(),
+        availableCourses: availableCoursesStoreConfig.module()
     }
 };
 
