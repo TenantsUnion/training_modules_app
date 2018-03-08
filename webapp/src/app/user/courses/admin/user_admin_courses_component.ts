@@ -3,11 +3,12 @@ import Component from "vue-class-component";
 import {AdminCourseDescription} from "@shared/courses";
 import {mapState} from 'vuex';
 import {ADMIN_COURSE_ROUTES} from "@global/routes";
+import {RootGetters, RootState} from "@webapp_root/store";
 
 @Component({
     computed: mapState({
-        courses: ({userCourses}) => userCourses.adminCourseDescriptions,
-        loading: ({userCourses}, {currentCourseLoading}) => userCourses.loading || currentCourseLoading
+        courses: ({coursesListing: {adminCourseDescriptions}}: RootState) => adminCourseDescriptions,
+        loading: ({coursesListing: {loading}}: RootState, {currentCourseLoading}: RootGetters) => loading || currentCourseLoading
     })
 })
 export default class UserAdminCourseComponent extends Vue {

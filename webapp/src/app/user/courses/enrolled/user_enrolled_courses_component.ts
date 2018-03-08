@@ -2,11 +2,13 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {ENROLLED_COURSE_ROUTES, USER_ROUTES} from "@global/routes";
 import {mapState} from "vuex";
+import {RootGetters, RootState} from "@webapp_root/store";
 
 @Component({
     computed: mapState({
-        courses: ({userCourses}) => userCourses.enrolledCourseDescriptions,
-        loading: ({userCourses}, {currentCourseLoading}) => userCourses.loading || currentCourseLoading
+        courses: ({coursesListing}: RootState) => coursesListing.enrolledCourseDescriptions,
+        loading: ({coursesListing}: RootState, {currentCourseLoading}: RootGetters) =>
+            coursesListing.loading || currentCourseLoading
     })
 })
 export default class UserEnrolledCoursesComponent extends Vue {
@@ -20,7 +22,7 @@ export default class UserEnrolledCoursesComponent extends Vue {
 
     enrollInCourse () {
         this.$router.push({
-           name: USER_ROUTES.availableCourses
+            name: USER_ROUTES.availableCourses
         });
     }
 }
