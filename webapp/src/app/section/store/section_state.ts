@@ -69,7 +69,7 @@ export const sectionStoreConfig: SectionStoreConfig = {
             actions: sectionActions,
             mutations: sectionMutations,
             getters: sectionGetters,
-            state: this.initState
+            state: this.initState()
         };
     }
 };

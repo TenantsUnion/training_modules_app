@@ -90,7 +90,7 @@ export const statusMessageStoreConfig: StatusMessageStoreConfig = {
     },
     module () {
         return {
-            state: this.initState,
+            state: this.initState(),
             actions: statusMessageActions,
             mutations: statusMessagesMutations,
         };

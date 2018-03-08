@@ -1,7 +1,7 @@
 import {RootGetters, RootState, VuexModule, VuexModuleConfig} from '@webapp_root/store';
 import {ViewModuleData} from '@shared/modules';
-import {ModuleActions} from "@module/store/module_actions";
-import {ModuleMutations} from "@module/store/module_mutations";
+import {moduleActions, ModuleActions} from "@module/store/module_actions";
+import {moduleMutations, ModuleMutations} from "@module/store/module_mutations";
 
 export interface ModuleState {
     currentModuleTitle: string;
@@ -64,9 +64,19 @@ export const moduleGetters: ModuleGetters = {
 export type ModuleStoreConfig = VuexModuleConfig<ModuleState, ModuleGetters, ModuleActions, ModuleMutations>
 export const moduleStoreConfig: ModuleStoreConfig = {
     initState (): ModuleState {
-        return undefined;
+        return {
+            currentModuleTitle: '',
+            currentModuleId: '',
+            modules: {},
+            moduleRequests: {}
+        };
     },
     module (): VuexModule<ModuleState, ModuleActions, ModuleGetters, ModuleMutations> {
-        return undefined;
+        return {
+            actions: moduleActions,
+            getters: moduleGetters,
+            state: this.initState(),
+            mutations: moduleMutations
+        };
     }
 };

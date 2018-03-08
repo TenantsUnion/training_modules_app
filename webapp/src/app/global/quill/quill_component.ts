@@ -3,7 +3,7 @@ import Quill from "quill";
 import Vue from "vue";
 import Component from "vue-class-component";
 import {DeltaStatic, Sources} from "quill";
-import {isNotEmptyQuillData} from '@global/edit_training_segments/edit_training_segments_component';
+import {isNotEmptyQuillData} from '@training/edit_training_segments/edit_training_segments_component';
 import {Prop} from 'vue-property-decorator';
 import {QuillEditorData} from '@shared/quill_editor';
 import {isCreatedQuillPlaceholderId} from "@shared/ids";

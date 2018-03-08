@@ -2,7 +2,7 @@ import * as _ from 'underscore';
 import Quill from 'quill';
 import Vue from "vue";
 import Component from 'vue-class-component';
-import QuillComponent from '../quill/quill_component';
+import QuillComponent from '@global/quill/quill_component';
 import {
     ContentSegment, isContentSegment, isQuestionSegment, QuestionSegment, SegmentArrayElement
 } from '@shared/segment';

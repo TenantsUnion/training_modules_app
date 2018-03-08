@@ -11,7 +11,7 @@ import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {SECTION_ACTIONS} from '@section/store/section_actions';
 import {TrainingEntityDiffDelta} from '@shared/training_entity';
 import {getSectionSlugFromIdFn} from '@section/store/section_state';
-import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
+import EditTrainingSegmentsComponent from "@training/edit_training_segments/edit_training_segments_component";
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
 

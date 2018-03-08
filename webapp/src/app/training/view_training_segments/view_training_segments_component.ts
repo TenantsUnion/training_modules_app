@@ -2,15 +2,15 @@ import * as _ from 'underscore';
 import Quill from 'quill';
 import Vue from "vue";
 import Component from 'vue-class-component';
-import QuillComponent from '../quill/quill_component';
+import QuillComponent from '../../global/quill/quill_component';
 import {
     ContentSegment, isContentSegment, isQuestionSegment, QuestionSegment, SegmentArrayElement
 } from '@shared/segment';
 import {isQuestionData, QuestionQuillData} from '@shared/questions';
-import {isQuillEditorData, QuillEditorData} from "@shared/quill_editor";
+import {isQuillEditorData, QuillEditorData} from '@shared/quill_editor';
 import {Prop} from "vue-property-decorator";
-import AnswerQuestionComponentVue from '@global/answer_question/answer_question_component.vue';
-import AnswerQuestionComponent from "@global/answer_question/answer_question_component";
+import AnswerQuestionComponentVue from '@training/answer_question/answer_question_component.vue';
+import AnswerQuestionComponent from "@training/answer_question/answer_question_component";
 import {QuestionSubmission} from "@shared/user_progress";
 
 @Component({

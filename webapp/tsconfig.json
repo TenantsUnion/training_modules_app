@@ -51,6 +51,9 @@
       "@user/*": [
         "./src/app/user/*"
       ],
+      "@training/*": [
+        "./src/app/training/*"
+      ],
       "@webapp_root/*": [
         "./src/app/*"
       ]

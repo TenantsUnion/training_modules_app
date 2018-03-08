@@ -60,6 +60,7 @@ module.exports = {
             '@section': path.resolve(__dirname, '../src/app/section'),
             '@user_progress': path.resolve(__dirname, '../src/app/user_progress'),
             '@user': path.resolve(__dirname, '../src/app/user'),
+            '@training': path.resolve(__dirname, '../src/app/training'),
             '@webapp_root': path.resolve(__dirname, '../src/app')
         }
     },

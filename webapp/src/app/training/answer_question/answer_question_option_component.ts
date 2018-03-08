@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {QuestionOptionQuillData} from "@shared/questions";
+import {QuestionOptionQuillData} from "../../../../../shared/questions";
 import {Prop} from "vue-property-decorator";
 import DeltaStatic = Quill.DeltaStatic;
 

@@ -18,7 +18,7 @@ type TypedAction<S, P, V> = (context: ActionContext<S, RootState>, payload: P) =
 
 type VuexModule<S, A extends ActionTree<S, RootState>, G extends GetterTree<S, RootState>, M extends MutationTree<S>> =
     {
-        actions?: A, getters?: G, mutations?: M
+        state: S, actions?: A, getters?: G, mutations?: M
     }
     & Module<S, RootState>;
 

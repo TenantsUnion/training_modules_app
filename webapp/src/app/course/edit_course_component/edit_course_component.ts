@@ -7,7 +7,7 @@ import * as VueForm from '../../vue-form';
 import {COURSE_ACTIONS} from '../store/course_actions';
 import {diffBasicPropsCourseProps, SaveCourseEntityPayload, ViewCourseData} from '@shared/courses';
 import {getSlugFromCourseIdFn} from '@user/store/courses_listing_store';
-import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
+import EditTrainingSegmentsComponent from "@training/edit_training_segments/edit_training_segments_component";
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
 

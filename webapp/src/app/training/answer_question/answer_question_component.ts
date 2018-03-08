@@ -6,7 +6,7 @@ import {
 } from "@shared/questions";
 import {Prop} from "vue-property-decorator";
 import VueAnswerQuestionOptionComponent from "./answer_question_option_component.vue";
-import AnswerQuestionOptionComponent from "@global/answer_question/answer_question_option_component";
+import AnswerQuestionOptionComponent from "src/app/training/answer_question/answer_question_option_component";
 import {QuestionSubmission} from "@shared/user_progress";
 
 @Component({

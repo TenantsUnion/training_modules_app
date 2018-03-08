@@ -1,11 +1,11 @@
 import {expect} from 'chai';
-import VueQuestionComponent from '@global/edit_question/edit_question_component.vue';
-import {QuestionComponent} from '@global/edit_question/edit_question_component';
+import VueQuestionComponent from '@training/edit_question/edit_question_component.vue';
+import {QuestionComponent} from '@training/edit_question/edit_question_component';
 import {AnswerType, QuestionChanges, QuestionOptionQuillData, QuestionQuillData, QuestionType} from '@shared/questions';
 import Quill from 'quill';
 
 import QuillComponent from '@global/quill/quill_component';
-import QuestionOptionComponent from '@global/edit_question/edit_question_option_component';
+import QuestionOptionComponent from '@training/edit_question/edit_question_option_component';
 import Vue from 'vue';
 import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 import {setOptionIsCorrect} from '../../../util/test_question_util';

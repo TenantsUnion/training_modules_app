@@ -13,7 +13,7 @@ import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {MODULE_ACTIONS} from '@module/store/module_actions';
 import {getModuleSlugFromIdFn} from '@module/store/module_state';
 import {Watch} from 'vue-property-decorator';
-import EditTrainingSegmentsComponent from "@global/edit_training_segments/edit_training_segments_component";
+import EditTrainingSegmentsComponent from "@training/edit_training_segments/edit_training_segments_component";
 import {ADMIN_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
 
