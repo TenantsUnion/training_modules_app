@@ -11,7 +11,7 @@ import {AdminCourseDescription, EnrolledCourseDescription} from "@shared/courses
 import {
     actionContextMutations, MutationCall, resetState, restoreStoreContext, spyActionContext
 } from "../../../util/test_vuex_util";
-import {CourseMode} from "@course/store/course_mutations";
+import {COURSE_MUTATIONS, CourseMode} from "@course/store/course_mutations";
 
 describe('Course listing store', function () {
     const store = new Store(storeConfig);
@@ -141,8 +141,18 @@ describe('Course listing store', function () {
         beforeEach(function () {
             store.commit(COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, adminCourseDescriptions);
             store.commit(COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, enrolledCourseDescriptions);
+            store.commit(COURSES_LISTING_MUTATIONS.SET_COURSES_LISTINGS_LOADED, true);
         });
-        it('getCourseIdFromSlug ', function () {
+
+        it.only('should have currentCourseMode reflect the current course id belonging to admin or enrolled courses, or neither(preview)', function(){
+            store.commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, adminCourse.id);
+            expect(getters.currentCourseMode).to.eq(CourseMode.ADMIN);
+            store.commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, enrolledCourse.id);
+            expect(getters.currentCourseMode).to.eq(CourseMode.ENROLLED);
+            store.commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, 'ZZ');
+            expect(getters.currentCourseMode).to.eq(CourseMode.PREVIEW);
+        });
+        it('should have getCourseIdFromSlug return the corresponding enrolled or admin course id for each slug', function () {
             let {getCourseIdFromSlug} = getters;
 
             expect(getCourseIdFromSlug('admin(sp)title')).to.eq(adminCourse.id);
@@ -156,7 +166,7 @@ describe('Course listing store', function () {
             expect(getCourseIdFromSlug('duplicate(sp)title(sp)2__CO8')).to.eq(duplicateTitle2EnrolledCourse2.id);
 
         });
-        it('getSlugFromCourseId', function () {
+        it('should have getSlugFromCourseId return the corresponding enrolled or admin course slug for each id', function () {
             let {getSlugFromCourseId} = getters;
             expect(getSlugFromCourseId(adminCourse.id)).to.eq('admin(sp)title');
             expect(getSlugFromCourseId(duplicateTitle1AdminCourse1.id)).to.eq('duplicate(sp)title(sp)1__CO2');
@@ -169,7 +179,7 @@ describe('Course listing store', function () {
             expect(getSlugFromCourseId(duplicateTitle2EnrolledCourse2.id)).to.eq('duplicate(sp)title(sp)2__CO8');
         });
 
-        it('getCourseModeFromId ', function () {
+        it('should have getCourseModeFromId return the course mode for corresponding ids', function () {
             let {getCourseModeFromId} = getters;
             expect(getCourseModeFromId(adminCourse.id)).to.eq(CourseMode.ADMIN);
             expect(getCourseModeFromId(duplicateTitle1AdminCourse1.id)).to.eq(CourseMode.ADMIN);
@@ -184,7 +194,7 @@ describe('Course listing store', function () {
             expect(getCourseModeFromId('ZZ')).to.eq(CourseMode.PREVIEW);
 
         });
-        it('getCourseModeFromSlug ', function () {
+        it('should have getCourseModeFromSlug return the course mode for corresponding slugs', function () {
             let {getCourseModeFromSlug} = getters;
             expect(getCourseModeFromSlug('admin(sp)title')).to.eq(CourseMode.ADMIN);
             expect(getCourseModeFromSlug('duplicate(sp)title(sp)1__CO2')).to.eq(CourseMode.ADMIN);
@@ -199,7 +209,7 @@ describe('Course listing store', function () {
             expect(getCourseModeFromSlug('not(sp)enrolled(sp)or(admin)')).to.eq(CourseMode.PREVIEW);
         });
 
-        it('adminCourseListingMap ', function () {
+        it('should have adminCourseListingMap be a map of the admin descriptions using the ids as keys', function () {
             let {adminCourseListingMap} = getters;
             expect(adminCourseListingMap).to.deep.eq({
                 CO1: {
