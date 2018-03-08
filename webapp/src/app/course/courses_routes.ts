@@ -9,10 +9,10 @@ import CourseDetailsComponent from "./course_details_component/course_details_co
 import VueEditCourseComponent from "@course/edit_course_component/edit_course_component.vue";
 import CreateModuleComponent from "@module/create_module_component/create_module_component.vue";
 import EditSectionComponent from "@section/edit/edit_section_component.vue";
-import {store} from "../state_store";
 import {appRouter} from "../router";
 import {USER_PROGRESS_ACTIONS} from "@user_progress/user_progress_store";
 import {LOGIN_ROUTE} from "../account/account_routes";
+import {store} from "@webapp_root/app";
 
 export const AdminCourseRoutes: RouteConfig = {
     path: 'admin/course',

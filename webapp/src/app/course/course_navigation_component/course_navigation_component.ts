@@ -4,8 +4,8 @@ import {ViewCourseData} from '@shared/courses';
 import {Location} from 'vue-router/types/router';
 import {mapGetters, mapState} from 'vuex';
 import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
-import {RootGetters, RootState} from "../../state_store";
 import {CourseMode} from "@course/store/course_mutations";
+import {RootGetters, RootState} from "@webapp_root/store";
 
 @Component({
     data: () => {
