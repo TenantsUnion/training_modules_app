@@ -80,7 +80,7 @@ export const statusMessageActions: StatusMessagesActions = {
     }
 };
 
-export class StatusMessageModuleConfig implements VuexModuleConfig
+export class StatusMessageStoreConfig implements VuexModuleConfig
     <StatusMessagesState, GetterTree<StatusMessagesState, RootState>, StatusMessagesActions, StatusMessagesMutations> {
     initState (): StatusMessagesState {
         return {
@@ -97,7 +97,7 @@ export class StatusMessageModuleConfig implements VuexModuleConfig
     }
 }
 
-export const statusMessageModuleConfig = new StatusMessageModuleConfig();
+export const statusMessageStoreConfig = new StatusMessageStoreConfig();
 
 
 

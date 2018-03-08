@@ -2,6 +2,10 @@ import sinon, {SinonSpy, SinonSpyCall} from 'sinon';
 import {ActionContext, Commit, Store} from 'vuex';
 import {storeConfig} from "@webapp_root/state_store";
 import {RootState} from "@webapp_root/store";
+import {userStoreConfig} from "@user/store/user_store";
+import {coursesListingStoreConfig} from "@user/store/courses_listing_store";
+import {userProgressStoreConfig} from "@user_progress/user_progress_store";
+import {statusMessageStoreConfig} from "@global/status_messages/status_messages_store";
 
 /**
  * Represents an {@link ActionContext} whose dispatch and commit properties have been wrapped with {@link SinonSpy}s
@@ -34,21 +38,28 @@ export const spyActionContext = <T> (rootStore: Store<RootState>, state: T): Spy
 };
 
 /**
- *
+ * Resets the provided vuex store state to based on the modules of {@link RootState} and the initial state of
+ * the corresponding implementation of {@link VuexModuleConfig#initState}
  */
 export const resetState = (store: Store<RootState>) => {
-    let baseState = Object.keys(storeConfig.modules).reduce((acc, key) => {
-        acc[key] = storeConfig.modules[key].state;
-        return acc;
-    }, <RootState>{});
-    store.replaceState(baseState)
+    let baseState: RootState = {
+        user: userStoreConfig.initState(),
+        course: store.state.course,
+        module: store.state.module,
+        section: store.state.section,
+        coursesListing: coursesListingStoreConfig.initState(),
+        userProgress: userProgressStoreConfig.initState(),
+        availableCourses: store.state.availableCourses,
+        statusMessages: statusMessageStoreConfig.initState()
+    };
+    store.replaceState(baseState);
 };
 
 /**
  * Restores any spies attached to the provided {@link Store} commit and dispatch. Will cause an exception for
  * trying to wrap a spy around a spy with a stack trace of:
  *  "TypeError: Attempted to wrap dispatch which is already wrapped
- at checkWrappedMethod..."
+ *          at checkWrappedMethod..."
  *
  */
 export const restoreStoreContext = (rootStore) => {

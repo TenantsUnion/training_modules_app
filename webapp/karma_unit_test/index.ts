@@ -1,9 +1,11 @@
 import Vue from 'vue'
+import Vuex from 'vuex';
 
 /**
  * Webpack entry point for Karma unit tests
  */
 Vue.config.productionTip = false;
+Vue.use(Vuex);
 
 // require all test files (files that ends with .spec.js)
 const testsContext = (<any>require).context('.', true, /\.spec\.ts$/);

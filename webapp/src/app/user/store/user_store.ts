@@ -1,5 +1,5 @@
-import {Action, ActionContext, ActionTree, Mutation, MutationTree} from 'vuex';
-import {RootState} from '@webapp_root/store';
+import {Action, ActionContext, ActionTree, GetterTree, Mutation, MutationTree} from 'vuex';
+import {RootState, VuexModule, VuexModuleConfig} from '@webapp_root/store';
 import {Constant} from '@shared/typings/util_typings';
 import {IUserInfo} from '@shared/user';
 import {accountHttpService} from '../../account/account_http_service';
@@ -18,20 +18,13 @@ export interface UserState {
     userInfo: IUserInfo;
 }
 
-export const userState: UserState = {
-    userId: '',
-    username: '',
-    loggedIn: false,
-    // change with Vue.set since new properties will be set... or init as new object?
-    userInfo: null,
-};
 
 /**
  * Mutations
  */
 export type UserMutation<P> = (state: UserState, payload: P) => any | Mutation<UserState>;
 
-export interface UserMutations {
+export interface UserMutations extends MutationTree<UserState> {
     USER_LOGIN: UserMutation<IUserInfo>,
     USER_LOGOUT: UserMutation<any>,
 }
@@ -41,7 +34,7 @@ export const USER_MUTATIONS: Constant<UserMutations> = {
     USER_LOGOUT: 'USER_LOGOUT',
 };
 
-export const userMutations: UserMutations & MutationTree<UserState> = {
+export const userMutations: UserMutations = {
     USER_LOGIN (state: UserState, info: IUserInfo) {
         state.loggedIn = true;
         state.userInfo = info;
@@ -62,7 +55,7 @@ export const userMutations: UserMutations & MutationTree<UserState> = {
 export type UserAction<P> = (context: ActionContext<UserState, RootState>, payload: P) => Promise<any>
     | Action<UserState, RootState>;
 
-export interface UserActions {
+export interface UserActions extends ActionTree<UserState, RootState> {
     LOGIN: UserAction<{ username: string }>,
     LOAD_INFO_FROM_USER_SESSION: UserAction<string>,
     LOGOUT: UserAction<any>,
@@ -78,7 +71,7 @@ export const USER_ACTIONS: Constant<UserActions> = {
     ENROLL_IN_COURSE: 'ENROLL_IN_COURSE'
 };
 
-export const userActions: UserActions & ActionTree<UserState, RootState> = {
+export const userActions: UserActions = {
     async LOGIN ({commit, dispatch}, {username}) {
         try {
             let userInfo = await accountHttpService.login({
@@ -119,11 +112,37 @@ export const userActions: UserActions & ActionTree<UserState, RootState> = {
     async LOGOUT ({commit, state, rootState}) {
         await accountHttpService.logout();
         commit(USER_MUTATIONS.USER_LOGOUT);
-        commit(COURSES_LISTING_MUTATIONS.CLEAR_USER_COURSES_LISTINGS);
+        commit(COURSES_LISTING_MUTATIONS.CLEAR_COURSES_LISTINGS);
         commit(AVAILABLE_COURSES_MUTATIONS.CLEAR_COURSES)
     },
     async ENROLL_IN_COURSE ({commit, state, rootState}, courseId: string) {
-       let {enrolledCourses, courseProgress} = await userHttpService.enrollUserInCourse({courseId, userId: state.userId});
-       commit(COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, enrolledCourses);
+        let {enrolledCourses, courseProgress} = await userHttpService.enrollUserInCourse({
+            courseId,
+            userId: state.userId
+        });
+        commit(COURSES_LISTING_MUTATIONS.SET_ENROLLED_COURSE_DESCRIPTIONS, enrolledCourses);
     }
 };
+
+export class UserStoreConfig implements VuexModuleConfig<UserState, GetterTree<UserState, RootState>, UserActions, UserMutations> {
+    initState (): UserState {
+        return {
+            userId: '',
+            username: '',
+            loggedIn: false,
+            // change with Vue.set since new properties will be set... or init as new object?
+            userInfo: null,
+        };
+    }
+
+    module (): VuexModule<UserState, UserActions, GetterTree<UserState, RootState>, UserMutations> {
+        return {
+            actions: userActions,
+            mutations: userMutations,
+            state: this.initState()
+        };
+    }
+
+}
+
+export const userStoreConfig = new UserStoreConfig();

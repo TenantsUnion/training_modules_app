@@ -51,7 +51,7 @@ export const courseActions: CourseActions = {
             };
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
             let courseEntity: ViewCourseData = await coursesService.createCourse(createCourseCommand);
-            let updateAdminDescriptions: AdminCourseDescription[] = [courseEntity, ...rootState.userCourses.adminCourseDescriptions];
+            let updateAdminDescriptions: AdminCourseDescription[] = [courseEntity, ...rootState.coursesListing.adminCourseDescriptions];
             commit(COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, updateAdminDescriptions);
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
             commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, courseEntity);
@@ -81,9 +81,9 @@ export const courseActions: CourseActions = {
     },
     async SET_CURRENT_COURSE_FROM_SLUG ({getters, dispatch, rootState}, slug) {
         await dispatch(COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
-        let mode = (<RootGetters> getters).getUserCourseModeFromSlug(slug);
+        let mode = (<RootGetters> getters).getCourseModeFromSlug(slug);
         let id = mode === CourseMode.PREVIEW ? (<RootGetters> getters).getAvailableCourseIdFromSlug(slug) :
-            (<RootGetters> getters).getUserCourseIdFromSlug(slug);
+            (<RootGetters> getters).getCourseIdFromSlug(slug);
         await dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE, id);
     },
     async SAVE_COURSE ({commit, dispatch}, saveCourseEntityPayload: SaveCourseEntityPayload) {
@@ -93,7 +93,7 @@ export const courseActions: CourseActions = {
             commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
             if (saveCourseEntityPayload.changes.title) {
                 // title change means slug changed -- reload admin courses to recalculate slug
-                commit(COURSES_LISTING_MUTATIONS.SET_USER_COURSES_LISTINGS_LOADED, false);
+                commit(COURSES_LISTING_MUTATIONS.SET_COURSES_LISTINGS_LOADED, false);
                 await dispatch(COURSES_LISTING_ACTIONS.LOAD_COURSE_LISTINGS);
             }
         } finally {

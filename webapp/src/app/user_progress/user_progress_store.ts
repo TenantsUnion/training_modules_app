@@ -7,7 +7,7 @@ import {CourseMode} from "@course/store/course_mutations";
 import {loadUserProgress, saveUserProgress} from "./user_progress_requests";
 import {Constant} from "@shared/typings/util_typings";
 import Vue from 'vue';
-import {RootState, TypedAction} from "@webapp_root/store";
+import {RootState, TypedAction, VuexModule, VuexModuleConfig} from "@webapp_root/store";
 
 export interface UserProgressState {
     savingProgress: { [index: string]: TrainingProgressUpdate[] };
@@ -23,12 +23,14 @@ export const userProgressState: UserProgressState = {
     courseProgressMap: {},
 };
 
-export interface UserProgressGetters {
+export interface UserProgressAccessors {
     savingUserProgress: boolean;
     loadingCourseProgress: boolean;
 }
 
-export const userProgressGetters: {[index in keyof UserProgressGetters]} & GetterTree<UserProgressState, RootState> = {
+export type UserProgressGetters = {[index in keyof UserProgressAccessors]} & GetterTree<UserProgressState, RootState>;
+
+export const userProgressGetters: UserProgressGetters = {
     savingUserProgress ({savingProgress}: UserProgressState): boolean {
         return !!Object.keys(savingProgress).length;
     },
@@ -75,11 +77,11 @@ export const userProgressMutations: UserProgressMutations = {
     SET_COURSE_PROGRESS ({courseProgressMap}: UserProgressState, courseProgress: UserCourseProgressView) {
        Vue.set(courseProgressMap, courseProgress.id, courseProgress);
     },
-    ADD_COURSE_PROGRESS_REQUEST ({progressRequests}: UserProgressState, courseId: string) {
-        Vue.set(progressRequests, courseId, true);
+    ADD_COURSE_PROGRESS_REQUEST ({progressRequests}: UserProgressState, courseId: string){
+         Vue.set(progressRequests, courseId, true);
     },
-    REMOVE_COURSE_PROGRESS_REQUEST ({progressRequests}: UserProgressState, courseId: string) {
-        Vue.delete(progressRequests, courseId);
+    REMOVE_COURSE_PROGRESS_REQUEST ({progressRequests}: UserProgressState, courseId: string){
+         Vue.delete(progressRequests, courseId);
     }
 };
 
@@ -150,3 +152,27 @@ export const userProgressActions: UserProgressActions = {
         }));
     }
 };
+
+export class UserProgressStoreConfig implements VuexModuleConfig
+    <UserProgressState, UserProgressGetters, UserProgressActions, UserProgressMutations> {
+    initState (): UserProgressState {
+        return {
+            savingProgress: {},
+            saveSuccess: false,
+            progressRequests: {},
+            courseProgressMap: {},
+        };
+    }
+
+    module (): VuexModule<UserProgressState, UserProgressActions, UserProgressGetters, UserProgressMutations> {
+        return {
+            actions: userProgressActions,
+            mutations: userProgressMutations,
+            getters: userProgressGetters,
+            state: this.initState()
+        };
+    }
+
+}
+
+export const userProgressStoreConfig: UserProgressStoreConfig = new UserProgressStoreConfig();
