@@ -1,9 +1,9 @@
 import * as _ from 'underscore';
-import {CreateQuestionData, QuestionChangesObj, QuestionQuillData, QuestionTransferData} from './questions';
+import {CreateQuestionData, QuestionChangesObj, QuestionQuillData} from './questions';
 import {QuillEditorData} from './quill_editor';
-import {EntityCommand, SaveEntityCommand} from './entity';
+import {Command, CommandType} from './entity';
 import {DeltaObjDiff} from './delta/delta';
-import {applyDeltaArrOps, DeltaArrOp} from './delta/diff_key_array';
+import {DeltaArrOp} from './delta/diff_key_array';
 import {isDeltaStatic} from './delta/typeguards_delta';
 import DeltaOperation = Quill.DeltaOperation;
 
@@ -29,7 +29,12 @@ export interface ViewTrainingEntityDescription {
     title: string,
     version: number,
     lastModifiedAt: string,
+    timeEstimate?: number;
+    createdAt: string,
     description?: string
+    slug?: string,
+    content: number,
+    questions: number
 }
 
 /**
@@ -103,7 +108,5 @@ export interface SaveTrainingEntityPayload<T extends TrainingEntityDiffDelta> {
     contentQuestions: ContentQuestionsDelta;
 }
 
-export type CreateTrainingEntityCommand<T, P extends CreateTrainingEntityPayload> = EntityCommand<T, P>;
-
-export type SaveTrainingEntityCommand<T, P extends TrainingEntityDiffDelta> = SaveEntityCommand<T, P>;
-
+export type CreateTrainingEntityCommand<T extends CommandType, P extends CreateTrainingEntityPayload> = Command<T, P>;
+export type SaveTrainingEntityCommand<T extends CommandType, P extends TrainingEntityDiffDelta> = Command<T, P>;

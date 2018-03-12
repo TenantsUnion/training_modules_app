@@ -1,23 +1,21 @@
 import {ViewModuleDescription} from './modules';
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, SaveTrainingEntityPayload,
-    TrainingEntityDiffDelta,
-    TrainingEntity, ViewTrainingEntity, ContentQuestionsDelta
+    TrainingEntityDiffDelta, TrainingEntity, ViewTrainingEntity, ViewTrainingEntityDescription
 } from './training_entity';
-import {EntityCommandMetaData} from './entity';
 import {DeltaArrOp} from './delta/diff_key_array';
 import {diffPropsDeltaObj, TRAINING_ENTITY_BASIC_PROPS} from './delta/diff_delta';
+import {CommandType} from "@shared/entity";
 
-export type CourseEntityType = 'CourseEntity';
-export type CreateCourseEntityCommand = CreateTrainingEntityCommand<CourseEntityType, CreateCourseEntityPayload>;
-export type SaveCourseEntityCommand = SaveTrainingEntityCommand<CourseEntityType, CourseEntityDeltas>;
+export type CreateCourseEntityCommand = CreateTrainingEntityCommand<CommandType.course, CreateCourseEntityPayload>;
+export type SaveCourseEntityCommand = SaveTrainingEntityCommand<CommandType.course, CourseEntityDeltas>;
 
 export interface CreateCourseEntityPayload extends CreateTrainingEntityPayload {
     openEnrollment: boolean;
+    userId: string;
 }
 
 export type SaveCourseEntityPayload = SaveTrainingEntityPayload<CourseEntityDiffDelta>;
-export type CourseEntityCommandMetadata = EntityCommandMetaData<CourseEntityType>;
 
 export interface CourseEntity extends TrainingEntity {
     openEnrollment: boolean;
@@ -27,6 +25,10 @@ export interface CourseEntity extends TrainingEntity {
 export interface CourseEntityDeltas extends TrainingEntityDiffDelta {
     openEnrollment?: boolean;
     orderedModuleIds?: DeltaArrOp<string>[];
+}
+
+export interface ViewCourseStructure extends ViewTrainingEntityDescription {
+    modules: ViewModuleDescription[]
 }
 
 export interface ViewCourseData extends ViewTrainingEntity {
@@ -54,11 +56,9 @@ export interface CourseDescription {
     admins?: string[]
 }
 
-export interface AdminCourseDescription extends CourseDescription {
-    // lastActive?: Moment; todo set up user course progress tracking functionality
-}
-
-export interface EnrolledCourseDescription extends CourseDescription {
+export interface CoursesListingView {
+    enrolled: CourseDescription[],
+    admin: CourseDescription[]
 }
 
 export interface CreateCourseResponse extends ViewCourseData {

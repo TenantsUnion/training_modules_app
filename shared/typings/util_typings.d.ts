@@ -1,1 +1,0 @@
-export type Constant<T extends {}> = {[index in keyof T]: keyof T};

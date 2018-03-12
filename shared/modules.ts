@@ -1,9 +1,9 @@
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityPayload,
-    TrainingEntityDiffDelta, TrainingEntity, ViewTrainingEntity, ViewTrainingEntityDescription, ContentQuestionsDelta
+    TrainingEntityDiffDelta, TrainingEntity, ViewTrainingEntity, ViewTrainingEntityDescription
 } from './training_entity';
 import {DeltaArrOp} from './delta/diff_key_array';
-import {ViewCourseDelta, ViewCourseData} from '@shared/courses';
+import {CommandType} from "@shared/entity";
 
 export type ModuleEntityType = 'ModuleEntity';
 
@@ -36,7 +36,7 @@ export interface SaveModuleResponse {
     courseModuleDescriptions: ViewModuleDescription[];
 }
 
-export type CreateModuleEntityCommand = CreateTrainingEntityCommand<ModuleEntityType, CreateModuleEntityPayload>;
+export type CreateModuleEntityCommand = CreateTrainingEntityCommand<CommandType.module, CreateModuleEntityPayload>;
 
 export interface SaveModuleEntityPayload extends SaveTrainingEntityPayload<ModuleEntityDiffDelta> {
     courseId: string

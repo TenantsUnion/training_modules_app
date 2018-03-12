@@ -1,10 +1,9 @@
 import {
     CreateTrainingEntityPayload, SaveTrainingEntityPayload, TrainingEntityDiffDelta,
-    TrainingEntity, ViewTrainingEntity, ContentQuestionsDelta, ViewTrainingEntityDescription
+    TrainingEntity, ViewTrainingEntity, ViewTrainingEntityDescription
 } from './training_entity';
 import {ViewModuleDescription} from '@shared/modules';
 
-export type SectionEntityType = 'SectionEntity';
 export type SectionEntity = TrainingEntity;
 
 export interface SectionDetails {

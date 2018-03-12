@@ -1,4 +1,4 @@
-import {AdminCourseDescription, EnrolledCourseDescription} from "@shared/courses";
+import {CourseDescription} from "@shared/courses";
 import {UserCourseProgressView} from "@shared/user_progress";
 
 declare namespace user {
@@ -22,13 +22,13 @@ declare namespace user {
     }
 
     interface UserCoursesListingPayload {
-        admin: AdminCourseDescription[];
-        enrolled: EnrolledCourseDescription[];
+        admin: CourseDescription[];
+        enrolled: CourseDescription[];
     }
 
     interface EnrollCourseResponse {
         courseProgress: UserCourseProgressView;
-        enrolledCourses: EnrolledCourseDescription[];
+        enrolledCourses: CourseDescription[];
     }
 }
 export = user;

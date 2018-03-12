@@ -1,35 +1,20 @@
-
-import {DeltaObjDiff} from './delta/delta';
-
-export interface Entity<T, P> {
-    id: string,
-    version: number,
-    metadata: EntityMetadata<T>,
-    payload: P
+export enum CommandType {
+    course = 'COURSE',
+    module = 'MODULE',
+    section = 'SECTION'
 }
 
-export interface EntityMetadata<T> {
+export interface CommandMetaData<T extends CommandType> {
     id: string,
     version: number;
     type: T;
+    timestamp?: string;
+    correlationId?: string; // random id for logging and tracing save command
+    userId: string;
 }
 
-
-export interface EntityCommandMetaData<T> extends EntityMetadata<T> {
-    timestamp: string;
-    correlationId: string; // random id for logging and tracing save command
-    userId?: string;
-}
-
-export interface EntityCommand<T, P> {
-    metadata: EntityCommandMetaData<T>;
-    payload: P;
-}
-
-export interface SaveEntityCommand<T, P extends DeltaObjDiff> extends EntityCommand<T, P> {
-    /**
-     * The updates and changes made to the entity to be validated and saved
-     */
+export interface Command<T extends CommandType, P> {
+    metadata: CommandMetaData<T>;
     payload: P;
 }
 
