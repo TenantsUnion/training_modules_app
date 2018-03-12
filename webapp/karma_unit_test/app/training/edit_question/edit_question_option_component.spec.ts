@@ -2,12 +2,12 @@ import {expect} from 'chai';
 import {QuestionOptionComponent} from '@training/edit_question/edit_question_option_component';
 import VueQuestionOptionComponent from '@training/edit_question/edit_question_option_component.vue';
 import {QuestionOptionQuillData} from '@shared/questions';
-import {registerGlobalComponents} from '@webapp_root/globals';
 import {SegmentArrayElement} from '@shared/segment';
 import QuillComponent from '@global/quill/quill_component';
 import {Quill} from 'quill';
 import SwitchCheckboxComponent from '@global/switch_checkbox/switch_checkbox';
 import {createdQuestionOptionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
+import {registerGlobalComponents} from "@webapp_root/globals";
 
 let Delta: Quill.DeltaStatic = Quill.import('delta');
 

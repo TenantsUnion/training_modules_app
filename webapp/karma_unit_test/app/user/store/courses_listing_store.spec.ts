@@ -7,7 +7,7 @@ import {
     COURSES_LISTING_MUTATIONS, CoursesListingAccessors,
     coursesListingActions} from "@user/store/courses_listing_store";
 import {userHttpService} from "@user/user_http_service";
-import {AdminCourseDescription, EnrolledCourseDescription} from "@shared/courses";
+import {CourseDescription} from "@shared/courses";
 import {
     actionContextMutations, MutationCall, resetState, restoreStoreContext, spyActionContext
 } from "../../../util/test_vuex_util";
@@ -34,8 +34,8 @@ describe('Course listing store', function () {
             });
 
             it('should load admin and enrolled course listings', async function () {
-                const adminCourse: AdminCourseDescription = {id: 'CO1', title: 'admin course'};
-                const enrolledCourse: EnrolledCourseDescription = {id: 'CO2', title: 'enrolled course'};
+                const adminCourse: CourseDescription = {id: 'CO1', title: 'admin course'};
+                const enrolledCourse: CourseDescription = {id: 'CO2', title: 'enrolled course'};
 
                 userHttpServiceMock.expects('loadUserCourses').once()
                     .withArgs(userId)
@@ -131,10 +131,10 @@ describe('Course listing store', function () {
             id: 'CO8',
             title: duplicateTitle2
         };
-        let adminCourseDescriptions: AdminCourseDescription[] = [
+        let adminCourseDescriptions: CourseDescription[] = [
             adminCourse, duplicateTitle1AdminCourse1, duplicateTitle1AdminCourse2, duplicateTitle2AdminCourse
         ];
-        let enrolledCourseDescriptions: EnrolledCourseDescription[] = [
+        let enrolledCourseDescriptions: CourseDescription[] = [
             enrolledCourse, duplicateTitle1EnrolledCourse, duplicateTitle2EnrolledCourse1, duplicateTitle2EnrolledCourse2
         ];
 
@@ -144,7 +144,7 @@ describe('Course listing store', function () {
             store.commit(COURSES_LISTING_MUTATIONS.SET_COURSES_LISTINGS_LOADED, true);
         });
 
-        it.only('should have currentCourseMode reflect the current course id belonging to admin or enrolled courses, or neither(preview)', function(){
+        it('should have currentCourseMode reflect the current course id belonging to admin or enrolled courses, or neither(preview)', function(){
             store.commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, adminCourse.id);
             expect(getters.currentCourseMode).to.eq(CourseMode.ADMIN);
             store.commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, enrolledCourse.id);

@@ -1,11 +1,15 @@
 import sinon, {SinonSpy, SinonSpyCall} from 'sinon';
 import {ActionContext, Commit, Store} from 'vuex';
-import {storeConfig} from "@webapp_root/state_store";
 import {RootState} from "@webapp_root/store";
 import {userStoreConfig} from "@user/store/user_store";
 import {coursesListingStoreConfig} from "@user/store/courses_listing_store";
 import {userProgressStoreConfig} from "@user_progress/user_progress_store";
 import {statusMessageStoreConfig} from "@global/status_messages/status_messages_store";
+import {trainingStoreConfig} from "@training/training_store";
+import {availableCoursesStoreConfig} from "@webapp_root/available_courses/available_courses_store";
+import {sectionStoreConfig} from "@section/store/section_state";
+import {moduleStoreConfig} from "@module/store/module_state";
+import {courseStoreConfig} from "@course/store/course_state";
 
 /**
  * Represents an {@link ActionContext} whose dispatch and commit properties have been wrapped with {@link SinonSpy}s
@@ -44,13 +48,14 @@ export const spyActionContext = <T> (rootStore: Store<RootState>, state: T): Spy
 export const resetState = (store: Store<RootState>) => {
     let baseState: RootState = {
         user: userStoreConfig.initState(),
-        course: store.state.course,
-        module: store.state.module,
-        section: store.state.section,
+        course: courseStoreConfig.initState(),
+        module: moduleStoreConfig.initState(),
+        section: sectionStoreConfig.initState(),
         coursesListing: coursesListingStoreConfig.initState(),
         userProgress: userProgressStoreConfig.initState(),
-        availableCourses: store.state.availableCourses,
-        statusMessages: statusMessageStoreConfig.initState()
+        availableCourses: availableCoursesStoreConfig.initState(),
+        statusMessages: statusMessageStoreConfig.initState(),
+        training: trainingStoreConfig.initState()
     };
     store.replaceState(baseState);
 };
