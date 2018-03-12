@@ -56,6 +56,12 @@
       ],
       "@webapp_root/*": [
         "./src/app/*"
+      ],
+      "@views/*": [
+        "./src/app/views/*"
+      ],
+      "@test_util/*": [
+        "./karma_unit_test/util/*"
       ]
     }
   }

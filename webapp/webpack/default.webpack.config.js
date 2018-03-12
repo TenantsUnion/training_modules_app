@@ -61,7 +61,9 @@ module.exports = {
             '@user_progress': path.resolve(__dirname, '../src/app/user_progress'),
             '@user': path.resolve(__dirname, '../src/app/user'),
             '@training': path.resolve(__dirname, '../src/app/training'),
-            '@webapp_root': path.resolve(__dirname, '../src/app')
+            '@views': path.resolve(__dirname, '../src/app/views'),
+            '@webapp_root': path.resolve(__dirname, '../src/app'),
+            '@test_util': path.resolve(__dirname, '../karma_unit_test/util')
         }
     },
     performance: {
