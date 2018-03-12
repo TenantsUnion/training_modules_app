@@ -1,47 +1,24 @@
 import {AbstractWebController} from "./abstract_routes_controller";
-import {Router} from "express";
-import {
-    CoursesListingView, ViewCourseData, ViewCourseStructure
-} from "@shared/courses";
-import {ViewModuleData} from "@shared/modules";
-import {ViewSectionData} from "@shared/sections";
+import {Router, Request} from "express";
 import {getLogger} from "../log";
 import {CourseStructureViewQuery} from "@course/view/course_structure_view_query";
 import {CourseViewQuery} from "@course/view/course_views_query";
 import {ModuleViewQuery} from "@module/module_view_query";
 import {SectionViewQuery} from "@section/admin/section_view_query";
 import {UserCoursesListingViewQuery} from "../user/user_courses_listing_view_query";
+import {UserProgressViewQuery} from "../user_progress/user_progress_view_query";
+import {ViewsRequestParams, ViewsResponse} from "@shared/views";
 
-export interface ViewRequestParams {
-    courseStructure: boolean;
-    courseTraining: boolean;
-    moduleTraining: boolean;
-    sectionTraining: boolean;
-    enrolledCourses: boolean;
-    adminCourses: boolean;
-    userProgress: boolean;
-    userId: string;
-    moduleId: string;
-    courseId: string;
-    sectionId: string;
-}
 
-export interface ViewRequestResponse {
-    courseStructure: ViewCourseStructure;
-    courseTraining: ViewCourseData;
-    moduleTraining: ViewModuleData;
-    sectionTraining: ViewSectionData;
-    coursesListing: CoursesListingView;
-}
-
-export class ViewRequestController extends AbstractWebController {
-    query: {[key in keyof ViewRequestResponse]: (request: ViewRequestParams) => Promise<ViewRequestResponse[key]>};
+export class ViewsRequestWebController extends AbstractWebController {
+    query: {[key in keyof ViewsResponse]: (request: ViewsRequestParams) => Promise<ViewsResponse[key]>};
 
     constructor (private courseStructureViewQuery: CourseStructureViewQuery,
                  private courseTrainingViewQuery: CourseViewQuery,
                  private moduleTrainingViewQuery: ModuleViewQuery,
                  private sectionTrainingViewQuery: SectionViewQuery,
-                 private coursesListingViewQuery: UserCoursesListingViewQuery) {
+                 private coursesListingViewQuery: UserCoursesListingViewQuery,
+                 private userProgressViewQuery: UserProgressViewQuery) {
         super(getLogger('ViewRequestController', 'info'));
 
         this.query = {
@@ -50,15 +27,25 @@ export class ViewRequestController extends AbstractWebController {
             moduleTraining: ({moduleId}) => this.moduleTrainingViewQuery.loadModule(moduleId),
             sectionTraining: ({sectionId}) => this.sectionTrainingViewQuery.loadSection(sectionId),
             coursesListing: ({userId}) => this.coursesListingViewQuery.coursesListingView(userId),
+            userProgress: ({userId, courseId}) => this.userProgressViewQuery.loadUserCourseProgress({userId, courseId})
         }
     }
 
-    async handleViewRequest (req): Promise<ViewRequestResponse> {
-        return null;
+    async handleViewRequest (req: Request): Promise<ViewsResponse> {
+        let params: ViewsRequestParams = req.params;
+        let loadViewsAsync = Object.keys(params).filter((key) => this.query[key])
+            .map(async (viewRequest) => {
+                let view = await this.query[viewRequest](params);
+                return {type: viewRequest, view}
+            });
+        return (await Promise.all(loadViewsAsync)).reduce((acc, {type, view}) => {
+            acc[type] = view;
+            return acc;
+        }, <ViewsResponse> {});
     }
 
     registerRoutes (router: Router) {
-        this.handle(this.handleViewRequest)
+        router.get('/views', this.handle(this.handleViewRequest));
     }
 
 }
