@@ -8,6 +8,7 @@ import {statusMessageStoreConfig} from "@global/status_messages/status_messages_
 import {RootState} from "@webapp_root/store";
 import {userStoreConfig} from "@user/store/user_store";
 import {userProgressStoreConfig} from "@user_progress/user_progress_store";
+import {trainingStoreConfig} from "@training/training_store";
 
 
 export const storeConfig: StoreOptions<RootState> = {
@@ -21,7 +22,8 @@ export const storeConfig: StoreOptions<RootState> = {
         course: courseStoreConfig.module(),
         module: moduleStoreConfig.module(),
         section: sectionStoreConfig.module(),
-        availableCourses: availableCoursesStoreConfig.module()
+        availableCourses: availableCoursesStoreConfig.module(),
+        training: trainingStoreConfig.module()
     }
 };
 

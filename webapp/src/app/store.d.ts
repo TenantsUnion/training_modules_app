@@ -7,6 +7,7 @@ import {CoursesListingAccessors, CoursesListingState} from "@user/store/courses_
 import {UserProgressAccessors, UserProgressState} from "@user_progress/user_progress_store";
 import {AvailableCoursesAccessors, AvailableCoursesState} from "@webapp_root/available_courses/available_courses_store";
 import {StatusMessagesState} from "@global/status_messages/status_messages_store";
+import {TrainingAccessors, TrainingState} from "@training/training_store";
 
 
 /**
@@ -38,10 +39,11 @@ interface RootState {
     userProgress: UserProgressState,
     availableCourses: AvailableCoursesState
     statusMessages: StatusMessagesState
+    training: TrainingState
 }
 
 type RootGetters = CourseAccessors & CoursesListingAccessors & ModuleAccessors
-    & SectionAccessors & AvailableCoursesAccessors & UserProgressAccessors;
+    & SectionAccessors & AvailableCoursesAccessors & UserProgressAccessors & TrainingAccessors;
 
 // getters and rootGetters are the same since the modules have the namespace option set to false
 type AppGetter<S> = ((state: S, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => any);
