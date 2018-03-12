@@ -1,5 +1,4 @@
 import {ActionTree, GetterTree, Mutation, MutationTree} from "vuex";
-import {Constant} from "@shared/typings/util_typings";
 import {RootState, TypedAction, VuexModuleConfig} from "@webapp_root/store";
 
 export interface StatusMessage {
@@ -15,15 +14,15 @@ export interface StatusMessagesState {
 
 export type StatusMessagesMutation<P> = (state: StatusMessagesState, payload: P) => any | Mutation<StatusMessagesState>;
 
-export interface StatusMessagesMutations extends MutationTree<StatusMessagesState> {
+export type StatusMessagesMutations = {[index in STATUS_MESSAGES_MUTATIONS]: StatusMessagesMutation<any>} & {
     PUSH_STATUS_MESSAGE: StatusMessagesMutation<StatusMessage>
     DISMISS_MESSAGE: StatusMessagesMutation<StatusMessage>
 }
 
-export const STATUS_MESSAGES_MUTATIONS: Constant<StatusMessagesMutations> = {
-    PUSH_STATUS_MESSAGE: 'PUSH_STATUS_MESSAGE',
-    DISMISS_MESSAGE: 'DISMISS_MESSAGE'
-};
+export enum STATUS_MESSAGES_MUTATIONS {
+    PUSH_STATUS_MESSAGE = 'PUSH_STATUS_MESSAGE',
+    DISMISS_MESSAGE = 'DISMISS_MESSAGE'
+}
 
 export const statusMessagesMutations: StatusMessagesMutations = {
     PUSH_STATUS_MESSAGE (state, message) {
@@ -43,7 +42,7 @@ export type StatusMessagesAction<P, V> = TypedAction<StatusMessagesState, P, V>;
 
 export type TitleMessagesObj = { title?: string, message?: string };
 
-export interface StatusMessagesActions extends ActionTree<StatusMessagesState, RootState> {
+export type StatusMessagesActions = {[index in STATUS_MESSAGES_ACTIONS]: StatusMessagesAction<any, any>} & {
     SET_MESSAGE_TIMEOUT_CLEAR: StatusMessagesAction<{ message: StatusMessage, msTimeout: number }, void>;
     // times out and dismissable
     SET_SUCCESS_MESSAGE: StatusMessagesAction<TitleMessagesObj, void>;
@@ -53,13 +52,12 @@ export interface StatusMessagesActions extends ActionTree<StatusMessagesState, R
     SET_WARNING_MESSAGE: StatusMessagesAction<TitleMessagesObj, void>;
 }
 
-export const STATUS_MESSAGES_ACTIONS: Constant<StatusMessagesActions> = {
-    SET_MESSAGE_TIMEOUT_CLEAR: 'SET_MESSAGE_TIMEOUT_CLEAR',
-    SET_SUCCESS_MESSAGE: 'SET_SUCCESS_MESSAGE',
-    SET_ALERT_MESSAGE: 'SET_ALERT_MESSAGE',
-    SET_WARNING_MESSAGE: 'SET_WARNING_MESSAGE'
-
-};
+export enum STATUS_MESSAGES_ACTIONS {
+    SET_MESSAGE_TIMEOUT_CLEAR= 'SET_MESSAGE_TIMEOUT_CLEAR',
+    SET_SUCCESS_MESSAGE= 'SET_SUCCESS_MESSAGE',
+    SET_ALERT_MESSAGE= 'SET_ALERT_MESSAGE',
+    SET_WARNING_MESSAGE= 'SET_WARNING_MESSAGE'
+}
 
 export const statusMessageActions: StatusMessagesActions = {
     SET_MESSAGE_TIMEOUT_CLEAR ({commit}, {message, msTimeout}) {

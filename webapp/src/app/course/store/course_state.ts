@@ -4,7 +4,7 @@ import {AppGetter, RootGetters, RootState, VuexModule, VuexModuleConfig} from '@
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
 import {ViewModuleDescription} from '@shared/modules';
 import {ViewTrainingEntity, ViewTrainingEntityDescription} from '@shared/training_entity';
-import {CourseMode, CourseMutations, coursesMutations} from "./course_mutations";
+import {CourseMutations, coursesMutations} from "./course_mutations";
 import {courseActions, CourseActions} from "@course/store/course_actions";
 import {GetterTree} from "vuex";
 

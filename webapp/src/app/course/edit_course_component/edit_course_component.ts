@@ -10,6 +10,7 @@ import {getSlugFromCourseIdFn} from '@user/store/courses_listing_store';
 import EditTrainingSegmentsComponent from "@training/edit_training_segments/edit_training_segments_component";
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
+import {CourseTrainingComponent} from "@training/training_components";
 
 @Component({
     data: () => {
@@ -21,18 +22,18 @@ import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages
             saving: false
         };
     },
+    extends: CourseTrainingComponent,
     computed: {
         ...mapGetters({
-            storedCourse: 'currentCourse',
             getSlugFromCourseId: 'getSlugFromCourseId'
         }),
         ...mapState({
             loading: (state: RootState, getters: RootGetters) => {
                 return !getters.currentCourse || getters.currentCourseLoading;
-            }
-        }),
-
-    },
+            },
+            storedCourse: (state: RootState, getters: RootGetters) => getters.currentTraining
+        })
+    }
 })
 export class EditCourseComponent extends Vue {
     saving: boolean;

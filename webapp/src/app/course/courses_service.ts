@@ -13,7 +13,7 @@ export const isAxiosResponse = (obj: any): obj is AxiosResponse => {
     return !!(data && status && statusText && headers && config);
 };
 export class CoursesService {
-    async loadAdminCourse(courseId: string): Promise<ViewCourseData> {
+    async loadCourseTraining(courseId: string): Promise<ViewCourseData> {
         try {
             let response = await axios.get(`view/course/admin/${courseId}`);
             let course:ViewCourseData = response.data;

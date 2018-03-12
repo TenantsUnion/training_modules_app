@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import * as _ from 'underscore';
-import {AdminCourseDescription, EnrolledCourseDescription} from '@shared/courses';
-import {Action, ActionContext, ActionTree, Mutation, MutationTree} from 'vuex';
+import {CourseDescription} from '@shared/courses';
+import {Action, ActionContext, Mutation} from 'vuex';
 import {AppGetter, RootGetters, RootState, VuexModule, VuexModuleConfig} from '@webapp_root/store';
-import {Constant} from '@shared/typings/util_typings';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
 import {CourseMode} from "@course/store/course_mutations";
 import {userHttpService} from "@user/user_http_service";
@@ -12,8 +11,8 @@ import {userHttpService} from "@user/user_http_service";
  * State
  */
 export interface CoursesListingState {
-    adminCourseDescriptions: AdminCourseDescription[];
-    enrolledCourseDescriptions: EnrolledCourseDescription[];
+    adminCourseDescriptions: CourseDescription[];
+    enrolledCourseDescriptions: CourseDescription[];
     courseSlugIdMap: { [index: string]: string };
     courseListingsLoaded: boolean;
     loading: boolean;
@@ -27,8 +26,8 @@ export interface CoursesListingAccessors {
     getSlugFromCourseId: (courseId: string) => string;
     getCourseModeFromId: (courseId: string) => CourseMode;
     getCourseModeFromSlug: (slug: string) => CourseMode;
-    adminCourseListingMap: { [index: string]: AdminCourseDescription };
-    enrolledCourseListingMap: { [index: string]: EnrolledCourseDescription };
+    adminCourseListingMap: { [index: string]: CourseDescription };
+    enrolledCourseListingMap: { [index: string]: CourseDescription };
     currentCourseMode: CourseMode;
 }
 
@@ -79,13 +78,13 @@ export const coursesListingGetters: CoursesListingGetters = {
             return getters.getCourseModeFromId(getters.getCourseIdFromSlug(slug));
         }
     },
-    adminCourseListingMap (state, getters): { [index: string]: AdminCourseDescription } {
+    adminCourseListingMap (state, getters): { [index: string]: CourseDescription } {
         return state.adminCourseDescriptions.reduce((acc, desc) => {
             acc[desc.id] = desc;
             return acc;
         }, {});
     },
-    enrolledCourseListingMap (state, getters): { [index: string]: EnrolledCourseDescription } {
+    enrolledCourseListingMap (state, getters): { [index: string]: CourseDescription } {
         return state.enrolledCourseDescriptions.reduce((acc, desc) => {
             acc[desc.id] = desc;
             return acc;
@@ -98,33 +97,33 @@ export const coursesListingGetters: CoursesListingGetters = {
  */
 export type CoursesListingMutation<P> = (state: CoursesListingState, payload: P) => any | Mutation<CoursesListingState>;
 
-export interface CoursesListingMutations extends MutationTree<CoursesListingState> {
-    SET_ADMIN_COURSE_DESCRIPTIONS: CoursesListingMutation<AdminCourseDescription[]>,
-    SET_ENROLLED_COURSE_DESCRIPTIONS: CoursesListingMutation<EnrolledCourseDescription[]>,
+export type CoursesListingMutations = {[index in COURSES_LISTING_MUTATIONS]: CoursesListingMutation<any>} & {
+    SET_ADMIN_COURSE_DESCRIPTIONS: CoursesListingMutation<CourseDescription[]>,
+    SET_ENROLLED_COURSE_DESCRIPTIONS: CoursesListingMutation<CourseDescription[]>,
     SET_COURSE_DESCRIPTIONS_LOADING: CoursesListingMutation<boolean>,
     SET_COURSES_LISTINGS_LOADED: CoursesListingMutation<boolean>,
     CLEAR_COURSES_LISTINGS: CoursesListingMutation<any>
 }
 
-export const COURSES_LISTING_MUTATIONS: Constant<CoursesListingMutations> = {
-    SET_ADMIN_COURSE_DESCRIPTIONS: 'SET_ADMIN_COURSE_DESCRIPTIONS',
-    SET_ENROLLED_COURSE_DESCRIPTIONS: 'SET_ENROLLED_COURSE_DESCRIPTIONS',
-    SET_COURSE_DESCRIPTIONS_LOADING: 'SET_COURSE_DESCRIPTIONS_LOADING',
-    SET_COURSES_LISTINGS_LOADED: 'SET_COURSES_LISTINGS_LOADED',
-    CLEAR_COURSES_LISTINGS: 'CLEAR_COURSES_LISTINGS'
-};
+export enum COURSES_LISTING_MUTATIONS {
+    SET_ADMIN_COURSE_DESCRIPTIONS = 'SET_ADMIN_COURSE_DESCRIPTIONS',
+    SET_ENROLLED_COURSE_DESCRIPTIONS = 'SET_ENROLLED_COURSE_DESCRIPTIONS',
+    SET_COURSE_DESCRIPTIONS_LOADING = 'SET_COURSE_DESCRIPTIONS_LOADING',
+    SET_COURSES_LISTINGS_LOADED = 'SET_COURSES_LISTINGS_LOADED',
+    CLEAR_COURSES_LISTINGS = 'CLEAR_COURSES_LISTINGS'
+}
 
-const setCourseDescriptions = (state: CoursesListingState, {enrolled, admin}: { enrolled: EnrolledCourseDescription[], admin: AdminCourseDescription[] }) => {
+const setCourseDescriptions = (state: CoursesListingState, {enrolled, admin}: { enrolled: CourseDescription[], admin: CourseDescription[] }) => {
     let uniqueTitle = [...enrolled, ...admin]
-        .reduce((acc, {title}: AdminCourseDescription) => {
+        .reduce((acc, {title}: CourseDescription) => {
             acc[title] = _.isUndefined(acc[title]);
             return acc;
         }, {});
-    let enrolledDescriptions = enrolled.map((description: AdminCourseDescription) => {
+    let enrolledDescriptions = enrolled.map((description: CourseDescription) => {
         let {id, title} = description;
         return {slug: titleToSlug(title, !uniqueTitle[title], id), id, title};
     });
-    let adminDescriptions = admin.map((description: EnrolledCourseDescription) => {
+    let adminDescriptions = admin.map((description: CourseDescription) => {
         let {id, title} = description;
         return {slug: titleToSlug(title, !uniqueTitle[title], id), id, title};
     });
@@ -138,10 +137,10 @@ const setCourseDescriptions = (state: CoursesListingState, {enrolled, admin}: { 
     Vue.set(state, 'enrolledCourseDescriptions', enrolledDescriptions);
 };
 export const coursesListingMutations: CoursesListingMutations = {
-    SET_ADMIN_COURSE_DESCRIPTIONS (state, adminCourseDescriptions: AdminCourseDescription[]) {
-        setCourseDescriptions(state, {admin: adminCourseDescriptions, enrolled: state.enrolledCourseDescriptions});
+    SET_ADMIN_COURSE_DESCRIPTIONS (state: CoursesListingState, incomingDescriptions: CourseDescription[]) {
+        setCourseDescriptions(state, {admin: incomingDescriptions, enrolled: state.enrolledCourseDescriptions});
     },
-    SET_ENROLLED_COURSE_DESCRIPTIONS (state: CoursesListingState, incomingDescriptions: EnrolledCourseDescription[]) {
+    SET_ENROLLED_COURSE_DESCRIPTIONS (state: CoursesListingState, incomingDescriptions: CourseDescription[]) {
         setCourseDescriptions(state, {admin: state.adminCourseDescriptions, enrolled: incomingDescriptions});
     },
     SET_COURSE_DESCRIPTIONS_LOADING (state: CoursesListingState, loading: boolean) {
@@ -161,17 +160,17 @@ export const coursesListingMutations: CoursesListingMutations = {
 /**
  * Actions
  */
-export type UserCoursesListingAction<P> =
+export type CoursesListingAction<P> =
     (context: ActionContext<CoursesListingState, RootState>, payload?: P) => Promise<any>
         | Action<CoursesListingState, RootState>;
 
-export interface CoursesListingActions extends ActionTree<CoursesListingState, RootState> {
-    LOAD_COURSE_LISTINGS: UserCoursesListingAction<Promise<void>>
+export type CoursesListingActions = {[index in COURSES_LISTING_ACTIONS]: CoursesListingAction<any>} & {
+    LOAD_COURSE_LISTINGS: CoursesListingAction<Promise<void>>
 }
 
-export const COURSES_LISTING_ACTIONS: Constant<CoursesListingActions> = {
-    LOAD_COURSE_LISTINGS: 'LOAD_COURSE_LISTINGS'
-};
+export enum COURSES_LISTING_ACTIONS {
+    LOAD_COURSE_LISTINGS = 'LOAD_COURSE_LISTINGS'
+}
 
 export const coursesListingActions: CoursesListingActions = {
     LOAD_COURSE_LISTINGS: async ({commit, state, rootState}) => {
@@ -208,5 +207,4 @@ export const coursesListingStoreConfig: CoursesListingStoreConfig = {
             mutations: coursesListingMutations
         };
     }
-
 };

@@ -2,10 +2,9 @@ import {
     CourseTrainingProgressUpdate, ModuleTrainingProgressUpdate, SectionTrainingProgressUpdate, TrainingProgressUpdate,
     TrainingProgressUpdateData, TrainingProgressUpdateType, UserCourseProgressView
 } from "@shared/user_progress";
-import {ActionTree, GetterTree, Mutation, MutationTree} from "vuex";
+import {ActionTree, GetterTree, Mutation} from "vuex";
 import {CourseMode} from "@course/store/course_mutations";
 import {loadUserProgress, saveUserProgress} from "./user_progress_requests";
-import {Constant} from "@shared/typings/util_typings";
 import Vue from 'vue';
 import {RootState, TypedAction, VuexModule, VuexModuleConfig} from "@webapp_root/store";
 
@@ -41,7 +40,7 @@ export const userProgressGetters: UserProgressGetters = {
 
 export type UserProgressMutation<P> = ((state: UserProgressState, payload: P) => void) & Mutation<UserProgressState>;
 
-export interface UserProgressMutations extends MutationTree<UserProgressState> {
+export type UserProgressMutations = {[index in USER_PROGRESS_MUTATIONS]: UserProgressMutation<any>} & {
     SET_SAVE_SUCCESS: UserProgressMutation<boolean>;
     ADD_SAVING_PROGRESS: UserProgressMutation<TrainingProgressUpdate>;
     REMOVE_SAVING_PROGRESS: UserProgressMutation<TrainingProgressUpdate>;
@@ -50,13 +49,13 @@ export interface UserProgressMutations extends MutationTree<UserProgressState> {
     REMOVE_COURSE_PROGRESS_REQUEST: UserProgressMutation<string>
 }
 
-export const USER_PROGRESS_MUTATIONS: Constant<UserProgressMutations> = {
-    SET_SAVE_SUCCESS: 'SET_SAVE_SUCCESS',
-    ADD_SAVING_PROGRESS: 'ADD_SAVING_PROGRESS',
-    REMOVE_SAVING_PROGRESS: 'REMOVE_SAVING_PROGRESS',
-    SET_COURSE_PROGRESS: 'SET_COURSE_PROGRESS',
-    ADD_COURSE_PROGRESS_REQUEST: 'ADD_COURSE_PROGRESS_REQUEST',
-    REMOVE_COURSE_PROGRESS_REQUEST: 'REMOVE_COURSE_PROGRESS_REQUEST',
+export enum USER_PROGRESS_MUTATIONS {
+    SET_SAVE_SUCCESS = 'SET_SAVE_SUCCESS',
+    ADD_SAVING_PROGRESS = 'ADD_SAVING_PROGRESS',
+    REMOVE_SAVING_PROGRESS = 'REMOVE_SAVING_PROGRESS',
+    SET_COURSE_PROGRESS = 'SET_COURSE_PROGRESS',
+    ADD_COURSE_PROGRESS_REQUEST = 'ADD_COURSE_PROGRESS_REQUEST',
+    REMOVE_COURSE_PROGRESS_REQUEST = 'REMOVE_COURSE_PROGRESS_REQUEST'
 };
 
 export const userProgressMutations: UserProgressMutations = {
@@ -87,19 +86,19 @@ export const userProgressMutations: UserProgressMutations = {
 
 type UserProgressAction<P, V> = TypedAction<UserProgressState, P, V>
 
-export interface UserProgressActions extends ActionTree<UserProgressState, RootState> {
+export type UserProgressActions = {[index in USER_PROGRESS_ACTIONS]: UserProgressAction<any, any>} & {
     SAVE_COURSE_PROGRESS: UserProgressAction<CourseTrainingProgressUpdate, void>;
     SAVE_MODULE_PROGRESS: UserProgressAction<ModuleTrainingProgressUpdate, void>;
     SAVE_SECTION_PROGRESS: UserProgressAction<SectionTrainingProgressUpdate, void>;
     LOAD_USER_PROGRESS: UserProgressAction<string, void>;
 }
 
-export const USER_PROGRESS_ACTIONS: Constant<UserProgressActions> = {
-    SAVE_COURSE_PROGRESS: 'SAVE_COURSE_PROGRESS',
-    SAVE_MODULE_PROGRESS: 'SAVE_MODULE_PROGRESS',
-    SAVE_SECTION_PROGRESS: 'SAVE_SECTION_PROGRESS',
-    LOAD_USER_PROGRESS: 'LOAD_USER_PROGRESS'
-};
+export enum USER_PROGRESS_ACTIONS {
+    SAVE_COURSE_PROGRESS = 'SAVE_COURSE_PROGRESS',
+    SAVE_MODULE_PROGRESS = 'SAVE_MODULE_PROGRESS',
+    SAVE_SECTION_PROGRESS = 'SAVE_SECTION_PROGRESS',
+    LOAD_USER_PROGRESS = 'LOAD_USER_PROGRESS'
+}
 
 export const userProgressActions: UserProgressActions = {
     async SAVE_COURSE_PROGRESS ({rootState, rootGetters, commit}, update: TrainingProgressUpdateData) {

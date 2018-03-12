@@ -1,18 +1,18 @@
 import {CourseState} from './course_state';
 import {COURSE_MUTATIONS, CourseMode} from './course_mutations';
 import {
-    AdminCourseDescription, CourseEntity, CreateCourseEntityCommand, CreateCourseEntityPayload,
+    CourseDescription, CreateCourseEntityCommand, CreateCourseEntityPayload,
     SaveCourseEntityPayload, SaveCourseResponse, ViewCourseData
 } from '@shared/courses';
 import {getCorrelationId} from '@shared/correlation_id_generator';
 import {coursesService} from '../courses_service';
-import {RootGetters, RootState, TypedAction} from '@webapp_root/store';
-import {Constant} from '@shared/typings/util_typings';
+import {RootGetters, TypedAction} from '@webapp_root/store';
 import {COURSES_LISTING_ACTIONS, COURSES_LISTING_MUTATIONS} from '@user/store/courses_listing_store';
-import {ActionTree} from "vuex";
+import {TRAINING_MUTATIONS} from "@training/training_store";
+import {CommandType} from "@shared/entity";
 
 export type CourseAction<P, V> = TypedAction<CourseState, P, V>;
-export interface CourseActions extends ActionTree<CourseState, RootState> {
+export type CourseActions  = {[index in COURSE_ACTIONS]: CourseAction<any, any>} & {
     CREATE_COURSE: CourseAction<CreateCourseEntityPayload, string>,
     SET_CURRENT_COURSE: CourseAction<string, void>;
     SET_CURRENT_COURSE_FROM_SLUG: CourseAction<string, void>;
@@ -22,12 +22,12 @@ export interface CourseActions extends ActionTree<CourseState, RootState> {
 /**
  * Const for using course mutation type values
  */
-export const COURSE_ACTIONS: Constant<CourseActions> = {
-    CREATE_COURSE: 'CREATE_COURSE',
-    SET_CURRENT_COURSE: 'SET_CURRENT_COURSE',
-    SET_CURRENT_COURSE_FROM_SLUG: 'SET_CURRENT_COURSE_FROM_SLUG',
-    SAVE_COURSE: 'SAVE_COURSE',
-};
+export enum COURSE_ACTIONS {
+    CREATE_COURSE= 'CREATE_COURSE',
+    SET_CURRENT_COURSE= 'SET_CURRENT_COURSE',
+    SET_CURRENT_COURSE_FROM_SLUG= 'SET_CURRENT_COURSE_FROM_SLUG',
+    SAVE_COURSE= 'SAVE_COURSE'
+}
 /**
  * Course store actions
  */
@@ -43,7 +43,7 @@ export const courseActions: CourseActions = {
                     userId: rootState.user.userId,
                     id: 'NEW',
                     version: 0,
-                    type: 'CourseEntity',
+                    type: CommandType.course,
                     timestamp: new Date().toUTCString(),
                     correlationId: getCorrelationId(rootState.user.userId),
                 },
@@ -51,10 +51,10 @@ export const courseActions: CourseActions = {
             };
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
             let courseEntity: ViewCourseData = await coursesService.createCourse(createCourseCommand);
-            let updateAdminDescriptions: AdminCourseDescription[] = [courseEntity, ...rootState.coursesListing.adminCourseDescriptions];
+            let updateAdminDescriptions: CourseDescription[] = [courseEntity, ...rootState.coursesListing.CourseDescriptions];
             commit(COURSES_LISTING_MUTATIONS.SET_ADMIN_COURSE_DESCRIPTIONS, updateAdminDescriptions);
             commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
-            commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, courseEntity);
+            commit(TRAINING_MUTATIONS.SET_TRAINING, courseEntity);
             return courseEntity.id;
         } catch (e) {
             console.error(e);
@@ -70,9 +70,9 @@ export const courseActions: CourseActions = {
             commit(COURSE_MUTATIONS.SET_CURRENT_COURSE, id);
             if (!rootGetters.currentCourseTrainingLoaded) {
                 commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id, requesting: true});
-                let course = await coursesService.loadAdminCourse(id);
+                let course = await coursesService.loadCourseTraining(id);
                 commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id, requesting: false});
-                commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, course);
+                commit(TRAINING_MUTATIONS.SET_TRAINING, course);
             }
         } catch (e) {
             console.error(e);
@@ -90,7 +90,7 @@ export const courseActions: CourseActions = {
         commit(COURSE_MUTATIONS.SET_COURSE_REQUEST_STAGE, {id: saveCourseEntityPayload.id, requesting: true});
         try {
             let response: SaveCourseResponse = await coursesService.saveCourse(saveCourseEntityPayload);
-            commit(COURSE_MUTATIONS.SET_COURSE_ENTITY, response.course);
+            commit(TRAINING_MUTATIONS.SET_TRAINING, response.course);
             if (saveCourseEntityPayload.changes.title) {
                 // title change means slug changed -- reload admin courses to recalculate slug
                 commit(COURSES_LISTING_MUTATIONS.SET_COURSES_LISTINGS_LOADED, false);

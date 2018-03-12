@@ -1,20 +1,20 @@
 import {SECTION_MUTATIONS} from './section_mutations';
-import {COURSE_MUTATIONS, CourseMode} from '@course/store/course_mutations';
+import {COURSE_MUTATIONS} from '@course/store/course_mutations';
 import {coursesService} from '@course/courses_service';
 import {RootGetters, RootState} from '@webapp_root/store';
 import {SectionState} from './section_state';
 import {Action, ActionTree} from 'vuex';
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload, } from '@shared/sections';
-import {Constant} from '@shared/typings/util_typings';
-import {createSection, loadSection} from '@section/sections_requests';
+import {sectionHttpService} from '@section/sections_requests';
 import {MODULE_MUTATIONS} from "@module/store/module_mutations";
+import {TRAINING_MUTATIONS} from "@training/training_store";
 
 export type SectionAction<P> = Action<SectionState, RootState>;
 
 export type CreateSectionAction = SectionAction<CreateSectionEntityPayload>;
 
-export interface SectionActions extends ActionTree<SectionState, RootState> {
+export type SectionActions = {[index in SECTION_ACTIONS]: SectionAction<any>} & {
     CREATE_SECTION: CreateSectionAction,
     SET_CURRENT_SECTION: SectionAction<{ sectionId: string, moduleId: string}>;
     SET_CURRENT_SECTION_FROM_SLUG: SectionAction<{ slug: string, moduleId: string}>;
@@ -27,14 +27,14 @@ export interface SectionActions extends ActionTree<SectionState, RootState> {
 /**
  * Const for using course mutation type values
  */
-export const SECTION_ACTIONS: Constant<SectionActions> = {
-    CREATE_SECTION: 'CREATE_SECTION',
-    SET_CURRENT_SECTION: 'SET_CURRENT_SECTION',
-    SET_CURRENT_SECTION_FROM_SLUG: 'SET_CURRENT_SECTION_FROM_SLUG',
-    NEXT_SECTION: 'NEXT_SECTION',
-    PREVIOUS_SECTION: 'PREVIOUS_SECTION',
-    SAVE_SECTION: 'SAVE_SECTION',
-    LOAD_SECTION_ENTITY: 'LOAD_SECTION_ENTITY'
+export enum SECTION_ACTIONS {
+    CREATE_SECTION= 'CREATE_SECTION',
+    SET_CURRENT_SECTION= 'SET_CURRENT_SECTION',
+    SET_CURRENT_SECTION_FROM_SLUG= 'SET_CURRENT_SECTION_FROM_SLUG',
+    NEXT_SECTION= 'NEXT_SECTION',
+    PREVIOUS_SECTION= 'PREVIOUS_SECTION',
+    SAVE_SECTION= 'SAVE_SECTION',
+    LOAD_SECTION_ENTITY= 'LOAD_SECTION_ENTITY'
 };
 
 export const CREATE_ID = 'CREATING';
@@ -45,14 +45,14 @@ export const sectionActions: SectionActions = {
     CREATE_SECTION: async ({dispatch, commit, getters, rootState}, createSectionData: CreateSectionEntityPayload) => {
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: CREATE_ID, requesting: true});
         let {courseModuleDescriptions, sectionId, moduleSectionDescriptions, section}
-            = await createSection(createSectionData);
+            = await sectionHttpService.createSection(createSectionData);
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: CREATE_ID, requesting: false});
 
         let {courseId, moduleId} = createSectionData;
         commit(COURSE_MUTATIONS.SET_COURSE_MODULE_DESCRIPTIONS, {courseId, courseModuleDescriptions});
         commit(MODULE_MUTATIONS.SET_MODULE_SECTION_DESCRIPTIONS, {moduleId, moduleSectionDescriptions});
 
-        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, section);
+        commit(TRAINING_MUTATIONS.SET_TRAINING, section);
         commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, {sectionId});
     },
     async SET_CURRENT_SECTION ({state, getters, commit}, {sectionId, moduleId}) {
@@ -65,9 +65,9 @@ export const sectionActions: SectionActions = {
             commit(SECTION_MUTATIONS.SET_CURRENT_SECTION, sectionId);
             if (!getters.currentSectionLoaded) {
                 commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {sectionId, requesting: true});
-                let section = await loadSection(sectionId);
+                let section = await sectionHttpService.loadSection(sectionId);
                 commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {sectionId, requesting: false});
-                commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, section);
+                commit(TRAINING_MUTATIONS.SET_TRAINING, section);
             }
         } catch (e) {
             console.error(e);
@@ -112,11 +112,11 @@ export const sectionActions: SectionActions = {
         let {courseId, moduleId} = saveSectionEntity;
         commit(COURSE_MUTATIONS.SET_COURSE_MODULE_DESCRIPTIONS, {courseId, courseModuleDescriptions});
         commit(MODULE_MUTATIONS.SET_MODULE_SECTION_DESCRIPTIONS, {moduleId, moduleSectionDescriptions});
-        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, section);
+        commit(TRAINING_MUTATIONS.SET_TRAINING, section);
     },
     async LOAD_SECTION_ENTITY ({commit, getters}, ids: { sectionId: string, moduleId: string }) {
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: ids.sectionId, requesting: true});
         commit(SECTION_MUTATIONS.SET_SECTION_REQUEST_STAGE, {id: ids.sectionId, requesting: false});
-        commit(SECTION_MUTATIONS.SET_SECTION_ENTITY, await loadSection(ids.sectionId));
+        commit(TRAINING_MUTATIONS.SET_TRAINING, await sectionHttpService.loadSection(ids.sectionId));
     }
 };

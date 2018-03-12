@@ -78,9 +78,10 @@ export default class CreateCourseComponent extends Vue {
     }
 
 
-    private getCoursePayload () {
-        let createCoursePayload: CreateCourseEntityPayload = {
+    private getCoursePayload (): CreateCourseEntityPayload {
+        return {
             title: this.course.title,
+            userId: this.$store.state.user.userId,
             timeEstimate: this.course.timeEstimate,
             submitIndividually: true,
             active: this.course.active,
@@ -94,7 +95,6 @@ export default class CreateCourseComponent extends Vue {
             },
             description: this.course.description
         };
-        return createCoursePayload;
     }
 
     timeUpdated (time: number) {

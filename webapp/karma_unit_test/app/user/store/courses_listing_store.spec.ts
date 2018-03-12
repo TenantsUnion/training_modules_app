@@ -10,7 +10,7 @@ import {userHttpService} from "@user/user_http_service";
 import {CourseDescription} from "@shared/courses";
 import {
     actionContextMutations, MutationCall, resetState, restoreStoreContext, spyActionContext
-} from "../../../util/test_vuex_util";
+} from "@test_util/test_vuex_util";
 import {COURSE_MUTATIONS, CourseMode} from "@course/store/course_mutations";
 
 describe('Course listing store', function () {

@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {AdminCourseDescription} from "@shared/courses";
+import {CourseDescription} from "@shared/courses";
 import {mapState} from 'vuex';
 import {ADMIN_COURSE_ROUTES} from "@global/routes";
 import {RootGetters, RootState} from "@webapp_root/store";
@@ -16,7 +16,7 @@ export default class UserAdminCourseComponent extends Vue {
         this.$router.push('course/create')
     }
 
-    async go(course: AdminCourseDescription) {
+    async go(course: CourseDescription) {
         this.$router.push({
             name: ADMIN_COURSE_ROUTES.editCourse,
             params: {

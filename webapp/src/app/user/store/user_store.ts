@@ -1,6 +1,5 @@
 import {Action, ActionContext, ActionTree, GetterTree, Mutation, MutationTree} from 'vuex';
 import {RootState, VuexModule, VuexModuleConfig} from '@webapp_root/store';
-import {Constant} from '@shared/typings/util_typings';
 import {IUserInfo} from '@shared/user';
 import {accountHttpService} from '../../account/account_http_service';
 import {COURSES_LISTING_ACTIONS, COURSES_LISTING_MUTATIONS} from './courses_listing_store';
@@ -24,14 +23,14 @@ export interface UserState {
  */
 export type UserMutation<P> = (state: UserState, payload: P) => any | Mutation<UserState>;
 
-export interface UserMutations extends MutationTree<UserState> {
+export type UserMutations = {[index in USER_MUTATIONS]: UserMutation<any>} & {
     USER_LOGIN: UserMutation<IUserInfo>,
     USER_LOGOUT: UserMutation<any>,
 }
 
-export const USER_MUTATIONS: Constant<UserMutations> = {
-    USER_LOGIN: 'USER_LOGIN',
-    USER_LOGOUT: 'USER_LOGOUT',
+export enum USER_MUTATIONS {
+    USER_LOGIN = 'USER_LOGIN',
+    USER_LOGOUT = 'USER_LOGOUT',
 };
 
 export const userMutations: UserMutations = {
@@ -55,7 +54,7 @@ export const userMutations: UserMutations = {
 export type UserAction<P> = (context: ActionContext<UserState, RootState>, payload: P) => Promise<any>
     | Action<UserState, RootState>;
 
-export interface UserActions extends ActionTree<UserState, RootState> {
+export type UserActions = {[index in USER_ACTIONS]: UserAction<any>} & {
     LOGIN: UserAction<{ username: string }>,
     LOAD_INFO_FROM_USER_SESSION: UserAction<string>,
     LOGOUT: UserAction<any>,
@@ -63,12 +62,12 @@ export interface UserActions extends ActionTree<UserState, RootState> {
     ENROLL_IN_COURSE: UserAction<string>;
 }
 
-export const USER_ACTIONS: Constant<UserActions> = {
-    LOGIN: 'LOGIN',
-    LOAD_INFO_FROM_USER_SESSION: 'LOAD_INFO_FROM_USER_SESSION',
-    LOGOUT: 'LOGOUT',
-    SIGNUP: 'SIGNUP',
-    ENROLL_IN_COURSE: 'ENROLL_IN_COURSE'
+export enum USER_ACTIONS {
+    LOGIN = 'LOGIN',
+    LOAD_INFO_FROM_USER_SESSION = 'LOAD_INFO_FROM_USER_SESSION',
+    LOGOUT = 'LOGOUT',
+    SIGNUP = 'SIGNUP',
+    ENROLL_IN_COURSE = 'ENROLL_IN_COURSE'
 };
 
 export const userActions: UserActions = {
