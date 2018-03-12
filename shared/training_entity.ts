@@ -15,11 +15,8 @@ export interface ViewTrainingEntity {
     timeEstimate?: number;
     active: boolean;
     submitIndividually?: boolean;
-    // orderedContentIds?: string[],
-    // orderedQuestionIds?: string[],
-    // orderedContentQuestionIds?: string[],
-    lastModifiedAt: string;
-    createdAt: string;
+    lastModifiedAt?: string;
+    createdAt?: string;
     contentQuestions: (QuillEditorData | QuestionQuillData)[];
 }
 

@@ -32,7 +32,7 @@ export interface ViewCourseStructure extends ViewTrainingEntityDescription {
 }
 
 export interface ViewCourseData extends ViewTrainingEntity {
-    openEnrollment: boolean,
+    openEnrollment?: boolean,
     modules: ViewModuleDescription[]
 }
 
