@@ -1,12 +1,11 @@
 import {accountHandler, coursesHandler} from '@server/config/handler_config';
-import {
-    CourseEntityCommandMetadata, CreateCourseEntityPayload, CreateCourseIdMap
-} from '@shared/courses';
+import {CreateCourseEntityPayload, CreateCourseIdMap} from '@shared/courses';
 import {IUserInfo} from '@shared/user';
 import {CreateModuleEntityPayload, CreateModuleIdMap} from '@shared/modules';
 import {CreateSectionEntityPayload, SectionIdMap} from '@shared/sections';
 import {ContentQuestionsDelta} from '@shared/training_entity';
 import {appendUUID} from "@testcafe/src/util/uuid_generator";
+import {CommandMetaData, CommandType} from "@shared/entity";
 
 export let latestUser;
 export const createUser = async (username?: string): Promise<IUserInfo> => {
@@ -16,9 +15,9 @@ export const createUser = async (username?: string): Promise<IUserInfo> => {
     return userInfo;
 };
 
-export const DEFAULT_COMMAND_METADATA = (userId = latestUser.id): CourseEntityCommandMetadata => {
+export const DEFAULT_COMMAND_METADATA = (userId = latestUser.id): CommandMetaData<CommandType.course> => {
     return {
-        type: 'CourseEntity',
+        type: CommandType.course,
         userId: userId,
         timestamp: new Date().toUTCString(),
         correlationId: '1',
@@ -35,28 +34,24 @@ export const EMPTY_CONTENT_QUESTIONS_DELTA: ContentQuestionsDelta = {
     orderedQuestionIds: []
 };
 
-export const DEFAULT_COURSE_ENTITY = {
+export const STUB_COURSE= {
     title: 'created course',
-    timeEstimate: 60,
     description: 'Course description',
     openEnrollment: true,
     active: true,
     submitIndividually: false,
+    timeEstimate: 120,
     contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
 
 let latestCourseId;
-export const createCourse = async (userId: string = latestUser.id, course: CreateCourseEntityPayload = DEFAULT_COURSE_ENTITY): Promise<CreateCourseIdMap> => {
-    let createCourseCommand = {
-        metadata: DEFAULT_COMMAND_METADATA(userId),
-        payload: course
-    };
-    let createdCourseIdMap = await coursesHandler.createCourse(createCourseCommand);
+export const createCourse = async (course?: CreateCourseEntityPayload): Promise<CreateCourseIdMap> => {
+    let createdCourseIdMap = await coursesHandler.createCourse(course ? course : {...STUB_COURSE, userId: latestUser});
     latestCourseId = createdCourseIdMap.courseId;
     return createdCourseIdMap;
 };
 
-export const DEFAULT_MODULE = {
+export const STUB_MODULE = {
     description: 'Module description blerg',
     timeEstimate: 60,
     title: 'A Module',
@@ -64,10 +59,10 @@ export const DEFAULT_MODULE = {
     submitIndividually: true,
     contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
-export const moduleEntity = (module = DEFAULT_MODULE, courseId = latestCourseId): CreateModuleEntityPayload => {
+export const moduleEntity = (module = STUB_MODULE, courseId = latestCourseId): CreateModuleEntityPayload => {
     return {
         courseId,
-        ...DEFAULT_MODULE
+        ...STUB_MODULE
     };
 };
 let latestModuleId;
@@ -77,7 +72,7 @@ export const addModule = async (module: CreateModuleEntityPayload = moduleEntity
     return idMap;
 };
 
-export const DEFAULT_SECTION = {
+export const STUB_SECTION = {
     description: 'this is a section description',
     timeEstimate: 60,
     title: 'Awesome Section',
@@ -86,13 +81,13 @@ export const DEFAULT_SECTION = {
     contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
 };
 
-export const sectionEntity = ({section = DEFAULT_SECTION, courseId = latestCourseId, moduleId = latestModuleId}): CreateSectionEntityPayload => {
+export const createSectionPayload = ({section = STUB_SECTION, courseId = latestCourseId, moduleId = latestModuleId}): CreateSectionEntityPayload => {
     return {
         courseId, moduleId,
-        ...DEFAULT_SECTION
+        ...STUB_SECTION
     };
 };
-export const addSection = async (section: CreateSectionEntityPayload = sectionEntity({})): Promise<SectionIdMap> => {
+export const addSection = async (section: CreateSectionEntityPayload = createSectionPayload({})): Promise<SectionIdMap> => {
      return await coursesHandler.createSection(section);
 };
 

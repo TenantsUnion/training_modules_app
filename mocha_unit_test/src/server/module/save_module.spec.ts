@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {addModule, addSection, createCourse, createUser, DEFAULT_MODULE, EMPTY_CHANGES_OBJ} from '../util/test_course_util';
+import {addModule, addSection, createCourse, createUser, STUB_MODULE, EMPTY_CHANGES_OBJ} from '../util/test_course_util';
 import {moduleRepository, quillRepository} from '@server/config/repository_config';
 import {coursesHandler} from '@server/config/handler_config';
 import {ModuleEntity, SaveModuleEntityPayload} from '@shared/modules';
@@ -34,7 +34,7 @@ describe('Save module', function () {
     describe('basic property changes', function () {
         beforeEach(async function () {
             // assert that the modules properties are set to the DEFAULT_MODULE property values
-            let {active, title, timeEstimate, description, submitIndividually} = DEFAULT_MODULE;
+            let {active, title, timeEstimate, description, submitIndividually} = STUB_MODULE;
             let defaultModule: ModuleEntity = {
                 id: moduleId,
                 headerDataId: null,
@@ -91,7 +91,7 @@ describe('Save module', function () {
         });
 
         it('should update the module active field', async function () {
-            let updatedActive = !DEFAULT_MODULE.active;
+            let updatedActive = !STUB_MODULE.active;
             let updatedModule: SaveModuleEntityPayload = basicModuleChange({active: updatedActive});
 
             await coursesHandler.saveModule(updatedModule);

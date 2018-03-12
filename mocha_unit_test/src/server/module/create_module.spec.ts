@@ -40,12 +40,12 @@ describe('Create module', function () {
             active: false
         };
         let {moduleId: moduleId1} = await coursesHandler.createModule(module1);
-        let {modules: modules1} = await courseViewQuery.loadAdminCourse(courseId);
+        let {modules: modules1} = await courseViewQuery.loadCourseTraining(courseId);
         let moduleIds1 = modules1.map(({id}) => id);
         expect(moduleIds1.length).to.eq(1);
         expect(moduleIds1[0]).to.eq(moduleId1);
         let {moduleId: moduleId2} = await coursesHandler.createModule(module2);
-        let {modules, modules: modules2} = await courseViewQuery.loadAdminCourse(courseId);
+        let {modules, modules: modules2} = await courseViewQuery.loadCourseTraining(courseId);
         let moduleIds2 = modules2.map(({id}) => id);
         expect(moduleIds2.length).to.eq(2);
         expect(moduleIds2[1]).to.eq(moduleId2);
@@ -103,7 +103,7 @@ describe('Create module', function () {
         };
 
         let {moduleId} = await coursesHandler.createModule(createModulePayload);
-        let {modules} = await courseViewQuery.loadAdminCourse(courseId);
+        let {modules} = await courseViewQuery.loadCourseTraining(courseId);
 
         let module = await moduleRepository.loadModuleEntity(moduleId);
         let quillContent = await quillRepository.loadQuillData(module.orderedContentIds[0]);

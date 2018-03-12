@@ -1,15 +1,12 @@
 import {expect} from 'chai';
-import {
-    AdminCourseDescription, CourseEntityCommandMetadata, CreateCourseEntityCommand
-} from '@shared/courses';
+import {CourseDescription, CreateCourseEntityPayload} from '@shared/courses';
 import {coursesHandler} from '@server/config/handler_config';
 import {QuillEditorData} from '@shared/quill_editor';
 import * as Delta from 'quill-delta';
-import {clearData} from '../../../test_db_util';
-import {IUserInfo} from '@shared/user';
 import {createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../../util/test_course_util';
 import {getUTCNow} from "@server/repository";
 import {courseViewQuery} from "@server/config/query_service_config";
+import {CommandMetaData, CommandType} from "@shared/entity";
 
 describe('Course Handler: Create Course', function () {
     let timestamp = new Date().toUTCString();
@@ -26,65 +23,61 @@ describe('Course Handler: Create Course', function () {
         lastModifiedAt: getUTCNow()
     };
 
-    let courseInfo1: CreateCourseEntityCommand;
-    let courseInfo2: CreateCourseEntityCommand;
-    let metadata: CourseEntityCommandMetadata;
-    let userInfo: IUserInfo;
+    let courseInfo1: CreateCourseEntityPayload;
+    let courseInfo2: CreateCourseEntityPayload;
+    let metadata: CommandMetaData<CommandType.course>;
+    let userId: string;
     beforeEach(async function () {
-        userInfo = await createUser();
+        userId = (await createUser()).id;
         metadata = {
-            type: 'CourseEntity',
-            userId: userInfo.id,
+            type: CommandType.course,
+            userId: userId,
             timestamp: timestamp,
             correlationId: '1',
             id: 'NEW',
             version: 0
         };
         courseInfo1 = {
-            metadata,
-            payload: {
-                title: 'created course',
-                timeEstimate: 60,
-                description: 'Course description',
-                openEnrollment: true,
-                submitIndividually: false,
-                active: true,
-                contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
-            }
+            userId,
+            title: 'created course',
+            timeEstimate: 60,
+            description: 'Course description',
+            openEnrollment: true,
+            submitIndividually: false,
+            active: true,
+            contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
         };
         courseInfo2 = {
-            metadata,
-            payload: {
-                title: 'created course 2',
-                timeEstimate: 120,
-                description: 'Course description 2',
-                openEnrollment: false,
-                submitIndividually: true,
-                active: false,
-                contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
-            }
+            userId,
+            title: 'created course 2',
+            timeEstimate: 120,
+            description: 'Course description 2',
+            openEnrollment: false,
+            submitIndividually: true,
+            active: false,
+            contentQuestions: EMPTY_CONTENT_QUESTIONS_DELTA
         };
     });
     it('should create 2 courses and load the matching admin course descriptions', async function () {
         let {courseId: courseId1} = await coursesHandler.createCourse(courseInfo1);
         let {courseId: courseId2} = await coursesHandler.createCourse(courseInfo2);
 
-        let expectedDescriptions: AdminCourseDescription[] = [
+        let expectedDescriptions: CourseDescription[] = [
             {
                 id: courseId1,
-                title: courseInfo1.payload.title,
-                description: courseInfo1.payload.description,
-                timeEstimate: courseInfo1.payload.timeEstimate
+                title: courseInfo1.title,
+                description: courseInfo1.description,
+                timeEstimate: courseInfo1.timeEstimate
             },
             {
                 id: courseId2,
-                title: courseInfo2.payload.title,
-                description: courseInfo2.payload.description,
-                timeEstimate: courseInfo2.payload.timeEstimate
+                title: courseInfo2.title,
+                description: courseInfo2.description,
+                timeEstimate: courseInfo2.timeEstimate
             }
         ];
 
-        let adminCourses: AdminCourseDescription[] = await courseViewQuery.loadUserAdminCourses(userInfo.id);
+        let adminCourses: CourseDescription[] = await courseViewQuery.loadUserAdminCourses(userId);
         expect(adminCourses.length).to.equal(2);
         expect(adminCourses[0]).to.deep.equal(expectedDescriptions[0]);
         expect(adminCourses[1]).to.deep.equal(expectedDescriptions[1]);

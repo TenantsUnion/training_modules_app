@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {
     processContentQuestions,
     processCourseView, ViewCourseDbData, ViewModuleDescriptionDbData,
-    ViewTrainingEntityDbData
+    ViewTrainingEntityDbData, ViewTrainingEntityDescriptionDbData
 } from "@server/course/view/course_view_row_processor";
 import {getUTCNow} from "@server/repository";
 import {QuillEditorData} from "@shared/quill_editor";
@@ -191,7 +191,7 @@ describe('Course View Row Processor', function () {
 
     const viewModuleDbData = (id: string,
                               orderedSectionIds: string[] = [],
-                              sections: ViewTrainingEntityDbData[] = []): ViewModuleDescriptionDbData => {
+                              sections: ViewTrainingEntityDescriptionDbData[] = []): ViewModuleDescriptionDbData => {
         return {
             id,
             title: 'a title',
@@ -201,6 +201,10 @@ describe('Course View Row Processor', function () {
             active: false,
             orderedSectionIds,
             createdAt: getUTCNow(),
-            lastModifiedAt: getUTCNow(), sections};
+            lastModifiedAt: getUTCNow(),
+            orderedContentIds: [],
+            orderedQuestionIds: [],
+            sections,
+        };
     };
 });

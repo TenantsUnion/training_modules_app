@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import {clearData} from '../../../test_db_util';
 import {createCourse, createUser, latestUser} from '../../util/test_course_util';
 import {CreateCourseEntityPayload, ViewCourseData} from '@shared/courses';
 import {QuillEditorData} from '@shared/quill_editor';
@@ -26,8 +25,9 @@ describe('Course view', function () {
 
     let now = new Date();
     let nowTimestamp = toDbTimestampFormat(now);
+    let userId;
     beforeEach(async function () {
-        await createUser();
+        userId = (await createUser()).id;
         MockDate.set(now);
     });
 
@@ -158,11 +158,11 @@ describe('Course view', function () {
 
     it('should load a course that has 1 question and 1 content segment', async function () {
         let data: CreateCourseEntityPayload = {
-            ...basicCourseProps,
+            userId, ...basicCourseProps,
             contentQuestions: contentQuestionsDelta,
         };
-        let idMap = await createCourse(latestUser.id, data);
-        let course = await courseViewQuery.loadAdminCourse(idMap.courseId);
+        let idMap = await createCourse(data);
+        let course = await courseViewQuery.loadCourseTraining(idMap.courseId);
 
         const expected = {
             id: idMap.courseId,

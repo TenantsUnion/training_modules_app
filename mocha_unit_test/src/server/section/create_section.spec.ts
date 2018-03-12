@@ -34,12 +34,12 @@ describe('Create section', function () {
             courseId, moduleId
         };
         let {sectionId: sectionId1} = await coursesHandler.createSection(section1);
-        let {modules: [{sections: sectionDescriptions1}]} = await courseViewQuery.loadAdminCourse(courseId);
+        let {modules: [{sections: sectionDescriptions1}]} = await courseViewQuery.loadCourseTraining(courseId);
         let sectionIds1 = sectionDescriptions1.map(({id}) => id);
         expect(sectionIds1.length).to.eq(1);
         expect(sectionIds1[0]).to.eq(sectionId1);
         let {sectionId: sectionId2} = await coursesHandler.createSection(section2);
-        let {modules: [{sections: sectionDescriptions2}]} = await courseViewQuery.loadAdminCourse(courseId);
+        let {modules: [{sections: sectionDescriptions2}]} = await courseViewQuery.loadCourseTraining(courseId);
         let sectionIds2 = sectionDescriptions2.map(({id}) => id);
         expect(sectionIds2.length).to.eq(2);
         expect(sectionIds2[1]).to.eq(sectionId2);

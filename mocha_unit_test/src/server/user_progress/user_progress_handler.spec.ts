@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {
-    addModule, addSection, createCourse, createUser, DEFAULT_COURSE_ENTITY, DEFAULT_MODULE,
-    sectionEntity
+    addModule, addSection, createCourse, createUser, STUB_COURSE, STUB_MODULE,
+    createSectionPayload
 } from "../util/test_course_util";
 import {userProgressHandler} from "@server/config/handler_config";
 import {
@@ -41,7 +41,7 @@ describe('User progress handler', function () {
     });
 
     it('should create a progress entry for a course', async function () {
-        let {courseId} = await createCourse(adminId);
+        let {courseId} = await createCourse({userId: adminId, ...STUB_COURSE});
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
         let {
@@ -59,7 +59,7 @@ describe('User progress handler', function () {
     });
 
     it('should create course and module progress entries', async function () {
-        let {courseId} = await createCourse(adminId);
+        let {courseId} = await createCourse({userId: adminId, ...STUB_COURSE});
         let {moduleId: moduleId1} = await addModule();
         let {moduleId: moduleId2} = await addModule();
 
@@ -89,10 +89,10 @@ describe('User progress handler', function () {
     });
 
     it('should create course, module, section progress entries for enrolling in course', async function () {
-        let {courseId} = await createCourse(adminId);
+        let {courseId} = await createCourse({userId: adminId, ...STUB_COURSE});
         let {moduleId: moduleId1} = await addModule();
-        let {sectionId: sectionId1} = await addSection(sectionEntity({moduleId: moduleId1}));
-        let {sectionId: sectionId2} = await addSection(sectionEntity({moduleId: moduleId1}));
+        let {sectionId: sectionId1} = await addSection(createSectionPayload({moduleId: moduleId1}));
+        let {sectionId: sectionId2} = await addSection(createSectionPayload({moduleId: moduleId1}));
         let {moduleId: moduleId2} = await addModule();
 
         await userProgressHandler.enrollUserInCourse({userId: studentId, courseId});
@@ -134,9 +134,7 @@ describe('User progress handler', function () {
 
     it('should save course training progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
-        let idMap = await createCourse(adminId, {
-            ...DEFAULT_COURSE_ENTITY, contentQuestions
-        });
+        let idMap = await createCourse({...STUB_COURSE, contentQuestions, userId: adminId});
         let courseId = idMap.courseId;
         questionId1 = idMap[questionId1];
         questionId2 = idMap[questionId2];
@@ -160,7 +158,7 @@ describe('User progress handler', function () {
 
     it('should save and mark complete course progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
-        let idMap = await createCourse(adminId, {...DEFAULT_COURSE_ENTITY, contentQuestions});
+        let idMap = await createCourse({...STUB_COURSE, userId: adminId, contentQuestions});
         let courseId = idMap.courseId;
         questionId1 = idMap[questionId1];
         questionId2 = idMap[questionId2];
@@ -186,8 +184,8 @@ describe('User progress handler', function () {
 
     it('should save module training progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
-        let {courseId} = await createCourse(adminId);
-        let idMap = await addModule({...DEFAULT_MODULE, contentQuestions, courseId});
+        let {courseId} = await createCourse({userId: adminId, ...STUB_COURSE});
+        let idMap = await addModule({...STUB_MODULE, contentQuestions, courseId});
         let moduleId = idMap.moduleId;
         questionId1 = idMap[questionId1];
         questionId2 = idMap[questionId2];
@@ -213,8 +211,8 @@ describe('User progress handler', function () {
 
     it('should save and mark complete module progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
-        let {courseId} = await createCourse(adminId);
-        let idMap = await addModule({...DEFAULT_MODULE, contentQuestions, courseId});
+        let {courseId} = await createCourse({userId: adminId, ...STUB_COURSE});
+        let idMap = await addModule({...STUB_MODULE, contentQuestions, courseId});
         let moduleId = idMap.moduleId;
         questionId1 = idMap[questionId1];
         questionId2 = idMap[questionId2];
@@ -240,9 +238,9 @@ describe('User progress handler', function () {
 
     it('should save section progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
-        let {courseId} = await createCourse(adminId);
+        let {courseId} = await createCourse({userId: adminId, ...STUB_COURSE});
         let {moduleId} = await addModule();
-        let idMap = await addSection({...DEFAULT_MODULE, contentQuestions, courseId, moduleId});
+        let idMap = await addSection({...STUB_MODULE, contentQuestions, courseId, moduleId});
         let sectionId = idMap.sectionId;
         questionId1 = idMap[questionId1];
         questionId2 = idMap[questionId2];
@@ -270,9 +268,9 @@ describe('User progress handler', function () {
 
     it('should save and mark complete a section progress', async function () {
         let {contentId1, contentId2, questionId1, questionId2, contentQuestions} = defaultContentQuestions();
-        let {courseId} = await createCourse(adminId);
+        let {courseId} = await createCourse({userId: adminId, ...STUB_COURSE});
         let {moduleId} = await addModule();
-        let idMap = await addSection({...DEFAULT_MODULE, contentQuestions, courseId, moduleId});
+        let idMap = await addSection({...STUB_MODULE, contentQuestions, courseId, moduleId});
         let sectionId = idMap.sectionId;
         questionId1 = idMap[questionId1];
         questionId2 = idMap[questionId2];
