@@ -2,8 +2,7 @@ import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
 import {Datasource} from '../../datasource';
 import {
-    AdminCourseDescription, EnrolledCourseDescription, UserEnrolledCourseData,
-    ViewCourseData
+    CourseDescription, UserEnrolledCourseData, ViewCourseData
 } from "@shared/courses";
 import {processCourseView, processModuleDescriptions} from "../view/course_view_row_processor";
 import {ViewModuleDescription} from "@shared/modules";
@@ -14,7 +13,7 @@ export class CourseViewQuery {
     constructor (private datasource: Datasource) {
     }
 
-    async loadUserAdminCourses (userId: string): Promise<AdminCourseDescription[]> {
+    async loadUserAdminCourses (userId: string): Promise<CourseDescription[]> {
         return await this.datasource.query({
             text: `
                           SELECT c.id, c.title, c.description, c.time_estimate FROM tu.course c JOIN
@@ -27,7 +26,7 @@ export class CourseViewQuery {
         });
     }
 
-    async loadUserEnrolledCourses (username: string): Promise<EnrolledCourseDescription[]> {
+    async loadUserEnrolledCourses (username: string): Promise<CourseDescription[]> {
         this.logger.log('info', 'Retrieving courses for user: %s', username);
 
         let result = await this.datasource.query({
@@ -40,8 +39,8 @@ export class CourseViewQuery {
             values: [username]
         });
 
-        let enrolled: EnrolledCourseDescription[] = result.map((row) => {
-            return <EnrolledCourseDescription> {
+        let enrolled: CourseDescription[] = result.map((row) => {
+            return <CourseDescription> {
                 id: row.id,
                 title: row.title
             };

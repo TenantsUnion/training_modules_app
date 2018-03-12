@@ -5,8 +5,7 @@ import {
     CreateSectionEntityPayload, SaveSectionEntityPayload, SectionIdMap
 } from '@shared/sections';
 import {
-    CourseEntity,
-    CreateCourseEntityCommand, CreateCourseEntityPayload, CreateCourseIdMap, SaveCourseEntityPayload
+    CourseEntity, CreateCourseEntityPayload, CreateCourseIdMap, SaveCourseEntityPayload
 } from '@shared/courses';
 import {QuillHandler} from '../../training_entity/quill/quill_handler';
 import {applyDeltaDiff} from '@shared/delta/apply_delta';
@@ -16,12 +15,6 @@ import {applyDeltaArrOps, updateArrOpsValues} from '@shared/delta/diff_key_array
 import {CourseRepository} from "./course_repository";
 import {AdminModuleHandler} from "@module/admin/admin_module_handler";
 import {AdminSectionHandler} from "@section/admin/admin_section_handler";
-
-export interface LoadAdminCourseParameters {
-    username: string;
-    courseTitle: string;
-    courseId: string;
-}
 
 export class AdminCourseHandler {
     logger = getLogger('CourseHandler', 'info');
@@ -34,14 +27,11 @@ export class AdminCourseHandler {
                 private moduleHandler: AdminModuleHandler) {
     }
 
-    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<CreateCourseIdMap> {
+    async createCourse(createCoursePayload: CreateCourseEntityPayload): Promise<CreateCourseIdMap> {
         try {
-            let {userId} = createCourseCommand.metadata;
-            let courseInfo: CreateCourseEntityPayload = createCourseCommand.payload;
-            // create quill content
-            let {contentQuestions: {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds}} = courseInfo;
+            let {contentQuestions: {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds}, userId} = createCoursePayload;
             let placeholderIdMap =
-                await this.trainingEntityHandler.handleContentQuestionDelta(courseInfo.contentQuestions);
+                await this.trainingEntityHandler.handleContentQuestionDelta(createCoursePayload.contentQuestions);
 
             let contentQuestions: ContentQuestionEntity = {
                 orderedContentIds: applyDeltaArrOps([], updateArrOpsValues(orderedContentIds, placeholderIdMap)),
@@ -49,7 +39,7 @@ export class AdminCourseHandler {
                 orderedContentQuestionIds: applyDeltaArrOps([], updateArrOpsValues(orderedContentQuestionIds, placeholderIdMap))
             };
 
-            let courseId = await this.courseRepository.createCourse({...courseInfo, ...contentQuestions});
+            let courseId = await this.courseRepository.createCourse({...createCoursePayload, ...contentQuestions});
             await this.userHandler.userCreatedCourse(userId, courseId);
             this.logger.info(`Successfully created course: ${courseId}`);
 
@@ -118,7 +108,5 @@ export class AdminCourseHandler {
         await this.moduleHandler.addSection({sectionId, ...sectionData});
         return sectionPlaceholderIdMap;
     }
-
-
 }
 

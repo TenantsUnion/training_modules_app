@@ -15,6 +15,8 @@ export interface ViewTrainingEntityDescriptionDbData {
     submitIndividually?: boolean;
     lastModifiedAt: string;
     createdAt: string;
+    orderedContentIds: string[],
+    orderedQuestionIds: string[]
 }
 
 export interface ViewTrainingEntityDbData {
@@ -43,7 +45,7 @@ export interface ViewCourseDbData extends ViewTrainingEntityDbData {
 
 export interface ViewModuleDescriptionDbData extends ViewTrainingEntityDescriptionDbData {
     orderedSectionIds: string[],
-    sections: ViewTrainingEntityDescription[]
+    sections: ViewTrainingEntityDescriptionDbData[]
 }
 
 

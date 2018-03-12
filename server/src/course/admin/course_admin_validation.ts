@@ -1,10 +1,9 @@
-import {CreateCourseEntityCommand, SaveCourseEntityCommand, SaveCourseEntityPayload} from '../../../../shared/courses';
+import {CreateCourseEntityPayload, SaveCourseEntityPayload} from '@shared/courses';
 
 export type ValidationResult = { [index: string]: string } | null;
-export const validateCreateCourse = (createCourseCommand: CreateCourseEntityCommand): ValidationResult => {
+export const validateCreateCourse = (createCourseCommand: CreateCourseEntityPayload): ValidationResult => {
     let errorMsgs = {};
-    let data = createCourseCommand.payload;
-    if (!data.title) {
+    if (!createCourseCommand.title) {
         errorMsgs['title'] = 'Title required for course';
     }
 

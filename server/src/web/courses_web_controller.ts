@@ -1,7 +1,7 @@
 import * as express from "express";
 import {Request, Response} from "express";
 import {
-    AdminCourseDescription, CreateCourseEntityCommand, SaveCourseEntityPayload,
+    CourseDescription, CreateCourseEntityCommand, SaveCourseEntityPayload,
     CreateCourseResponse, SaveCourseResponse
 } from "@shared/courses";
 import {AdminCourseHandler} from "@course/admin/course_admin_handler";
@@ -34,14 +34,14 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     }
 
     async createCourse (request: Request, response: Response) {
-        let createCourseCommand: CreateCourseEntityCommand = request.body;
+        let {payload}: CreateCourseEntityCommand = request.body;
         try {
-            let errMsgs = validateCreateCourse(createCourseCommand);
+            let errMsgs = validateCreateCourse(payload);
             if (errMsgs) {
                 this.handleValidationErr(errMsgs, request, response);
             } else {
-                let {courseId} = await this.coursesHandler.createCourse(createCourseCommand);
-                let createdCourse: CreateCourseResponse = await this.courseViewQuery.loadAdminCourse(courseId);
+                let {courseId} = await this.coursesHandler.createCourse(payload);
+                let createdCourse: CreateCourseResponse = await this.courseViewQuery.loadCourseTraining(courseId);
                 // todo handle room creation for course
                 response.status(200).send(createdCourse);
             }
@@ -59,7 +59,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
             } else {
                 await coursesHandler.saveCourse(course);
                 let result: SaveCourseResponse = {
-                    course: await this.courseViewQuery.loadAdminCourse(course.id)
+                    course: await this.courseViewQuery.loadCourseTraining(course.id)
                 };
                 response.status(200).send(result);
             }
@@ -81,7 +81,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     async getUserAdminCourses (request: Request, response: Response) {
         let userId: string = request.params.userId;
         try {
-            let userCourses: AdminCourseDescription[] = await this.courseViewQuery.loadUserAdminCourses(userId);
+            let userCourses: CourseDescription[] = await this.courseViewQuery.loadUserAdminCourses(userId);
             response.status(200).send(userCourses);
         } catch (e) {
             this.handleServerErr(e, request, response);
@@ -167,7 +167,7 @@ export class CourseCommandController implements ModuleOperations, SectionOperati
     async loadUserAdminCourseWebView (request: Request, response: Response) {
         let {courseId} = request.params;
         try {
-            let course = await this.courseViewQuery.loadAdminCourse(courseId);
+            let course = await this.courseViewQuery.loadCourseTraining(courseId);
             response.status(200).send(course);
         } catch (e) {
             this.handleServerErr(e, request, response);
