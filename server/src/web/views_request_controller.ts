@@ -32,10 +32,10 @@ export class ViewsRequestWebController extends AbstractWebController {
     }
 
     async handleViewRequest (req: Request): Promise<ViewsResponse> {
-        let params: ViewsRequestParams = req.params;
-        let loadViewsAsync = Object.keys(params).filter((key) => this.query[key])
+        let queryParams: ViewsRequestParams = req.query;
+        let loadViewsAsync = Object.keys(queryParams).filter((key) => this.query[key])
             .map(async (viewRequest) => {
-                let view = await this.query[viewRequest](params);
+                let view = await this.query[viewRequest](queryParams);
                 return {type: viewRequest, view}
             });
         return (await Promise.all(loadViewsAsync)).reduce((acc, {type, view}) => {

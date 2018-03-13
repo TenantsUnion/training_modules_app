@@ -1,4 +1,7 @@
-import {userProgressWebController, userWebController, viewsRequestWebController} from "./web/web_controller_config";
+import {
+    coursesController, userProgressWebController, userWebController,
+    viewsRequestWebController
+} from "./web/web_controller_config";
 
 const express = require("express");
 const logger = require("morgan");
@@ -12,7 +15,6 @@ import {QuillRoutes} from './training_entity/quill/quill_routes_controller';
 import {getLogger, LOG_LEVELS} from './log';
 import {Express} from 'express';
 import {AvailableCourseRoutes} from "./web/available_courses_routes";
-import {CoursesRoutes} from "./web/course_admin_routes";
 
 /**
  * Configured to listen on port and started in /bin scripts
@@ -65,12 +67,12 @@ app.get('/', express.Router().get('/', function (req, res, next) {
 }));
 
 app.use(AccountRoutes);
-app.use(CoursesRoutes);
 app.use(QuillRoutes);
 app.use(AvailableCourseRoutes);
 userProgressWebController.registerRoutes(app);
 userWebController.registerRoutes(app);
 viewsRequestWebController.registerRoutes(app);
+coursesController.registerRoutes(app);
 
 // has to go last so other routes can match, catch 404 and forward to error handler
 app.use(function (req, res, next) {
