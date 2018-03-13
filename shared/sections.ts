@@ -1,17 +1,9 @@
 import {
     CreateTrainingEntityPayload, SaveTrainingEntityPayload, TrainingEntityDiffDelta,
-    TrainingEntity, ViewTrainingEntity, ViewTrainingEntityDescription
-} from './training_entity';
-import {ViewModuleDescription} from '@shared/modules';
+    TrainingEntity, ViewTrainingEntity} from './training_entity';
+import {ViewCourseStructure} from "@shared/courses";
 
 export type SectionEntity = TrainingEntity;
-
-export interface SectionDetails {
-    id: string;
-    title: string;
-    description?: string;
-}
-
 export interface ViewSectionData extends ViewTrainingEntity {}
 
 
@@ -21,9 +13,8 @@ export interface SaveSectionEntityPayload extends SaveTrainingEntityPayload<Trai
 }
 
 export interface SaveSectionResponse {
-    section: ViewSectionData
-    courseModuleDescriptions: ViewModuleDescription[];
-    moduleSectionDescriptions: ViewTrainingEntityDescription[];
+    section: ViewSectionData;
+    courseStructure: ViewCourseStructure;
 }
 
 export interface CreateSectionEntityPayload extends CreateTrainingEntityPayload {
@@ -42,8 +33,7 @@ export interface SectionIdMap {
 export interface CreateSectionResponse {
     sectionId: string;
     section: ViewSectionData;
-    moduleSectionDescriptions: ViewTrainingEntityDescription[];
-    courseModuleDescriptions: ViewModuleDescription[];
+    courseStructure: ViewCourseStructure;
 }
 
 

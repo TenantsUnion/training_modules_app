@@ -35,13 +35,6 @@ export interface ViewCourseData extends ViewTrainingEntity {
     openEnrollment?: boolean,
     modules: ViewModuleDescription[]
 }
-
-export interface ViewCourseDelta extends TrainingEntityDiffDelta {
-    openEnrollment?: boolean,
-    // replace, move and update module descriptions
-    modules?: DeltaArrOp<ViewModuleDescription>[]
-}
-
 export interface UserEnrolledCourseData extends ViewCourseData {
     //todo maybe user description?
     //todo module and section progress
@@ -61,7 +54,10 @@ export interface CoursesListingView {
     admin: CourseDescription[]
 }
 
-export interface CreateCourseResponse extends ViewCourseData {
+export interface CreateCourseResponse {
+    courseTraining: ViewCourseData,
+    courseStructure: ViewCourseStructure,
+    adminCourseDescriptions: CourseDescription[]
 }
 
 export interface CourseEntityDiffDelta extends TrainingEntityDiffDelta {
@@ -70,7 +66,8 @@ export interface CourseEntityDiffDelta extends TrainingEntityDiffDelta {
 }
 
 export interface SaveCourseResponse {
-    course: ViewCourseData;
+    courseTraining: ViewCourseData;
+    courseStructure: ViewCourseStructure;
 }
 
 export const diffBasicPropsCourseProps = (before: ViewCourseData, after: ViewCourseData): CourseEntityDiffDelta => {
@@ -84,6 +81,5 @@ export const diffBasicPropsCourseProps = (before: ViewCourseData, after: ViewCou
  */
 export interface CreateCourseIdMap {
     courseId: string,
-
     [p: string]: string
 }
