@@ -1,6 +1,6 @@
 import {appRouter} from './router';
 import Vuex from 'vuex';
-import Vue from 'vue';
+import Vue, {ComponentOptions, VueConstructor} from 'vue';
 import {loginRoutes} from "./account/account_routes";
 import {userRoutes} from "@user/user_routes";
 import {registerGlobalComponents} from './globals';
@@ -12,6 +12,7 @@ import {storeConfig} from "@webapp_root/state_store";
 
 // load javascript functionality for foundation
 require('foundation-sites');
+
 
 appRouter.addRoutes([
     loginRoutes,
@@ -31,3 +32,9 @@ let app = new Vue({
     template: `<app></app>`
 }).$mount('#app');
 
+Vue.mixin(<ComponentOptions<Vue> & VueConstructor> {
+    beforeCreate: function() {
+        this.$state = store.state;
+        this.$getters = store.getters;
+    }
+});

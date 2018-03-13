@@ -1,6 +1,10 @@
 import {store} from "@webapp_root/app";
 import {TRAINING_ACTIONS} from "@training/training_store";
 import {NavigationGuard} from "vue-router";
+import {mapState} from "vuex";
+import {RootGetters, RootState} from "@webapp_root/store";
+import {ComponentOptions} from "vue";
+import {Vue} from "vue/types/vue";
 
 const courseTrainingGuard: NavigationGuard = async (to: any, from: any, next) => {
     const {currentCourseId} = store.state.course;
@@ -14,18 +18,19 @@ const courseTrainingGuard: NavigationGuard = async (to: any, from: any, next) =>
 };
 
 const moduleTrainingGuard: NavigationGuard = async (to: any, from: any, next) => {
-    const {currentModuleId} = store.state.module;
+    const {currentModuleId} = store.state.course;
     try {
+        if (!currentModuleId) throw new Error(`currentModuleId undefined!`);
         await store.dispatch(TRAINING_ACTIONS.SET_CURRENT_MODULE_TRAINING, currentModuleId);
+        next();
     } catch (e) {
         console.error(`Error setting module ${currentModuleId} as current training.\nException: ${e}`);
-    } finally {
-        next();
+        next(e);
     }
 };
 
 const sectionTrainingGuard: NavigationGuard = async (to: any, from: any, next) => {
-    const {currentSectionId} = store.state.section;
+    const {currentSectionId} = store.state.course;
     try {
         await store.dispatch(TRAINING_ACTIONS.SET_CURRENT_MODULE_TRAINING, currentSectionId);
     } catch (e) {
@@ -35,18 +40,29 @@ const sectionTrainingGuard: NavigationGuard = async (to: any, from: any, next) =
     }
 };
 
+export const TrainingComponent: ComponentOptions<Vue> = {
+    computed: {
+        ...mapState<RootState>({
+            loading: (state, {trainingLoading, currentCourseLoading}: RootGetters) =>
+                trainingLoading || currentCourseLoading
+        })
+    }
+};
 
-export const CourseTrainingComponent = {
+export const CourseTrainingComponent: ComponentOptions<Vue> = {
     beforeRouteEnter: courseTrainingGuard,
-    beforeRouteUpdate: courseTrainingGuard
+    beforeRouteUpdate: courseTrainingGuard,
+    extends: TrainingComponent
 };
 
-export const ModuleTrainingComponent = {
+export const ModuleTrainingComponent: ComponentOptions<Vue> = {
     beforeRouteEnter: moduleTrainingGuard,
-    beforeRouteUpdate: moduleTrainingGuard
+    beforeRouteUpdate: moduleTrainingGuard,
+    extends: TrainingComponent
 };
 
-export const SectionTrainingComponent = {
+export const SectionTrainingComponent: ComponentOptions<Vue> = {
     beforeRouteEnter: sectionTrainingGuard,
-    beforeRouteUpdate: sectionTrainingGuard
+    beforeRouteUpdate: sectionTrainingGuard,
+    extends: TrainingComponent
 };

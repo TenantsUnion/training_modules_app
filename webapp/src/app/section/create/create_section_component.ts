@@ -1,12 +1,10 @@
 import Component from 'vue-class-component';
 import Vue from 'vue';
 import * as VueForm from '../../vue-form';
-import {Segment} from '@shared/segment';
-import {SECTION_ACTIONS} from '@section/store/section_actions';
 import {CreateSectionEntityPayload} from '@shared/sections';
-import {currentModuleRouteGuard} from '@module/module_details_component/module_details_component';
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
+import {EDIT_COURSE_COMMAND_ACTIONS} from "@course/edit_course_command_store";
 
 @Component({
     data: () => {
@@ -19,8 +17,6 @@ import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages
             formstate: {}
         };
     },
-    beforeRouteEnter: currentModuleRouteGuard,
-    beforeRouteUpdate: currentModuleRouteGuard,
 })
 export default class CreateSectionComponent extends Vue {
     errorMessages: { [index: string]: string };
@@ -29,7 +25,6 @@ export default class CreateSectionComponent extends Vue {
     timeEstimate: number;
     description: string;
     formstate: VueForm.FormState;
-    quillContent: Segment[] = [];
 
     async createSection() {
         this.formstate._submit();
@@ -40,15 +35,15 @@ export default class CreateSectionComponent extends Vue {
         this.loading = true;
         this.errorMessages = null;
 
-        let {currentModuleId} = this.$store.state.module;
+        let {currentModuleId} = this.$state.course;
         try {
             const createSectionPayload: CreateSectionEntityPayload = {
                 title: this.title,
                 description: this.description,
                 timeEstimate: this.timeEstimate,
-                submitIndividually: false, // todo make field
-                active: true, // todo make field
-                courseId: this.$store.state.course.currentCourseId,
+                submitIndividually: false,
+                active: true,
+                courseId: this.$state.course.currentCourseId,
                 moduleId: currentModuleId,
                 contentQuestions: {
                     quillChanges: {},
@@ -58,16 +53,15 @@ export default class CreateSectionComponent extends Vue {
                     questionChanges: {}
                 },
             };
-            await this.$store.dispatch(SECTION_ACTIONS.CREATE_SECTION, createSectionPayload);
+            let sectionId = await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.CREATE_SECTION, createSectionPayload);
             let message: TitleMessagesObj = {message: `Section: ${this.title} created successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
 
             let {getSectionSlugFromId} = this.$store.getters;
-            let {currentSectionId} = this.$store.state.section;
             this.$router.push({
                 name: PREVIEW_COURSE_ROUTES.sectionPreview,
                 params: {
-                    sectionSlug: getSectionSlugFromId({moduleId: currentModuleId, sectionId: currentSectionId})
+                    sectionSlug: getSectionSlugFromId({moduleId: currentModuleId, sectionId})
                 },
             });
         } catch (errorMessages) {

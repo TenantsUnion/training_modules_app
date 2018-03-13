@@ -3,10 +3,10 @@ import Component from "vue-class-component";
 import {CreateCourseEntityPayload} from '@shared/courses';
 import {FormState} from '../../vue-form';
 import {Segment} from '@shared/segment';
-import {COURSE_ACTIONS} from '@course/store/course_actions';
 import {Location} from "vue-router";
 import {ADMIN_COURSE_ROUTES, USER_ROUTES} from "@global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
+import {EDIT_COURSE_COMMAND_ACTIONS} from "@course/edit_course_command_store";
 
 @Component({
     data: () => {
@@ -66,7 +66,7 @@ export default class CreateCourseComponent extends Vue {
         this.errorMessages = null;
         let createCoursePayload = this.getCoursePayload();
         try {
-            let courseId = await this.$store.dispatch(COURSE_ACTIONS.CREATE_COURSE, createCoursePayload);
+            let courseId = await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.CREATE_COURSE, createCoursePayload);
             let message: TitleMessagesObj = {message: `Course: ${this.course.title} created successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             onSuccess(courseId);

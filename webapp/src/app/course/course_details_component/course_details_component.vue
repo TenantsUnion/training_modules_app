@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <div v-if="currentCourseLoading" class="grid-x">
+        <div v-if="loading" class="grid-x">
             <loading></loading>
         </div>
         <div v-if="currentCourse" class="grid-x">

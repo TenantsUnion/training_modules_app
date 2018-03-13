@@ -7,6 +7,7 @@ import {mapState} from "vuex";
 import {ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {USER_ACTIONS} from "@user/store/user_store";
 import {store} from "@webapp_root/app";
+import {RootState} from "@webapp_root/store";
 
 export const availableCoursesRouteGuard: NavigationGuard = async (to, from, next) => {
     try {
@@ -19,7 +20,7 @@ export const availableCoursesRouteGuard: NavigationGuard = async (to, from, next
 };
 @Component({
     computed: {
-        ...mapState({
+        ...mapState<RootState>({
             loading: ({availableCourses}) => availableCourses.loading,
             courses: ({availableCourses}) => availableCourses.courses,
             enrolling: ({user}) => user.loggedIn

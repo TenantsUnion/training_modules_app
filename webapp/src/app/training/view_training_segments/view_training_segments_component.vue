@@ -10,7 +10,9 @@
                              :individual-submit-cb="individualSubmitCb"
                              :question="segment.question"/>
         </div>
-        <div v-if="!individualSubmit"><button v-on:click="submit()" type="button" class="button primary">Submit</button></div>
+        <div v-if="!individualSubmit && questionRefs.length">
+            <button v-on:click="submit()" type="button" class="button primary">Submit</button>
+        </div>
     </div>
 </template>
 <script lang="ts" src="./view_training_segments_component.ts"></script>

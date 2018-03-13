@@ -11,7 +11,7 @@ import {CourseDescription} from "@shared/courses";
 import {
     actionContextMutations, MutationCall, resetState, restoreStoreContext, spyActionContext
 } from "@test_util/test_vuex_util";
-import {COURSE_MUTATIONS, CourseMode} from "@course/store/course_mutations";
+import {COURSE_MUTATIONS, CourseMode} from "@course/course_store";
 
 describe('Course listing store', function () {
     const store = new Store(storeConfig);

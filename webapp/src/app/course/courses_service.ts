@@ -85,13 +85,12 @@ export class CoursesService {
     }
 
     /**
-     *
+     * Sends the provided create course command as the body of a request to the http endpoint to create a course
      * @param {CreateCourseEntityCommand} createCourseCommand
      * @returns {Promise<string>}
      */
-    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<ViewCourseData> {
-        let createdCourse: CreateCourseResponse = (await axios.post('courses/create', createCourseCommand)).data;
-        return <ViewCourseData> createdCourse;
+    async createCourse(createCourseCommand: CreateCourseEntityCommand): Promise<CreateCourseResponse> {
+        return (await axios.post('courses/create', createCourseCommand)).data;
     }
 }
 

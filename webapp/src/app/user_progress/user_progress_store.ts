@@ -2,11 +2,11 @@ import {
     CourseTrainingProgressUpdate, ModuleTrainingProgressUpdate, SectionTrainingProgressUpdate, TrainingProgressUpdate,
     TrainingProgressUpdateData, TrainingProgressUpdateType, UserCourseProgressView
 } from "@shared/user_progress";
-import {ActionTree, GetterTree, Mutation} from "vuex";
-import {CourseMode} from "@course/store/course_mutations";
+import {GetterTree, Mutation} from "vuex";
 import {loadUserProgress, saveUserProgress} from "./user_progress_requests";
 import Vue from 'vue';
 import {RootState, TypedAction, VuexModule, VuexModuleConfig} from "@webapp_root/store";
+import {CourseMode} from "@course/course_store";
 
 export interface UserProgressState {
     savingProgress: { [index: string]: TrainingProgressUpdate[] };

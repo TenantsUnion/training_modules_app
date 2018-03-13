@@ -4,8 +4,8 @@ import {ViewCourseData} from '@shared/courses';
 import {Location} from 'vue-router/types/router';
 import {mapGetters, mapState} from 'vuex';
 import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
-import {CourseMode} from "@course/store/course_mutations";
 import {RootGetters, RootState} from "@webapp_root/store";
+import {CourseMode} from "@course/course_store";
 
 @Component({
     data: () => {
@@ -42,7 +42,7 @@ import {RootGetters, RootState} from "@webapp_root/store";
         isCourseAdmin: Boolean
     },
     computed: {
-        ...mapState({
+        ...mapState<RootState>({
             isAdmin: function(state: RootState, getters: RootGetters){
                 return getters.currentCourseMode === CourseMode.ADMIN;
             }

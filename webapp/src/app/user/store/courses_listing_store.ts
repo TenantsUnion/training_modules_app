@@ -4,8 +4,8 @@ import {CourseDescription} from '@shared/courses';
 import {Action, ActionContext, Mutation} from 'vuex';
 import {AppGetter, RootGetters, RootState, VuexModule, VuexModuleConfig} from '@webapp_root/store';
 import {titleToSlug} from '@shared/slug/title_slug_transformations';
-import {CourseMode} from "@course/store/course_mutations";
 import {userHttpService} from "@user/user_http_service";
+import {CourseMode} from "@course/course_store";
 
 /**
  * State

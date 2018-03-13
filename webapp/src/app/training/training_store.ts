@@ -4,6 +4,8 @@ import {RootGetters, RootState, TypedAction, VuexModuleConfig} from "@webapp_roo
 import Vue from "vue";
 import {idType} from "@shared/ids";
 import {viewsHttpService} from "@views/views_http_service";
+import {ViewModuleData} from "@shared/modules";
+import {ViewSectionData} from "@shared/sections";
 
 /**
  * Training Store is responsible for maintaining the loading, caching, and maintaining
@@ -24,7 +26,7 @@ export enum TrainingType {
 export interface TrainingAccessors {
     currentTraining: ViewTrainingEntity;
     currentTrainingType: TrainingType
-    loading: boolean;
+    trainingLoading: boolean;
 }
 
 export type TrainingGetter<V> = (state: TrainingState, getters: RootGetters, rootState: RootState, rootGetters: RootGetters) => V
@@ -32,13 +34,13 @@ export type TrainingGetter<V> = (state: TrainingState, getters: RootGetters, roo
 export type TrainingGetters = GetterTree<TrainingState, RootState> & {
     currentTraining: TrainingGetter<ViewTrainingEntity>;
     currentTrainingType: TrainingGetter<TrainingType>;
+    trainingLoading: TrainingGetter<boolean>
 };
 
 export const trainingGetters: TrainingGetters = {
     currentTraining: ({currentTrainingId, trainings}) => trainings[currentTrainingId],
-    currentTrainingType ({currentTrainingId}) {
-        return <TrainingType> idType(currentTrainingId);
-    }
+    currentTrainingType: ({currentTrainingId}) => currentTrainingId ? <TrainingType> idType(currentTrainingId) : null,
+    trainingLoading: ({currentTrainingId, requests}) => requests[currentTrainingId],
 };
 
 export type TrainingMutation<P> = (state: TrainingState, payload: P) => any;

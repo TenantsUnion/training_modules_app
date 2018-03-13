@@ -3,31 +3,18 @@ import Component from "vue-class-component";
 import CourseNavigationComponent from '@course/course_navigation_component/course_navigation_component.vue';
 import {$} from '../../globals';
 import {mapGetters, mapState} from 'vuex';
-import {COURSE_ACTIONS} from '@course/store/course_actions';
 import {NavigationGuard} from 'vue-router';
 import CourseDetailsComponent from "@course/course_details_component/course_details_component";
-import {CourseMode} from "@course/store/course_mutations";
 import {store} from "@webapp_root/app";
+import {COURSE_ACTIONS, CourseMode} from "@course/course_store";
+import {currentCourseRouteGuard} from "@course/course_route_guards";
+import {RootGetters, RootState} from "@webapp_root/store";
 
-const currentCourseRouteGuard: NavigationGuard = async (to: any, from: any, next) => {
-    let slug = to.params.courseSlug;
-    if (!slug || slug === 'undefined') {
-        throw new Error('Invalid route. :courseSlug must be defined');
-    }
-    try {
-        await store.dispatch(COURSE_ACTIONS.SET_CURRENT_COURSE_FROM_SLUG, slug);
-    } catch (e) {
-        console.error(`Error setting current course. ${e}`);
-    } finally {
-        next();
-    }
-
-};
 
 @Component({
     computed: {
-        ...mapState({
-            isCourseAdmin: ({course}) => course.mode === CourseMode.ADMIN
+        ...mapState<RootState>({
+            isCourseAdmin: (state, {currentCourseMode}: RootGetters) => currentCourseMode === CourseMode.ADMIN
         }),
         ...mapGetters(['currentCourse', 'currentCourseLoading'])
     },

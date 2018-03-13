@@ -3,19 +3,17 @@ import draggable from 'vuedraggable';
 import Component from 'vue-class-component';
 import * as VueForm from '../../vue-form';
 import {SaveModuleEntityPayload, ViewModuleData} from '@shared/modules';
-import {CourseRefreshComponent} from '@global/refresh_route';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '@webapp_root/store';
-import {currentModuleRouteGuard} from '../module_details_component/module_details_component';
 import {TrainingEntityDiffDelta, ViewTrainingEntityDescription} from '@shared/training_entity';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
-import {MODULE_ACTIONS} from '@module/store/module_actions';
-import {getModuleSlugFromIdFn} from '@module/store/module_state';
 import {Watch} from 'vue-property-decorator';
 import EditTrainingSegmentsComponent from "@training/edit_training_segments/edit_training_segments_component";
 import {ADMIN_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
+import {ModuleTrainingComponent} from "@training/training_components";
+import {EDIT_COURSE_COMMAND_ACTIONS} from "@course/edit_course_command_store";
 
 @Component({
     data: () => {
@@ -30,21 +28,15 @@ import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages
     },
     computed: {
         ...mapGetters({
-            storedModule: 'currentModule',
             getModuleSlugFromId: 'getModuleSlugFromId'
         }),
-        ...mapState({
-            loading: (state: RootState, getters: RootGetters) => {
-                return !getters.currentModule || getters.currentModuleLoading
-                    || getters.currentCourseLoading || getters.currentModuleLoading;
-            },
+        ...mapState<RootState>({
             currentCourseId: ({course: {currentCourseId}}) => currentCourseId,
-            currentModuleId: ({module: {currentModuleId}}) => currentModuleId
+            currentModuleId: ({course: {currentModuleId}}) => currentModuleId,
+            storedModule: (state, {currentTraining}: RootGetters) => currentTraining
         })
     },
-    beforeRouteUpdate: currentModuleRouteGuard,
-    beforeRouteEnter: currentModuleRouteGuard,
-    extends: CourseRefreshComponent,
+    extends: ModuleTrainingComponent,
     components: {
         draggable
     }
@@ -59,13 +51,13 @@ export class EditModuleComponent extends Vue {
     currentCourseId: string;
     currentModuleId: string;
     removeSections: { [index: string]: boolean };
-    getModuleSlugFromId: getModuleSlugFromIdFn;
+    getModuleSlugFromId: (id) => string;
 
     @Watch('storedModule', {immediate: true})
     updateModule (currentModule: ViewModuleData, oldCurrentModule) {
         if (currentModule) {
             let module = {...currentModule};
-            Vue.set(this, 'sections', [...module.sections]);
+            Vue.set(this, 'sections', module.sections ? [...module.sections] : []);
             Vue.set(this, 'module', module);
         }
     }
@@ -111,7 +103,7 @@ export class EditModuleComponent extends Vue {
 
         try {
             this.saving = true;
-            await this.$store.dispatch(MODULE_ACTIONS.SAVE_MODULE, moduleEntityPayload);
+            await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.SAVE_MODULE, moduleEntityPayload);
             let message: TitleMessagesObj = {message: `Module: ${this.module.title} saved successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             this.$router.push({

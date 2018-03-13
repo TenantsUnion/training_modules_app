@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
-import {mapGetters, mapState} from 'vuex';
+import {mapState} from 'vuex';
 import {QuestionSubmission, TrainingProgressUpdateData} from "@shared/user_progress";
 import {ViewCourseData} from "@shared/courses";
 import {USER_PROGRESS_ACTIONS} from "@user_progress/user_progress_store";
@@ -10,9 +10,8 @@ import {RootGetters, RootState} from "@webapp_root/store";
 @Component({
     extends: CourseTrainingComponent,
     computed: {
-        ...mapGetters(['currentCourseLoading']),
-        ...mapState({
-            currentCourse: (state: RootState, getters: RootGetters) => getters.currentTraining,
+        ...mapState<RootState>({
+            currentCourse: (state, {currentTraining}: RootGetters) => currentTraining,
         })
     },
 })

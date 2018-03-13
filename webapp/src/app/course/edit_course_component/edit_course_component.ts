@@ -4,13 +4,14 @@ import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '@webapp_root/store';
 import {Watch} from 'vue-property-decorator';
 import * as VueForm from '../../vue-form';
-import {COURSE_ACTIONS} from '../store/course_actions';
 import {diffBasicPropsCourseProps, SaveCourseEntityPayload, ViewCourseData} from '@shared/courses';
 import {getSlugFromCourseIdFn} from '@user/store/courses_listing_store';
 import EditTrainingSegmentsComponent from "@training/edit_training_segments/edit_training_segments_component";
 import {PREVIEW_COURSE_ROUTES} from "@global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@global/status_messages/status_messages_store";
 import {CourseTrainingComponent} from "@training/training_components";
+import {COURSE_ACTIONS} from "@course/course_store";
+import {EDIT_COURSE_COMMAND_ACTIONS} from "@course/edit_course_command_store";
 
 @Component({
     data: () => {
@@ -27,22 +28,17 @@ import {CourseTrainingComponent} from "@training/training_components";
         ...mapGetters({
             getSlugFromCourseId: 'getSlugFromCourseId'
         }),
-        ...mapState({
-            loading: (state: RootState, getters: RootGetters) => {
-                return !getters.currentCourse || getters.currentCourseLoading;
-            },
-            storedCourse: (state: RootState, getters: RootGetters) => getters.currentTraining
+        ...mapState<RootState>({
+            storedCourse: (state, {currentTraining}: RootGetters) => currentTraining
         })
     }
 })
 export class EditCourseComponent extends Vue {
     saving: boolean;
     errorMessages: {};
-    // quillContent: Segment[] = [];
     formstate: VueForm.FormState;
     course: ViewCourseData;
     storedCourse: ViewCourseData;
-    getSlugFromCourseId: getSlugFromCourseIdFn;
 
     @Watch('storedCourse', {immediate: true})
     updateCourse (storedCourse: ViewCourseData) {
@@ -69,7 +65,7 @@ export class EditCourseComponent extends Vue {
 
         try {
             this.saving = true;
-            await this.$store.dispatch(COURSE_ACTIONS.SAVE_COURSE, saveCoursePayload);
+            await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.SAVE_COURSE, saveCoursePayload);
             let message: TitleMessagesObj = {message: `Course: ${this.course.title} saved successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
         } catch (error) {
@@ -82,7 +78,7 @@ export class EditCourseComponent extends Vue {
         this.$router.push({
             name: PREVIEW_COURSE_ROUTES.coursePreview,
             params: {
-                courseSlug: this.getSlugFromCourseId(this.storedCourse.id)
+                courseSlug: this.$store.getters.getSlugFromCourseId(this.storedCourse.id)
             }
         });
     }
