@@ -37,8 +37,8 @@ export class UserProgressWebController extends AbstractWebController {
 
     registerRoutes (router: Router): Router {
         return router
-            .post('/user/:userId/course/:courseId/enroll', this.handle(this.enrollInCourse))
             .get('/user/:userId/course/:courseId/progress', this.handle(this.loadUserCourseProgress))
+            .post('/user/:userId/course/:courseId/enroll', this.handle(this.enrollInCourse))
             .post('/user/:userId/training/progress/:trainingType/:id/save', this.handle(this.saveTrainingProgress))
     }
 }

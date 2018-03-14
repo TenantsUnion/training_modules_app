@@ -2,8 +2,8 @@ import axios from 'axios';
 import {EnrollCourseRequestPayload, EnrollCourseResponse, UserCoursesListingPayload} from "@shared/user";
 
 export const userHttpService = {
-    async enrollUserInCourse (userCourse: EnrollCourseRequestPayload): Promise<EnrollCourseResponse> {
-        return (await axios.post(`user/course/enroll`, userCourse)).data;
+    async enrollUserInCourse (payload: EnrollCourseRequestPayload): Promise<EnrollCourseResponse> {
+        return (await axios.post(`user/${payload.userId}/course/${payload.userId}/enroll`, payload)).data;
     },
 
     async loadUserCourses (userId: string): Promise<UserCoursesListingPayload> {
