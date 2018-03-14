@@ -12,7 +12,7 @@ import EditSectionComponent from "@section/edit/edit_section_component.vue";
 import {appRouter} from "../router";
 import {USER_PROGRESS_ACTIONS} from "@user_progress/user_progress_store";
 import {LOGIN_ROUTE} from "../account/account_routes";
-import {store} from "@webapp_root/app";
+import {appGetters, store} from "@webapp_root/app";
 
 export const AdminCourseRoutes: RouteConfig = {
     path: 'admin/course',
@@ -56,7 +56,7 @@ const refreshProgress: NavigationGuard = async (to, from, next) => {
     let courseSlug = to.params.courseSlug;
     if (courseSlug) {
         console.log(store);
-        await store.dispatch(USER_PROGRESS_ACTIONS.LOAD_USER_PROGRESS, store.getters.getUserCourseIdFromSlug(courseSlug));
+        await store.dispatch(USER_PROGRESS_ACTIONS.LOAD_USER_PROGRESS, appGetters.getCourseIdFromSlug(courseSlug));
     }
     next();
 };

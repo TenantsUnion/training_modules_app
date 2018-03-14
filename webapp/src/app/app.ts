@@ -7,7 +7,7 @@ import {registerGlobalComponents} from './globals';
 import App from './app.vue';
 import {availableCoursesRoutes} from "./available_courses/available_courses_routes";
 import {Store} from "vuex";
-import {RootState} from "@webapp_root/store";
+import {RootGetters, RootState} from "@webapp_root/store";
 import {storeConfig} from "@webapp_root/state_store";
 
 // load javascript functionality for foundation
@@ -23,6 +23,8 @@ appRouter.addRoutes([
 registerGlobalComponents();
 Vue.use(Vuex);
 export const store: Store<RootState> = new Vuex.Store(storeConfig);
+export const appGetters: RootGetters = store.getters;
+
 let app = new Vue({
     components: {
         app: App

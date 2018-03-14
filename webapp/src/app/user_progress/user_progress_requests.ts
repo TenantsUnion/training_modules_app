@@ -1,13 +1,20 @@
 import axios from "axios";
 import {TrainingProgressUpdate, UserCourseProgressView} from "@shared/user_progress";
 import {EnrollCourseRequestPayload, EnrollCourseResponse} from "@shared/user";
+import {ViewsRequestParams} from "@shared/views";
 
 export const enrollUserInCourse = async (userCourse: EnrollCourseRequestPayload): Promise<EnrollCourseResponse> => {
     let {userId, courseId} = userCourse;
     return (await axios.post(`/user/${userId}/course/${courseId}/enroll`, userCourse)).data;
 };
 export const loadUserProgress = async ({userId, courseId}: {userId: string, courseId: string}): Promise<UserCourseProgressView> => {
-    return (await axios.get(`/user/${userId}/course/${courseId}/progress`)).data;
+    let params: ViewsRequestParams = {
+        userId, courseId,
+        userProgress: true
+    };
+    return (await axios.get(`/views`, {
+        params
+    })).data;
 };
 
 export const saveUserProgress = async (update: TrainingProgressUpdate) => {
