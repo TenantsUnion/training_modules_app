@@ -6,6 +6,7 @@ import {AvailableSourcesViewQuery} from "../available_courses/available_sources_
 import {UserProgressViewQuery} from "../user_progress/user_progress_view_query";
 import {UserCoursesListingViewQuery} from "../user/user_courses_listing_view_query";
 import {CourseStructureViewQuery} from "@course/view/course_structure_view_query";
+import {CourseProgressSummaryViewQuery} from "../user_progress/course_progress_summary_view_query";
 
 export const courseViewQuery = new CourseViewQuery(postgresDb);
 export const moduleViewQuery = new ModuleViewQuery(postgresDb);
@@ -14,3 +15,4 @@ export const availableCoursesViewQuery = new AvailableSourcesViewQuery(postgresD
 export const userProgressViewQuery = new UserProgressViewQuery(postgresDb);
 export const userCoursesListingViewQuery = new UserCoursesListingViewQuery(postgresDb);
 export const courseStructureViewQuery = new CourseStructureViewQuery(postgresDb);
+export const courseProgressSummaryViewQuery = new CourseProgressSummaryViewQuery(postgresDb);

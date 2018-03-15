@@ -79,7 +79,7 @@ export class UserProgressViewQuery {
     }
 
     private async loadEnrolledUserCourseProgress (userId, courseId): Promise<UserCourseProgressDbRow> {
-        let result = await this.datasource.query({
+        return (await this.datasource.query({
             // language=PostgreSQL
             text: `
               SELECT c.id, c.time_estimate, c.title, c.description, c.active, c.ordered_module_ids,
@@ -115,8 +115,6 @@ export class UserProgressViewQuery {
               WHERE c.id = $2 AND cp.user_id = $1;
             `,
             values: [userId, courseId]
-        });
-
-        return result[0];
+        }))[0];
     }
 }

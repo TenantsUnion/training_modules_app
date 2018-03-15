@@ -8,7 +8,8 @@ CREATE TABLE tu.course_progress (
   correct_question_ids   JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
   --key references pk of question row, timestamptz
   submitted_question_ids JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
-  training_completed     TIMESTAMPTZ                             DEFAULT NULL,
+  questions_completed    TIMESTAMPTZ                             DEFAULT NULL,
+  content_viewed         TIMESTAMPTZ                             DEFAULT NULL,
   last_viewed_at         TIMESTAMPTZ                             DEFAULT NULL,
   last_modified_at       TIMESTAMPTZ                    NOT NULL,
   created_at             TIMESTAMPTZ                    NOT NULL,
