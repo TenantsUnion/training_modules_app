@@ -1,12 +1,11 @@
-import {DeltaArrOp} from "@shared/delta/diff_key_array";
-
 export interface TrainingProgress {
     id: string;
     version: number;
     viewedContentIds: string[],
-    contentIds: string[]
     correctQuestionIds: string[],
-    submittedQuestionIds: string[]
+    submittedQuestionIds: string[],
+    questionsCompleted: string, // utc timestamp of when all possible questions were completed
+    contentViewed: string, // utc timestamp of when all possible content was viewed
     lastViewedAt: string | null;
     lastModifiedAt: string;
     createdAt: string;
@@ -77,30 +76,21 @@ export interface SectionProgress extends TrainingProgress {
 export interface TrainingProgressView {
     id: string;
     version: number;
-    title: string;
-    description: string;
-    timeEstimate: number;
-    headerDataId: string;
-    active: boolean;
-    submitIndividually: boolean;
-    correctQuestionsIds: string[];
-    submittedQuestionsIds: string[];
-    orderedContentIds: string[];
-    orderedQuestionIds: string[];
-    orderedContentQuestionIds: string[];
-    viewedContentIds: string[]
+    completedQuestionIds: {[questionId: string]: string}; // val: submission timestamps
+    submittedQuestionIds: {[questionId: string]: string}; // val: submission timestamps
+    viewedContentIds: {[contentId: string]: string}; // val: timestamp viewed
+    questionsCompleted: string, // utc timestamp of when all possible questions were completed
+    contentViewed: string, // utc timestamp of when all possible content was viewed
     createdAt: string;
     lastModifiedAt: string;
     lastViewedAt: string;
 }
 
 export interface UserModuleProgressView extends TrainingProgressView {
-    orderedSectionIds: string[],
-    sections: TrainingProgressView[]
+    sections: {[sectionId: string]: TrainingProgressView}
 }
 
 export interface UserCourseProgressView extends TrainingProgressView {
     userId: string;
-    orderedModuleIds: string[],
-    modules: UserModuleProgressView[],
+    modules: {[moduleId: string]: UserModuleProgressView},
 }
