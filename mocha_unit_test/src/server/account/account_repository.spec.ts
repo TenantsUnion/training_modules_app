@@ -1,15 +1,13 @@
 import {expect} from "chai";
-import {clearData} from "../../test_db_util";
 import {accountRepository} from "@server/config/repository_config";
 import {postgresDb} from "@server/datasource";
 import {AccountInfo} from "@server/user/user_handler";
+import {appendUUID} from "@testcafe/src/util/uuid_generator";
 
 describe('Account Repository', function () {
 
-    beforeEach(async function () {});
-
     it('should create an account', async function () {
-        let username = 'user_person';
+        let username = appendUUID('username');
         let accountId = await accountRepository.createAccount({
             username: username
         });
@@ -23,7 +21,7 @@ describe('Account Repository', function () {
     });
 
     it('should find an account by username', async function () {
-        let username = 'username';
+        let username = appendUUID('username');
         let accountId = await accountRepository.createAccount({username});
         let account = await accountRepository.findAccountByUsername(username);
         expect(account).to.deep.eq(<AccountInfo>{
