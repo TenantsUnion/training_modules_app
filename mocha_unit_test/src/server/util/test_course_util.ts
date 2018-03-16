@@ -6,6 +6,10 @@ import {CreateSectionEntityPayload, SectionIdMap} from '@shared/sections';
 import {ContentQuestionsDelta} from '@shared/training_entity';
 import {appendUUID} from "@testcafe/src/util/uuid_generator";
 import {CommandMetaData, CommandType} from "@shared/entity";
+import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
+import {Delta} from "@shared/normalize_imports";
+import {AnswerType, QuestionType} from "@shared/questions";
+import {toAddDeltaArrOps} from "@shared/delta/diff_key_array";
 
 export let latestUser;
 export const createUser = async (username?: string): Promise<IUserInfo> => {
@@ -34,7 +38,76 @@ export const EMPTY_CONTENT_QUESTIONS_DELTA: ContentQuestionsDelta = {
     orderedQuestionIds: []
 };
 
-export const STUB_COURSE= {
+export const STUB_QUESTION_ID = createdQuestionPlaceholderId();
+export const STUB_OPTION_ID_1 = createdQuestionOptionPlaceholderId();
+export const STUB_OPTION_ID_2 = createdQuestionOptionPlaceholderId();
+export const STUB_QUESTION: ContentQuestionsDelta = ((): ContentQuestionsDelta => {
+    const questionQuillId = createdQuillPlaceholderId();
+    const optionQuillId1 = createdQuillPlaceholderId();
+    const explanationQuillId1 = createdQuillPlaceholderId();
+    const optionQuillId2 = createdQuillPlaceholderId();
+    const explanationQuillId2 = createdQuillPlaceholderId();
+    return {
+        quillChanges: {
+            [questionQuillId]: new Delta().insert('Is this a question?'),
+            [optionQuillId1]: new Delta().insert('Yes'),
+            [explanationQuillId1]: new Delta().insert('You\'re right!'),
+            [optionQuillId2]: new Delta().insert('No'),
+            [explanationQuillId2]: new Delta().insert('Wrong!')
+        },
+        questionChanges: {
+            [STUB_QUESTION_ID]: {
+                questionQuillId: questionQuillId,
+                answerInOrder: false,
+                answerType: AnswerType.DEFAULT,
+                questionType: QuestionType.DEFAULT,
+                canPickMultiple: false,
+                correctOptionIds: toAddDeltaArrOps([STUB_OPTION_ID_1]),
+                optionIds: toAddDeltaArrOps([STUB_OPTION_ID_1, STUB_OPTION_ID_2]),
+                optionChangesObject: {
+                    [STUB_OPTION_ID_1]: {
+                        optionQuillId: optionQuillId1,
+                        explanationQuillId: explanationQuillId1
+                    },
+                    [STUB_OPTION_ID_2]: {
+                        optionQuillId: optionQuillId2,
+                        explanationQuillId: explanationQuillId2
+                    }
+                },
+                randomizeOptionOrder: true
+            }
+        },
+        orderedContentQuestionIds: toAddDeltaArrOps([STUB_QUESTION_ID]),
+        orderedContentIds: [],
+        orderedQuestionIds: toAddDeltaArrOps([STUB_QUESTION_ID])
+    }
+})();
+
+export const STUB_CONTENT_ID = createdQuillPlaceholderId();
+export const STUB_CONTENT: ContentQuestionsDelta = ((): ContentQuestionsDelta => {
+    return {
+        quillChanges: {
+            [STUB_CONTENT_ID]: new Delta().insert('Some stubby content')
+        },
+        questionChanges: {},
+        orderedQuestionIds: [],
+        orderedContentIds: toAddDeltaArrOps([STUB_CONTENT_ID]),
+        orderedContentQuestionIds: toAddDeltaArrOps([STUB_CONTENT_ID])
+    }
+})();
+
+export const STUB_CONTENT_QUESTIONS: ContentQuestionsDelta = ((): ContentQuestionsDelta => {
+    return {
+        quillChanges: {...STUB_QUESTION.quillChanges, ...STUB_CONTENT.quillChanges},
+        questionChanges: {...STUB_QUESTION.questionChanges},
+        orderedContentIds: [...STUB_CONTENT.orderedContentIds],
+        orderedQuestionIds: [...STUB_QUESTION.orderedQuestionIds],
+        orderedContentQuestionIds: [...STUB_CONTENT.orderedContentIds, ...STUB_QUESTION.orderedQuestionIds]
+    };
+})();
+
+
+export const STUB_COURSE = {
     title: 'created course',
     description: 'Course description',
     openEnrollment: true,
@@ -88,7 +161,7 @@ export const createSectionPayload = ({section = STUB_SECTION, courseId = latestC
     };
 };
 export const addSection = async (section: CreateSectionEntityPayload = createSectionPayload({})): Promise<SectionIdMap> => {
-     return await coursesHandler.createSection(section);
+    return await coursesHandler.createSection(section);
 };
 
 export const EMPTY_CHANGES_OBJ = {

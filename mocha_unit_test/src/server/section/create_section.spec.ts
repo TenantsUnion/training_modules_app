@@ -8,7 +8,7 @@ describe('Create section', function () {
     let moduleId: string;
 
     beforeEach(async function () {
-        await createUser('user1');
+        await createUser();
         courseId = (await createCourse()).courseId;
         moduleId = (await addModule()).moduleId;
     });

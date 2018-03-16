@@ -5,7 +5,7 @@ import {TrainingProgressUpdate} from "@shared/user_progress";
 export interface TrainingProgressRowUpdate {
     id: string,
     userId: string,
-    correctQuestionIds: string[],
+    completedQuestionIds: string[],
     viewedContentIds: string[],
     submittedQuestionIds: string[]
 }
@@ -39,19 +39,19 @@ export abstract class TrainingProgressRepository extends AbstractRepository {
     }
 
     async saveTrainingProgress (trainingProgress: TrainingProgressRowUpdate) {
-        let {id, userId, correctQuestionIds, viewedContentIds, submittedQuestionIds} = trainingProgress;
+        let {id, userId, completedQuestionIds, viewedContentIds, submittedQuestionIds} = trainingProgress;
         await this.sqlTemplate.query({
             // language=PostgreSQL
             text: `
               UPDATE tu.${this.tableNames.progress} SET
-                correct_question_ids   = $1 :: JSONB || correct_question_ids,
+                completed_question_ids   = $1 :: JSONB || completed_question_ids,
                 viewed_content_ids     = $2 :: JSONB || viewed_content_ids,
                 submitted_question_ids = $3 :: JSONB || submitted_question_ids,
                 last_viewed_at = $4, last_modified_at = $4
               WHERE user_id = $5 AND id = $6
             `,
             values: [
-                toIdTimestampObj(correctQuestionIds),
+                toIdTimestampObj(completedQuestionIds),
                 toIdTimestampObj(viewedContentIds),
                 toIdTimestampObj(submittedQuestionIds),
                 getUTCNow(),
@@ -64,15 +64,18 @@ export abstract class TrainingProgressRepository extends AbstractRepository {
         await this.sqlTemplate.query({
             // language=PostgreSQL
             text: `
-              UPDATE tu.${this.tableNames.progress} p SET training_completed = $1
+              UPDATE tu.${this.tableNames.progress} p
+              SET questions_completed =
+              CASE WHEN p.completed_question_ids ?& t.ordered_question_ids THEN $1::TIMESTAMPTZ
+              ELSE NULL END,
+              content_viewed = 
+              CASE WHEN p.viewed_content_ids ?& t.ordered_content_ids THEN $1::TIMESTAMPTZ
+              ELSE NULL END
               FROM tu.${this.tableNames.training} t
               WHERE p.id = t.id 
               AND t.id = $2
               AND p.id = $2
-              AND p.training_completed IS NULL 
                     AND p.user_id = $3
-                    AND p.correct_question_ids ?& t.ordered_question_ids
-                    AND p.viewed_content_ids ?& t.ordered_content_ids
             `,
             values: [getUTCNow(), id, userId]
         })

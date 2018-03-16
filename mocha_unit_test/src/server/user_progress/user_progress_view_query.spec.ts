@@ -1,29 +1,42 @@
 import * as MockDate from 'mockdate';
 import {expect} from 'chai';
 import {
-    addModule, addSection, createCourse, createUser, STUB_COURSE, STUB_MODULE, STUB_SECTION,
-    createSectionPayload
+    addModule, addSection, createCourse, createUser, createSectionPayload, STUB_COURSE, STUB_CONTENT_QUESTIONS,
+    STUB_QUESTION_ID, STUB_OPTION_ID_1, STUB_OPTION_ID_2, STUB_CONTENT_ID
 } from "../util/test_course_util";
-import {userProgressHandler} from "@server/config/handler_config";
+import {coursesHandler, userProgressHandler} from "@server/config/handler_config";
 import {toDbTimestampFormat} from "@server/repository";
 import {userProgressViewQuery} from "@server/config/query_service_config";
+import {TrainingProgressUpdateType, UserCourseProgressView} from "@shared/user_progress";
 
 describe('User Progress View Query', function () {
     let nowDate = new Date();
     let now = toDbTimestampFormat(nowDate);
-    // unused destructuring assignment is used to remove properties from ...(rest) assignment
-    let {contentQuestions, openEnrollment, ...DEFAULT_USER_COURSE_PROGRESS} = STUB_COURSE;
-    let {contentQuestions: rmModProp, ...DEFAULT_USER_MODULE_PROGRESS} = STUB_MODULE;
-    let {contentQuestions: rmSecProp, ...DEFAULT_USER_SECTION_PROGRESS} = STUB_SECTION;
+    let defaultEmpty = {
+        version: 0,
+        questionsCompleted: null,
+        contentViewed: null,
+        lastViewedAt: null,
+        createdAt: now,
+        lastModifiedAt: now,
+        viewedContentIds: {},
+        submittedQuestionIds: {},
+        completedQuestionIds: {}
+    };
+
+    let adminId: string;
+    before(async function () {
+        adminId = (await createUser()).id;
+    });
     beforeEach(function () {
         MockDate.set(now);
     });
 
-    after(function(){
+    after(function () {
         MockDate.reset();
     });
 
-    it('should load a view of an enrolled user\'s course progress', async function () {
+    it('should load a view of an enrolled user\'s progress of a course with two modules and two sections', async function () {
         let {id: userId} = await createUser();
         let {courseId} = await createCourse();
         let {moduleId: moduleId1} = await addModule();
@@ -32,57 +45,77 @@ describe('User Progress View Query', function () {
         let {moduleId: moduleId2} = await addModule();
 
         await userProgressHandler.enrollUserInCourse({userId, courseId});
-        let defaultEmpty = {
-            version: 0,
-            trainingCompleted: null,
-            lastViewedAt: null,
-            createdAt: now,
-            lastModifiedAt: now,
-            viewedContentIds: {},
-            submittedQuestionIds: {},
-            correctQuestionIds: {},
-            orderedContentIds: [],
-            orderedQuestionIds: [],
-            orderedContentQuestionIds: [],
-        };
 
-        expect(await userProgressViewQuery.loadUserCourseProgress({userId, courseId})).to.deep.eq({
+        expect(await userProgressViewQuery.loadUserCourseProgress({userId, courseId})).to.deep.eq(<UserCourseProgressView>{
+                ...defaultEmpty,
+                id: courseId,
+                version: 0,
+                userId: userId,
+                modules: {
+                    [moduleId1]: {
+                        ...defaultEmpty,
+                        id: moduleId1,
+                        sections: {
+                            [sectionId1]: {
+                                ...defaultEmpty, id: sectionId1,
+                            },
+                            [sectionId2]: {
+                                ...defaultEmpty, id: sectionId2
+                            }
+                        },
+                    },
+                    [moduleId2]: {
+                        ...defaultEmpty,
+                        id: moduleId2,
+                        sections: {},
+                    }
+                }
+            }
+        );
+    });
+
+    it('should load a view of an enrolled user\'s progress of a completed course', async function () {
+        let idMap = await coursesHandler.createCourse({...STUB_COURSE, userId: adminId, contentQuestions: STUB_CONTENT_QUESTIONS});
+        let {
+            courseId,
+            [STUB_QUESTION_ID]: questionId,
+            [STUB_CONTENT_ID]: contentId,
+            [STUB_OPTION_ID_1]: optionId1,
+            [STUB_OPTION_ID_2]: optionId2,
+        } = idMap;
+        let {id: userId} = await createUser();
+
+        await userProgressHandler.enrollUserInCourse({userId, courseId});
+        await userProgressHandler.saveTrainingProgress({
+            userId, id: idMap.courseId,
+            type: TrainingProgressUpdateType.COURSE,
+            questionSubmissions: [{
+                questionId,
+                chosenQuestionOptionIds: [optionId1],
+                possibleQuestionOptionIds: [optionId1, optionId2],
+                correct: true
+            }],
+            viewedContentIds: [contentId]
+        });
+
+        expect(await userProgressViewQuery.loadUserCourseProgress({userId, courseId})).to.deep.eq(<UserCourseProgressView>{
+            ...defaultEmpty,
             id: courseId,
             version: 0,
             userId: userId,
-            ...DEFAULT_USER_COURSE_PROGRESS,
-            ...defaultEmpty,
-            orderedModuleIds: [
-                moduleId1,
-                moduleId2,
-            ],
-            modules: [
-                {
-                    id: moduleId1,
-                    ...DEFAULT_USER_MODULE_PROGRESS,
-                    ...defaultEmpty,
-                    orderedSectionIds: [sectionId1, sectionId2],
-                    sections: [
-                        {
-                            id: sectionId1,
-                            ...DEFAULT_USER_SECTION_PROGRESS,
-                            ...defaultEmpty
-                        },
-                        {
-                            id: sectionId2,
-                            ...DEFAULT_USER_SECTION_PROGRESS,
-                            ...defaultEmpty
-                        }
-                    ],
-                },
-                {
-                    id: moduleId2,
-                    ...DEFAULT_USER_MODULE_PROGRESS,
-                    ...defaultEmpty,
-                    orderedSectionIds: [],
-                    sections: []
-                }
-            ],
+            modules: {},
+            lastViewedAt: now,
+            questionsCompleted: now,
+            contentViewed: now,
+            completedQuestionIds: {
+                [questionId]: now
+            },
+            submittedQuestionIds: {
+                [questionId]: now
+            },
+            viewedContentIds: {
+                [contentId]: now
+            }
         });
     });
 });

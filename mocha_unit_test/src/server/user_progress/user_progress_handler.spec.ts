@@ -20,10 +20,11 @@ describe('User progress handler', function () {
     let nowDate = new Date();
     let now = toDbTimestampFormat(nowDate);
     let progressEntryDefaults = {
-        correctQuestionIds: {},
+        completedQuestionIds: {},
         createdAt: now,
         lastModifiedAt: now,
-        trainingCompleted: null,
+        questionsCompleted: null,
+        contentViewed: null,
         lastViewedAt: null,
         submittedQuestionIds: {},
         version: 0,
@@ -150,7 +151,8 @@ describe('User progress handler', function () {
             ...progressEntryDefaults,
             id: courseId, userId: studentId,
             lastViewedAt: now,
-            correctQuestionIds: toTimestampKeyObj([questionId2]),
+            contentViewed: now,
+            completedQuestionIds: toTimestampKeyObj([questionId2]),
             submittedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             viewedContentIds: toTimestampKeyObj([contentId1, contentId2]),
         });
@@ -175,10 +177,11 @@ describe('User progress handler', function () {
             userId: studentId,
             id: courseId,
             lastViewedAt: now,
-            correctQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
+            contentViewed: now,
+            questionsCompleted: now,
+            completedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             submittedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
-            viewedContentIds: toTimestampKeyObj([contentId1, contentId2]),
-            trainingCompleted: now,
+            viewedContentIds: toTimestampKeyObj([contentId1, contentId2])
         });
     });
 
@@ -203,9 +206,10 @@ describe('User progress handler', function () {
             id: moduleId, userId: studentId,
             version: 0,
             lastViewedAt: now,
-            correctQuestionIds: toTimestampKeyObj([questionId2]),
+            completedQuestionIds: toTimestampKeyObj([questionId2]),
             submittedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             viewedContentIds: toTimestampKeyObj([contentId1, contentId2]),
+            contentViewed: now
         });
     });
 
@@ -228,9 +232,10 @@ describe('User progress handler', function () {
         expect(await moduleProgressRepository.loadTrainingProgress({id: moduleId, userId: studentId})).to.deep.eq({
             ...progressEntryDefaults,
             id: moduleId, userId: studentId,
-            trainingCompleted: now,
             lastViewedAt: now,
-            correctQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
+            contentViewed: now,
+            questionsCompleted: now,
+            completedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             submittedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             viewedContentIds: toTimestampKeyObj([contentId1, contentId2]),
         });
@@ -256,11 +261,12 @@ describe('User progress handler', function () {
         expect(await sectionProgressRepository.loadTrainingProgress({id: sectionId, userId: studentId})).to.deep.eq({
             id: sectionId, userId: studentId,
             version: 0,
-            trainingCompleted: null,
             lastViewedAt: now,
+            contentViewed: now,
+            questionsCompleted: null,
             createdAt: now,
             lastModifiedAt: now,
-            correctQuestionIds: toTimestampKeyObj([questionId2]),
+            completedQuestionIds: toTimestampKeyObj([questionId2]),
             submittedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             viewedContentIds: toTimestampKeyObj([contentId1, contentId2]),
         });
@@ -286,11 +292,12 @@ describe('User progress handler', function () {
         expect(await sectionProgressRepository.loadTrainingProgress({id: sectionId, userId: studentId})).to.deep.eq({
             id: sectionId, userId: studentId,
             version: 0,
-            trainingCompleted: now,
+            contentViewed: now,
+            questionsCompleted: now,
             lastViewedAt: now,
             createdAt: now,
             lastModifiedAt: now,
-            correctQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
+            completedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             submittedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             viewedContentIds: toTimestampKeyObj([contentId1, contentId2]),
         });

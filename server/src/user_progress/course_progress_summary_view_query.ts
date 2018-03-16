@@ -1,17 +1,19 @@
 import {Datasource} from "../datasource";
 import {CourseProgressSummaryView} from "@shared/course_progress_summary";
+import {UserCourseProgressView} from "@shared/user_progress";
+import {mapUserProgressView} from "./user_progress_view_query";
 
 export class CourseProgressSummaryViewQuery {
     constructor (private datasource: Datasource) {
     }
 
     async load (courseId: string): Promise<CourseProgressSummaryView> {
-        return (await this.datasource.query({
+        let enrolledUsers = (await this.datasource.query({
             // language=PostgreSQL
             text: `
-              SELECT c.id, c.ordered_module_ids, c.ordered_question_ids, c.ordered_content_ids,
-                c.ordered_content_question_ids, cp.*, m.modules FROM tu.course c
-                INNER JOIN (select * from tu.course_progress cp ON c.id = cp.id
+              SELECT cp.*, m.modules, u.username FROM tu.course c
+                INNER JOIN tu.course_progress cp ON c.id = cp.id
+                LEFT JOIN tu.user u ON cp.user_id = u.id
                 LEFT JOIN LATERAL
                           (
                           SELECT json_agg(m.*) AS modules FROM
@@ -39,6 +41,14 @@ export class CourseProgressSummaryViewQuery {
               WHERE c.id = $1;
             `,
             values: [courseId]
-        }))[0];
+        }));
+
+        return {
+            courseId,
+            enrolledUsers: enrolledUsers.reduce((summary, userProgress) => {
+                summary[userProgress.userId] = mapUserProgressView(userProgress);
+                return summary;
+            }, <{ [index: string]: UserCourseProgressView }> {})
+        }
     }
 }

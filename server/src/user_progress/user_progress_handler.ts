@@ -36,7 +36,7 @@ export class UserProgressHandler {
         let {id, userId, viewedContentIds, questionSubmissions} = trainingProgressUpdate;
         let rowUpdate: TrainingProgressRowUpdate = {
             id, userId, viewedContentIds,
-            correctQuestionIds: questionSubmissions
+            completedQuestionIds: questionSubmissions
                 .filter(({correct}) => correct).map(({questionId}) => questionId),
             submittedQuestionIds: questionSubmissions.map(({questionId}) => questionId)
         };

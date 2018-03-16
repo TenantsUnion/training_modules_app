@@ -1,12 +1,11 @@
 import * as _ from 'underscore';
 import {QuillRepository} from './quill_repository';
-import {QuillEditorData} from '../../../../shared/quill_editor';
-import {quillRepository} from '../../config/repository_config';
+import {QuillEditorData} from '@shared/quill_editor';
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../../log';
-import {Delta} from '../../../../shared/normalize_imports';
-import {QuillChangesObj} from '../../../../shared/training_entity';
-import {isCreatedQuillPlaceholderId} from "../../../../shared/ids";
+import {Delta} from '@shared/normalize_imports';
+import {QuillChangesObj} from '@shared/training_entity';
+import {isCreatedQuillPlaceholderId} from "@shared/ids";
 
 
 export class QuillHandler {
