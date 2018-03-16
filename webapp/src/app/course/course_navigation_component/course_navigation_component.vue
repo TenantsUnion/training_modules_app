@@ -1,8 +1,10 @@
 <template>
     <nav class="sidebar-nav">
         <div class="grid-x menu-section__row menu-header">
-        <span class="menu-section__course-title" v-bind:class="{'is-active': activeNavigation.course}">
-            <router-link :to="courseRoute()">{{course.title}}</router-link>
+        <span class="menu-section__course-title">
+            <router-link :to="courseRoute()" v-bind:class="{'router-link-active': activeNavigation.course}">
+                {{course.title}}
+            </router-link>
         </span>
             <div v-if="isAdmin" class="buttons">
                 <router-link :to="coursePreview">
@@ -18,7 +20,6 @@
                     </button>
                 </router-link>
             </div>
-
         </div>
         <div class="menu-section">
             <ul class="menu-section__inner">

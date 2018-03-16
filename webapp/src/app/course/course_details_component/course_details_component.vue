@@ -18,16 +18,6 @@
                                                 :individual-submit-cb="individualSubmitCb"/>
                     </div>
                 </div>
-                <div v-for="module in currentCourse.modules">
-                    <h3>{{module.title}}</h3>
-                    <p>{{module.description}}</p>
-                    <ul class="content-list">
-                        <li v-for="section in module.sections" class="content-item">
-                            <h5>{{section.title}}</h5>
-                            <p>{{section.description}}</p>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>
