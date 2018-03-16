@@ -5,7 +5,7 @@ CREATE TABLE tu.question_submission (
   created_at                   TIMESTAMPTZ                      NOT NULL,
   chosen_question_option_ids   TEXT []                          NOT NULL DEFAULT ARRAY [] :: TEXT [],
   possible_question_option_ids TEXT []                          NOT NULL DEFAULT ARRAY [] :: TEXT [],
-  correct                      BOOLEAN                          NOT NULL,
+  correct                      BOOLEAN                                   DEFAULT NULL,
   text_answer                  TEXT                                      DEFAULT NULL
 );
 

@@ -5,7 +5,7 @@ CREATE TABLE tu.section_progress (
   --key references pk of viewed_content row, timestamptz
   viewed_content_ids     JSONB                           NOT NULL DEFAULT '{}' :: JSONB,
   --key references pk of question row, timestamptz
-  correct_question_ids   JSONB                           NOT NULL DEFAULT '{}' :: JSONB,
+  completed_question_ids JSONB                           NOT NULL DEFAULT '{}' :: JSONB,
   --key references pk of question row, timestamptz
   submitted_question_ids JSONB                           NOT NULL DEFAULT '{}' :: JSONB,
   questions_completed    TIMESTAMPTZ                              DEFAULT NULL,
@@ -22,11 +22,17 @@ CREATE INDEX section_progress_user_id_idx
 CREATE INDEX section_progress_section_id_idx
   ON tu.section_progress (id);
 
+CREATE INDEX section_progress_content_viewed_idx
+  ON tu.section_progress (content_viewed);
+
+CREATE INDEX section_progress_questions_completed_idx
+  ON tu.section_progress (questions_completed);
+
 CREATE INDEX section_progress_viewed_content_ids_gin_idx
   ON tu.section_progress USING GIN (viewed_content_ids);
 
-CREATE INDEX section_progress_correct_question_ids_gin_idx
-  ON tu.section_progress USING GIN (correct_question_ids);
+CREATE INDEX section_progress_completed_question_ids_gin_idx
+  ON tu.section_progress USING GIN (completed_question_ids);
 
 CREATE INDEX section_progress_submitted_question_ids_gin_idx
   ON tu.section_progress USING GIN (submitted_question_ids);

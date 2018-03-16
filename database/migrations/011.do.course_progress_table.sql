@@ -5,7 +5,7 @@ CREATE TABLE tu.course_progress (
   --key references pk of viewed_content row, timestamptz
   viewed_content_ids     JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
   --key references pk of question row, timestamptz
-  correct_question_ids   JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
+  completed_question_ids JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
   --key references pk of question row, timestamptz
   submitted_question_ids JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
   questions_completed    TIMESTAMPTZ                             DEFAULT NULL,
@@ -22,11 +22,17 @@ CREATE INDEX course_progress_user_id_idx
 CREATE INDEX course_progress_course_id_idx
   ON tu.course_progress (id);
 
+CREATE INDEX course_progress_content_viewed_idx
+  ON tu.course_progress (content_viewed);
+
+CREATE INDEX course_progress_questions_completed_idx
+  ON tu.course_progress (questions_completed);
+
 CREATE INDEX course_progress_viewed_content_ids_gin_idx
   ON tu.course_progress USING GIN (viewed_content_ids);
 
-CREATE INDEX course_progress_correct_question_ids_gin_idx
-  ON tu.course_progress USING GIN (correct_question_ids);
+CREATE INDEX course_progress_completed_question_ids_gin_idx
+  ON tu.course_progress USING GIN (completed_question_ids);
 
 CREATE INDEX course_progress_submitted_question_ids_gin_idx
   ON tu.course_progress USING GIN (submitted_question_ids);
