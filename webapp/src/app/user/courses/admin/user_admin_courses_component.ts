@@ -16,7 +16,15 @@ export default class UserAdminCourseComponent extends Vue {
         this.$router.push('course/create')
     }
 
-    async go(course: CourseDescription) {
+    async enrolledUsers(course: CourseDescription) {
+        this.$router.push({
+            name: ADMIN_COURSE_ROUTES.enrolledUsers,
+            params: {
+                courseSlug: course.slug
+            }
+        })
+    }
+    async editCourse(course: CourseDescription) {
         this.$router.push({
             name: ADMIN_COURSE_ROUTES.editCourse,
             params: {
