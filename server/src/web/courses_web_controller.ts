@@ -37,7 +37,7 @@ export class CourseCommandController extends AbstractCommandController {
         let [courseTraining, courseStructure, adminCourseDescriptions] = await Promise.all([
             await this.courseViewQuery.loadCourseTraining(courseId),
             await this.courseStructureViewQuery.loadCourseStructure(courseId),
-            await this.courseViewQuery.loadUserAdminCourses(request.session.user_id)
+            await this.courseViewQuery.loadUserAdminCourses(payload.userId)
         ]);
         return {courseTraining, courseStructure, adminCourseDescriptions};
     }

@@ -51,7 +51,7 @@ export default class CreateCourseComponent extends Vue {
             this.$router.push(<Location>{
                 name: ADMIN_COURSE_ROUTES.editCourse,
                 params: {
-                    courseSlug: this.$store.getters.getSlugFromCourseId(courseId)
+                    courseSlug: this.$getters.getSlugFromCourseId(courseId)
                 }
             });
         });
