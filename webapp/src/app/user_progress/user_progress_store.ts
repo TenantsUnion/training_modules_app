@@ -170,5 +170,4 @@ export const userProgressStoreConfig: UserProgressStoreConfig = {
             state: this.initState()
         };
     }
-
 };
