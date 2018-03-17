@@ -7,9 +7,10 @@ export enum USER_ROUTES {
 export enum ADMIN_COURSE_ROUTES {
     editCourse = 'adminCourse.editCourse',
     createModule = 'adminCourse.createModule',
-    editModule = 'admin.editModule',
+    editModule = 'adminCourse.editModule',
     createSection = 'adminCourse.createSection',
-    editSection = 'course.editSection'
+    editSection = 'adminCourse.editSection',
+    enrolledUsers = 'adminCourse.enrolledUsers'
 }
 
 export enum ENROLLED_COURSE_ROUTES {
