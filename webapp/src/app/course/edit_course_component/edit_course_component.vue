@@ -59,13 +59,8 @@
                         <edit-training-segments :content-questions="course.contentQuestions" ref="trainingSegment"/>
                     </div>
                 </div>
-                <div class="grid-x">
-                    <div class="cell small-2">
-                        <button v-bind:disabled="saving || loading" @click="save" class="button" type="button">Save
-                        </button>
-                        <button @click="cancel" class="button secondary">Cancel</button>
-                    </div>
-                </div>
+                <edit-buttons></edit-buttons>
+                
             </vue-form>
         </template>
     </div>

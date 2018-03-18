@@ -48,7 +48,12 @@ export class EditCourseComponent extends Vue {
         }
     }
 
-    async save () {
+    async save() {
+        console.log('this shouldn\'t print')
+    }
+    async saved () {
+
+
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;

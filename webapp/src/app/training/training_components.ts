@@ -5,6 +5,7 @@ import {mapState} from "vuex";
 import {RootGetters, RootState} from "@webapp_root/store";
 import {ComponentOptions} from "vue";
 import {Vue} from "vue/types/vue";
+import EditButtonsComponent from "@training/edit_buttons/edit_buttons_component.vue";
 
 const courseTrainingGuard: NavigationGuard = async (to: any, from: any, next) => {
     const {currentCourseId} = store.state.course;
@@ -46,6 +47,9 @@ export const TrainingComponent: ComponentOptions<Vue> = {
             loading: (state, {trainingLoading, currentCourseLoading}: RootGetters) =>
                 trainingLoading || currentCourseLoading
         })
+    },
+    components: {
+        'edit-buttons': EditButtonsComponent
     }
 };
 
