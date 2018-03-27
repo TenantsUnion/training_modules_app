@@ -10,6 +10,7 @@ CREATE TABLE tu.module_progress (
   submitted_question_ids JSONB                          NOT NULL DEFAULT '{}' :: JSONB,
   questions_completed    TIMESTAMPTZ                             DEFAULT NULL,
   content_viewed         TIMESTAMPTZ                             DEFAULT NULL,
+  module_completed       TIMESTAMPTZ                             DEFAULT NULL,
   last_viewed_at         TIMESTAMPTZ                             DEFAULT NULL,
   last_modified_at       TIMESTAMPTZ                    NOT NULL,
   created_at             TIMESTAMPTZ                    NOT NULL,
