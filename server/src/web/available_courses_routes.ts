@@ -1,12 +1,10 @@
-import {Request, Response} from 'express';
-import * as express from 'express';
-import {availableCoursesViewQuery} from "../config/query_service_config";
+import {Request, Response, Router} from 'express';
+import {availableCoursesViewQuery} from "@server/views/view_query_config";
 import {getLogger} from "../log";
 import {CourseDescription} from "@shared/courses";
 import {loggedInUserId} from "./account_web_controller";
 
-let router = express.Router();
-
+let router = Router();
 let logger = getLogger('AvailableCoursesRoutes');
 let logError = (e, request: Request, response: Response) => {
     const message = `Error executing ${request.originalUrl}.\n${e}\n${JSON.stringify(e.stack, null, 2)}`;

@@ -2,7 +2,7 @@ import {AbstractWebController} from "./abstract_routes_controller";
 import {Router} from "express";
 import {UserCoursesListingPayload} from "@shared/user";
 import {getLogger} from "../log";
-import {UserCoursesListingViewQuery} from "../user/user_courses_listing_view_query";
+import {UserCoursesListingViewQuery} from "../views/user/user_courses_listing_view_query";
 
 export class UserWebController extends AbstractWebController {
 

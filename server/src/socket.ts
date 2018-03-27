@@ -1,7 +1,7 @@
-import * as socket from 'socket.io';
+import socket from 'socket.io';
 import socketWildcard from 'socketio-wildcard';
 import {getLogger} from './log';
-import {ADMIN_COURSE_NSP, SUBSCRIBE} from "../../shared/socket";
+import {ADMIN_COURSE_NSP, SUBSCRIBE} from "@shared/socket";
 
 let socketServerLogger = getLogger('SocketServer', 'info');
 let adminSocketLogger = getLogger('AdminCourseSocket', 'info');

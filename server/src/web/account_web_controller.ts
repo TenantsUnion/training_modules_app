@@ -1,6 +1,6 @@
-import {IAccountHandler} from '../account/account_handler';
-import {AccountRequestValidator} from "../account/account_request_validation_service";
-import {IUserHandler} from "../user/user_handler";
+import {IAccountHandler} from '../handlers/account/account_handler';
+import {AccountRequestValidator} from "../handlers/account/account_request_validation_service";
+import {IUserHandler} from "../handlers/user/user_handler";
 import {Response, Request} from "express";
 import {LoggerInstance} from 'winston';
 import {getLogger} from '../log';

@@ -1,7 +1,7 @@
-import * as express from 'express';
+import {Router} from 'express';
 import {accountController} from "./web_controller_config";
 
-let router = express.Router();
+let router = Router();
 router.post('/account/login', (request, response) => {
     return accountController.login(request, response);
 });

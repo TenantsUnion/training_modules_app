@@ -1,5 +1,11 @@
 {
+  "include": [
+    "./src/**/*.ts",
+    "../shared/**/*.ts"
+  ],
+  "extends": "../base.tsconfig.json",
   "compilerOptions": {
+    "noEmit": false,
     "lib": [
       "dom",
       "es5",
@@ -16,20 +22,44 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
+      "@server/*": [
+        "./src/*"
+      ],
       "@shared/*": [
         "../shared/*"
       ],
-      "@course/*": [
-        "./src/course/*"
+      "@views/*": [
+        "./src/views/*"
       ],
-      "@module/*": [
-        "./src/module/*"
+      "@v-course/*": [
+        "./src/views/course/*"
       ],
-      "@section/*": [
-        "./src/section/*"
+      "@v-training/*": [
+        "./src/views/training/*"
       ],
-      "@util/*": [
-        "./src/util/*"
+      "@v-user/*": [
+        "./src/views/user/*"
+      ],
+      "@v-user_progress/*": [
+        "./src/views/user_progress/*"
+      ],
+      "@handlers/*": [
+        "./src/handlers/*"
+      ],
+      "@h-course/*": [
+        "./src/handlers/course/*"
+      ],
+      "@h-module/*": [
+        "./src/handlers/course/module/*"
+      ],
+      "@h-section/*": [
+        "./src/handlers/course/module/section/*"
+      ],
+      "@h-training/*": [
+        "./src/handlers/training/*"
+      ],
+      "@h-user_progress/*": [
+        "./src/handlers/user_progress/*"
       ],
       "*": [
         "*"

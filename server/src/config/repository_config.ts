@@ -1,17 +1,16 @@
-import {postgresDb} from "../datasource";
-import {UserRepository} from "../user/users_repository";
-import {AccountRepository} from "../account/account_repository";
-import {QuillRepository} from "../training_entity/quill/quill_repository";
-import {ModuleRepository} from "@module/admin/module_repository";
-import {SectionRepository} from '@section/admin/section_repository';
-
-import {QuestionRepository} from '../training_entity/question/question_repository';
-import {QuestionOptionRepository} from '../training_entity/question/question_option_repository';
-import {CourseRepository} from "@course/admin/course_repository";
-import {CourseProgressRepository} from "@course/../user_progress/course_progress_repository";
-import {ModuleProgressRepository} from "@module/../user_progress/module_progress_repository";
-import {SectionProgressRepository} from "@section/../user_progress/section_progress_repository";
-import {QuestionSubmissionRepository} from "../training_entity/question/question_submission_repository";
+import {CourseRepository} from "@server/handlers/course/course_repository";
+import {postgresDb} from "@server/datasource";
+import {UserRepository} from "@server/handlers/user/users_repository";
+import {AccountRepository} from "@server/handlers/account/account_repository";
+import {QuillRepository} from "@server/handlers/training/quill/quill_repository";
+import {ModuleRepository} from "@server/handlers/course/module/module_repository";
+import {SectionRepository} from "@server/handlers/course/module/section/section_repository";
+import {QuestionRepository} from "@server/handlers/training/question/question_repository";
+import {QuestionOptionRepository} from "@server/handlers/training/question/question_option_repository";
+import {CourseProgressRepository} from "@server/handlers/user_progress/course_progress_repository";
+import {ModuleProgressRepository} from "@server/handlers/user_progress/module_progress_repository";
+import {SectionProgressRepository} from "@server/handlers/user_progress/section_progress_repository";
+import {QuestionSubmissionRepository} from "@server/handlers/training/question/question_submission_repository";
 
 export const coursesRepository = new CourseRepository(postgresDb);
 export const userRepository = new UserRepository(postgresDb);

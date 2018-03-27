@@ -1,18 +1,18 @@
+import {AdminCourseHandler} from "@h-course/course_handler";
+import {AdminModuleHandler} from "@h-module/module_handler";
+import {AdminSectionHandler} from "@h-section/section_handler";
+import {QuestionHandler} from "@h-training/question/question_handler";
+import {QuillHandler} from "@h-training/quill/quill_handler";
+import {TrainingEntityHandler} from "@h-training/training_entity_handler";
+import {AccountHandler} from "@handlers/account/account_handler";
+import {UserHandler} from "@handlers/user/user_handler";
+import {UserProgressHandler} from "@handlers/user_progress/user_progress_handler";
 import {
     accountRepository, courseProgressRepository, coursesRepository, moduleProgressRepository, moduleRepository,
     questionOptionRepository,
     questionRepository, questionSubmissionRepository, quillRepository, sectionProgressRepository, sectionRepository,
     userRepository
 } from "./repository_config";
-import {UserHandler} from "../user/user_handler";
-import {AccountHandler} from "../account/account_handler";
-import {QuillHandler} from '../training_entity/quill/quill_handler';
-import {QuestionHandler} from '../training_entity/question/question_handler';
-import {TrainingEntityHandler} from '../training_entity/admin/training_entity_handler';
-import {AdminModuleHandler} from "@module/admin/admin_module_handler";
-import {AdminCourseHandler} from "@course/admin/course_admin_handler";
-import {AdminSectionHandler} from "@section/admin/admin_section_handler";
-import {UserProgressHandler} from "../user_progress/user_progress_handler";
 
 export const quillHandler = new QuillHandler(quillRepository);
 export const questionHandler = new QuestionHandler(questionRepository, questionOptionRepository);

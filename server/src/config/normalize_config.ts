@@ -1,4 +1,4 @@
-import {config} from '../../../shared/normalize_imports';
+import {config} from "../../../shared/normalize_imports";
 
 export const DatabaseConfig = {
     user: config.get("database.db_user"),

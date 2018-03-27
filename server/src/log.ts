@@ -1,5 +1,4 @@
-import {LoggerInstance} from 'winston';
-import * as winston from 'winston';
+import {LoggerInstance, addColors, transports, Logger, setLevels} from 'winston';
 import {LogConfig} from './config/normalize_config';
 
 export const LOG_COLORS: {[index in keyof LogLevels]: string} = {
@@ -58,10 +57,10 @@ const basicTransportOptions = {
     colorize: true,
 };
 
-winston.setLevels(LOG_LEVEL_VALUES);
-winston.addColors(LOG_COLORS);
+setLevels(LOG_LEVEL_VALUES);
+addColors(LOG_COLORS);
 export const getLogger = (loggerName: string, level?: string & keyof LogLevels, loggerFile?: string): LoggerInstance => {
-    let transport = LogConfig.fileLogging ? new winston.transports.File({
+    let transport = LogConfig.fileLogging ? new transports.File({
             label: loggerName,
             level: LogConfig.useConfigLevel ? LogConfig.level : level,
             filename: LogConfig.directory + '/' + (loggerFile ? loggerFile : 'server.log'),
@@ -71,13 +70,13 @@ export const getLogger = (loggerName: string, level?: string & keyof LogLevels, 
             rotationFormat: 'gz',
             ...basicTransportOptions
         }) :
-        new winston.transports.Console({
+        new transports.Console({
             label: loggerName,
             level: LogConfig.useConfigLevel || !level ? LogConfig.level : level,
             ...basicTransportOptions
         });
 
-    return new winston.Logger({
+    return new Logger({
         levels: LOG_LEVEL_VALUES,
         transports: [
             transport

@@ -3,9 +3,9 @@ import {moment} from '@shared/normalize_imports';
 import {getLogger} from './log';
 import {Pool, types} from 'pg';
 import {DatabaseConfig} from './config/normalize_config';
-import {Moment} from 'moment';
 import {TIMESTAMP_FORMAT} from './repository';
-import DeltaOperation = Quill.DeltaOperation;
+import {DeltaOperation, DeltaStatic} from "quill";
+import {Moment} from "moment";
 
 /**
  * Interface for parameterized queries using node-postgres apis.
@@ -18,7 +18,7 @@ import DeltaOperation = Quill.DeltaOperation;
  */
 export interface IQueryConfig {
     text: string,
-    values: (string | number | boolean | number | (number | string)[] | string[] | number[] | Quill.DeltaStatic
+    values: (string | number | boolean | number | (number | string)[] | string[] | number[] | DeltaStatic
         | { ops: DeltaOperation[] } | Date | Moment | {})[]
 }
 
