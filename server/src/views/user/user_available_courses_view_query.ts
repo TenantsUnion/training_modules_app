@@ -1,5 +1,5 @@
-import {Datasource} from "../datasource";
 import {CourseDescription} from "@shared/courses";
+import {Datasource} from "@server/datasource";
 
 export class AvailableSourcesViewQuery {
     constructor (private datasource: Datasource) {

@@ -1,6 +1,5 @@
-import {Datasource} from "../datasource";
-import {orderObjByIds, toIdObjMap} from "@util/id_entity";
 import {CourseProgressId, UserCourseProgressView, UserModuleProgressView} from "@shared/user_progress";
+import {Datasource} from "@server/datasource";
 
 export interface TrainingEntityProgressDbRow {
     userId: string;
@@ -19,10 +18,12 @@ export interface TrainingEntityProgressDbRow {
 
 export type UserModuleProgressDbRow = TrainingEntityProgressDbRow & {
     sections: TrainingEntityProgressDbRow[];
+    moduleCompleted: string;
 };
 
 export type UserCourseProgressDbRow = TrainingEntityProgressDbRow & {
     modules: UserModuleProgressDbRow[];
+    courseCompleted: string;
 }
 
 

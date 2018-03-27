@@ -1,7 +1,7 @@
 import {Datasource} from '../../datasource';
-import {ViewSectionData} from "../../../../shared/sections";
-import {processContentQuestions} from "../../course/view/course_view_row_processor";
+import {ViewSectionData} from "@shared/sections";
 import {getLogger} from "../../log";
+import {processContentQuestions} from "./process_training_view";
 
 export class SectionViewQuery {
     logger = getLogger('SectionViewQuery');

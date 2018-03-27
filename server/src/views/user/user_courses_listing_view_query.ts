@@ -1,6 +1,6 @@
 import {CourseDescription, CoursesListingView} from "@shared/courses";
-import {getLogger} from "../log";
-import {Datasource} from "../datasource";
+import {getLogger} from "../../log";
+import {Datasource} from "../../datasource";
 
 export class UserCoursesListingViewQuery {
     logger = getLogger('UserCoursesListingViewQuery', 'info');
@@ -47,6 +47,7 @@ export class UserCoursesListingViewQuery {
         });
         //filter empty rows from joining admin -> enrolled -> user
         return {
+            userId,
             admin: admin.filter((c) => c),
             enrolled: enrolled.filter((c) => c)
         }

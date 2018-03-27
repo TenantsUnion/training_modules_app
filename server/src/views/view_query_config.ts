@@ -1,0 +1,22 @@
+import {postgresDb} from '../datasource';
+import {AvailableSourcesViewQuery} from "./user/user_available_courses_view_query";
+import {UserProgressViewQuery} from "./user_progress/user_progress_view_query";
+import {UserCoursesListingViewQuery} from "./user/user_courses_listing_view_query";
+import {CourseStructureViewQuery} from "./course/course_structure_view_query";
+import {CourseEnrolledSummaryViewQuery} from "./course/course_enrolled_summary_view_query";
+import {CourseEnrolledUserViewQuery} from "./user_progress/course_enrolled_user_view_query";
+import {UserAdminCoursesViewQuery} from "./user/user_admin_courses_view_query";
+import {CourseTrainingViewQuery} from "./training/course_views_query";
+import {ModuleViewQuery} from "./training/module_training_view_query";
+import {SectionViewQuery} from "./training/section_view_query";
+
+export const courseViewQuery = new CourseTrainingViewQuery(postgresDb);
+export const moduleViewQuery = new ModuleViewQuery(postgresDb);
+export const sectionViewQuery = new SectionViewQuery(postgresDb);
+export const availableCoursesViewQuery = new AvailableSourcesViewQuery(postgresDb);
+export const userProgressViewQuery = new UserProgressViewQuery(postgresDb);
+export const userCoursesListingViewQuery = new UserCoursesListingViewQuery(postgresDb);
+export const courseStructureViewQuery = new CourseStructureViewQuery(postgresDb);
+export const courseEnrolledSummaryViewQuery = new CourseEnrolledSummaryViewQuery(postgresDb);
+export const courseEnrolledUserViewQuery = new CourseEnrolledUserViewQuery(postgresDb);
+export const userAdminCoursesViewQuery = new UserAdminCoursesViewQuery(postgresDb);
