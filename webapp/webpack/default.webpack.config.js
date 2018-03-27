@@ -6,7 +6,7 @@ const vueLoaderConf = require('./vue_loader.conf');
 
 module.exports = {
     entry: [
-        './src/app/app.ts'
+        './src/app.ts'
     ],
     context: config.get('webapp.context'),
     output: {
@@ -54,19 +54,19 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
             '@shared': path.resolve(__dirname, '../../shared'),
-            '@global': path.resolve(__dirname, '../src/app/global'),
-            '@course': path.resolve(__dirname, '../src/app/course'),
-            '@module': path.resolve(__dirname, '../src/app/module'),
-            '@section': path.resolve(__dirname, '../src/app/section'),
-            '@user_progress': path.resolve(__dirname, '../src/app/user_progress'),
-            '@user': path.resolve(__dirname, '../src/app/user'),
-            '@training': path.resolve(__dirname, '../src/app/training'),
-            '@views': path.resolve(__dirname, '../src/app/views'),
-            '@webapp_root': path.resolve(__dirname, '../src/app'),
-            '@test_util': path.resolve(__dirname, '../karma_unit_test/util')
+            '@karma_unit_test': path.resolve(__dirname, '../karma_unit_test/src'),
+            '@webapp': path.resolve(__dirname, '../src'),
+            "@global": path.resolve(__dirname, "../src/global"),
+            "@training": path.resolve(__dirname, "../src/training"),
+            "@course": path.resolve(__dirname, "../src/course"),
+            "@module": path.resolve(__dirname, "../src/module"),
+            "@section": path.resolve(__dirname, "../src/section"),
+            "@user": path.resolve(__dirname, "../src/user"),
+            "@store": path.resolve(__dirname, "../src/store")
         }
     },
     performance: {
         hints: false
     }
-};
+}
+;

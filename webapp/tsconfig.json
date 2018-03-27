@@ -1,8 +1,10 @@
 {
+  "extends": "../base.tsconfig.json",
   "include": [
-    "./src/app/**/*.ts",
-    "./src/app/**/*.vue",
-    "./karma_unit_test/**/*.ts",
+    "./src/**/*.ts",
+    "./src/**/*.d.ts",
+    "./src/**/*.vue",
+    "./karma_unit_test/src/**/*.ts",
     "../shared/**/*.ts",
     "../node_modules/@types"
   ],
@@ -23,45 +25,38 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": ".",
     "sourceMap": true,
-    "outDir": "dist",
+    "baseUrl": ".",
     "paths": {
-      "*": [
-        "*"
-      ],
       "@shared/*": [
         "../shared/*"
       ],
+      "@webapp/*": [
+        "./src/*"
+      ],
       "@global/*": [
-        "./src/app/global/*"
-      ],
-      "@course/*": [
-        "./src/app/course/*"
-      ],
-      "@module/*": [
-        "./src/app/module/*"
-      ],
-      "@section/*": [
-        "./src/app/section/*"
-      ],
-      "@user_progress/*": [
-        "./src/app/user_progress/*"
-      ],
-      "@user/*": [
-        "./src/app/user/*"
+        "./src/global/*"
       ],
       "@training/*": [
-        "./src/app/training/*"
+        "./src/training/*"
       ],
-      "@webapp_root/*": [
-        "./src/app/*"
+      "@course/*": [
+        "./src/course/*"
       ],
-      "@views/*": [
-        "./src/app/views/*"
+      "@module/*": [
+        "./src/module/*"
       ],
-      "@test_util/*": [
-        "./karma_unit_test/util/*"
+      "@section/*": [
+        "./src/section/*"
+      ],
+      "@store/*": [
+        "./src/store/*"
+      ],
+      "@karma_unit_test/*": [
+        "./karma_unit_test/src/*"
+      ],
+      "*": [
+        "*"
       ]
     }
   }

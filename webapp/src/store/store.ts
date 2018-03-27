@@ -1,0 +1,36 @@
+import {courseProgressSummaryConfig} from "@course/admin/course_progress_summary/course_progress_summary_store";
+import {courseStoreConfig} from "@course/course_store";
+import {editCourseCommandStoreConfig} from "@course/edit_course_command_store";
+import {statusMessageStoreConfig} from "@global/status_messages/status_messages_store";
+import {trainingStoreConfig} from "@training/training_store";
+import {availableCoursesStoreConfig} from "@webapp/available_courses/available_courses_store";
+import {AppGetter, RootState} from "@store/store_types";
+import {coursesListingStoreConfig} from "@webapp/user/store/courses_listing_store";
+import {userStoreConfig} from "@webapp/user/store/user_store";
+import {userProgressStoreConfig} from "@webapp/user_progress/user_progress_store";
+import Vue from "vue";
+import {StoreOptions, Store} from "vuex";
+import Vuex from "vuex";
+
+
+export const storeConfig: StoreOptions<RootState> = {
+    // slows down production app and creating new vue stores triggers mutating outside of handlers warning when testing
+    strict: process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
+    modules: {
+        statusMessages: statusMessageStoreConfig.module(),
+        user: userStoreConfig.module(),
+        coursesListing: coursesListingStoreConfig.module(),
+        userProgress: userProgressStoreConfig.module(),
+        course: courseStoreConfig.module(),
+        availableCourses: availableCoursesStoreConfig.module(),
+        training: trainingStoreConfig.module(),
+        editCourseCommand: editCourseCommandStoreConfig.module(),
+        courseProgressSummary: courseProgressSummaryConfig.module()
+    }
+};
+
+Vue.use(Vuex);
+export const store = new Store(storeConfig);
+export const appGetters: AppGetter<RootState> = store.getters;
+export const appState: RootState = store.getters;
+

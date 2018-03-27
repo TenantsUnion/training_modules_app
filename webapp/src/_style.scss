@@ -1,0 +1,23 @@
+@import "scss/variables";
+@import "scss/foundation";
+@import "scss/global-styles";
+// import component styles
+@import "scss/quill_component";
+
+$flex: true;
+@include foundation-custom(true);
+
+$fa-font-path: "~font-awesome-sass/assets/fonts/font-awesome/";
+@import "../../node_modules/font-awesome-sass/assets/stylesheets/font-awesome";
+
+// placement of router-view below user toolbar
+.wrapper {
+  // always place below fixed nav bar
+  padding-top: 80px;
+  padding-left: 0;
+  -webkit-transition: padding 0.5s ease;
+  -moz-transition: padding 0.5s ease;
+  -o-transition: padding 0.5s ease;
+  transition: padding 0.5s ease;
+  width: 100%;
+}

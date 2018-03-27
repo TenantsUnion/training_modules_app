@@ -63,9 +63,10 @@ exports.cssLoaders = function (options) {
         less: generateLoaders('less'),
         sass: generateLoaders('sass', {indentedSyntax: true}),
         scss: generateLoaders('sass', {
-            data: '@import "style";',
+            data: '@import "style";@import "variables";',
             includePaths: [
-                path.resolve(__dirname, '../src/app'),
+                path.resolve(__dirname, '../src'),
+                path.resolve(__dirname, '../src/scss'),
                 path.resolve(__dirname, '../../node_modules/foundation-sites/scss'),
                 path.resolve(__dirname, '../../node_modules/foundation-sites/scss/util'),
                 path.resolve(__dirname, '../../node_modules/foundation-sites/_vendor'),

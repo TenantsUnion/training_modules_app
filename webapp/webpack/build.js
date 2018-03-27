@@ -1,4 +1,8 @@
 const path = require('path');
+
+process.env.NODE_CONFIG_DIR = path.resolve(__dirname, '../../config');
+process.env.NODE_ENV = 'development';
+
 const webpack = require('webpack');
 const rimraf = require('rimraf');
 const ora = require('ora');
@@ -6,7 +10,6 @@ const config = require('config');
 const webpackConf = require('./production.webpack.config');
 const chalk = require('chalk');
 
-process.env.NODE_ENV = 'production';
 
 const spinner = ora('building for production...');
 spinner.start();

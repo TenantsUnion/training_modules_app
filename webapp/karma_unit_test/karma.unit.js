@@ -13,15 +13,15 @@ module.exports = function (config) {
             require('karma-chrome-launcher'),
             require('karma-mocha-reporter')
         ],
-        files: ['karma_unit_test/index.ts',
+        files: ['karma_unit_test/src/index.ts',
             {
-                pattern: './src/app/**/*',
+                pattern: './src/**/*',
                 watched: false,
                 included: false,
                 served: true
             },
             {
-                pattern: './karma_unit_test/**/*.ts',
+                pattern: './karma_unit_test/src/**/*.ts',
                 watched: false,
                 included: false,
                 served: true
@@ -33,7 +33,7 @@ module.exports = function (config) {
         },
         reporters: ['mocha'],
         preprocessors: {
-            'karma_unit_test/index.ts': ['webpack']
+            'karma_unit_test/src/index.ts': ['webpack']
         },
         webpack: webpackConfig,
         webpackServer: {noInfo: true},
@@ -41,7 +41,8 @@ module.exports = function (config) {
         autoWatch: true,
         colors: true,
         logLevel: config.LOG_INFO,
-        browsers: ['ChromeHeadlessNoSandbox'],
+        browsers: ['Chrome'],
+        // browsers: ['ChromeHeadlessNoSandbox'],
         // for running in container environments like travis-ci where there is no sandbox available
         // https://docs.travis-ci.com/user/chrome#Sandboxing
         customLaunchers: {
