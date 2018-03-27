@@ -1,4 +1,4 @@
-import {createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from "../util/test_course_util";
+import {createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from "../../../test_util/test_course_util";
 import {coursesHandler} from "@server/config/handler_config";
 
 describe('User Courses Listing View Query', function () {

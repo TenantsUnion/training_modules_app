@@ -1,15 +1,15 @@
 import {expect} from 'chai';
-import {createCourse, createUser, latestUser} from '../../util/test_course_util';
+import {createCourse, createUser} from '@mocha-root/test_util/test_course_util';
 import {CreateCourseEntityPayload, ViewCourseData} from '@shared/courses';
 import {QuillEditorData} from '@shared/quill_editor';
-import {Delta} from '@shared/normalize_imports';
+import Delta from 'quill-delta';
 import {AnswerType, QuestionChanges, QuestionQuillData, QuestionType} from '@shared/questions';
 import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';
-import * as MockDate from 'mockdate';
-import DeltaOperation = Quill.DeltaOperation;
+import MockDate from 'mockdate';
 import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
 import {toDbTimestampFormat} from "@server/repository";
-import {courseViewQuery} from "@server/config/query_service_config";
+import {courseViewQuery} from "@server/views/view_query_config";
+import {DeltaOperation} from "quill";
 
 describe('Course view', function () {
     let questionId = createdQuestionPlaceholderId();

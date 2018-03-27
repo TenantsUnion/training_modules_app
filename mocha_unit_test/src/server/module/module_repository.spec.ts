@@ -1,12 +1,11 @@
+import MockDate from 'mockdate';
+import Moment from 'moment';
 import {expect} from 'chai';
-import {clearData} from "../../test_db_util";
-import * as MockDate from 'mockdate';
 import {ModuleEntity} from "@shared/modules";
-import * as Moment from 'moment';
-import {Delta} from '@shared/normalize_imports';
+import Delta from 'quill-delta';
 import {TIMESTAMP_FORMAT, toDbTimestampFormat} from "@server/repository";
-import {ModuleInsertDbData} from "@server/module/admin/module_repository";
 import {moduleRepository, quillRepository} from "@server/config/repository_config";
+import {ModuleInsertDbData} from "@server/handlers/course/module/module_repository";
 
 describe('Module Repository', function () {
     let now = new Date();
@@ -54,7 +53,7 @@ describe('Module Repository', function () {
         let moduleUpdate: ModuleEntity = {
             id: moduleId,
             version: 0,
-            headerDataId: 'QD4',
+            headerDataId: quillId,
             active: false,
             submitIndividually: true,
             timeEstimate: 100000,

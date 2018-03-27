@@ -1,7 +1,7 @@
 import {expect} from 'chai';
-import {addModule, createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../util/test_course_util';
+import {addModule, createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../../test_util/test_course_util';
 import {coursesHandler} from "@server/config/handler_config";
-import {courseViewQuery} from "@server/config/query_service_config";
+import {courseViewQuery} from "@server/views/view_query_config";
 
 describe('Create section', function () {
     let courseId: string;

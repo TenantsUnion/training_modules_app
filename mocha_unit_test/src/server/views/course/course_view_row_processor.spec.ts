@@ -1,20 +1,17 @@
 import {expect} from 'chai';
-import {
-    processContentQuestions,
-    processCourseView, ViewCourseDbData, ViewModuleDescriptionDbData,
-    ViewTrainingEntityDbData, ViewTrainingEntityDescriptionDbData
-} from "@server/course/view/course_view_row_processor";
 import {getUTCNow} from "@server/repository";
 import {QuillEditorData} from "@shared/quill_editor";
 import {
     AnswerType, QuestionOptionQuillData, QuestionQuillData, QuestionType
 } from "@shared/questions";
-import {QuestionOptionDbData, QuestionViewDbData} from "@server/course/view/view_database";
-import {Delta} from '@shared/normalize_imports';
+import Delta from 'quill-delta';
+import {
+    processContentQuestions,
+    processCourseView, QuestionOptionDbData, QuestionViewDbData, ViewCourseDbData, ViewModuleDescriptionDbData,
+    ViewTrainingEntityDbData, ViewTrainingEntityDescriptionDbData
+} from "@server/views/training/process_training_view";
 
 describe('Course View Row Processor', function () {
-
-
     const moduleId1 = 'M1';
     const moduleId2 = 'M2';
     const moduleId3 = 'M3';

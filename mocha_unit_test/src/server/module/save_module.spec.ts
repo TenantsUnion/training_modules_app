@@ -1,13 +1,13 @@
 import {expect} from 'chai';
-import {addModule, addSection, createCourse, createUser, STUB_MODULE, EMPTY_CHANGES_OBJ} from '../util/test_course_util';
+import {addModule, addSection, createCourse, createUser, STUB_MODULE, EMPTY_CHANGES_OBJ} from '../../test_util/test_course_util';
 import {moduleRepository, quillRepository} from '@server/config/repository_config';
 import {coursesHandler} from '@server/config/handler_config';
 import {ModuleEntity, SaveModuleEntityPayload} from '@shared/modules';
 import {deltaArrayDiff, DeltaArrOp} from '@shared/delta/diff_key_array';
 import {DeltaStatic} from 'quill';
-import {Delta} from '@shared/normalize_imports';
 import {QuillEditorData} from '@shared/quill_editor';
-import * as MockDate from 'mockdate';
+import Delta from 'quill-delta';
+import MockDate from 'mockdate';
 import {toDbTimestampFormat} from "@server/repository";
 import {createdQuillPlaceholderId} from "@shared/ids";
 

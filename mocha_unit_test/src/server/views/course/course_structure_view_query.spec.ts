@@ -1,11 +1,11 @@
+import MockDate from 'mockdate';
 import {expect} from 'chai';
 import {
     addModule, addSection, createCourse, createUser, createSectionPayload,
     STUB_COURSE, STUB_MODULE, STUB_SECTION
-} from "../../util/test_course_util";
-import {courseStructureViewQuery} from "@server/config/query_service_config";
+} from "@mocha-root/test_util/test_course_util";
+import {courseStructureViewQuery} from "@server/views/view_query_config";
 import {ViewCourseStructure} from "@shared/courses";
-import * as MockDate from 'mockdate';
 import {toDbTimestampFormat} from "@server/repository";
 
 describe('Course Structure View Query', function () {
@@ -23,7 +23,7 @@ describe('Course Structure View Query', function () {
         let {sectionId: sectionId2} = await addSection(createSectionPayload({moduleId: moduleId1}));
         let {moduleId: moduleId2} = await addModule();
 
-        expect(await courseStructureViewQuery.loadCourseStructure(courseId)).to.deep.eq(<ViewCourseStructure> {
+        expect(await courseStructureViewQuery.searchView({id: courseId})).to.deep.eq(<ViewCourseStructure> {
             id: courseId,
             version: 0,
             title: STUB_COURSE.title,

@@ -1,15 +1,15 @@
-import {accountHandler, coursesHandler} from '@server/config/handler_config';
 import {CreateCourseEntityPayload, CreateCourseIdMap} from '@shared/courses';
 import {IUserInfo} from '@shared/user';
 import {CreateModuleEntityPayload, CreateModuleIdMap} from '@shared/modules';
 import {CreateSectionEntityPayload, SectionIdMap} from '@shared/sections';
 import {ContentQuestionsDelta} from '@shared/training_entity';
-import {appendUUID} from "@testcafe/src/util/uuid_generator";
 import {CommandMetaData, CommandType} from "@shared/entity";
 import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
-import {Delta} from "@shared/normalize_imports";
+import {appendUUID} from "@test-shared/uuid_generator";
+import Delta from "quill-delta";
 import {AnswerType, QuestionType} from "@shared/questions";
 import {toAddDeltaArrOps} from "@shared/delta/diff_key_array";
+import {accountHandler, coursesHandler} from "@server/config/handler_config";
 
 export let latestUser;
 export const createUser = async (username?: string): Promise<IUserInfo> => {

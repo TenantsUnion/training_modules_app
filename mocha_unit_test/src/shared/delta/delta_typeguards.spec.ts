@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import {isDeltaObj} from '@shared/delta/typeguards_delta';
-import {Delta} from '@shared/normalize_imports';
+import Delta from 'quill-delta';
 
 describe('Delta typeguard functions', () => {
    it('should evaluate DeltaStatic object as not a DeltaObj type', function() {

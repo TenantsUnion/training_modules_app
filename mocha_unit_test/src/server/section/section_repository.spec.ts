@@ -1,12 +1,11 @@
+import MockDate from 'mockdate';
+import Moment from 'moment';
 import {expect} from 'chai';
-import {clearData} from "../../test_db_util";
-import * as MockDate from 'mockdate';
-import * as Moment from 'moment';
-import {Delta} from '@shared/normalize_imports';
 import {SectionEntity} from "@shared/sections";
 import {toDbTimestampFormat} from "@server/repository";
-import {SectionInsertDbData} from "@server/section/admin/section_repository";
 import {quillRepository, sectionRepository} from "@server/config/repository_config";
+import {SectionInsertDbData} from "@server/handlers/course/module/section/section_repository";
+import Delta from "quill-delta";
 
 describe('Section Repository', function () {
     let now = new Date();

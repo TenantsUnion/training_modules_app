@@ -1,12 +1,11 @@
 import {expect} from 'chai';
-import {clearData} from "../../../test_db_util";
-import * as MockDate from 'mockdate';
+import MockDate from 'mockdate';
 import {
     questionRepository, quillRepository} from "@server/config/repository_config";
-import {Delta} from "@shared/normalize_imports";
+import Delta from "quill-delta";
 import {AnswerType, QuestionEntity, QuestionType} from "@shared/questions";
-import {QuestionInsertDbData} from "@server/training_entity/question/question_repository";
-import * as Moment from 'moment';
+import {QuestionInsertDbData} from "@server/handlers/training/question/question_repository";
+import Moment from 'moment';
 import {toDbTimestampFormat} from "@server/repository";
 
 describe('Question Repository', function () {

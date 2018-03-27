@@ -1,6 +1,8 @@
 {
-  "includes": [
-    "**/*.ts",
+  "extends": "../base.tsconfig.json",
+  "include": [
+    "./src/**/*.ts",
+    "../shared/*.ts",
     "../server/**/*.ts"
   ],
   "compilerOptions": {
@@ -15,7 +17,6 @@
     "target": "es6",
     "moduleResolution": "node",
     "allowJs": true,
-    "noEmit": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
@@ -24,23 +25,47 @@
       "@shared/*": [
         "../shared/*"
       ],
-      "@testcafe/*": [
-        "../testcafe_e2e_test/*"
-      ],
-      "@course/*": [
-        "../server/src/course/*"
-      ],
-      "@section/*": [
-        "../server/src/section/*"
-      ],
-      "@module/*": [
-        "../server/src/module/*"
-      ],
       "@server/*": [
         "../server/src/*"
       ],
-      "@util/*": [
-        "../server/src/util/*"
+      "@views/*": [
+        "../server/src/views/*"
+      ],
+      "@v-course/*": [
+        "../server/src/views/course/*"
+      ],
+      "@v-training/*": [
+        "../server/src/views/training/*"
+      ],
+      "@v-user/*": [
+        "../server/src/views/user/*"
+      ],
+      "@v-user_progress/*": [
+        "../server/src/views/user_progress/*"
+      ],
+      "@handlers/*": [
+        "../server/src/handlers/*"
+      ],
+      "@h-course/*": [
+        "../server/src/handlers/course/*"
+      ],
+      "@h-module/*": [
+        "../server/src/handlers/course/module/*"
+      ],
+      "@h-section/*": [
+        "../server/src/handlers/course/module/section/*"
+      ],
+      "@h-training/*": [
+        "../server/src/handlers/training/*"
+      ],
+      "@h-user_progress/*": [
+        "../server/src/handlers/user_progress/*"
+      ],
+      "@mocha-root/*": [
+        "./src/*"
+      ],
+      "@test-shared/*": [
+        "../test_shared/*"
       ],
       "*": [
         "*"

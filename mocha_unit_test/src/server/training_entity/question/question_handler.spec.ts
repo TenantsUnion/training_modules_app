@@ -1,11 +1,11 @@
 import {expect} from 'chai';
 import {trainingEntityHandler} from '@server/config/handler_config';
-import {Delta} from '@shared/normalize_imports';
+import Delta from 'quill-delta';
 import {
     questionOptionRepository, questionRepository
 } from '@server/config/repository_config';
 import {QuillEditorData} from '@shared/quill_editor';
-import {QuestionOptionDto} from '@server/training_entity/question/question_option_repository';
+import {QuestionOptionDto} from '@server/handlers/training/question/question_option_repository';
 import {
     AnswerType, QuestionChangesObj, QuestionEntity,
     QuestionType
@@ -14,7 +14,7 @@ import {
     ContentQuestionsDelta, QuillChangesObj
 } from '@shared/training_entity';
 import {addDeltaArrOp} from '@shared/delta/diff_key_array';
-import * as MockDate from 'mockdate';
+import MockDate from 'mockdate';
 import {toDbTimestampFormat} from "@server/repository";
 import {postgresDb} from "@server/datasource";
 import {

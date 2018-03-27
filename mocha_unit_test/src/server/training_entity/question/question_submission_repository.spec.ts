@@ -7,8 +7,8 @@ import {
     createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId
 } from "@shared/ids";
 import {toAddDeltaArrOps} from "@shared/delta/diff_key_array";
-import {createUser} from "../../util/test_course_util";
-import * as MockDate from 'mockdate';
+import {createUser} from "../../../test_util/test_course_util";
+import MockDate from 'mockdate';
 import {toDbTimestampFormat} from "@server/repository";
 
 describe('Question Submission Repository', function () {

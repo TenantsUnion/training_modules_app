@@ -1,12 +1,12 @@
-import * as MockDate from 'mockdate';
+import MockDate from 'mockdate';
 import {expect} from 'chai';
 import {
     addModule, addSection, createCourse, createUser, createSectionPayload, STUB_COURSE, STUB_CONTENT_QUESTIONS,
     STUB_QUESTION_ID, STUB_OPTION_ID_1, STUB_OPTION_ID_2, STUB_CONTENT_ID
-} from "../util/test_course_util";
+} from "@mocha-root/test_util/test_course_util";
 import {coursesHandler, userProgressHandler} from "@server/config/handler_config";
 import {toDbTimestampFormat} from "@server/repository";
-import {userProgressViewQuery} from "@server/config/query_service_config";
+import {userProgressViewQuery} from "@server/views/view_query_config";
 import {TrainingProgressUpdateType, UserCourseProgressView} from "@shared/user_progress";
 
 describe('User Progress View Query', function () {
@@ -51,10 +51,12 @@ describe('User Progress View Query', function () {
                 id: courseId,
                 version: 0,
                 userId: userId,
+                courseCompleted: null,
                 modules: {
                     [moduleId1]: {
                         ...defaultEmpty,
                         id: moduleId1,
+                        moduleCompleted: null,
                         sections: {
                             [sectionId1]: {
                                 ...defaultEmpty, id: sectionId1,
@@ -67,6 +69,7 @@ describe('User Progress View Query', function () {
                     [moduleId2]: {
                         ...defaultEmpty,
                         id: moduleId2,
+                        moduleCompleted: null,
                         sections: {},
                     }
                 }
@@ -107,6 +110,7 @@ describe('User Progress View Query', function () {
             lastViewedAt: now,
             questionsCompleted: now,
             contentViewed: now,
+            courseCompleted: null,
             completedQuestionIds: {
                 [questionId]: now
             },

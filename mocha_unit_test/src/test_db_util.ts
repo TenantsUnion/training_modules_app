@@ -2,7 +2,7 @@ import {LoggerInstance} from "winston";
 import {getLogger} from "@server/log";
 import {DatabaseConfig} from '@server/config/normalize_config';
 import {QuillDeltaMap} from '@shared/quill_editor';
-import {Delta} from '@shared/normalize_imports';
+import Delta from 'quill-delta';
 import {postgresDb} from '@server/datasource';
 
 /**

@@ -1,13 +1,12 @@
-import * as _ from 'underscore';
+import _ from 'underscore';
 import {expect} from 'chai';
 import {CreateModuleEntityPayload} from '@shared/modules';
-import {clearData} from '../../test_db_util';
-import {createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '../util/test_course_util';
-import {Delta} from '@shared/normalize_imports';
+import {createCourse, createUser, EMPTY_CONTENT_QUESTIONS_DELTA} from '@mocha-root/test_util/test_course_util';
+import Delta from 'quill-delta';
 import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 import {createdQuillPlaceholderId} from "@shared/ids";
 import {coursesHandler} from "@server/config/handler_config";
-import {courseViewQuery} from "@server/config/query_service_config";
+import {courseViewQuery} from "@server/views/view_query_config";
 import {moduleRepository, quillRepository} from "@server/config/repository_config";
 
 describe('Create module', function () {

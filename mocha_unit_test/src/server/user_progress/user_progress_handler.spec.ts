@@ -2,13 +2,13 @@ import {expect} from 'chai';
 import {
     addModule, addSection, createCourse, createUser, STUB_COURSE, STUB_MODULE,
     createSectionPayload
-} from "../util/test_course_util";
+} from "../../test_util/test_course_util";
 import {userProgressHandler} from "@server/config/handler_config";
 import {
     courseProgressRepository, moduleProgressRepository, sectionProgressRepository,
     userRepository
 } from "@server/config/repository_config";
-import * as MockDate from 'mockdate';
+import MockDate from 'mockdate';
 import {toDbTimestampFormat} from "@server/repository";
 import {ContentQuestionsDelta} from "@shared/training_entity";
 import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
@@ -55,7 +55,7 @@ describe('User progress handler', function () {
 
         expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
         expect(courseProgress).to.deep.eq({
-            id: courseId, userId: studentId, ...progressEntryDefaults
+            id: courseId, userId: studentId, ...progressEntryDefaults, courseCompleted: null
         });
     });
 
@@ -79,13 +79,13 @@ describe('User progress handler', function () {
 
         expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
         expect(courseProgress).to.deep.eq({
-            id: courseId, userId: studentId, ...progressEntryDefaults
+            id: courseId, userId: studentId, ...progressEntryDefaults, courseCompleted: null
         });
         expect(module1Progress).to.deep.eq({
-            id: moduleId1, userId: studentId, ...progressEntryDefaults
+            id: moduleId1, userId: studentId, ...progressEntryDefaults, moduleCompleted: null
         });
         expect(module2Progress).to.deep.eq({
-            id: moduleId2, userId: studentId, ...progressEntryDefaults
+            id: moduleId2, userId: studentId, ...progressEntryDefaults, moduleCompleted: null
         });
     });
 
@@ -116,13 +116,13 @@ describe('User progress handler', function () {
 
         expect(user.enrolledInCourseIds).to.deep.eq([courseId]);
         expect(courseProgress).to.deep.eq({
-            id: courseId, userId: studentId, ...progressEntryDefaults
+            id: courseId, userId: studentId, ...progressEntryDefaults, courseCompleted: null
         });
         expect(module1Progress).to.deep.eq({
-            id: moduleId1, userId: studentId, ...progressEntryDefaults
+            id: moduleId1, userId: studentId, ...progressEntryDefaults, moduleCompleted: null
         });
         expect(module2Progress).to.deep.eq({
-            id: moduleId2, userId: studentId, ...progressEntryDefaults
+            id: moduleId2, userId: studentId, ...progressEntryDefaults, moduleCompleted: null
         });
         expect(section1Progress).to.deep.eq({
             id: sectionId1, userId: studentId, ...progressEntryDefaults
@@ -150,6 +150,7 @@ describe('User progress handler', function () {
         expect(await courseProgressRepository.loadTrainingProgress({id: courseId, userId: studentId})).to.deep.eq({
             ...progressEntryDefaults,
             id: courseId, userId: studentId,
+            courseCompleted: null,
             lastViewedAt: now,
             contentViewed: now,
             completedQuestionIds: toTimestampKeyObj([questionId2]),
@@ -179,6 +180,7 @@ describe('User progress handler', function () {
             lastViewedAt: now,
             contentViewed: now,
             questionsCompleted: now,
+            courseCompleted: null,
             completedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             submittedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             viewedContentIds: toTimestampKeyObj([contentId1, contentId2])
@@ -206,6 +208,7 @@ describe('User progress handler', function () {
             id: moduleId, userId: studentId,
             version: 0,
             lastViewedAt: now,
+            moduleCompleted: null,
             completedQuestionIds: toTimestampKeyObj([questionId2]),
             submittedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             viewedContentIds: toTimestampKeyObj([contentId1, contentId2]),
@@ -235,6 +238,7 @@ describe('User progress handler', function () {
             lastViewedAt: now,
             contentViewed: now,
             questionsCompleted: now,
+            moduleCompleted: null,
             completedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             submittedQuestionIds: toTimestampKeyObj([questionId1, questionId2]),
             viewedContentIds: toTimestampKeyObj([contentId1, contentId2]),

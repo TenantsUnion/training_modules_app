@@ -1,8 +1,8 @@
+import {appendUUID} from "@test-shared/uuid_generator";
 import {expect} from "chai";
 import {accountRepository} from "@server/config/repository_config";
 import {postgresDb} from "@server/datasource";
-import {AccountInfo} from "@server/user/user_handler";
-import {appendUUID} from "@testcafe/src/util/uuid_generator";
+import {AccountInfo} from "@server/handlers/user/user_handler";
 
 describe('Account Repository', function () {
 

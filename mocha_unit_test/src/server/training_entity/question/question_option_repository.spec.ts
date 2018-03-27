@@ -1,11 +1,10 @@
 import {expect} from 'chai';
-import * as MockDate from 'mockdate';
-import {clearData} from "../../../test_db_util";
-import {QuestionOptionDto} from "@server/training_entity/question/question_option_repository";
+import MockDate from 'mockdate';
+import {QuestionOptionDto} from "@server/handlers/training/question/question_option_repository";
 import {
     questionOptionRepository, quillRepository
 } from "@server/config/repository_config";
-import {Delta} from '@shared/normalize_imports';
+import Delta from 'quill-delta';
 import {toDbTimestampFormat} from "@server/repository";
 import {postgresDb} from "@server/datasource";
 

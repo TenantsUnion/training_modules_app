@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import * as Delta from 'quill-delta';
+import Delta from 'quill-delta';
 import {convertToDeltaObj} from '@shared/delta/convert_delta';
 import {diffDeltaObj} from '@shared/delta/diff_delta';
 import {DeltaObjDiff} from '@shared/delta/delta';

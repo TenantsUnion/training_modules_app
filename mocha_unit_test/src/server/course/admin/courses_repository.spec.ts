@@ -1,11 +1,11 @@
 import {expect} from 'chai';
 import {coursesRepository, quillRepository} from "@server/config/repository_config";
-import * as MockDate from 'mockdate';
+import MockDate from 'mockdate';
 import {CourseEntity} from "@shared/courses";
-import * as Moment from 'moment';
-import {Delta} from '@shared/normalize_imports';
+import Moment from 'moment';
 import {TIMESTAMP_FORMAT, toDbTimestampFormat} from "@server/repository";
-import {CourseInsertDbData} from "@course/admin/course_repository";
+import {CourseInsertDbData} from "@server/handlers/course/course_repository";
+import Delta from "quill-delta";
 
 describe('Courses Repository', function () {
     let now = new Date();
