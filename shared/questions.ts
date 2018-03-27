@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import _ from 'underscore';
 import {isQuillEditorData, QuillEditorData} from './quill_editor';
 import {DeltaStatic} from 'quill';
 import {isDeltaStatic} from './delta/typeguards_delta';

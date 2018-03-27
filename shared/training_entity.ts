@@ -1,11 +1,11 @@
-import * as _ from 'underscore';
+import _ from 'underscore';
 import {CreateQuestionData, QuestionChangesObj, QuestionQuillData} from './questions';
 import {QuillEditorData} from './quill_editor';
 import {Command, CommandType} from './entity';
 import {DeltaObjDiff} from './delta/delta';
 import {DeltaArrOp} from './delta/diff_key_array';
 import {isDeltaStatic} from './delta/typeguards_delta';
-import DeltaOperation = Quill.DeltaOperation;
+import {DeltaOperation, DeltaStatic} from "quill";
 
 export interface ViewTrainingEntity {
     id: string;
@@ -41,7 +41,7 @@ export interface ViewTrainingEntityDescription {
  *
  */
 export interface QuillChangesObj {
-    [index: string]: Quill.DeltaStatic | {ops: DeltaOperation[]}
+    [index: string]: DeltaStatic | {ops: DeltaOperation[]}
 }
 
 export const isQuillContentDiff = (obj: any): obj is QuillChangesObj => {

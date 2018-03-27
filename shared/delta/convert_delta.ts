@@ -1,10 +1,8 @@
-import * as quillDelta from "quill-delta";
-import * as _ from "underscore";
-import {Delta, DeltaObj} from "./delta";
+import _ from "underscore";
+import {DeltaObj} from "./delta";
 import {isDeltaObj, isDeltaStatic} from './typeguards_delta';
 
 //use types from @types/Quill for standalone quill-delta library that doesn't require DOM
-let Delta: Delta = quillDelta;
 export const parameterErrorMsg = 'Can only convert objects. Was given parameter: ';
 
 /**

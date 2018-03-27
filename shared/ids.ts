@@ -68,8 +68,6 @@ export const idType: (id: string) => keyof IdPrefixes  = (() => {
     let prefixRegStr = Object.keys(IdPrefixes).map((key) => IdPrefixes[key]).join('|');
     let prefixRegex = new RegExp(`(${prefixRegStr})[-\\d]+$`);
     return (id: string): keyof IdPrefixes => {
-        console.log('getting type of value');
-        console.log(id);
         return <keyof IdPrefixes> idLookup[prefixRegex.exec(id)[1]];
     }
 })();

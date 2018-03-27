@@ -88,9 +88,11 @@ export interface TrainingProgressView {
 
 export interface UserModuleProgressView extends TrainingProgressView {
     sections: {[sectionId: string]: TrainingProgressView}
+    moduleCompleted: string; // utc timestamp of when the training content and all sections are completed
 }
 
 export interface UserCourseProgressView extends TrainingProgressView {
     userId: string;
+    courseCompleted: string; // utc timestamp of when the training content and all modules are completed
     modules: {[moduleId: string]: UserModuleProgressView},
 }

@@ -1,8 +1,9 @@
 import {DeltaArrOp} from './diff_key_array';
 import {QuillChangesObj} from '../training_entity';
 import {OptionChangesObj, QuestionChangesObj} from '../questions';
+import {DeltaStatic} from "quill";
 
-export interface Delta extends Quill.DeltaStatic {
+export interface Delta extends DeltaStatic {
 }
 
 export interface DeltaObj {

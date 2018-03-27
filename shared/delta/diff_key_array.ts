@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import _ from 'underscore';
 
 export const addDeltaArrOp = <T>(val: T, index: number): DeltaArrOp<T> => {
     return {

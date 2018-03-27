@@ -1,11 +1,12 @@
-import * as _ from 'underscore';
+import _ from 'underscore';
 import {DeltaObj} from './delta';
+import {DeltaStatic} from "quill";
 
 /**
  * Type guard for {@link Quill.DeltaStatic}. Only checks that parameter is type object and has
  * {@link Quill.DeltaStatic#ops} array property and <b>not</b> functions of Quill's Delta library
  */
-export const isDeltaStatic = (obj: any): obj is Quill.DeltaStatic => {
+export const isDeltaStatic = (obj: any): obj is DeltaStatic => {
     return _.isObject(obj) && !_.isArray(obj) && _.isArray(obj.ops);
 };
 
@@ -30,7 +31,7 @@ export const isDeltaObj = (obj: any): obj is DeltaObj => {
  * @param {any[]} arr
  * @returns {boolean}
  */
-export const isDeltaStaticArray = (arr: any): arr is Quill.DeltaStatic[] => {
+export const isDeltaStaticArray = (arr: any): arr is DeltaStatic[] => {
     return _.isArray(arr) && arr.every((el) => isDeltaStatic(el));
 };
 

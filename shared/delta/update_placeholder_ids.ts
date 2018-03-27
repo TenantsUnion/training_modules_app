@@ -1,4 +1,4 @@
-import * as _ from 'underscore';
+import _ from 'underscore';
 
 /**
  * Replaces properties and values (at nested levels) that correspond to a key in the provided placeholderIdMap with

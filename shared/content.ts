@@ -1,10 +1,11 @@
 // deprecated was for proof of concept with quill
 import {QuillEditorData} from '@shared/quill_editor';
+import {DeltaStatic} from "quill";
 
 export interface CreateUserContentCommand {
     userId: string;
     title: string;
-    quillContent: Quill.DeltaStatic;
+    quillContent: DeltaStatic;
 }
 
 export interface ContentData {

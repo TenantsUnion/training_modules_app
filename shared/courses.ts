@@ -35,10 +35,6 @@ export interface ViewCourseData extends ViewTrainingEntity {
     openEnrollment?: boolean,
     modules: ViewModuleDescription[]
 }
-export interface UserEnrolledCourseData extends ViewCourseData {
-    //todo maybe user description?
-    //todo module and section progress
-}
 
 export interface CourseDescription {
     id: string;
@@ -46,10 +42,13 @@ export interface CourseDescription {
     title: string;
     description?: string;
     timeEstimate?: number;
-    admins?: string[]
+    admins?: string[];
+    lastModifiedAt?: string;
+    createdAt?: string;
 }
 
 export interface CoursesListingView {
+    userId: string;
     enrolled: CourseDescription[],
     admin: CourseDescription[]
 }

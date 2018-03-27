@@ -1,5 +1,5 @@
-import * as _ from 'underscore';
-import * as Delta from 'quill-delta';
+import _ from 'underscore';
+import Delta from 'quill-delta';
 import {DeltaObj, DeltaObjDiff} from './delta';
 import {isDeltaObj, isDeltaStatic, isKeyArr} from './typeguards_delta';
 import {deltaArrayDiff} from './diff_key_array';

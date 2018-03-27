@@ -1,7 +1,8 @@
-import * as _ from "underscore";
+import _ from "underscore";
 import {DeltaDiff, DeltaObjDiff} from './delta';
 import {isDeltaStatic, isKeyArr} from './typeguards_delta';
 import {applyDeltaArrOps, isDeltaArrDiff} from './diff_key_array';
+import Delta from "quill-delta";
 
 /**
  * Applies the provided {@link DeltaObjDiff} to the provided object. A diff is only applied to the objects values if there
