@@ -1,18 +1,28 @@
 import http from 'http';
 import Debug from 'debug';
 import config from 'config'
+import path from 'path';
 import {getLogger} from './script_logger';
-import {app} from '../server/dist/server/src/app';
-import {initSocket} from '../server/dist/server/src/socket';
+import {registerModuleAliases} from "./module_aliases";
 
 const logger = getLogger('start_server');
 const debug = Debug('myapp:server');
 
 logger.info('start script');
 
-const port = config.get("server.port");
+
+// add module path aliases before importing es6 static module entry point app at which point all es6 import module paths
+// will be evaluated
+const tsConfig = require('../server/tsconfig');
+const serverPath = path.resolve(__dirname, '../server/dist/server');
+registerModuleAliases(serverPath, tsConfig);
 
 module.exports = () => {
+
+    const app = require(`../server/dist/server/src/app`)();
+
+    const port = config.get("server.port");
+
     app.set('port', port);
     /**
      * Create HTTP server.
@@ -62,5 +72,6 @@ module.exports = () => {
     /**
      * Initialize socket.io server
      */
+    const {initSocket} = require(`../server/dist/server/src/socket`);
     initSocket(server);
 };

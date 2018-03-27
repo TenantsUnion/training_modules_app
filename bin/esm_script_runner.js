@@ -1,5 +1,4 @@
-require = require("@std/esm")(module, true);
-require('module-alias/register');
+require = require("esm")(module, true);
 const scriptName = process.env.SCRIPT_NAME;
 console.log(`Running in env: ${process.env.NODE_ENV}`);
 console.log(`Running script: ${scriptName} . . .`);
