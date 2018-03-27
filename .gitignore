@@ -20,7 +20,7 @@ npm-debug.log
 -- Intellij keeps getting confused about just compiling and checking the ts files instead of generating the js files
 test/**/*.js
 test/**/*.js.map
-webapp/src/app/**/*.js
-webapp/src/app/**/*.js.map
+webapp/src/**/*.js
+webapp/src/**/*.js.map
 server/src/**/*.js
 server/src/**/*.js.map
