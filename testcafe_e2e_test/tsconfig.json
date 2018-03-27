@@ -1,46 +1,71 @@
 {
-  "includes": [
-    "**/*.ts",
-    "../server/**/*.ts",
-    "../mocha_unit_test/**/*.ts"
+  "extends": "../base.tsconfig.json",
+  "include": [
+    "./**/*.ts",
+    "../server/src/**/*.ts",
+    "../shared/**/*.ts",
+    "../node_modules/testcafe/ts-defs/index.d.ts"
   ],
   "compilerOptions": {
     "lib": [
+      "dom",
       "es5",
-      "es2015.promise",
       "es6",
       "es7",
-      "dom"
+      "ES2015.promise"
     ],
-    "module": "commonjs",
     "target": "es6",
+    "module": "es6",
+    "moduleResolution": "node",
     "noEmit": true,
-    "allowJs": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@mochatest/*": [
-        "../mocha_unit_test/*"
+      "@testcafe-root/*": [
+          "./src/*"
       ],
       "@shared/*": [
         "../shared/*"
       ],
-      "@course/*": [
-        "../server/src/course/*"
-      ],
-      "@section/*": [
-        "../server/src/section/*"
-      ],
-      "@module/*": [
-        "../server/src/module/*"
-      ],
-      "@util/*": [
-        "../server/src/util/*"
+      "@test-shared/*": [
+        "../test_shared/*"
       ],
       "@server/*": [
         "../server/src/*"
+      ],
+      "@views/*": [
+        "../server/src/views/*"
+      ],
+      "@v-course/*": [
+        "../server/src/views/course/*"
+      ],
+      "@v-training/*": [
+        "../server/src/views/training/*"
+      ],
+      "@v-user/*": [
+        "../server/src/views/user/*"
+      ],
+      "@v-user_progress/*": [
+        "../server/src/views/user_progress/*"
+      ],
+      "@handlers/*": [
+        "../server/src/handlers/*"
+      ],
+      "@h-course/*": [
+        "../server/src/handlers/course/*"
+      ],
+      "@h-module/*": [
+        "../server/src/handlers/course/module/*"
+      ],
+      "@h-section/*": [
+        "../server/src/handlers/course/module/section/*"
+      ],
+      "@h-training/*": [
+        "../server/src/handlers/training/*"
+      ],
+      "@h-user_progress/*": [
+        "../server/src/handlers/user_progress/*"
       ],
       "*": [
         "*"

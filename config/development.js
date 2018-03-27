@@ -11,5 +11,8 @@ module.exports = {
     },
     log: {
         fileLogging: false
+    },
+    e2e: {
+        port: 8080
     }
 };

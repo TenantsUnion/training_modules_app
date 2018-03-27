@@ -4,7 +4,7 @@ import {LandingPageDriver} from "../util/drivers/pages/landing_page_driver";
 import {LoggedInNavigationDriver} from "../util/drivers/pages/logged_in_navigation_driver";
 import {AdminCoursesPageDriver} from "../util/drivers/pages/admin_courses_page_driver";
 import {CreateCoursePageDriver} from "../util/drivers/pages/create_course_page_driver";
-import {appendUUID} from "../util/uuid_generator";
+import {appendUUID} from "../../../test_shared/uuid_generator";
 
 fixture('Admin Course').page(landingPage);
 

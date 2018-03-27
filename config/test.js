@@ -17,5 +17,8 @@ module.exports = {
         level: "warning",
         useConfigLevel: true,
         fileLogging: false
+    },
+    e2e: {
+        port: 3000
     }
 };

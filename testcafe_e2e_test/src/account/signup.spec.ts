@@ -1,7 +1,7 @@
 import {Selector} from 'testcafe';
 import {LandingPageDriver} from "../util/drivers/pages/landing_page_driver";
-import {config} from "@shared/normalize_imports";
-import {appendUUID} from "../util/uuid_generator";
+import {appendUUID} from "@test-shared/uuid_generator";
+const config = require("config");
 
 fixture('Account Signup')
     .page(`localhost:${config.get('webapp.port')}`);

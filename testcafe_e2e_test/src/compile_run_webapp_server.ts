@@ -1,21 +1,9 @@
-const path = require('path');
-process.env.NODE_CONFIG_DIR = path.resolve(__dirname, '../config');
-process.env.NODE_ENV = 'test';
 const http = require('http');
 const config = require('config');
-const webappTsConfig = require('../webapp/webpack/testcafe_e2e_test.webpack.config.js');
+const webappTsConfig = require('../../webapp/webpack/testcafe_e2e_test.webpack.config.js');
 const rimraf = require('rimraf');
 const webpack = require('webpack');
 const chalk = require('chalk');
-
-const testTsConfig = require('./tsconfig.json');
-const tsConfigPaths = require('tsconfig-paths');
-tsConfigPaths.register({
-    baseUrl: path.resolve(__dirname, './'),
-    paths: testTsConfig.compilerOptions.paths
-});
-import {app} from '@server/app';
-
 
 export const buildWebpack = async () => {
     console.log(chalk.cyan('\n\tBuilding webpack...'));
@@ -46,13 +34,14 @@ export const buildWebpack = async () => {
 };
 export const runServer = async () => {
     console.log(chalk.cyan('\tInitializing app server...'));
+    const app = require('@server/app')();
     app.set('port', config.get('server.port'));
     let server = http.createServer(app);
 
     return new Promise((resolve, reject) => {
         server.listen(config.get('server.port'));
         server.once('listening', function () {
-            console.log(chalk.cyan('\tServing listening on ' + server.address().port));
+            console.log(chalk.cyan('Serving listening on ' + server.address().port));
             resolve();
         });
     });

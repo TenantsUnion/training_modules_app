@@ -1,11 +1,8 @@
 import chalk from 'chalk';
-import * as path from 'path';
 import {createTestCafeServer, runTests} from './compile_run_testcafe';
 
-process.env.NODE_CONFIG_DIR = path.resolve(__dirname, '../config');
-// will run against live reload webpack dev server on localhost:8080
-process.env.NODE_ENV = 'test_dev';
-
+// e2e test fixture page will run against live reload webpack dev server on localhost:8080
+process.env.NODE_ENV = 'dev';
 
 createTestCafeServer()
     .then((t) => runTests(t, ['chrome']))

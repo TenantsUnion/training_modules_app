@@ -1,8 +1,8 @@
-import {LandingPageDriver} from "../util/drivers/pages/landing_page_driver";
 import {Selector} from "testcafe";
-import {landingPage} from "../util/uri_utils";
-import {LoggedInNavigationDriver} from "../util/drivers/pages/logged_in_navigation_driver";
-import {appendUUID} from "../util/uuid_generator";
+import {LoggedInNavigationDriver} from "@testcafe-root/util/drivers/pages/logged_in_navigation_driver";
+import {landingPage} from "@testcafe-root/util/uri_utils";
+import {LandingPageDriver} from "@testcafe-root/util/drivers/pages/landing_page_driver";
+import {appendUUID} from "@test-shared/uuid_generator";
 
 const username = appendUUID('test_admin');
 fixture(`Account Login`)
