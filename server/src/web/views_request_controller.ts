@@ -9,6 +9,7 @@ import {UserCoursesListingViewQuery} from "@server/views/user/user_courses_listi
 import {UserProgressViewQuery} from "@server/views/user_progress/user_progress_view_query";
 import {CourseEnrolledSummaryViewQuery} from "@server/views/course/course_enrolled_summary_view_query";
 import {getLogger} from "@server/log";
+import {CourseEnrolledUserViewQuery} from "@v-user_progress/course_enrolled_user_view_query";
 
 
 export class ViewsRequestWebController extends AbstractWebController {
@@ -20,7 +21,8 @@ export class ViewsRequestWebController extends AbstractWebController {
                  private sectionTrainingViewQuery: SectionViewQuery,
                  private coursesListingViewQuery: UserCoursesListingViewQuery,
                  private userProgressViewQuery: UserProgressViewQuery,
-                 private courseEnrolledSummary: CourseEnrolledSummaryViewQuery) {
+                 private courseEnrolledSummaryViewQuery: CourseEnrolledSummaryViewQuery,
+                 private courseEnrolledUserViewQuery: CourseEnrolledUserViewQuery) {
         super(getLogger('ViewRequestController', 'info'));
 
         this.query = {
@@ -30,7 +32,7 @@ export class ViewsRequestWebController extends AbstractWebController {
             sectionTraining: ({sectionId}) => this.sectionTrainingViewQuery.loadSection(sectionId),
             coursesListing: ({userId}) => this.coursesListingViewQuery.coursesListingView(userId),
             userProgress: ({userId, courseId}) => this.userProgressViewQuery.loadUserCourseProgress({userId, courseId}),
-            courseProgressSummary: ({courseId}) => this.courseEnrolledSummary.searchView({id: courseId})
+            courseProgressSummary: ({courseId}) => this.courseEnrolledSummaryViewQuery.searchView({id: courseId})
         }
     }
 
@@ -47,8 +49,11 @@ export class ViewsRequestWebController extends AbstractWebController {
         }, <ViewsResponse> {});
     }
 
+    async handleSearchViewRequest (req: Request): Promise<void> {}
+
     registerRoutes (router: Router) {
         router.get('/views', this.handle(this.handleViewRequest));
+        // router.get('/views/search', this.handle(this.handleViewRequest));
     }
 
 }

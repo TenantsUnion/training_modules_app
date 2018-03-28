@@ -2,6 +2,10 @@ import sql from 'sql';
 import {BinaryNode, Column, Columns, OrderByValueNode, Query, QueryLike, SQL, Table} from "sql";
 import {Datasource} from "@server/datasource";
 
+/**
+ * Possible sql operations used to customize predicate value of {@link AbstractViewQuery#searchView} to filter
+ * {@link Column} results
+ */
 export enum SqlOp {
     EQUALS = '=',
     NOT_EQUAL = '<>',
@@ -14,15 +18,21 @@ export enum SqlOp {
     IN = 'IN'
 }
 
-export type PredicateObj = { op: SqlOp, val: any };
+/**
+ * Api configuration object for {@link AbstractViewQuery#searchView} query
+ */
 export type SearchParams<Id, Row> = {
     predicates?: {
         [index in keyof Row]?: PredicateObj
-        },
+    },
     id?: Id
     orderBy?: { colName: keyof Row, dir: 'asc' | 'desc' }[]
 };
-export type IdType<Row> = {[index in keyof Row]?: Row[index]};
+export type PredicateObj = { op: SqlOp, val: any };
+/**
+ * Map of {@link SqlOp} to corresponding {@link Column} predicate of node-sql library
+ * {@link
+ */
 const applySqlOp: {[index in SqlOp]?: <Name>(col: Column<Name, any>, val, t: Columns<any>) => BinaryNode} = {
     [SqlOp.EQUALS]: (col, val, t) => col.equals(val),
     [SqlOp.NOT_EQUAL]: (col, val, t) => col.notEquals(val),
@@ -40,6 +50,11 @@ const applySqlOp: {[index in SqlOp]?: <Name>(col: Column<Name, any>, val, t: Col
 
 export abstract class AbstractViewQuery<Id, View, Row> {
 
+    /**
+     *
+     * @param {Id} id
+     * @returns {BinaryNode} Predicate that filters for rows whose 'id' column equals the provided id
+     */
     protected abstract id (id: Id): BinaryNode;
 
     protected abstract paramSelect (): Query<Row>;

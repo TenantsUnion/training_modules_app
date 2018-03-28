@@ -4,9 +4,13 @@ import {CourseStructureRouteGuardMixin} from "@webapp/course/course_route_guards
 import {mapState} from "vuex";
 import {RootGetters, RootState} from "@store/store_types";
 import {COURSE_PROGRESS_SUMMARY_ACTIONS} from "@webapp/course/admin/course_progress_summary/course_progress_summary_store";
+import Vuetable from 'vuetable-2';
 
 @Component({
     mixins: [CourseStructureRouteGuardMixin],
+    components: {
+        Vuetable
+    },
     computed: mapState({
         course: (state: RootState, {currentCourse}: RootGetters) => currentCourse,
         progressSummary: (state, {currentCourseProgressSummary}: RootGetters) => currentCourseProgressSummary,
