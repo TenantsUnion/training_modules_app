@@ -2,7 +2,7 @@ import {Selector} from "testcafe";
 import {LoggedInNavigationDriver} from "@testcafe-root/util/drivers/pages/logged_in_navigation_driver";
 import {landingPage} from "@testcafe-root/util/uri_utils";
 import {LandingPageDriver} from "@testcafe-root/util/drivers/pages/landing_page_driver";
-import {appendUUID} from "@test-shared/uuid_generator";
+import {appendUUID} from "@test-shared/src/uuid_generator";
 
 const username = appendUUID('test_admin');
 fixture(`Account Login`)

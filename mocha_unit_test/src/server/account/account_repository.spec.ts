@@ -1,4 +1,4 @@
-import {appendUUID} from "@test-shared/uuid_generator";
+import {appendUUID} from "@test-shared/src/uuid_generator";
 import {expect} from "chai";
 import {accountRepository} from "@server/config/repository_config";
 import {postgresDb} from "@server/datasource";

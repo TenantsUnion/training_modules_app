@@ -1,12 +1,12 @@
 import {RouteConfig} from "vue-router";
 import {ADMIN_COURSE_ROUTES} from "@webapp/global/routes";
-import CourseEnrolledUsersComponent from "@webapp/course/admin/course_progress_summary/course_progress_summary_component.vue";
 import CourseComponent from "@webapp/course/course_component/course_component.vue";
 import VueEditCourseComponent from "@webapp/course/edit_course_component/edit_course_component.vue";
 import CreateModuleComponent from "@webapp/module/create_module_component/create_module_component.vue";
 import EditSectionComponent from "@webapp/section/edit/edit_section_component.vue";
 import CreateSectionComponent from "@webapp/section/create/create_section_component.vue";
 import EditModuleComponent from "@webapp/module/edit_modules_component/edit_module_component.vue";
+import CourseEnrolledProgressComponent from "@course/course_enrolled_progress/course_enrolled_progress_component.vue";
 
 export const AdminCourseRoutes: RouteConfig[] = [
     {
@@ -44,5 +44,5 @@ export const AdminCourseRoutes: RouteConfig[] = [
         path: 'admin/course/:courseSlug/enrolled-users',
         name: ADMIN_COURSE_ROUTES.enrolledUsers,
         props: true,
-        component: CourseEnrolledUsersComponent
+        component: CourseEnrolledProgressComponent
     }];

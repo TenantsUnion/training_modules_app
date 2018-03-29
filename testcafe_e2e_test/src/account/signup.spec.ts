@@ -1,6 +1,6 @@
 import {Selector} from 'testcafe';
 import {LandingPageDriver} from "../util/drivers/pages/landing_page_driver";
-import {appendUUID} from "@test-shared/uuid_generator";
+import {appendUUID} from "@test-shared/src/uuid_generator";
 const config = require("config");
 
 fixture('Account Signup')

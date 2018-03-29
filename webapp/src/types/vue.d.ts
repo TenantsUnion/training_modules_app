@@ -1,7 +1,6 @@
 /** Extends interfaces in Vue.js and Vuex **/
-import {RootGetters} from "@store/store_types";
-import {RootState} from "@store/store_types";
 import {Store} from "vuex";
+import {RootGetters, RootState} from "@store/store_types";
 
 declare module "vue/types/vue" {
 

@@ -8,7 +8,7 @@ import {statusMessageStoreConfig} from "@webapp/global/status_messages/status_me
 import {trainingStoreConfig} from "@webapp/training/training_store";
 import {availableCoursesStoreConfig} from "@webapp/available_courses/available_courses_store";
 import {courseStoreConfig} from "@webapp/course/course_store";
-import {courseProgressSummaryConfig} from "@webapp/course/admin/course_progress_summary/course_progress_summary_store";
+import {courseProgressSummaryConfig} from "@webapp/course/course_enrolled_progress/course_progress_summary/course_progress_summary_store";
 
 /**
  * Represents an {@link ActionContext} whose dispatch and commit properties have been wrapped with {@link SinonSpy}s

@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import {CreateCourseEntityPayload} from '@shared/courses';
-import {FormState} from '@webapp/vue-form';
+import {FormState} from '@webapp/types/vue-form';
 import {Segment} from '@shared/segment';
 import {Location} from "vue-router";
 import {ADMIN_COURSE_ROUTES, USER_ROUTES} from "@webapp/global/routes";

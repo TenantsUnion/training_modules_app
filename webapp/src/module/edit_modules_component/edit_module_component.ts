@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import draggable from 'vuedraggable';
 import Component from 'vue-class-component';
-import VueForm from '@webapp/vue-form';
+import VueForm from '@webapp/types/vue-form';
 import {SaveModuleEntityPayload, ViewModuleData} from '@shared/modules';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '@store/store_types';

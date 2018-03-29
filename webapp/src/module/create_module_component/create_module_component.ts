@@ -1,4 +1,4 @@
-import VueForm from "@webapp/vue-form";
+import VueForm from "@webapp/types/vue-form";
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Segment} from "@shared/segment";

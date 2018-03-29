@@ -1,7 +1,7 @@
 import {
     CourseProgressSummaryAccessors,
     CourseProgressSummaryState
-} from "@course/admin/course_progress_summary/course_progress_summary_store";
+} from "@course/course_enrolled_progress/course_progress_summary/course_progress_summary_store";
 import {CourseAccessors, CourseState} from "@course/course_store";
 import {StatusMessagesState} from "@global/status_messages/status_messages_store";
 import {TrainingAccessors, TrainingState} from "@training/training_store";

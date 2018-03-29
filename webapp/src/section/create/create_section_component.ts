@@ -1,6 +1,6 @@
 import Component from 'vue-class-component';
 import Vue from 'vue';
-import VueForm from '@webapp/vue-form';
+import VueForm from '@webapp/types/vue-form';
 import {CreateSectionEntityPayload} from '@shared/sections';
 import {PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";

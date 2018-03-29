@@ -5,7 +5,7 @@ import {CreateSectionEntityPayload, SectionIdMap} from '@shared/sections';
 import {ContentQuestionsDelta} from '@shared/training_entity';
 import {CommandMetaData, CommandType} from "@shared/entity";
 import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
-import {appendUUID} from "@test-shared/uuid_generator";
+import {appendUUID} from "@test-shared/src/uuid_generator";
 import Delta from "quill-delta";
 import {AnswerType, QuestionType} from "@shared/questions";
 import {toAddDeltaArrOps} from "@shared/delta/diff_key_array";

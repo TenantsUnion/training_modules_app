@@ -1,4 +1,4 @@
-import {store} from "@store/store";
+import {appGetters, store} from "@store/store";
 import {NavigationGuard, RouteConfig} from "vue-router";
 import {Vue} from "vue/types/vue";
 import CourseComponent from './course_component/course_component.vue';
@@ -19,8 +19,7 @@ const refreshProgress: NavigationGuard = async function (this: Vue, to, from, ne
     }
     let courseSlug = to.params.courseSlug;
     if (courseSlug) {
-        console.log(this.$store);
-        await this.$store.dispatch(USER_PROGRESS_ACTIONS.LOAD_USER_PROGRESS, this.$getters.getCourseIdFromSlug(courseSlug));
+        await store.dispatch(USER_PROGRESS_ACTIONS.LOAD_USER_PROGRESS, appGetters.getCourseIdFromSlug(courseSlug));
     }
     next();
 };

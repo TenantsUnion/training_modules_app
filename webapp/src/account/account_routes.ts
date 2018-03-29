@@ -1,8 +1,8 @@
 import {RouteConfig} from 'vue-router';
 import LoginComponent from './login/login_component.vue';
 import SignupComponent from "./signup/signup_component.vue";
-import VueForm from "../vue-form";
-import {FormField} from "../vue-form";
+import VueForm from "../types/vue-form";
+import {FormField} from "../types/vue-form";
 
 
 export const LOGIN_ROUTE = '/login';

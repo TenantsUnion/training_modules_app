@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import VueForm from "@webapp/vue-form";
+import VueForm from "@webapp/types/vue-form";
 import {appRouter} from "@webapp/app_router";
 import QuillComponent from '@webapp/global/quill/quill_component';
 import {ContentEntity} from "@shared/content";

@@ -2,7 +2,7 @@ import {AppGetter, TypedAction, VuexModuleConfig} from "@store/store_types";
 import Vue from 'vue';
 import {CourseEnrolledSummaryView} from "@shared/course_progress_summary";
 import {Mutation} from "vuex";
-import {loadCourseProgressSummary} from "@webapp/course/admin/course_progress_summary/course_progress_summary_requests";
+import {loadCourseProgressSummary} from "@course/course_enrolled_progress/course_progress_summary/course_progress_summary_requests";
 
 export interface CourseProgressSummaryState {
     summaries: { [courseId: string]: CourseEnrolledSummaryView }

@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import VueForm from '@webapp/vue-form';
+import VueForm from '@webapp/types/vue-form';
 import {SaveSectionEntityPayload, ViewSectionData} from '@shared/sections';
 import {mapGetters, mapState} from 'vuex';
 import {Watch} from 'vue-property-decorator';

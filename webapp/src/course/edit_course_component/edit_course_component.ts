@@ -9,7 +9,7 @@ import {PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
 import {CourseTrainingComponent} from "@webapp/training/training_components";
 import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
-import VueForm from "@webapp/vue-form";
+import VueForm from "@webapp/types/vue-form";
 
 @Component({
     data: () => {
