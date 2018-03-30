@@ -32,7 +32,7 @@ export class ViewsRequestWebController extends AbstractWebController {
             sectionTraining: ({sectionId}) => this.sectionTrainingViewQuery.loadSection(sectionId),
             coursesListing: ({userId}) => this.coursesListingViewQuery.coursesListingView(userId),
             userProgress: ({userId, courseId}) => this.userProgressViewQuery.loadUserCourseProgress({userId, courseId}),
-            courseProgressSummary: ({courseId}) => this.courseEnrolledSummaryViewQuery.searchView({id: courseId})
+            courseProgressSummary: ({courseId}) => this.courseEnrolledSummaryViewQuery.searchView({id: courseId}),
         }
     }
 
@@ -53,6 +53,7 @@ export class ViewsRequestWebController extends AbstractWebController {
 
     registerRoutes (router: Router) {
         router.get('/views', this.handle(this.handleViewRequest));
+        router.get('/views/search')
         // router.get('/views/search', this.handle(this.handleViewRequest));
     }
 

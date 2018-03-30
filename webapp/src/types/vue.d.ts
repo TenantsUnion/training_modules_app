@@ -4,7 +4,6 @@ import {RootGetters, RootState} from "@store/store_types";
 
 declare module "vue/types/vue" {
 
-
     interface Vue {
         $getters: RootGetters
         $state: RootState

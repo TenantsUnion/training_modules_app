@@ -1,7 +1,15 @@
 import {UserCourseProgressView} from "@shared/user_progress";
 
-export interface CourseEnrolledUserView extends UserCourseProgressView {
+export interface EnrolledUserView extends UserCourseProgressView {
     username: string;
+}
+export interface CourseEnrolledUserView {
+    /**
+     * Id of course
+     */
+    id: string;
+    users: EnrolledUserView[];
+    searchCriteria: any;
 }
 
 /**

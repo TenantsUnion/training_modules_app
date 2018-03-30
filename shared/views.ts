@@ -2,7 +2,7 @@ import {CoursesListingView, ViewCourseData, ViewCourseStructure} from "@shared/c
 import {ViewModuleData} from "@shared/modules";
 import {ViewSectionData} from "@shared/sections";
 import {UserCourseProgressView} from "@shared/user_progress";
-import {CourseEnrolledSummaryView} from "@shared/course_progress_summary";
+import {CourseEnrolledSummaryView, CourseEnrolledUserView} from "@shared/course_progress_summary";
 
 export interface ViewsRequestParams {
     courseStructure?: boolean;
@@ -26,4 +26,5 @@ export interface ViewsResponse {
     coursesListing?: CoursesListingView;
     userProgress?: UserCourseProgressView;
     courseProgressSummary?: CourseEnrolledSummaryView;
+    courseEnrolledUser?: CourseEnrolledUserView;
 }

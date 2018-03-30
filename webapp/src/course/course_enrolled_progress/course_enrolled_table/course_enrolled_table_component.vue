@@ -1,6 +1,6 @@
 <template>
     <div>
-        <vuetable ref="vuetable" :fields="fields" api-url="" :http-fetch="httpFetch"></vuetable>
+        <table-config :fetch="fetch" :fields="fields" :transform="transform"></table-config>
     </div>
 </template>
 <script lang="ts" src="./course_enrolled_table_component.ts"></script>

@@ -37,6 +37,9 @@
       "@global/*": [
         "./src/global/*"
       ],
+      "@components/*": [
+        "./src/components/*"
+      ],
       "@training/*": [
         "./src/training/*"
       ],

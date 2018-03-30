@@ -56,6 +56,7 @@ module.exports = {
             '@shared': path.resolve(__dirname, '../../shared'),
             '@karma_unit_test': path.resolve(__dirname, '../karma_unit_test/src'),
             '@webapp': path.resolve(__dirname, '../src'),
+            "@components": path.resolve(__dirname, "../src/components"),
             "@global": path.resolve(__dirname, "../src/global"),
             "@training": path.resolve(__dirname, "../src/training"),
             "@course": path.resolve(__dirname, "../src/course"),
