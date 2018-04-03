@@ -1,13 +1,11 @@
 import {storeMixin} from "@store/store_mixin";
 import {appRouter, initRouter} from './app_router';
-import Vuex from 'vuex';
 import Vue from 'vue';
 import {jqueryMixin, registerGlobalComponents} from './globals';
 import App from './app.vue';
 import {store} from "@webapp/store/store";
+import {refsVueMixin} from '@components/refs_mixin';
 
-// load javascript functionality for foundation
-require('foundation-sites');
 registerGlobalComponents();
 
 // route modules use store and appGetters so they should be initiazized after that part of app.ts is done
@@ -15,6 +13,7 @@ registerGlobalComponents();
 initRouter();
 jqueryMixin();
 storeMixin();
+refsVueMixin();
 
 let app = new Vue({
     components: {
@@ -27,3 +26,5 @@ let app = new Vue({
 
 
 
+// load javascript functionality for foundation
+require('foundation-sites');

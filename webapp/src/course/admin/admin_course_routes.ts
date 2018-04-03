@@ -6,13 +6,15 @@ import CreateModuleComponent from "@webapp/module/create_module_component/create
 import EditSectionComponent from "@webapp/section/edit/edit_section_component.vue";
 import CreateSectionComponent from "@webapp/section/create/create_section_component.vue";
 import EditModuleComponent from "@webapp/module/edit_modules_component/edit_module_component.vue";
-import CourseEnrolledProgressComponent from "@course/course_enrolled_progress/course_enrolled_progress_component.vue";
+import CourseEnrolledProgressComponent from "@course/course_enrolled/course_enrolled_page_component.vue";
+import {currentCourseGuard} from '@course/course_route_guards';
 
 export const AdminCourseRoutes: RouteConfig[] = [
     {
         path: 'admin/course/:courseSlug',
         props: true,
         component: CourseComponent,
+        beforeEnter: currentCourseGuard,
         children: [
             {
                 path: 'edit',
@@ -43,6 +45,7 @@ export const AdminCourseRoutes: RouteConfig[] = [
     }, {
         path: 'admin/course/:courseSlug/enrolled-users',
         name: ADMIN_COURSE_ROUTES.enrolledUsers,
+        beforeEnter: currentCourseGuard,
         props: true,
         component: CourseEnrolledProgressComponent
     }];

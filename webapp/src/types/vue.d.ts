@@ -8,6 +8,7 @@ declare module "vue/types/vue" {
         $getters: RootGetters
         $state: RootState
         $: JQueryStatic
+        normalizeRefs: <R extends object = object>(any: (R | R[] | any)) => R[];
     }
 
     interface VueConstructor<V extends Vue = Vue> {
@@ -15,5 +16,6 @@ declare module "vue/types/vue" {
         $state: RootState,
         $store: Store<RootState>
         $: JQueryStatic
+        normalizeRefs: <R extends object = object>(any: (R | R[])) => R[];
     }
 }

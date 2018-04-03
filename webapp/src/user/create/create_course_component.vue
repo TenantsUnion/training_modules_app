@@ -1,5 +1,5 @@
 <template>
-    <div class="main grid-container grid-padding-x">
+    <div class="grid-container grid-padding-x">
         <div class="grid-x">
             <div class="cell small-12">
                 <h3>Create Course</h3>

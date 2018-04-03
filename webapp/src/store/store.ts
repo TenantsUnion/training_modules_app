@@ -1,16 +1,16 @@
-import {courseProgressSummaryConfig} from "@course/course_enrolled_progress/course_progress_summary/course_progress_summary_store";
 import {courseStoreConfig} from "@course/course_store";
 import {editCourseCommandStoreConfig} from "@course/edit_course_command_store";
 import {statusMessageStoreConfig} from "@global/status_messages/status_messages_store";
 import {trainingStoreConfig} from "@training/training_store";
 import {availableCoursesStoreConfig} from "@webapp/available_courses/available_courses_store";
-import {AppGetter, RootGetters, RootState} from "@store/store_types";
+import {RootGetters, RootState} from "@store/store_types";
 import {coursesListingStoreConfig} from "@webapp/user/store/courses_listing_store";
 import {userStoreConfig} from "@webapp/user/store/user_store";
 import {userProgressStoreConfig} from "@webapp/user_progress/user_progress_store";
 import Vue from "vue";
 import {StoreOptions, Store} from "vuex";
 import Vuex from "vuex";
+import {courseProgressSummaryConfig} from '@course/course_enrolled/course_enrolled_summary/course_enrolled_summary_store';
 
 
 export const storeConfig: StoreOptions<RootState> = {

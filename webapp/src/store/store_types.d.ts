@@ -1,7 +1,3 @@
-import {
-    CourseProgressSummaryAccessors,
-    CourseProgressSummaryState
-} from "@course/course_enrolled_progress/course_progress_summary/course_progress_summary_store";
 import {CourseAccessors, CourseState} from "@course/course_store";
 import {StatusMessagesState} from "@global/status_messages/status_messages_store";
 import {TrainingAccessors, TrainingState} from "@training/training_store";
@@ -10,6 +6,10 @@ import {CoursesListingAccessors, CoursesListingState} from "@webapp/user/store/c
 import {UserState} from "@webapp/user/store/user_store";
 import {UserProgressAccessors, UserProgressState} from "@webapp/user_progress/user_progress_store";
 import {Action, ActionContext, ActionTree, Getter, GetterTree, Module, MutationTree} from "vuex";
+import {
+    CourseProgressSummaryAccessors,
+    CourseProgressSummaryState
+} from '@course/course_enrolled/course_enrolled_summary/course_enrolled_summary_store';
 
 
 /**

@@ -4,7 +4,7 @@ import {COURSE_ACTIONS} from "@webapp/course/course_store";
 import {Vue} from "vue/types/vue";
 
 const undefinedParam = (param): boolean => !param || param === 'undefined';
-const courseStructureRouteGuard: NavigationGuard = async function (this: Vue, to: any, from: any, next) {
+export const currentCourseGuard: NavigationGuard = async function (this: Vue, to: any, from: any, next) {
     let courseSlug = to.params.courseSlug;
     let moduleSlug = to.params.moduleSlug;
     let sectionSlug = to.params.sectionSlug;
@@ -29,8 +29,8 @@ const courseStructureRouteGuard: NavigationGuard = async function (this: Vue, to
 };
 
 export const CourseStructureRouteGuardMixin = {
-    beforeRouteEnter: courseStructureRouteGuard,
-    beforeRouteUpdate: courseStructureRouteGuard
+    beforeRouteEnter: currentCourseGuard,
+    beforeRouteUpdate: currentCourseGuard
 };
 
 

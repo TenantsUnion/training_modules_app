@@ -18,14 +18,19 @@ declare module "vuetable-2" {
         data: object[]
     }
 
-    interface Field<N extends String = string> {
+    interface Field<N extends string = string> {
         /**
          * The name of the property on the row data object
          */
         name: N;
         title?: string;
         sortField?: string;
-        direction?: 'desc' | 'asc'
+    }
+
+    interface SortOrderField<N extends string = string> {
+        field: N;
+        sortField: string;
+        direction: 'desc' | 'asc'
     }
 
     interface VuetableConfig {
@@ -47,25 +52,27 @@ declare module "vuetable-2" {
 
 
     export interface CssConfig {
-          tableClass: string,
-          loadingClass: string,
-          ascendingIcon: string,
-          descendingIcon: string,
-          ascendingClass: string,
-          descendingClass: string,
-          sortableIcon: string,
-          detailRowClass: string,
-          handleIcon: string,
-          tableBodyClass: string,
-          tableHeaderClass: string
+        tableClass: string,
+        loadingClass: string,
+        ascendingIcon: string,
+        descendingIcon: string,
+        ascendingClass: string,
+        descendingClass: string,
+        sortableIcon: string,
+        detailRowClass: string,
+        handleIcon: string,
+        tableBodyClass: string,
+        tableHeaderClass: string
     }
 
     type HttpFetchFn = (apiUrl: string, httpOptions: HttpOptions) => Promise<{ data: any[] }>;
 
+    type PaginationOptions = {
+        page: number,
+        per_page: number,
+    };
     type HttpOptions = {
-        params: {
-           [index: string]: any
-        }
+        params: PaginationOptions & { sort: string }
     };
 
     type TransformFn<A, B = DataFormat> = (input: A) => B

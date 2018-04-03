@@ -67,7 +67,8 @@
 // ---------
 
 $global-font-size: 100%;
-$global-width: rem-calc(1200);
+// defines max width of grid container
+$global-width: rem-calc(1500);
 $global-lineheight: 1.5;
 $foundation-palette: (
         primary: #1779ba,
@@ -1797,13 +1798,13 @@ $xy-block-grid-max: 8;
 //  55. Top Bar
 //  56. Xy Grid
 
-@import '../../../../node_modules/foundation-sites/scss/util/util';
+@import '~foundation-sites/scss/util/util';
 
 // 1. Global
 // ---------
 
 $global-font-size: 100%;
-$global-width: rem-calc(1200);
+$global-width: rem-calc(1500);
 $global-lineheight: 1.5;
 $foundation-palette: (
         primary: #1779ba,
