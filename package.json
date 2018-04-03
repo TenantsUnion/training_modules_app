@@ -15,7 +15,6 @@
     "webpack-build": "cross-env NODE_ENV=production node webapp/webpack/build.js",
     "webpack-dev": "webpack-dev-server --config webapp/webpack/dev.webpack.config.js",
     "server-build": "tsc --project server/tsconfig.json --outDir server/dist",
-    "watch-webapp": "",
     "watch-dev": "concurrently -k -p \"[{name}]\" -n \"Server-Build,Server,Webpack\" -c \"cyan.bold,green.bold,yellow.bold\"  \"npm run watch-build-server\" \"npm run nodemon-start\" \"npm run webpack-dev\"",
     "watch-server": "concurrently -k -p \"[{name}]\" -n \"Server-Build,Server\" -c \"cyan.bold,green.bold\"  \"npm run watch-build-server\" \"npm run nodemon-start\"",
     "watch-build-server": "tsc --pretty --watch --project server/tsconfig.json --outDir server/dist",
