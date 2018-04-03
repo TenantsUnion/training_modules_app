@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {snakeToCamelCase, traverseSnakeToCamelCase} from '@server/util/snake_to_camel_case_util';
+import {snakeToCamelCase, traverseSnakeToCamelCase} from '@shared/util/snake_to_camel_case_util';
 
 describe('Utility that converts snake case to camel case', function () {
     it('should convert time_estimate to timeEstimate', function () {

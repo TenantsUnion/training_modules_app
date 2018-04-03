@@ -1,4 +1,4 @@
-import {CourseEnrolledUserView} from "@shared/course_progress_summary";
+import {CourseEnrolledView, EnrolledUserView} from "@shared/course_progress_summary";
 import {sqlBuilder} from "@server/views/sql";
 import {Query} from "sql";
 import {CourseProgressRow, courseProgressTable, getColumns, userTable} from "@server/views/table_definitions";
@@ -11,7 +11,7 @@ type CourseEnrolledUserRow = CourseProgressRow & { username: string };
  * Listing of an enrolled users progress in a course
  */
 export class CourseEnrolledUserViewQuery
-    extends AbstractCourseViewQuery<CourseEnrolledUserView, CourseEnrolledUserRow> {
+    extends AbstractCourseViewQuery<EnrolledUserView[], CourseEnrolledUserRow> {
 
     protected paramSelect (): Query<CourseEnrolledUserRow> {
         return sqlBuilder().select(`

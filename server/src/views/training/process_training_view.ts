@@ -1,6 +1,6 @@
 import {QuillEditorData} from "@shared/quill_editor";
 import {QuestionData, QuestionOptionData, QuestionQuillData} from "@shared/questions";
-import {orderObjByIds, toIdObjMap} from "@server/util/id_entity";
+import {orderObjByIds, toIdObjMap} from "@shared/util/id_array_util";
 import {ViewTrainingEntityDescription} from "@shared/training_entity";
 import {ViewCourseData} from "@shared/courses";
 

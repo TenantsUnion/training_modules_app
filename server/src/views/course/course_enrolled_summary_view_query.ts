@@ -2,7 +2,7 @@ import {CourseEnrolledSummaryView} from "@shared/course_progress_summary";
 import {Columns, Query, QueryLike} from "sql";
 import {AbstractViewQuery} from "@server/views/abstract_view_query";
 import {sqlBuilder} from "@server/views/sql";
-import {courseProgressTable} from "@server/views/table_definitions";
+import {courseProgressTable, courseTable} from "@server/views/table_definitions";
 
 type CourseEnrolledSummaryRow = {
     id: string,
@@ -19,15 +19,15 @@ export class CourseEnrolledSummaryViewQuery
 
     protected paramSelect (): Query<CourseEnrolledSummaryRow> {
         return sqlBuilder().select(`
-          cp.id, COUNT(*) :: INT AS total_enrolled,
+          c.id, COUNT(cp.*) :: INT AS total_enrolled,
             coalesce(SUM(CASE WHEN cp.course_completed IS NOT NULL THEN 1 ELSE 0 END), 0) :: INT AS total_completed
-          FROM tu.course_progress cp
+          FROM tu.course_progress cp right join tu.course c on c.id = cp.id
         `);
     }
 
     protected get columns () {
         return <Columns<CourseEnrolledSummaryRow>> {
-            id: courseProgressTable.id,
+            id: courseTable.id,
             // these two columns probably don't work...
             total_enrolled: courseProgressTable.id.count().as('total_enrolled'),
             total_completed: courseProgressTable.course_completed.sum().as('total_completed')
@@ -45,7 +45,7 @@ export class CourseEnrolledSummaryViewQuery
     }
 
     id(id: string) {
-        return courseProgressTable.id.equals(id);
+        return courseTable.id.equals(id);
     }
 
 }

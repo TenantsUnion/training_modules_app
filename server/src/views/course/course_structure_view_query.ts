@@ -1,6 +1,6 @@
 import {AbstractCourseViewQuery} from "./abstract_course_view_query";
 import {ViewCourseStructure} from "@shared/courses";
-import {orderObjByIds, toIdObjMap} from "@server/util/id_entity";
+import {orderObjByIds, toIdObjMap} from "@shared/util/id_array_util";
 import {CourseRow, courseTable} from "@server/views/table_definitions";
 import {sqlBuilder} from "@server/views/sql";
 import {Query, QueryLike, Table} from "sql";

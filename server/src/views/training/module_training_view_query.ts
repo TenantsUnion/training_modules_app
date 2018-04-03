@@ -1,6 +1,6 @@
 import {ViewModuleData} from '@shared/modules';
 import {processContentQuestions} from "./process_training_view";
-import {orderObjByIds, toIdObjMap} from "@server/util/id_entity";
+import {orderObjByIds, toIdObjMap} from "@shared/util/id_array_util";
 import {getLogger} from "@server/log";
 import {Datasource} from "@server/datasource";
 

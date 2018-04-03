@@ -1,4 +1,4 @@
-import {traverseSnakeToCamelCase} from './util/snake_to_camel_case_util';
+import {traverseSnakeToCamelCase} from '@shared/util/snake_to_camel_case_util';
 import {moment} from '@shared/normalize_imports';
 import {getLogger} from './log';
 import {Pool, types} from 'pg';
