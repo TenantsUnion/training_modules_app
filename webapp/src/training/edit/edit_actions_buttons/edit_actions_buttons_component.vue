@@ -6,4 +6,4 @@
         </div>
     </div>
 </template>
-<script lang="ts" src="./edit_buttons_component.ts"></script>
+<script lang="ts" src="./edit_actions_buttons_component.ts"></script>

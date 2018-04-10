@@ -4,8 +4,34 @@ import {NavigationGuard} from "vue-router";
 import {mapState} from "vuex";
 import {RootGetters, RootState} from "@store/store_types";
 import {ComponentOptions} from "vue";
-import {Vue} from "vue/types/vue";
-import EditButtonsComponent from "@webapp/training/edit_buttons/edit_buttons_component.vue";
+import EditActionsButtonsComponent from "@webapp/training/edit/edit_actions_buttons/edit_actions_buttons_component.vue";
+import Vue from "vue";
+import Component from 'vue-class-component';
+import TrainingSegmentsComponent from "./training_segments/training_segments_component.vue";
+import SubTrainingComponent from "./sub_training/sub_training_component.vue";
+
+
+interface SubTraining {
+    title: string;
+    description?: string;
+    timeEstimate?: number;
+    subTrainingsLabel?: string;
+    subTrainings?: SubTraining[]
+}
+
+@Component({
+    components: {
+        'training-segments': TrainingSegmentsComponent,
+        'sub-training': SubTrainingComponent
+    }
+})
+export default class TrainingComponent extends Vue {
+    title: string;
+    description: string;
+    subTrainingsLabel: string;
+    trainingSegments: any[];
+    subTrainings: any[];
+}
 
 const courseTrainingGuard: NavigationGuard = async function (to: any, from: any, next) {
     const {currentCourseId} = store.state.course;
@@ -41,7 +67,7 @@ const sectionTrainingGuard: NavigationGuard = async function (this: Vue, to: any
     }
 };
 
-export const TrainingComponent: ComponentOptions<Vue> = {
+export const trainingComponent: ComponentOptions<Vue> = {
     computed: {
         ...mapState<RootState>({
             loading: (state, {trainingLoading, currentCourseLoading}: RootGetters) =>
@@ -49,24 +75,26 @@ export const TrainingComponent: ComponentOptions<Vue> = {
         })
     },
     components: {
-        'edit-buttons': EditButtonsComponent
+        'edit-actions-buttons': EditActionsButtonsComponent
     }
 };
 
 export const CourseTrainingComponent: ComponentOptions<Vue> = {
     beforeRouteEnter: courseTrainingGuard,
     beforeRouteUpdate: courseTrainingGuard,
-    extends: TrainingComponent
+    extends: trainingComponent
 };
 
 export const ModuleTrainingComponent: ComponentOptions<Vue> = {
     beforeRouteEnter: moduleTrainingGuard,
     beforeRouteUpdate: moduleTrainingGuard,
-    extends: TrainingComponent
+    extends: trainingComponent
 };
 
 export const SectionTrainingComponent: ComponentOptions<Vue> = {
     beforeRouteEnter: sectionTrainingGuard,
     beforeRouteUpdate: sectionTrainingGuard,
-    extends: TrainingComponent
+    extends: trainingComponent
 };
+
+

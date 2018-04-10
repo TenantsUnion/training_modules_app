@@ -60,7 +60,6 @@
                     </div>
                 </div>
             </vue-form>
-            <edit-buttons></edit-buttons>
         </template>
     </div>
 </template>

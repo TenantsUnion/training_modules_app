@@ -7,7 +7,7 @@ import Component from "vue-class-component";
     },
     props: {}
 })
-export class EditButtonsComponent extends Vue {
+export class EditActionsButtonsComponent extends Vue {
 
     save () {
         console.log('saved!');
@@ -18,4 +18,4 @@ export class EditButtonsComponent extends Vue {
     }
 }
 
-export default EditButtonsComponent;
+export default EditActionsButtonsComponent;
