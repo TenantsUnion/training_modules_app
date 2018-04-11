@@ -5,15 +5,15 @@ import VueForm from '@webapp/types/vue-form';
 import {SaveModuleEntityPayload, ViewModuleData} from '@shared/modules';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '@store/store_types';
-import {TrainingEntityDiffDelta, ViewTrainingEntityDescription} from '@shared/training_entity';
+import {TrainingEntityDiffDelta, TrainingDescriptionView} from '@shared/training';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {Watch} from 'vue-property-decorator';
 import EditTrainingSegmentsComponent from "@webapp/training/edit_training_segments/edit_training_segments_component";
 import {ADMIN_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
-import {ModuleTrainingComponent} from "@webapp/training/training_components";
 import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
+import {ModuleTrainingComponent} from '@training/training_route_guards';
 
 @Component({
     data: () => {
@@ -47,7 +47,7 @@ export class EditModuleComponent extends Vue {
     formstate: VueForm.FormState;
     storedModule: ViewModuleData;
     module: ViewModuleData;
-    sections: ViewTrainingEntityDescription[] = [];
+    sections: TrainingDescriptionView[] = [];
     currentCourseId: string;
     currentModuleId: string;
     removeSections: { [index: string]: boolean };
@@ -124,7 +124,7 @@ export class EditModuleComponent extends Vue {
         this.module.timeEstimate = time;
     }
 
-    sectionTitleStyles (section: ViewTrainingEntityDescription) {
+    sectionTitleStyles (section: TrainingDescriptionView) {
         return {
             "text-decoration": this.removeSections[section.id] ? "line-through" : "none"
         };

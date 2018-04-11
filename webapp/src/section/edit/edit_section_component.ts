@@ -5,13 +5,13 @@ import {SaveSectionEntityPayload, ViewSectionData} from '@shared/sections';
 import {mapGetters, mapState} from 'vuex';
 import {Watch} from 'vue-property-decorator';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
-import {TrainingEntityDiffDelta} from '@shared/training_entity';
+import {TrainingEntityDiffDelta} from '@shared/training';
 import EditTrainingSegmentsComponent from "@webapp/training/edit_training_segments/edit_training_segments_component";
 import {PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
-import {SectionTrainingComponent} from "@webapp/training/training_components";
 import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
 import {RootState} from "@store/store_types";
+import {SectionTrainingComponent} from '@training/training_route_guards';
 
 @Component({
     data: () => {

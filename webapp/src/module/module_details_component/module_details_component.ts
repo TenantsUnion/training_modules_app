@@ -5,8 +5,8 @@ import {QuestionSubmission, TrainingProgressUpdateData} from "@shared/user_progr
 import {ViewModuleData} from "@shared/modules";
 import {USER_PROGRESS_ACTIONS} from "@webapp/user_progress/user_progress_store";
 import {CourseMode} from "@webapp/course/course_store";
-import {ModuleTrainingComponent} from "@webapp/training/training_components";
 import {RootGetters, RootState} from "@store/store_types";
+import {ModuleTrainingComponent} from '@training/training_route_guards';
 
 @Component({
     computed: {

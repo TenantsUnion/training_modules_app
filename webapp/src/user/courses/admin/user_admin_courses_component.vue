@@ -10,16 +10,10 @@
                class="content-list">
             <tr v-for="course in courses"
                 class="content-item">
-                <td>{{ course.title }}</td>
+                <td><router-link :to="courseLocation(course)">{{ course.title }}</router-link></td>
                 <td>
                     <button class="enrolled-users-btn button primary"
                             @click="enrolledUsers(course)">Enrolled
-                    </button>
-                </td>
-                <td>
-                    <button class="edit-course-btn button primary"
-                            @click="editCourse(course)">
-                        Edit
                     </button>
                 </td>
             </tr>

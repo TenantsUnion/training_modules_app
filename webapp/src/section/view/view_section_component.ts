@@ -9,7 +9,7 @@ import {ViewSectionData} from "@shared/sections";
 import {USER_PROGRESS_ACTIONS} from "@webapp/user_progress/user_progress_store";
 import {RootGetters, RootState} from "@store/store_types";
 import {COURSE_ACTIONS} from "@webapp/course/course_store";
-import {SectionTrainingComponent} from "@webapp/training/training_components";
+import {SectionTrainingComponent} from '@training/training_route_guards';
 
 
 @Component({

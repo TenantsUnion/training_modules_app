@@ -7,9 +7,9 @@ import {diffBasicPropsCourseProps, SaveCourseEntityPayload, ViewCourseData} from
 import EditTrainingSegmentsComponent from "@webapp/training/edit_training_segments/edit_training_segments_component";
 import {PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
-import {CourseTrainingComponent} from "@webapp/training/training_components";
 import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
 import VueForm from "@webapp/types/vue-form";
+import {CourseTrainingComponent} from '@training/training_route_guards';
 
 @Component({
     data: () => {
@@ -23,9 +23,6 @@ import VueForm from "@webapp/types/vue-form";
     },
     extends: CourseTrainingComponent,
     computed: {
-        ...mapGetters({
-            getSlugFromCourseId: 'getSlugFromCourseId'
-        }),
         ...mapState<RootState>({
             storedCourse: (state, {currentTraining}: RootGetters) => currentTraining
         })
@@ -46,12 +43,7 @@ export class EditCourseComponent extends Vue {
         }
     }
 
-    async save() {
-        console.log('this shouldn\'t print')
-    }
-    async saved () {
-
-
+    async save () {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;

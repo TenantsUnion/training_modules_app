@@ -15,6 +15,7 @@ jqueryMixin();
 storeMixin();
 refsVueMixin();
 
+
 let app = new Vue({
     components: {
         app: App
@@ -26,5 +27,3 @@ let app = new Vue({
 
 
 
-// load javascript functionality for foundation
-require('foundation-sites');

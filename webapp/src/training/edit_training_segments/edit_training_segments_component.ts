@@ -6,7 +6,7 @@ import QuillComponent from '@webapp/global/quill/quill_component';
 import {
     ContentSegment, isContentSegment, isQuestionSegment, QuestionSegment, SegmentArrayElement
 } from '@shared/segment';
-import {ContentQuestionsDelta} from '@shared/training_entity';
+import {ContentQuestionsDelta} from '@shared/training';
 import {
     AnswerType, isEmptyQuestionChanges, isQuestionData, QuestionQuillData, QuestionType
 } from '@shared/questions';

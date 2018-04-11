@@ -7,7 +7,7 @@ import {
 import QuestionComponent from '@webapp/training/edit_question/edit_question_component';
 import Vue from 'vue';
 import {toAddDeltaArrOps} from '@shared/delta/diff_key_array';
-import {ContentQuestionsDelta} from '@shared/training_entity';
+import {ContentQuestionsDelta} from '@shared/training';
 import QuillComponent from '@webapp/global/quill/quill_component';
 import {QuillEditorData} from "@shared/quill_editor";
 import {QuestionQuillData} from "@shared/questions";

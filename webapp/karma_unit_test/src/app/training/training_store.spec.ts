@@ -4,7 +4,6 @@ import {storeConfig} from "@webapp/store/store";
 import {Store} from "vuex";
 import {
     TRAINING_MUTATIONS, TrainingAccessors, trainingActions, trainingMutations, trainingStoreConfig,
-    TrainingType
 } from "@webapp/training/training_store";
 import {viewsHttpService} from "@webapp/views/views_http_service";
 import {ViewCourseData} from "@shared/courses";
@@ -14,6 +13,7 @@ import {
     actionContextMutations, MutationCall, resetState, restoreStoreContext,
     spyActionContext
 } from "@karma_unit_test/util/test_vuex_util";
+import {TrainingType} from '@shared/training';
 
 describe('Training Store', function () {
     const courseId = 'CO1';
@@ -23,7 +23,8 @@ describe('Training Store', function () {
         version: 0,
         modules: [],
         active: true,
-        contentQuestions: []
+        contentQuestions: [],
+        trainingType: TrainingType.COURSE
     };
 
     const moduleId = 'MO1';
@@ -33,7 +34,8 @@ describe('Training Store', function () {
         version: 0,
         sections: [],
         active: true,
-        contentQuestions: []
+        contentQuestions: [],
+        trainingType: TrainingType.MODULE
     };
 
     const sectionId = 'SE1';
@@ -42,7 +44,8 @@ describe('Training Store', function () {
         title: 'section title',
         version: 0,
         active: true,
-        contentQuestions: []
+        contentQuestions: [],
+        trainingType: TrainingType.SECTION
     };
     const store = new Store(storeConfig);
 
@@ -204,15 +207,15 @@ describe('Training Store', function () {
         it('should return the currentTrainingType', function () {
             it('should return \'COURSE\' training type', function () {
                 store.commit(TRAINING_MUTATIONS.SET_CURRENT_TRAINING, courseId);
-                expect(getters.currentTrainingType).to.eq(TrainingType.course);
+                expect(getters.currentTrainingType).to.eq(TrainingType.COURSE);
             });
             it('should return \'MODULE\' training type', function () {
                 store.commit(TRAINING_MUTATIONS.SET_CURRENT_TRAINING, moduleId);
-                expect(getters.currentTrainingType).to.eq(TrainingType.module);
+                expect(getters.currentTrainingType).to.eq(TrainingType.MODULE);
             });
             it('should return \'SECTION\' training type', function () {
                 store.commit(TRAINING_MUTATIONS.SET_CURRENT_TRAINING, sectionId);
-                expect(getters.currentTrainingType).to.eq(TrainingType.section);
+                expect(getters.currentTrainingType).to.eq(TrainingType.SECTION);
             });
         });
     });

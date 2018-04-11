@@ -4,8 +4,8 @@ import Component from 'vue-class-component';
 @Component({
 
 })
-export class EditPanelComponent extends Vue {
+export class TrainingFieldsComponent extends Vue {
 
 }
 
-export default EditPanelComponent;
+export default TrainingFieldsComponent;

@@ -13,3 +13,5 @@ export class SubTrainingComponent extends Vue {
     @Prop({type: Array, default: []})
     subTrainings: object[];
 }
+
+export default SubTrainingComponent;

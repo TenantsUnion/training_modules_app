@@ -1,37 +1,11 @@
-import {store} from "@store/store";
-import {TRAINING_ACTIONS} from "@webapp/training/training_store";
-import {NavigationGuard} from "vue-router";
-import {mapState} from "vuex";
-import {RootGetters, RootState} from "@store/store_types";
-import {ComponentOptions} from "vue";
-import EditActionsButtonsComponent from "@webapp/training/edit/edit_actions_buttons/edit_actions_buttons_component.vue";
-import Vue from "vue";
-import Component from 'vue-class-component';
-import TrainingSegmentsComponent from "./training_segments/training_segments_component.vue";
-import SubTrainingComponent from "./sub_training/sub_training_component.vue";
-
-
-interface SubTraining {
-    title: string;
-    description?: string;
-    timeEstimate?: number;
-    subTrainingsLabel?: string;
-    subTrainings?: SubTraining[]
-}
-
-@Component({
-    components: {
-        'training-segments': TrainingSegmentsComponent,
-        'sub-training': SubTrainingComponent
-    }
-})
-export default class TrainingComponent extends Vue {
-    title: string;
-    description: string;
-    subTrainingsLabel: string;
-    trainingSegments: any[];
-    subTrainings: any[];
-}
+import {NavigationGuard} from 'vue-router';
+import {store} from '@store/store';
+import {TRAINING_ACTIONS} from '@training/training_store';
+import {Vue} from 'vue/types/vue';
+import {ComponentOptions} from 'vue';
+import {mapState} from 'vuex';
+import {RootGetters, RootState} from '@store/store_types';
+import EditActionsButtonsComponent from '@training/edit/edit_actions_buttons/edit_actions_buttons_component';
 
 const courseTrainingGuard: NavigationGuard = async function (to: any, from: any, next) {
     const {currentCourseId} = store.state.course;
@@ -56,8 +30,8 @@ const moduleTrainingGuard: NavigationGuard = async function (to: any, from: any,
     }
 };
 
-const sectionTrainingGuard: NavigationGuard = async function (this: Vue, to: any, from: any, next) {
-    const {currentSectionId} = this.$store.state.course;
+const sectionTrainingGuard: NavigationGuard = async function (to: any, from: any, next) {
+    const {currentSectionId} = store.state.course;
     try {
         store.dispatch(TRAINING_ACTIONS.SET_CURRENT_MODULE_TRAINING, currentSectionId);
     } catch (e) {
