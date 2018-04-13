@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {mapGetters, mapState} from 'vuex';
-import {PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
+import {TRAINING_ROUTES} from "@webapp/global/routes";
 import {
     QuestionSubmission, TrainingProgressUpdateData
 } from "@shared/user_progress";
@@ -59,7 +59,7 @@ export default class ViewSectionComponent extends Vue {
         await this.$store.dispatch(COURSE_ACTIONS.NEXT_SECTION);
 
         this.$router.push({
-            name: PREVIEW_COURSE_ROUTES.sectionPreview,
+            name: TRAINING_ROUTES.section,
             params: {sectionSlug}
         })
     }
@@ -74,7 +74,7 @@ export default class ViewSectionComponent extends Vue {
         await this.$store.dispatch(COURSE_ACTIONS.NEXT_SECTION);
 
         this.$router.push({
-            name: PREVIEW_COURSE_ROUTES.sectionPreview,
+            name: TRAINING_ROUTES.section,
             params: {sectionSlug}
         })
     }

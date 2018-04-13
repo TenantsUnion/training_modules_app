@@ -1,6 +1,6 @@
 import {QuillHandler} from './quill/quill_handler';
 import {QuestionHandler} from './question/question_handler';
-import {ContentQuestionsDelta} from '@shared/training_entity';
+import {ContentQuestionsDelta} from '@shared/training';
 import {LoggerInstance} from 'winston';
 import {getLogger, LOG_LEVELS} from '../../log';
 import {updateArrOpsValues} from '@shared/delta/diff_key_array';

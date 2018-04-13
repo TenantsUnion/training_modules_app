@@ -6,6 +6,8 @@ import CourseDetailsComponent from "@webapp/course/course_details_component/cour
 import {CourseMode} from "@webapp/course/course_store";
 import {CourseStructureRouteGuardMixin} from "@webapp/course/course_route_guards";
 import {RootGetters, RootState} from "@store/store_types";
+import TrainingPanelComponent from '@training/training_panel/training_panel_component.vue';
+import {FoundationOffCanvasMixin} from '@components/foundation/foundation_off_canvas_mixin';
 
 
 @Component({
@@ -18,17 +20,30 @@ import {RootGetters, RootState} from "@store/store_types";
     mixins: [CourseStructureRouteGuardMixin],
     components: {
         'course-navigation': CourseNavigationComponent,
-        'course-details': CourseDetailsComponent
+        'course-details': CourseDetailsComponent,
+        'training-panel': TrainingPanelComponent
+
     }
 })
 export default class CourseComponent extends Vue {
-    created () {
-        this.$(this.$el).find('#menu-toggle').on('click', (e) => {
-            e.preventDefault();
-            this.$('#page-content-wrapper').toggleClass('toggled');
-            this.$('#sidebar-wrapper').toggleClass('toggled');
-            this.$('.sidebar-nav').toggleClass('toggled');
-            this.$('#wrapper').toggleClass('toggled');
-        });
+    isHideCourseNavigation: boolean = true;
+    isHideTrainingPanel: boolean = true;
+
+    openCourseNavigation() {
+        (<FoundationOffCanvasMixin>this.$refs.courseNavigationPanel).open();
+        this.isHideCourseNavigation = false;
+    }
+
+    openTrainingPanel() {
+        (<FoundationOffCanvasMixin>this.$refs.trainingPanel).open();
+        this.isHideTrainingPanel = false;
+    }
+
+    onCloseCourseNavigation() {
+        this.isHideCourseNavigation = true;
+    }
+
+    onCloseTrainingPanel() {
+        this.isHideTrainingPanel = true;
     }
 }

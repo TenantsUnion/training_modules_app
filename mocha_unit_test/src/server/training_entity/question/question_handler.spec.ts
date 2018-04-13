@@ -12,7 +12,7 @@ import {
 } from '@shared/questions';
 import {
     ContentQuestionsDelta, QuillChangesObj
-} from '@shared/training_entity';
+} from '@shared/training';
 import {addDeltaArrOp} from '@shared/delta/diff_key_array';
 import MockDate from 'mockdate';
 import {toDbTimestampFormat} from "@server/repository";

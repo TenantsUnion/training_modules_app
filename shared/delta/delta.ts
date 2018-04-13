@@ -1,5 +1,5 @@
 import {DeltaArrOp} from './diff_key_array';
-import {QuillChangesObj} from '../training_entity';
+import {QuillChangesObj} from '../training';
 import {OptionChangesObj, QuestionChangesObj} from '../questions';
 import {DeltaStatic} from "quill";
 

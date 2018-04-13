@@ -1,14 +1,20 @@
-/* Sidebar Navigation Styles */
+$course-nav-background-color: #444d53;
+$course-nav-color: #999999;
+.course-navigation-panel {
+  top: $user-bar-height;
 
-.sidebar-nav {
-  top: 1em;
-  width: $sidebar-width - $sidebar-collapsed-width;
+  background-color: $course-nav-background-color;
   margin: 0;
-  padding: 0 0 3em;
   list-style: none;
-  color: #999999;
-  position: relative;
+  color: $course-nav-color;
   bottom: 0;
+
+  button.panel-close.button {
+    margin-bottom: 0;
+    color: $course-nav-color;
+    border-color: $course-nav-color;
+    background-color: $course-nav-background-color;
+  }
 
   .menu-header {
     justify-content: space-between;

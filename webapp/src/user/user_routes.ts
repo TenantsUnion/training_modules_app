@@ -12,7 +12,7 @@ import AvailableCoursesComponent from "../available_courses/available_courses_co
 import UserEnrolledCoursesComponent from "./courses/enrolled/user_enrolled_courses_component.vue";
 import UserAdminCourseComponent from "./courses/admin/user_admin_courses_component.vue";
 import {USER_ROUTES} from "@webapp/global/routes";
-import {EnrolledCourseRoutes, PreviewCourseRoutes} from "@webapp/course/courses_routes";
+import {EnrolledCourseRoutes, CourseTrainingRoutes} from "@webapp/course/courses_routes";
 import {AdminCourseRoutes} from "@webapp/course/admin/admin_course_routes";
 
 /**
@@ -88,5 +88,5 @@ export const userRoutes: RouteConfig = {
     }
 };
 
-userRoutes.children = userRoutes.children.concat([...AdminCourseRoutes, EnrolledCourseRoutes, PreviewCourseRoutes]);
+userRoutes.children = userRoutes.children.concat([...AdminCourseRoutes, EnrolledCourseRoutes, CourseTrainingRoutes]);
 

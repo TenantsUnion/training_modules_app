@@ -3,7 +3,7 @@ import {SectionRepository} from './section_repository';
 import {LoggerInstance} from "winston";
 import {getLogger} from "@server/log";
 import {CreateSectionEntityPayload, SaveSectionEntityPayload, SectionIdMap, ViewSectionData} from "@shared/sections";
-import {ContentQuestionEntity} from "@shared/training_entity";
+import {ContentQuestionEntity} from "@shared/training";
 import {applyDeltaArrOps, updateArrOpsValues} from "@shared/delta/diff_key_array";
 import {applyDeltaDiff} from "@shared/delta/apply_delta";
 

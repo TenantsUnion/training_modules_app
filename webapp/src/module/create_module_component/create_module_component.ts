@@ -4,7 +4,7 @@ import Component from 'vue-class-component';
 import {Segment} from "@shared/segment";
 import {Location} from 'vue-router';
 import {CreateModuleEntityPayload} from "@shared/modules";
-import {PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
+import {TRAINING_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
 import {COURSE_MUTATIONS} from "@webapp/course/course_store";
 import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
@@ -62,7 +62,7 @@ export default class CreateModuleComponent extends Vue {
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             this.$store.commit(COURSE_MUTATIONS.SET_CURRENT_MODULE, moduleId);
             this.$router.push(<Location>{
-                name: PREVIEW_COURSE_ROUTES.modulePreview,
+                name: TRAINING_ROUTES.module,
                 params: {moduleSlug: this.$store.getters.getModuleSlugFromId(moduleId)}
             });
         } catch (errorMessages) {

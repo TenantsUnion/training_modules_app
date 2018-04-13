@@ -7,8 +7,15 @@ import {DeltaArrOp} from './delta/diff_key_array';
 import {isDeltaStatic} from './delta/typeguards_delta';
 import {DeltaOperation, DeltaStatic} from "quill";
 
-export interface ViewTrainingEntity {
+export enum TrainingType {
+    COURSE = 'COURSE',
+    MODULE = 'MODULE',
+    SECTION = 'SECTION',
+}
+
+export interface TrainingView {
     id: string;
+    trainingType: TrainingType;
     title: string;
     version: number;
     description?: string;
@@ -18,9 +25,22 @@ export interface ViewTrainingEntity {
     lastModifiedAt?: string;
     createdAt?: string;
     contentQuestions: (QuillEditorData | QuestionQuillData)[];
+    subTrainings?: SubTrainingView[];
+    subTrainingsLabel?: string;
 }
 
-export interface ViewTrainingEntityDescription {
+export interface SubTrainingView {
+    id: string;
+    title: string;
+    version: number;
+    description?: string;
+    timeEstimate?: number;
+    active?: boolean;
+    subTrainings?: SubTrainingView[];
+    subTrainingsLabel?: string;
+}
+
+export interface TrainingDescriptionView {
     id: string,
     active: boolean,
     title: string,
@@ -41,7 +61,7 @@ export interface ViewTrainingEntityDescription {
  *
  */
 export interface QuillChangesObj {
-    [index: string]: DeltaStatic | {ops: DeltaOperation[]}
+    [index: string]: DeltaStatic | { ops: DeltaOperation[] }
 }
 
 export const isQuillContentDiff = (obj: any): obj is QuillChangesObj => {
@@ -86,6 +106,7 @@ export interface TrainingEntityDiffDelta extends DeltaObjDiff {
     description?: string;
     timeEstimate?: number;
     active?: boolean;
+    subTrainings?: DeltaArrOp<string>[]
 }
 
 export type CreateContentQuestion = QuillEditorData | CreateQuestionData;

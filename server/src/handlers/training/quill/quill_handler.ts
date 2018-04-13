@@ -3,7 +3,7 @@ import {QuillRepository} from './quill_repository';
 import {QuillEditorData} from '@shared/quill_editor';
 import {LoggerInstance} from 'winston';
 import {getLogger} from '@server/log';
-import {QuillChangesObj} from '@shared/training_entity';
+import {QuillChangesObj} from '@shared/training';
 import {isCreatedQuillPlaceholderId} from "@shared/ids";
 import Delta from "quill-delta";
 

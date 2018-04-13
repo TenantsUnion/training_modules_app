@@ -14,7 +14,7 @@ import {
 import {getLogger} from "@server/log";
 import {applyDeltaArrOps, updateArrOpsValues} from "@shared/delta/diff_key_array";
 import {applyDeltaDiff} from "@shared/delta/apply_delta";
-import {ContentQuestionEntity} from "@shared/training_entity";
+import {ContentQuestionEntity} from "@shared/training";
 
 export class AdminCourseHandler {
     logger = getLogger('CourseHandler', 'info');

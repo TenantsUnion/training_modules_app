@@ -1,35 +1,36 @@
-import Vue from 'vue';
-import Component from "vue-class-component";
+import Component, {mixins} from "vue-class-component";
 import {ViewCourseData} from '@shared/courses';
 import {Location} from 'vue-router/types/router';
 import {mapGetters, mapState} from 'vuex';
-import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
+import {ADMIN_COURSE_ROUTES, ENROLLED_COURSE_ROUTES, TRAINING_ROUTES} from "@webapp/global/routes";
 import {RootGetters, RootState} from "@store/store_types";
 import {CourseMode} from "@webapp/course/course_store";
+import {FoundationOffCanvasMixin} from '@components/foundation/foundation_off_canvas_mixin';
+import {IOffCanvasOptions} from 'foundation';
 
 @Component({
     data: () => {
         return {
             createModule: {name: ADMIN_COURSE_ROUTES.createModule},
-            coursePreview: {name: PREVIEW_COURSE_ROUTES.coursePreview},
-            createSection (moduleSlug: string): Location {
+            coursePreview: {name: TRAINING_ROUTES.course},
+            createSection(moduleSlug: string): Location {
                 return {
                     name: ADMIN_COURSE_ROUTES.createSection, params: {
                         moduleSlug
                     }
                 };
             },
-            previewModule (moduleSlug): Location {
+            previewModule(moduleSlug): Location {
                 return {
-                    name: PREVIEW_COURSE_ROUTES.modulePreview,
+                    name: TRAINING_ROUTES.module,
                     params: {
                         moduleSlug: moduleSlug
                     }
                 };
             },
-            previewSection (moduleSlug, sectionSlug): Location {
+            previewSection(moduleSlug, sectionSlug): Location {
                 return {
-                    name: PREVIEW_COURSE_ROUTES.sectionPreview,
+                    name: TRAINING_ROUTES.section,
                     params: {
                         moduleSlug: moduleSlug,
                         sectionSlug: sectionSlug
@@ -43,7 +44,7 @@ import {CourseMode} from "@webapp/course/course_store";
     },
     computed: {
         ...mapState<RootState>({
-            isAdmin: function(state: RootState, getters: RootGetters){
+            isAdmin: function (state: RootState, getters: RootGetters) {
                 return getters.currentCourseMode === CourseMode.ADMIN;
             }
         }),
@@ -52,29 +53,30 @@ import {CourseMode} from "@webapp/course/course_store";
         })
     }
 })
-export default class CourseNavigationComponent extends Vue {
+export default class CourseNavigationComponent extends mixins(FoundationOffCanvasMixin) {
     course: ViewCourseData;
     isAdmin: boolean;
 
-    courseRoute (): Location {
-        return {
-            name: this.isAdmin ? ADMIN_COURSE_ROUTES.editCourse : PREVIEW_COURSE_ROUTES.coursePreview
-        }
-
+    mounted() {
+        this.open();
     }
 
-    moduleRoute (moduleSlug: string): Location {
+    courseRoute(): Location {
+        return {name: TRAINING_ROUTES.course}
+    }
+
+    moduleRoute(moduleSlug: string): Location {
         return {
-            name: this.isAdmin ? ADMIN_COURSE_ROUTES.editModule : PREVIEW_COURSE_ROUTES.modulePreview,
+            name: TRAINING_ROUTES.module,
             params: {
                 moduleSlug: moduleSlug
             }
         };
     }
 
-    sectionRoute (moduleSlug: string, sectionSlug: string): Location {
+    sectionRoute(moduleSlug: string, sectionSlug: string): Location {
         return {
-            name: this.isAdmin ? ADMIN_COURSE_ROUTES.editSection : PREVIEW_COURSE_ROUTES.sectionPreview,
+            name: TRAINING_ROUTES.section,
             params: {
                 moduleSlug: moduleSlug,
                 sectionSlug: sectionSlug
@@ -82,12 +84,12 @@ export default class CourseNavigationComponent extends Vue {
         }
     }
 
-    get activeNavigation () {
+    get activeNavigation() {
         return {
             // highlight course item
             course:
             this.$route.name === ADMIN_COURSE_ROUTES.editCourse
-            || this.$route.name === PREVIEW_COURSE_ROUTES.coursePreview
+            || this.$route.name === TRAINING_ROUTES.course
             || this.$route.name === ADMIN_COURSE_ROUTES.createModule
             || this.$route.name === ENROLLED_COURSE_ROUTES.enrolledCourse,
             module: this.$route.params.moduleSlug,
@@ -95,8 +97,20 @@ export default class CourseNavigationComponent extends Vue {
         };
     }
 
-    isActiveSection (moduleSlug: string, sectionSlug: string) {
+    isActiveSection(moduleSlug: string, sectionSlug: string) {
         return this.$route.params.moduleSlug === moduleSlug
             && this.$route.params.sectionSlug === sectionSlug;
+    }
+
+
+    get offCanvasConfig(): IOffCanvasOptions {
+        return {
+            contentOverlay: false,
+            transition: 'push',
+            contentScroll: false,
+            autoFocus: true,
+            trapFocus: false,
+            closeOnClick: false
+        };
     }
 }

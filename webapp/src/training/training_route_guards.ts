@@ -5,7 +5,6 @@ import {Vue} from 'vue/types/vue';
 import {ComponentOptions} from 'vue';
 import {mapState} from 'vuex';
 import {RootGetters, RootState} from '@store/store_types';
-import EditActionsButtonsComponent from '@training/edit/edit_actions_buttons/edit_actions_buttons_component';
 
 const courseTrainingGuard: NavigationGuard = async function (to: any, from: any, next) {
     const {currentCourseId} = store.state.course;
@@ -47,9 +46,6 @@ export const trainingComponent: ComponentOptions<Vue> = {
             loading: (state, {trainingLoading, currentCourseLoading}: RootGetters) =>
                 trainingLoading || currentCourseLoading
         })
-    },
-    components: {
-        'edit-actions-buttons': EditActionsButtonsComponent
     }
 };
 

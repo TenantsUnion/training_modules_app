@@ -1,7 +1,7 @@
 import {QuillEditorData} from "@shared/quill_editor";
 import {QuestionData, QuestionOptionData, QuestionQuillData} from "@shared/questions";
 import {orderObjByIds, toIdObjMap} from "@shared/util/id_array_util";
-import {ViewTrainingEntityDescription} from "@shared/training_entity";
+import {TrainingDescriptionView, TrainingType} from "@shared/training";
 import {ViewCourseData} from "@shared/courses";
 
 export interface ViewTrainingEntityDescriptionDbData {
@@ -94,14 +94,15 @@ export const processCourseView = (row: ViewCourseDbData): ViewCourseData => {
     return {
         ...viewCourse,
         contentQuestions: processContentQuestions(row),
-        modules: processModuleDescriptions(orderedModuleIds, modules)
+        modules: processModuleDescriptions(orderedModuleIds, modules),
+        trainingType: TrainingType.COURSE
     };
 };
 
 export const processModuleDescriptions = (orderedModuleIds: string[], modules: ViewModuleDescriptionDbData[]) => {
     return orderObjByIds(orderedModuleIds, toIdObjMap(modules)).map((module) => {
         let sections = module.sections ? module.sections : [];
-        let orderedSections: ViewTrainingEntityDescription[] =
+        let orderedSections: TrainingDescriptionView[] =
             orderObjByIds(module.orderedSectionIds, toIdObjMap(sections))
                 .map((section) => {
                     return section;

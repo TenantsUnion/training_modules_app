@@ -2,7 +2,7 @@ import Component from 'vue-class-component';
 import Vue from 'vue';
 import VueForm from '@webapp/types/vue-form';
 import {CreateSectionEntityPayload} from '@shared/sections';
-import {PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
+import {TRAINING_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
 import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
 
@@ -59,7 +59,7 @@ export default class CreateSectionComponent extends Vue {
 
             let {getSectionSlugFromId} = this.$store.getters;
             this.$router.push({
-                name: PREVIEW_COURSE_ROUTES.sectionPreview,
+                name: TRAINING_ROUTES.section,
                 params: {
                     sectionSlug: getSectionSlugFromId({moduleId: currentModuleId, sectionId})
                 },

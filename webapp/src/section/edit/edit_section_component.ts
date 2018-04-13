@@ -7,7 +7,7 @@ import {Watch} from 'vue-property-decorator';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {TrainingEntityDiffDelta} from '@shared/training';
 import EditTrainingSegmentsComponent from "@webapp/training/edit_training_segments/edit_training_segments_component";
-import {PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
+import {TRAINING_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
 import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
 import {RootState} from "@store/store_types";
@@ -75,9 +75,9 @@ export default class EditSectionComponent extends Vue {
             let message: TitleMessagesObj = {message: `Section: ${this.section.title} saved successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             this.$router.push({
-                name: PREVIEW_COURSE_ROUTES.sectionPreview,
+                name: TRAINING_ROUTES.section,
                 params: {
-                    sectionSlug: this.$store.getters.getSectionSlugFromId({
+                    sectionSlug: this.$getters.getSectionSlugFromId({
                         sectionId: this.section.id,
                         moduleId: this.currentModuleId
                     })

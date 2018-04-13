@@ -2,7 +2,7 @@ import {CreateCourseEntityPayload, CreateCourseIdMap} from '@shared/courses';
 import {IUserInfo} from '@shared/user';
 import {CreateModuleEntityPayload, CreateModuleIdMap} from '@shared/modules';
 import {CreateSectionEntityPayload, SectionIdMap} from '@shared/sections';
-import {ContentQuestionsDelta} from '@shared/training_entity';
+import {ContentQuestionsDelta} from '@shared/training';
 import {CommandMetaData, CommandType} from "@shared/entity";
 import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
 import {appendUUID} from "@test-shared/src/uuid_generator";

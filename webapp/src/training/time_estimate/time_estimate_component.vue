@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="isInput">
+        <div v-if="editing">
             <label>Time Estimate
                 <div class="input-group">
                     <label for="hours-input" class="input-group-label">Hours</label>
@@ -16,63 +16,9 @@
                 </div>
             </label>
         </div>
-        <div v-if="!isInput">
-            <p>{{hours}} hours {{minutes}} minutes</p>
+        <div v-if="!editing">
+            <p class="subheader">{{timeEstimateDescription()}}</p>
         </div>
     </div>
 </template>
-<script lang="ts">
-    import Vue from 'vue';
-    import Component from 'vue-class-component';
-    import {Watch} from 'vue-property-decorator';
-
-    const SELECTABLE_MINUTES = [0, 15, 30, 45];
-    const SELECTABLE_HOURS = Array.from(Array(6).keys());
-
-    @Component({
-        data: () => {
-            return {
-                hours: "0",
-                minutes: "0",
-                selectableMinutes: SELECTABLE_MINUTES,
-                selectableHours: SELECTABLE_HOURS
-            };
-        },
-        props: {
-            //the duration in minutes
-            timeEstimate: Number,
-            isInput: {
-                type: Boolean,
-                default: false
-            },
-            updated: {
-                type: Function,
-                default: () => {
-                }
-            }
-        },
-    })
-    export default class TimeEstimateComponent extends Vue {
-        hours: string;
-        minutes: string;
-        timeEstimate: string;
-        updated: (time: number) => void;
-
-        @Watch('timeEstimate', {immediate: true})
-        updateTimeEstimate(timeEstimate, oldTimeEstimate) {
-            if (timeEstimate) {
-                this.hours = (Math.floor(parseInt(timeEstimate) / 60)) + '';
-                this.minutes = parseInt(timeEstimate) % 60 + '';
-            } else {
-                this.hours = '0';
-                this.minutes = '0';
-            }
-            this.timeChanged();
-        }
-
-        timeChanged() {
-            // parse time
-            this.updated((parseInt(this.hours) * 60 + parseInt(this.minutes)));
-        }
-    }
-</script>
+<script lang="ts" src="./time_estimate_component.ts"></script>

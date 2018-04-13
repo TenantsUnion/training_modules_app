@@ -1,13 +1,13 @@
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityPayload,
-    TrainingEntityDiffDelta, TrainingEntity, ViewTrainingEntity, ViewTrainingEntityDescription
-} from './training_entity';
+    TrainingEntityDiffDelta, TrainingEntity, TrainingView, TrainingDescriptionView
+} from './training';
 import {DeltaArrOp} from './delta/diff_key_array';
 import {CommandType} from "@shared/entity";
 import {ViewCourseStructure} from "@shared/courses";
 
-export interface ViewModuleData extends ViewTrainingEntity {
-    sections: ViewTrainingEntityDescription[]
+export interface ViewModuleData extends TrainingView {
+    sections: TrainingDescriptionView[]
 }
 
 export interface ModuleEntity extends TrainingEntity {
@@ -39,8 +39,8 @@ export type CreateModuleEntityCommand = CreateTrainingEntityCommand<CommandType.
 export interface SaveModuleEntityPayload extends SaveTrainingEntityPayload<ModuleEntityDiffDelta> {
     courseId: string
 }
-export interface ViewModuleDescription extends ViewTrainingEntityDescription {
-    sections: ViewTrainingEntityDescription[]
+export interface ViewModuleDescription extends TrainingDescriptionView {
+    sections: TrainingDescriptionView[]
 }
 
 export interface ModuleEntityDiffDelta extends TrainingEntityDiffDelta {

@@ -2,7 +2,7 @@ import {appGetters, store} from "@store/store";
 import {NavigationGuard, RouteConfig} from "vue-router";
 import {Vue} from "vue/types/vue";
 import CourseComponent from './course_component/course_component.vue';
-import {ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
+import {ENROLLED_COURSE_ROUTES, TRAINING_ROUTES} from "@webapp/global/routes";
 import ModuleDetailsComponent from "@webapp/module/module_details_component/module_details_component.vue";
 import ViewSectionComponent from "@webapp/section/view/view_section_component.vue";
 import CourseDetailsComponent from "./course_details_component/course_details_component.vue";
@@ -45,22 +45,22 @@ export const EnrolledCourseRoutes: RouteConfig = {
     ]
 };
 
-export const PreviewCourseRoutes: RouteConfig = {
-    path: 'preview/course',
+export const CourseTrainingRoutes: RouteConfig = {
+    path: 'course',
     props: true,
     component: CourseComponent,
     children: [
         {
             path: ':courseSlug',
-            name: PREVIEW_COURSE_ROUTES.coursePreview,
+            name: TRAINING_ROUTES.course,
             component: CourseDetailsComponent
         }, {
             path: ':courseSlug/module/:moduleSlug',
-            name: PREVIEW_COURSE_ROUTES.modulePreview,
+            name: TRAINING_ROUTES.module,
             component: ModuleDetailsComponent
         }, {
             path: ':courseSlug/module/:moduleSlug/section/:sectionSlug',
-            name: PREVIEW_COURSE_ROUTES.sectionPreview,
+            name: TRAINING_ROUTES.section,
             component: ViewSectionComponent
         }
     ]

@@ -10,7 +10,7 @@ import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {Watch} from 'vue-property-decorator';
 import EditTrainingSegmentsComponent from "@webapp/training/edit_training_segments/edit_training_segments_component";
-import {ADMIN_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
+import {ADMIN_COURSE_ROUTES, TRAINING_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
 import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
 import {ModuleTrainingComponent} from '@training/training_route_guards';
@@ -107,7 +107,7 @@ export class EditModuleComponent extends Vue {
             let message: TitleMessagesObj = {message: `Module: ${this.module.title} saved successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             this.$router.push({
-                name: PREVIEW_COURSE_ROUTES.modulePreview,
+                name: TRAINING_ROUTES.module,
                 params: {
                     moduleSlug: this.getModuleSlugFromId(this.currentModuleId)
                 }

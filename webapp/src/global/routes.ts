@@ -19,8 +19,8 @@ export enum ENROLLED_COURSE_ROUTES {
     enrolledSection = 'enrolled.Section'
 }
 
-export enum PREVIEW_COURSE_ROUTES {
-    coursePreview = 'preview.coursePreview',
-    modulePreview = 'preview.modulePreview',
-    sectionPreview = 'preview.sectionDetails'
+export enum TRAINING_ROUTES {
+    course = 'training.course',
+    module = 'training.module',
+    section = 'training.section'
 }

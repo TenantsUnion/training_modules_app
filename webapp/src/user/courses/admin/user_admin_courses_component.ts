@@ -2,7 +2,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {CourseDescription} from "@shared/courses";
 import {mapState} from 'vuex';
-import {ADMIN_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
+import {ADMIN_COURSE_ROUTES, TRAINING_ROUTES} from "@webapp/global/routes";
 import {RootGetters, RootState} from "@store/store_types";
 import {Location} from 'vue-router';
 
@@ -28,7 +28,7 @@ export default class UserAdminCourseComponent extends Vue {
 
     courseLocation(course: CourseDescription): Location {
         return {
-            name: PREVIEW_COURSE_ROUTES.coursePreview,
+            name: TRAINING_ROUTES.course,
             params: {
                 courseSlug: course.slug
             }

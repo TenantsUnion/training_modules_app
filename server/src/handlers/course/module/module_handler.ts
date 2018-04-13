@@ -6,7 +6,7 @@ import {
     CreateModuleEntityPayload, CreateModuleIdMap, ModuleEntity, ModuleEntityDiffDelta,
     SaveModuleEntityPayload, ViewModuleDescription
 } from "@shared/modules";
-import {ContentQuestionEntity} from "@shared/training_entity";
+import {ContentQuestionEntity} from "@shared/training";
 import {applyDeltaArrOps, updateArrOpsValues} from "@shared/delta/diff_key_array";
 import {applyDeltaDiff} from "@shared/delta/apply_delta";
 import {CreateSectionEntityPayload, SaveSectionEntityPayload} from "@shared/sections";

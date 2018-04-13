@@ -5,7 +5,7 @@ import {CourseDescription} from "@shared/courses";
 import {NavigationGuard} from "vue-router";
 import {AVAILABLE_COURSES_ACTIONS} from "./available_courses_store";
 import {mapState} from "vuex";
-import {ENROLLED_COURSE_ROUTES, PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
+import {ENROLLED_COURSE_ROUTES, TRAINING_ROUTES} from "@webapp/global/routes";
 import {USER_ACTIONS} from "@webapp/user/store/user_store";
 import {RootState} from "@store/store_types";
 
@@ -32,7 +32,7 @@ export const availableCoursesRouteGuard: NavigationGuard = async function (to, f
 export default class AvailableCoursesComponent extends Vue {
     async preview (course: CourseDescription) {
         this.$router.push({
-            name: PREVIEW_COURSE_ROUTES.coursePreview,
+            name: TRAINING_ROUTES.course,
             params: {
                 courseSlug: course.slug
             }

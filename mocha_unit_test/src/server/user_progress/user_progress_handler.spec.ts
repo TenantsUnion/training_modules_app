@@ -10,7 +10,7 @@ import {
 } from "@server/config/repository_config";
 import MockDate from 'mockdate';
 import {toDbTimestampFormat} from "@server/repository";
-import {ContentQuestionsDelta} from "@shared/training_entity";
+import {ContentQuestionsDelta} from "@shared/training";
 import {createdQuestionOptionPlaceholderId, createdQuestionPlaceholderId, createdQuillPlaceholderId} from "@shared/ids";
 import {toAddDeltaArrOps} from "@shared/delta/diff_key_array";
 import {TrainingProgressUpdateType} from "@shared/user_progress";

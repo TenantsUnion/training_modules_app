@@ -5,7 +5,7 @@ import {RootGetters, RootState} from '@store/store_types';
 import {Watch} from 'vue-property-decorator';
 import {diffBasicPropsCourseProps, SaveCourseEntityPayload, ViewCourseData} from '@shared/courses';
 import EditTrainingSegmentsComponent from "@webapp/training/edit_training_segments/edit_training_segments_component";
-import {PREVIEW_COURSE_ROUTES} from "@webapp/global/routes";
+import {TRAINING_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
 import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
 import VueForm from "@webapp/types/vue-form";
@@ -71,7 +71,7 @@ export class EditCourseComponent extends Vue {
         }
 
         this.$router.push({
-            name: PREVIEW_COURSE_ROUTES.coursePreview,
+            name: TRAINING_ROUTES.course,
             params: {
                 courseSlug: this.$store.getters.getSlugFromCourseId(this.storedCourse.id)
             }
@@ -79,7 +79,7 @@ export class EditCourseComponent extends Vue {
     }
 
     cancel () {
-        this.$router.push({name: PREVIEW_COURSE_ROUTES.coursePreview})
+        this.$router.push({name: TRAINING_ROUTES.course})
     }
 
     timeEstimateUpdated (time) {

@@ -230,10 +230,10 @@ declare module 'foundation' {
         destroy(): void;
     }
 
-    interface IOffCanvasOptions {
+    export interface IOffCanvasOptions {
         closeOnClick?: boolean;
         transitionTime?: number;
-        position?: string;
+        // position?: string;
         forceTop?: boolean;
         isRevealed?: boolean;
         revealOn?: string;
@@ -247,6 +247,8 @@ declare module 'foundation' {
         contentId?: string;
         nested?: boolean;
         contentOverlay?: boolean;
+        transition?: 'push' | 'detached' | 'slide';
+        contentScroll?: boolean;
     }
 
     // http://foundation.zurb.com/sites/docs/orbit.html#javascript-reference
@@ -431,9 +433,9 @@ declare module 'foundation' {
     }
 
     interface Motion {
-        animateIn(element: Object, animation: any, cb: Function): void;
+        animateIn(element: Object, animation: any, cb?: Function): void;
 
-        animateOut(element: Object, animation: any, cb: Function): void;
+        animateOut(element: Object, animation: any, cb?: Function): void;
     }
 
     interface Move {

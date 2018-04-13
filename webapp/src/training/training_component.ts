@@ -1,10 +1,5 @@
-import {store} from "@store/store";
-import {TRAINING_ACTIONS} from "@webapp/training/training_store";
-import {NavigationGuard} from "vue-router";
 import {mapState} from "vuex";
-import {RootGetters, RootState} from "@store/store_types";
-import {ComponentOptions} from "vue";
-import EditActionsButtonsComponent from "@webapp/training/edit/edit_actions_buttons/edit_actions_buttons_component.vue";
+import {RootGetters} from "@store/store_types";
 import Vue from "vue";
 import Component from 'vue-class-component';
 import TrainingSegmentsComponent from "./training_segments/training_segments_component.vue";
@@ -15,9 +10,9 @@ import {
     ContentQuestionsDelta,
     SaveTrainingEntityPayload,
     TrainingEntityDiffDelta,
-    TrainingView
 } from '@shared/training';
 import {Prop} from 'vue-property-decorator';
+import TrainingHeaderComponent from '@training/training_header_component/training_header_component.vue';
 
 
 export interface TrainingCallbacksConfig<T extends TrainingEntityDiffDelta = TrainingEntityDiffDelta> {
@@ -41,9 +36,11 @@ interface SubTraining {
         'training-segments': TrainingSegmentsComponent,
         'training-panel': TrainingPanelComponent,
         'sub-training': SubTrainingComponent,
+        'training-header': TrainingHeaderComponent
     },
     computed: {
         ...mapState({
+            loading: (rootState, {trainingLoading}: RootGetters) => trainingLoading,
             training: (rootState, {currentTraining}: RootGetters) => currentTraining
         })
     }

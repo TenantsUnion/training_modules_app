@@ -1,10 +1,10 @@
 import {
     CreateTrainingEntityPayload, SaveTrainingEntityPayload, TrainingEntityDiffDelta,
-    TrainingEntity, ViewTrainingEntity} from './training_entity';
+    TrainingEntity, TrainingView} from './training';
 import {ViewCourseStructure} from "@shared/courses";
 
 export type SectionEntity = TrainingEntity;
-export interface ViewSectionData extends ViewTrainingEntity {}
+export interface ViewSectionData extends TrainingView {}
 
 
 export interface SaveSectionEntityPayload extends SaveTrainingEntityPayload<TrainingEntityDiffDelta> {
