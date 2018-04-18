@@ -125,7 +125,7 @@ declare module 'foundation' {
     }
 
     // http://foundation.zurb.com/sites/docs/dropdown.html#javascript-reference
-    interface Dropdown {
+    export interface Dropdown {
         getPositionClass(): string;
 
         open(): void;
@@ -137,24 +137,26 @@ declare module 'foundation' {
         destroy(): void;
     }
 
-    interface IDropdownOptions {
+    export interface IDropdownOptions {
         hoverDelay?: number;
         hover?: boolean;
         hoverPane?: boolean;
         vOffset?: number;
         hOffset?: number;
-        positionClass?: string;
+        position?: string;
+        allowOverlap?: boolean;
+        alignment?: string;
         trapFocus?: boolean;
         autoFocus?: boolean;
         closeOnClick?: boolean;
     }
 
     // http://foundation.zurb.com/sites/docs/dropdown-menu.html#javascript-reference
-    interface DropdownMenu {
+    export interface DropdownMenu {
         destroy(): void;
     }
 
-    interface IDropdownMenuOptions {
+    export interface IDropdownMenuOptions {
         disableHover?: boolean;
         autoclose?: boolean;
         hoverDelay?: number;
@@ -377,7 +379,7 @@ declare module 'foundation' {
     }
 
     // http://foundation.zurb.com/sites/docs/tooltip.html#javascript-reference
-    interface Tooltip {
+    export interface Tooltip {
         show(): void;
 
         hide(): void;
@@ -387,7 +389,7 @@ declare module 'foundation' {
         destroy(): void;
     }
 
-    interface ITooltipOptions {
+    export interface ITooltipOptions {
         hoverDelay?: number;
         fadeInDuration?: number;
         fadeOutDuration?: number;

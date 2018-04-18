@@ -1,11 +1,16 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, Watch} from 'vue-property-decorator';
+import {Prop} from 'vue-property-decorator';
+import TrainingElementComponent from '@training/training_element/training_element_component.vue';
+import {IDropdownOptions} from 'foundation';
 
 const SELECTABLE_MINUTES = [0, 15, 30, 45];
 const SELECTABLE_HOURS = Array.from(Array(6).keys());
 
 @Component({
+    components: {
+        'training-element': TrainingElementComponent
+    },
     data: () => {
         return {
             hours: "0",
@@ -16,11 +21,16 @@ const SELECTABLE_HOURS = Array.from(Array(6).keys());
     },
 })
 export class TimeEstimateComponent extends Vue {
-    @Prop({default: false})
-    editing: boolean = false;
     //the duration in minutes
     @Prop({type: Number})
     timeEstimate: number;
+    dropdownConfig: IDropdownOptions = {
+        alignment: 'center',
+        position: 'right',
+        allowOverlap: true,
+        hOffset: 5
+    };
+    formstate = {};
 
     timeEstimateDescription() {
         return this.timeEstimate ? `

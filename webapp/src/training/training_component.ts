@@ -12,7 +12,9 @@ import {
     TrainingEntityDiffDelta,
 } from '@shared/training';
 import {Prop} from 'vue-property-decorator';
-import TrainingHeaderComponent from '@training/training_header_component/training_header_component.vue';
+import TimeEstimateComponent from '@training/time_estimate/time_estimate_component.vue';
+import TrainingTitleComponent from '@training/training_title/training_title_component.vue';
+import TrainingDescriptionComponent from '@training/description/training_description_component.vue';
 
 
 export interface TrainingCallbacksConfig<T extends TrainingEntityDiffDelta = TrainingEntityDiffDelta> {
@@ -28,7 +30,7 @@ interface SubTraining {
     description?: string;
     timeEstimate?: number;
     subTrainingsLabel?: string;
-    subTrainings?: SubTraining[]
+    subTrainings?: SubTraining[];
 }
 
 @Component({
@@ -36,7 +38,9 @@ interface SubTraining {
         'training-segments': TrainingSegmentsComponent,
         'training-panel': TrainingPanelComponent,
         'sub-training': SubTrainingComponent,
-        'training-header': TrainingHeaderComponent
+        'time-estimate': TimeEstimateComponent,
+        'training-title': TrainingTitleComponent,
+        'training-description': TrainingDescriptionComponent
     },
     computed: {
         ...mapState({
