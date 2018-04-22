@@ -81,7 +81,7 @@ export interface ContentQuestionEntity {
     orderedContentQuestionIds: string[];
 }
 
-export interface ContentQuestionsDelta extends TrainingEntityDiffDelta {
+export interface ContentQuestionsDelta extends DeltaObjDiff {
     quillChanges: QuillChangesObj,
     questionChanges: QuestionChangesObj;
     orderedContentQuestionIds: DeltaArrOp<string>[];
@@ -101,7 +101,7 @@ export interface TrainingEntity extends ContentQuestionEntity {
 }
 
 
-export interface TrainingEntityDiffDelta extends DeltaObjDiff {
+export interface TrainingEntityDelta extends ContentQuestionsDelta {
     title?: string;
     description?: string;
     timeEstimate?: number;
@@ -120,11 +120,11 @@ export interface CreateTrainingEntityPayload {
     contentQuestions: ContentQuestionsDelta;
 }
 
-export interface SaveTrainingEntityPayload<T extends TrainingEntityDiffDelta> {
+export interface SaveTrainingEntityPayload<T extends TrainingEntityDelta> {
     id: string;
     changes: T;
     contentQuestions: ContentQuestionsDelta;
 }
 
 export type CreateTrainingEntityCommand<T extends CommandType, P extends CreateTrainingEntityPayload> = Command<T, P>;
-export type SaveTrainingEntityCommand<T extends CommandType, P extends TrainingEntityDiffDelta> = Command<T, P>;
+export type SaveTrainingEntityCommand<T extends CommandType, P extends TrainingEntityDelta> = Command<T, P>;

@@ -11,6 +11,7 @@ import Vue from "vue";
 import {StoreOptions, Store} from "vuex";
 import Vuex from "vuex";
 import {courseProgressSummaryConfig} from '@course/course_enrolled/course_enrolled_summary/course_enrolled_summary_store';
+import {editTrainingStoreConfig} from '@training/edit_training_store/edit_training_state';
 
 
 export const storeConfig: StoreOptions<RootState> = {
@@ -23,6 +24,7 @@ export const storeConfig: StoreOptions<RootState> = {
         userProgress: userProgressStoreConfig.module(),
         course: courseStoreConfig.module(),
         availableCourses: availableCoursesStoreConfig.module(),
+        editTraining: editTrainingStoreConfig.module(),
         training: trainingStoreConfig.module(),
         editCourseCommand: editCourseCommandStoreConfig.module(),
         courseProgressSummary: courseProgressSummaryConfig.module()

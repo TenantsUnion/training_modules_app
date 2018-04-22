@@ -12,7 +12,7 @@ export const toAddDeltaArrOps = <T>(values: T[]): DeltaArrOp<T>[] => {
 };
 
 
-export interface DeltaArrOp<T> {
+export interface DeltaArrOp<T = any> {
     val?: T,
     op: 'ADD' | 'DELETE' | 'MOVE',
     index: number,

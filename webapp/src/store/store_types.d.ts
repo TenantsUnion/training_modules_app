@@ -10,6 +10,7 @@ import {
     CourseProgressSummaryAccessors,
     CourseProgressSummaryState
 } from '@course/course_enrolled/course_enrolled_summary/course_enrolled_summary_store';
+import {EditTrainingState} from '@training/edit_training_store/edit_training_state';
 
 
 /**
@@ -40,6 +41,7 @@ export interface RootState {
     availableCourses: AvailableCoursesState,
     statusMessages: StatusMessagesState,
     training: TrainingState,
+    editTraining: EditTrainingState,
     courseProgressSummary: CourseProgressSummaryState
 }
 

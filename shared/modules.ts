@@ -1,6 +1,6 @@
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityPayload,
-    TrainingEntityDiffDelta, TrainingEntity, TrainingView, TrainingDescriptionView
+    TrainingEntityDelta, TrainingEntity, TrainingView, TrainingDescriptionView
 } from './training';
 import {DeltaArrOp} from './delta/diff_key_array';
 import {CommandType} from "@shared/entity";
@@ -15,7 +15,7 @@ export interface ModuleEntity extends TrainingEntity {
     orderedSectionIds: string[]
 }
 
-export interface ModuleEntityDiffDelta extends TrainingEntityDiffDelta {
+export interface ModuleEntityDiffDelta extends TrainingEntityDelta {
     orderedSectionIds?: DeltaArrOp<string>[];
 }
 
@@ -43,7 +43,7 @@ export interface ViewModuleDescription extends TrainingDescriptionView {
     sections: TrainingDescriptionView[]
 }
 
-export interface ModuleEntityDiffDelta extends TrainingEntityDiffDelta {
+export interface ModuleEntityDiffDelta extends TrainingEntityDelta {
     sections?: DeltaArrOp<string>[];
 }
 

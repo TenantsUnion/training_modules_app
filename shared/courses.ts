@@ -1,7 +1,7 @@
 import {ViewModuleDescription} from './modules';
 import {
     CreateTrainingEntityCommand, CreateTrainingEntityPayload, SaveTrainingEntityCommand, SaveTrainingEntityPayload,
-    TrainingEntityDiffDelta, TrainingEntity, TrainingView, TrainingDescriptionView
+    TrainingEntityDelta, TrainingEntity, TrainingView, TrainingDescriptionView
 } from './training';
 import {DeltaArrOp} from './delta/diff_key_array';
 import {diffPropsDeltaObj, TRAINING_ENTITY_BASIC_PROPS} from './delta/diff_delta';
@@ -22,7 +22,7 @@ export interface CourseEntity extends TrainingEntity {
     orderedModuleIds: string[];
 }
 
-export interface CourseEntityDeltas extends TrainingEntityDiffDelta {
+export interface CourseEntityDeltas extends TrainingEntityDelta {
     openEnrollment?: boolean;
     orderedModuleIds?: DeltaArrOp<string>[];
 }
@@ -59,7 +59,7 @@ export interface CreateCourseResponse {
     adminCourseDescriptions: CourseDescription[]
 }
 
-export interface CourseEntityDiffDelta extends TrainingEntityDiffDelta {
+export interface CourseEntityDiffDelta extends TrainingEntityDelta {
     openEnrollment?: boolean;
     modules?: DeltaArrOp<string>[];
 }

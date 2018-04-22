@@ -9,7 +9,7 @@ import {QuestionSubmission} from '@shared/user_progress';
 import {
     ContentQuestionsDelta,
     SaveTrainingEntityPayload,
-    TrainingEntityDiffDelta,
+    TrainingEntityDelta,
 } from '@shared/training';
 import {Prop} from 'vue-property-decorator';
 import TimeEstimateComponent from '@training/time_estimate/time_estimate_component.vue';
@@ -17,7 +17,7 @@ import TrainingTitleComponent from '@training/training_title/training_title_comp
 import TrainingDescriptionComponent from '@training/description/training_description_component.vue';
 
 
-export interface TrainingCallbacksConfig<T extends TrainingEntityDiffDelta = TrainingEntityDiffDelta> {
+export interface TrainingCallbacksConfig<T extends TrainingEntityDelta = TrainingEntityDelta> {
     individualSubmitCb(submission: QuestionSubmission): Promise<any>;
     submitCb(submissions: QuestionSubmission[]): Promise<any>;
     saveTraining(payload: SaveTrainingEntityPayload<T>);
@@ -57,7 +57,7 @@ export class TrainingComponent extends Vue {
         return null;
     }
 
-    getTrainingDiffDelta(): TrainingEntityDiffDelta {
+    getTrainingDiffDelta(): TrainingEntityDelta {
        return null;
     }
 }

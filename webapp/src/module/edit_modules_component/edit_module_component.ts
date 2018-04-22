@@ -5,7 +5,7 @@ import VueForm from '@webapp/types/vue-form';
 import {SaveModuleEntityPayload, ViewModuleData} from '@shared/modules';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '@store/store_types';
-import {TrainingEntityDiffDelta, TrainingDescriptionView} from '@shared/training';
+import {TrainingEntityDelta, TrainingDescriptionView} from '@shared/training';
 import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {Watch} from 'vue-property-decorator';
@@ -81,7 +81,7 @@ export class EditModuleComponent extends Vue {
         }
 
         // primitive keys diff
-        let changes: TrainingEntityDiffDelta = diffBasicPropsTrainingEntity(this.storedModule, this.module);
+        let changes: TrainingEntityDelta = diffBasicPropsTrainingEntity(this.storedModule, this.module);
 
         let contentQuestions = (<EditTrainingSegmentsComponent> this.$refs.trainingSegment).getContentQuestionsDelta();
 

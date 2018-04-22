@@ -8,7 +8,7 @@ import {RootGetters, RootState} from "@store/store_types";
 import {CourseTrainingComponent} from '@training/training_route_guards';
 import TrainingComponentVue from '@training/training_component.vue'
 import {TrainingCallbacksConfig, TrainingComponent} from '@training/training_component';
-import {TrainingEntityDiffDelta} from '@shared/training';
+import {TrainingEntityDelta} from '@shared/training';
 import {EDIT_COURSE_COMMAND_ACTIONS} from '@course/edit_course_command_store';
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from '@global/status_messages/status_messages_store';
 
@@ -50,7 +50,7 @@ export default class CourseDetailsComponent extends Vue {
 
         // todo move this into training
         let contentQuestions = (<TrainingComponent> this.$refs.training).getContentQuestionsDelta();
-        let changes: TrainingEntityDiffDelta = (<TrainingComponent> this.$refs.training).getTrainingDiffDelta();
+        let changes: TrainingEntityDelta = (<TrainingComponent> this.$refs.training).getTrainingDiffDelta();
         // todo course specific changes?
         // let changes = diffBasicPropsCourseProps(this.storedCourse, this.course);
 
