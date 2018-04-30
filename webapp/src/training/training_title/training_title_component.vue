@@ -1,7 +1,7 @@
 <template>
-    <training-element focus-field="title">
+    <training-element focus-field="title" :cancel-callback="cancelCallback">
         <div slot="display">
-            <h2>{{training.title}}</h2>
+            <h2>{{title}}</h2>
         </div>
         <div slot="edit">
             <vue-form :state="formstate" @submit.prevent>
@@ -12,7 +12,7 @@
                         </small>
                     </field-messages>
                     <label for="course-title">Title
-                        <input v-model="editTitle" type="text"
+                        <input v-model=title type="text"
                                name="title"
                                required
                                placeholder="Course Title"

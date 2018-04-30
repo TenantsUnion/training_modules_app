@@ -12,6 +12,7 @@ export interface EditTrainingState {
 
 export enum EDIT_TRAINING_MUTATIONS {
     BASIC_EDIT = 'BASIC_EDIT',
+    CLEAR_BASIC_EDIT = 'CLEAR_BASIC_EDIT',
     ARR_OP_EDIT = 'ARR_OP_EDIT',
     CONTENT_IDS_OP = 'CONTENT_IDS_OP',
     QUESTION_IDS_OP = 'QUESTION_IDS_OP',
@@ -23,6 +24,7 @@ export enum EDIT_TRAINING_MUTATIONS {
 export type EditTrainingMutation<P> = (state: EditTrainingState, payload: P) => any;
 export type EditTrainingMutations = {[index in EDIT_TRAINING_MUTATIONS]: EditTrainingMutation<any>} & {
     BASIC_EDIT: EditTrainingMutation<{ prop: string, val: string | number }>,
+    CLEAR_BASIC_EDIT: EditTrainingMutation<string>,
     ARR_OP_EDIT: EditTrainingMutation<{ prop: string, op: DeltaArrOp }>,
     CONTENT_IDS_OP: EditTrainingMutation<DeltaArrOp<string>>,
     QUESTION_IDS_OP: EditTrainingMutation<DeltaArrOp<string>>,
@@ -34,6 +36,9 @@ export type EditTrainingMutations = {[index in EDIT_TRAINING_MUTATIONS]: EditTra
 export const editTrainingMutations: EditTrainingMutations = {
     BASIC_EDIT({unsavedEdits}: EditTrainingState, {val, prop}: { prop: string, val: string | number }) {
         Vue.set(unsavedEdits, prop, val);
+    },
+    CLEAR_BASIC_EDIT({unsavedEdits}: EditTrainingState, prop: string) {
+        Vue.delete(unsavedEdits, prop);
     },
     ARR_OP_EDIT({unsavedEdits}: EditTrainingState, {prop, op}: { prop: string, op: DeltaArrOp }) {
         let editsArr = <DeltaArrOp[]> unsavedEdits[prop];

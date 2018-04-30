@@ -1,5 +1,5 @@
 <template>
-    <training-element focus-field="description">
+    <training-element focus-field="description" :cancel-callback="cancelCallback">
         <div slot="display">
             <p v-show="training.description">{{training.description}}</p>
             <p v-if="!training.description && isAdmin" class="subheader">No description</p>

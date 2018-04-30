@@ -10,7 +10,8 @@
             <button type="button" class="button" @click="editMode">Edit</button>
         </dropdown>
         <dropdown :dropdown-id="editModeDropdownId" ref="editModeDropdown" :config="dropdownConfig">
-            <button type="button" class="button" @click="viewMode">Cancel</button>
+            <button type="button" class="button primary" @click="viewMode">Okay</button>
+            <button type="button" class="button secondary" @click="cancelEdits">Cancel</button>
         </dropdown>
     </div>
 </template>

@@ -4,7 +4,7 @@ import {Dropdown, IDropdownOptions} from 'foundation';
 import {Prop} from 'vue-property-decorator';
 
 export const DEFAULT_DROPDOWN_OPTIONS: IDropdownOptions = {
-    alignment: 'top',
+    alignment: 'center',
     position: 'right',
     allowOverlap: true,
     hOffset: 5
