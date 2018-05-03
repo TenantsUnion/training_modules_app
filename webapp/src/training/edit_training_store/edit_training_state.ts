@@ -62,6 +62,8 @@ export const editTrainingMutations: EditTrainingMutations = {
     }
 };
 
+
+
 export type EditTrainingStoreConfig = VuexModuleConfig<EditTrainingState, {}, {}, EditTrainingMutations>;
 export const editTrainingStoreConfig: EditTrainingStoreConfig = {
     initState() {

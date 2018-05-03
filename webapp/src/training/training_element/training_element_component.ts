@@ -5,6 +5,9 @@ import {RootGetters} from '@store/store_types';
 import {CourseMode} from '@course/course_store';
 import FoundationDropdownComponentVue from '@components/foundation/dropdown/foundation_dropdown_component.vue';
 import FoundationDropdownComponent from '@components/foundation/dropdown/foundation_dropdown_component';
+import EditIcon from '@components/icons/edit_icon_component.vue';
+import CancelIcon from '@components/icons/cancel_icon_component.vue';
+import PreviewIcon from '@components/icons/preview_icon_component.vue';
 import {Prop} from 'vue-property-decorator';
 import {IDropdownOptions} from 'foundation';
 
@@ -17,7 +20,10 @@ export interface TrainingFieldComponent {
 
 @Component({
     components: {
-        'dropdown': FoundationDropdownComponentVue
+        'dropdown': FoundationDropdownComponentVue,
+        'edit-icon': EditIcon,
+        'cancel-icon': CancelIcon,
+        'preview-icon': PreviewIcon
     },
     computed: mapState({
         isAdmin: (rootState, {currentCourseMode}: RootGetters) => currentCourseMode === CourseMode.ADMIN,

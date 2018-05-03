@@ -13,7 +13,7 @@ $fa-font-path: "~font-awesome-sass/assets/fonts/font-awesome/";
 // placement of router-view below user toolbar
 .wrapper {
   // always place below fixed nav bar
-  padding-top: $user-bar-height;
+  padding-top: $user-bar-height + 10;
   padding-left: 0;
   -webkit-transition: padding 0.5s ease;
   -moz-transition: padding 0.5s ease;

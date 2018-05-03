@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <button v-on:click="openCourseNavigation"
                 class="show-canvas show-course-navigation button secondary hollow">
             <i class="fa fa-bars fa-fw"/>

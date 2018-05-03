@@ -2,16 +2,20 @@
     <div class="grid-container fluid">
         <loading v-show="loading"></loading>
         <div class="grid-x grid-margin-x align-middle align-left">
-            <div class="cell large-shrink medium-8">
-                <training-title/>
+            <div class="cell grid-x">
+                <div class="cell shrink">
+                    <training-title/>
+                </div>
             </div>
-            <div class="cell large-shrink large-offset-1 medium-8">
-                <time-estimate :time-estimate="training.timeEstimate"></time-estimate>
+            <div class="cell grid-x">
+                <div class="cell shrink">
+                    <time-estimate :time-estimate="training.timeEstimate"></time-estimate>
+                </div>
             </div>
-        </div>
-        <div class="grid-x">
-            <div class="cell shrink">
-                <training-description></training-description>
+            <div class="cell grid-x">
+                <div class="cell shrink">
+                    <training-description></training-description>
+                </div>
             </div>
         </div>
     </div>
