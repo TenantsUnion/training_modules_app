@@ -1,5 +1,5 @@
 <template>
-    <training-element focus-field="title" :cancel-callback="cancelCallback" :has-edits="hasEdits">
+    <training-element field-name="title" :cancel-callback="cancelCallback" :has-edits="hasEdits">
         <h2 slot="display">{{title}}</h2>
         <vue-form slot="edit" :state="formstate" @submit.prevent>
             <validate>

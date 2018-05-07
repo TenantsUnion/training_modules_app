@@ -1,5 +1,5 @@
 <template>
-    <training-element :dropdown-config="dropdownConfig" focus-field="hours" :cancel-callback="cancelCallback" :has-edits="hasEdits">
+    <training-element :dropdown-config="dropdownConfig" field-name="hours" :cancel-callback="cancelCallback" :has-edits="hasEdits">
         <div slot="edit">
             <vue-form :state="formstate" @submit.prevent class="input-group">
                 <label for="hours-input" class="input-group-label">Hours</label>

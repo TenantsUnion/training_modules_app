@@ -11,6 +11,7 @@ import PreviewIcon from '@components/icons/preview_icon_component.vue';
 import {Prop} from 'vue-property-decorator';
 import {IDropdownOptions} from 'foundation';
 import {TrainingEntityDelta} from '@shared/training';
+import {EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state';
 
 let editDropdownCount = 0;
 const editDropdownId = () => `edit-dropdown-${editDropdownCount++}`;
@@ -35,7 +36,7 @@ export class TrainingElementComponent extends Vue {
     @Prop({required: false})
     dropdownConfig!: IDropdownOptions;
     @Prop({required: true, type: String})
-    focusField!: string;
+    fieldName!: string;
     @Prop({required: true, type: Function})
     cancelCallback!: () => any;
     @Prop({required: true, type: Boolean})
@@ -72,7 +73,7 @@ export class TrainingElementComponent extends Vue {
         (<FoundationDropdownComponent> this.$refs.viewModeDropdown).close(() => {
             this.editing = true;
             Vue.nextTick(() => {
-                let focusElement = this.$(`[name="${this.focusField}"]`);
+                let focusElement = this.$(`[name="${this.fieldName}"]`);
                 if (focusElement.length > 1) {
                     throw new Error(`Multiple elements selector for focus`);
                 }
@@ -82,12 +83,15 @@ export class TrainingElementComponent extends Vue {
         });
     }
 
-    get editing() {
-
+    get editing(): boolean {
+        return this.$getters.isEditingField(this.fieldName);
     }
 
-    set editing() {
-
+    set editing(editing: boolean) {
+        this.$store.commit(EDIT_TRAINING_MUTATIONS.SET_BASIC_FIELD_EDITING, {
+            fieldName: this.fieldName,
+            editMode: editing
+        });
     }
 
     cancelEdits() {
