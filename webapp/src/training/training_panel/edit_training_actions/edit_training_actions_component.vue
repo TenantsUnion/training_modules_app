@@ -1,28 +1,33 @@
 <template>
     <div class="edit-actions">
         <div class="grid-x">
-            <div class="cell large-6 small-12">
-                <button @click="save" class="button" type="button">Save</button>
+            <div class="cell small-12">
+                <button v-show="hasEdits" @click="save" class="button" type="button" title="Save All">
+                    <save-icon/>
+                    Save All</button>
             </div>
-            <div class="cell large-6 small-12">
-                <button @click="cancelButton" class="button secondary" type="button">Cancel</button>
+            <div class="cell small-12" title="Reset All">
+                <button v-show="hasEdits" @click="resetAll" class="button alert" type="button">
+                    <cancel-icon/>
+                    Reset All
+                </button>
             </div>
         </div>
         <div class="grid-x">
-            <div class="cell large-6 small-12">
+            <div class="cell small-12">
                 <button class="button" type="button"><i class="fa fa-plus-square"/>Section</button>
             </div>
-            <div class="cell large-6 small-12">
+            <div class="cell small-12">
                 <button class="button" type="button"><i class="fa fa-plus-square"/>Module</button>
             </div>
         </div>
         <div class="grid-x">
-            <div class="cell large-6 small-12">
+            <div class="cell small-12">
                 <button class="button" type="button">
                     <i class="fa fa-plus-square"/><span>Content</span>
                 </button>
             </div>
-            <div class="cell large-6 small-12">
+            <div class="cell small-12">
                 <button class="button" type="button"><i class="fa fa-plus-square"/>Question</button>
             </div>
         </div>

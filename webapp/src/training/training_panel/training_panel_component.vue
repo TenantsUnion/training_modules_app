@@ -2,8 +2,8 @@
     <div class="off-canvas training-panel position-right">
         <div class="grid-x align-left">
             <div class="cell shrink">
-                <button type="button" class="panel-close button hollow" v-on:click="close">
-                    <i class="fa fa-bars fa-fw"/>
+                <button type="button" class="panel-close button secondary" v-on:click="close">
+                    <bars-icon></bars-icon>
                 </button>
             </div>
         </div>

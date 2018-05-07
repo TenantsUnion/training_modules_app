@@ -10,12 +10,14 @@ import CancelIcon from '@components/icons/cancel_icon_component.vue';
 import PreviewIcon from '@components/icons/preview_icon_component.vue';
 import {Prop} from 'vue-property-decorator';
 import {IDropdownOptions} from 'foundation';
+import {TrainingEntityDelta} from '@shared/training';
 
 let editDropdownCount = 0;
 const editDropdownId = () => `edit-dropdown-${editDropdownCount++}`;
 
 export interface TrainingFieldComponent {
     cancelCallback: () => any;
+    hasEdits: boolean;
 }
 
 @Component({
@@ -26,7 +28,7 @@ export interface TrainingFieldComponent {
         'preview-icon': PreviewIcon
     },
     computed: mapState({
-        isAdmin: (rootState, {currentCourseMode}: RootGetters) => currentCourseMode === CourseMode.ADMIN,
+        isAdmin: (rootState, {currentCourseMode}: RootGetters) => currentCourseMode === CourseMode.ADMIN
     })
 })
 export class TrainingElementComponent extends Vue {
@@ -36,8 +38,9 @@ export class TrainingElementComponent extends Vue {
     focusField!: string;
     @Prop({required: true, type: Function})
     cancelCallback!: () => any;
+    @Prop({required: true, type: Boolean})
+    hasEdits!: boolean;
 
-    editing: boolean = false;
     isAdmin!: boolean;
     editModeDropdownId: string = editDropdownId();
     viewModeDropdownId: string = editDropdownId();
@@ -48,7 +51,7 @@ export class TrainingElementComponent extends Vue {
     onElement() {
         setTimeout(() => {
             this.open();
-        }, 200);
+        }, 150);
     }
 
     /**
@@ -62,7 +65,7 @@ export class TrainingElementComponent extends Vue {
             } else {
                 this.close();
             }
-        }, 250);
+        }, 350);
     }
 
     editMode() {
@@ -77,6 +80,14 @@ export class TrainingElementComponent extends Vue {
                 (<FoundationDropdownComponent> this.$refs.editModeDropdown).open();
             });
         });
+    }
+
+    get editing() {
+
+    }
+
+    set editing() {
+
     }
 
     cancelEdits() {

@@ -1,20 +1,25 @@
-import Vue from "vue";
-import Component from "vue-class-component";
+import Component, {mixins} from "vue-class-component";
+import {IconComponentMixin} from '@components/icons/icon_component_mixin';
+import {mapState} from 'vuex';
+import {RootGetters} from '@store/store_types';
+import {EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state';
 
 @Component({
-    data: function() {
+    data: function () {
         return {};
     },
-    props: {}
+    computed: mapState({
+        hasEdits: (state, {hasEdits}: RootGetters) => hasEdits
+    })
 })
-export class EditTrainingActionsComponent extends Vue {
+export class EditTrainingActionsComponent extends mixins(IconComponentMixin) {
 
-    save () {
+    save() {
         console.log('saved!');
     }
 
-    cancelButton () {
-        console.log('canceled!');
+    resetAll() {
+        this.$store.commit(EDIT_TRAINING_MUTATIONS.RESET_ALL);
     }
 }
 

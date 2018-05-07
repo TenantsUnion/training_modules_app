@@ -10,7 +10,11 @@ import {
     CourseProgressSummaryAccessors,
     CourseProgressSummaryState
 } from '@course/course_enrolled/course_enrolled_summary/course_enrolled_summary_store';
-import {EditTrainingState} from '@training/edit_training_store/edit_training_state';
+import {
+    EditTrainingAccessors,
+    EditTrainingGetters,
+    EditTrainingState
+} from '@training/edit_training_store/edit_training_state';
 
 
 /**
@@ -45,7 +49,16 @@ export interface RootState {
     courseProgressSummary: CourseProgressSummaryState
 }
 
-export type RootGetters = CourseAccessors & CoursesListingAccessors
+/**
+ * Interfaces of all the getter properties available on the root store from each module. Accessor interfaces are used
+ * for defining how to access or read getter field either has a value returned or a function to call to get the value
+ *
+ * The Getter interfaces for each module are used to defined the function that computes the getter value and is called
+ * with arguments of the current state {@see Getter} via the Vuex library.
+ *
+ * @see AppGetter - stricter typing (possible subset) of the Vuex library compute getter function
+ */
+export type RootGetters = CourseAccessors & CoursesListingAccessors & EditTrainingAccessors
     & AvailableCoursesAccessors & UserProgressAccessors & TrainingAccessors & CourseProgressSummaryAccessors;
 
 // getters and rootGetters are the same since the modules have the namespace option set to false

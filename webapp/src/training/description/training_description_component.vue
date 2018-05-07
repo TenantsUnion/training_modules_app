@@ -1,8 +1,8 @@
 <template>
-    <training-element focus-field="description" :cancel-callback="cancelCallback">
+    <training-element focus-field="description" :cancel-callback="cancelCallback" :has-edits="hasEdits">
         <div slot="display">
-            <p v-show="training.description">{{training.description}}</p>
-            <p v-if="!training.description && isAdmin" class="subheader">No description</p>
+            <p v-show="description">{{description}}</p>
+            <p v-if="!description && isAdmin" class="subheader">No description</p>
         </div>
         <div slot="edit">
             <vue-form :state="formstate" @submit.prevent>
@@ -13,10 +13,10 @@
                         </small>
                     </field-messages>
                     <label for="training-description">Description
-                        <textarea v-model="editDescription" type="text"
+                        <textarea v-model="description" type="text"
                                   name="description"
                                   maxlength="300"
-                                  placeholder="Description"
+                                  placeholder="Training description"
                                   id="training-description"/>
                     </label>
                 </validate>

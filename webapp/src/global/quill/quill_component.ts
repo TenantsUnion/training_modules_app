@@ -3,10 +3,10 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import {DeltaStatic, Sources} from "quill";
 import Quill from "quill";
-import {isNotEmptyQuillData} from '@webapp/training/edit_training_segments/edit_training_segments_component';
 import {Prop} from 'vue-property-decorator';
-import {QuillEditorData} from '@shared/quill_editor';
+import {isNotEmpty, QuillEditorData} from '@shared/quill_editor';
 import {isCreatedQuillPlaceholderId} from "@shared/ids";
+import {isNotEmptyQuillData} from '@training/view_training_segments/view_training_segments_component';
 
 // only log quill error messages if not in debug or dev mode
 if (['debug', 'dev'].indexOf(process.env.NODE_ENV) === -1) {
@@ -57,23 +57,24 @@ type EditorState = 'NEW' | 'CHANGED' | 'PRISTINE';
         toolbarConfig: {
             type: Array,
             required: false,
-            default: function() {
+            default: function () {
                 return [
-                ['bold', 'italic', 'underline', 'strike'],
-                ['link', 'image'],
-                [{'color': []}, {'background': []}],
-                ['blockquote', 'code-block'],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['link', 'image'],
+                    [{'color': []}, {'background': []}],
+                    ['blockquote', 'code-block'],
 
-                [{'list': 'ordered'}, {'list': 'bullet'}],
-                [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
-                [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
-                [{'direction': 'rtl'}],                         // text direction
+                    [{'list': 'ordered'}, {'list': 'bullet'}],
+                    [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
+                    [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+                    [{'direction': 'rtl'}],                         // text direction
 
-                [{'header': [false, 1, 2, 3, 4, 5, 6]}],
+                    [{'header': [false, 1, 2, 3, 4, 5, 6]}],
 
-                [{'font': []}],
-                [{'align': []}]
-            ]}
+                    [{'font': []}],
+                    [{'align': []}]
+                ]
+            }
         }
     },
 })
@@ -142,8 +143,7 @@ export default class QuillComponent extends Vue {
      */
     get displayQuillEditor(): boolean {
         return !this.readOnly ||
-            (this.editorJson && _.isArray(this.editorJson.ops) &&
-                (this.editorJson.ops.length > 1 || this.editorJson.ops[0] !== '\n'));
+            isNotEmpty(this.editorJson);
     }
 
     isBtnObj(obj: any): boolean {

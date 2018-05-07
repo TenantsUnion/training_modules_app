@@ -8,19 +8,19 @@
         </div>
         <dropdown class="training-dropdown" :dropdown-id="viewModeDropdownId" ref="viewModeDropdown"
                   :config="dropdownConfig">
-            <button type="button" class="button icon-button" @click="editMode">
+            <button type="button" title="Edit" class="button icon-button" @click="editMode">
                 <edit-icon/>
             </button>
-            <button type="button" class="button icon-button alert" @click="cancelEdits">
+            <button v-show="hasEdits" type="button" title="Reset" class="button icon-button alert" @click="cancelEdits">
                 <cancel-icon/>
             </button>
         </dropdown>
         <dropdown class="training-dropdown" :dropdown-id="editModeDropdownId" ref="editModeDropdown"
                   :config="dropdownConfig">
-            <button type="button" class="button icon-button secondary icon-button" @click="viewMode">
+            <button type="button" title="Preview" class="button icon-button secondary icon-button" @click="viewMode">
                 <preview-icon/>
             </button>
-            <button type="button" class="button icon-button alert" @click="cancelEdits">
+            <button v-show="hasEdits" type="button" title="Reset" class="button icon-button alert" @click="cancelEdits">
                 <cancel-icon/>
             </button>
         </dropdown>

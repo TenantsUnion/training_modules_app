@@ -100,7 +100,6 @@ export interface TrainingEntity extends ContentQuestionEntity {
     createdAt?: string;
 }
 
-
 export interface TrainingEntityDelta extends ContentQuestionsDelta {
     title?: string;
     description?: string;
@@ -108,6 +107,27 @@ export interface TrainingEntityDelta extends ContentQuestionsDelta {
     active?: boolean;
     subTrainings?: DeltaArrOp<string>[]
 }
+
+/**
+ * Indicates whether the provided training entity delta has any basic property, quill content, or question changes
+ * @param {TrainingEntityDelta} delta
+ * @returns {boolean}
+ */
+export const hasChanges = (delta: TrainingEntityDelta) => {
+    return Object.keys(delta).some((key) => {
+        let val = delta[key];
+        if (Array.isArray(val)) {
+            // indicates a non empty array of change operations
+            return val.length > 0;
+        } else if (typeof val === 'object') {
+            // question/quill changes objects have keys corresponding to the changed quill data or question
+            return Object.keys(val).length > 0;
+        } else {
+            // primitive property changed to new value
+            return true;
+        }
+    });
+};
 
 export type CreateContentQuestion = QuillEditorData | CreateQuestionData;
 

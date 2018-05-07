@@ -206,9 +206,3 @@ export default class EditTrainingSegmentsComponent extends Vue {
     }
 }
 
-export const isNotEmptyQuillData = (quillData: DeltaStatic): boolean => {
-    return quillData.ops.some((quillOp) => {
-        // newly created quill editor will default to single line insert operation
-        return quillOp.insert !== '\n';
-    });
-};

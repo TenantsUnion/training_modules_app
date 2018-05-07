@@ -1,36 +1,25 @@
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import TrainingElement from '@training/training_element/training_element_component.vue';
-import {mapState} from 'vuex';
-import {RootGetters} from '@store/store_types';
-import {CourseMode} from '@course/course_store';
+import Component, {mixins} from 'vue-class-component';
 import {TrainingFieldComponent} from '@training/training_element/training_element_component';
-import {EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state';
-import {TrainingView} from '@shared/training';
+import {TrainingElementMixin} from '@training/training_element_mixin';
 
-@Component({
-    components: {
-        'training-element': TrainingElement
-    },
-    computed: mapState({
-        training: (rootState, {currentTraining}: RootGetters) => currentTraining,
-        isAdmin: (rootState, {currentCourseMode}: RootGetters) => currentCourseMode === CourseMode.ADMIN
-    })
-})
-export class TrainingDescriptionComponent extends Vue implements TrainingFieldComponent {
-    training!: TrainingView;
-    formstate = {};
+@Component
+export class TrainingDescriptionComponent extends mixins(TrainingElementMixin) implements TrainingFieldComponent {
+    fieldName: 'description' = 'description';
 
-    set editDescription(description: string) {
-        this.$store.commit(EDIT_TRAINING_MUTATIONS.BASIC_EDIT, {prop: 'description', val: description});
+    set description(description: string) {
+        this.setFieldEdit(this.fieldName, description);
     }
 
-    get editDescription() {
-        return this.training.description;
+    get description() {
+        return this.getCurrentFieldValue(this.fieldName);
+    }
+
+    get hasEdits() {
+        return this.$getters.fieldHasEdits(this.fieldName);
     }
 
     cancelCallback() {
-        this.$store.commit(EDIT_TRAINING_MUTATIONS.CLEAR_BASIC_EDIT, 'description')
+        this.cancelEdit(this.fieldName)
     }
 }
 

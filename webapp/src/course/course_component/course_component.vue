@@ -12,11 +12,25 @@
         <!--own off canvas wrapper so it doesn't affect training page-->
         <div class="off-canvas-wrapper">
             <training-panel ref="trainingPanel" :onClose="onCloseTrainingPanel"
-                            ></training-panel>
+            ></training-panel>
         </div>
-        <button v-on:click="openTrainingPanel" class="show-training-panel show-canvas button secondary hollow">
-            <i class="fa fa-bars fa-fw"/>
-        </button>
+        <ul class="menu vertical show-canvas show-training-panel">
+            <li>
+                <button v-on:click="openTrainingPanel" title="Open Training Panel" class="button secondary">
+                    <bars-icon></bars-icon>
+                </button>
+            </li>
+            <li>
+                <button v-show="hasEdits" class="button primary" title="Save All" type="button">
+                    <save-icon></save-icon>
+                </button>
+            </li>
+            <li>
+                <button v-show="hasEdits" v-on:click="resetAll" class="button alert" title="Reset All" type="button">
+                    <cancel-icon></cancel-icon>
+                </button>
+            </li>
+        </ul>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -28,7 +42,6 @@
     .show-canvas {
         top: $user-bar-height;
         position: absolute;
-        bottom: 0;
 
         &.show-training-panel {
             right: 0;
