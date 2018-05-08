@@ -34,7 +34,7 @@ export class AdminModuleHandler {
     }
 
     async saveModule(data: SaveModuleEntityPayload): Promise<void> {
-        let {id, changes, contentQuestions} = data;
+        let {id, changes, changes: {contentQuestions}} = data;
         let module = await this.moduleRepo.loadModuleEntity(id);
 
         let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = contentQuestions;

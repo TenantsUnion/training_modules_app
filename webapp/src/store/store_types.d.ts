@@ -14,15 +14,18 @@ import {
     EditTrainingAccessors,
     EditTrainingGetters,
     EditTrainingState
-} from '@training/edit_training_store/edit_training_state';
+} from '@training/edit_training_store/edit_training_state_store';
 
 
+export type TypedActionContext<S> = ActionContext<S, RootState> & {
+    rootGetters: RootGetters
+}
 /**
  * Type for vuex action that generically types the payload (default definition has payload typed to 'any')
  * Stronger typing than vuex ActionTree that only enforces string keys and Action properties.
  * This goes one step further by being able to enforce an interface I with each property an action with a typed payload
  */
-export type TypedAction<S, P, V> = (context: ActionContext<S, RootState>, payload: P) => (Promise<V> | V) | Action<S, RootState>;
+export type TypedAction<S, P, V> = (context: TypedActionContext<S>, payload: P) => (Promise<V> | V) | Action<S, RootState>;
 
 export type VuexModule<S, A extends ActionTree<S, RootState>, G extends GetterTree<S, RootState>, M extends MutationTree<S>> =
     {

@@ -6,13 +6,12 @@ import {SaveModuleEntityPayload, ViewModuleData} from '@shared/modules';
 import {mapGetters, mapState} from 'vuex';
 import {RootGetters, RootState} from '@store/store_types';
 import {TrainingEntityDelta, TrainingDescriptionView} from '@shared/training';
-import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {deltaArrayDiff} from '@shared/delta/diff_key_array';
 import {Watch} from 'vue-property-decorator';
 import EditTrainingSegmentsComponent from "@webapp/training/edit_training_segments/edit_training_segments_component";
 import {ADMIN_COURSE_ROUTES, TRAINING_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
-import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
+import {EDIT_TRAINING_ACTIONS} from "@webapp/training/edit_training_store/edit_training_actions_store";
 import {ModuleTrainingComponent} from '@training/training_route_guards';
 
 @Component({
@@ -54,7 +53,7 @@ export class EditModuleComponent extends Vue {
     getModuleSlugFromId: (id) => string;
 
     @Watch('storedModule', {immediate: true})
-    updateModule (currentModule: ViewModuleData, oldCurrentModule) {
+    updateModule(currentModule: ViewModuleData, oldCurrentModule) {
         if (currentModule) {
             let module = {...currentModule};
             Vue.set(this, 'sections', module.sections ? [...module.sections] : []);
@@ -66,22 +65,23 @@ export class EditModuleComponent extends Vue {
         this.$router.push({name: ADMIN_COURSE_ROUTES.createSection});
     }
 
-    removeSection (section) {
+    removeSection(section) {
         this.$set(this.removeSections, section.id, true);
     }
 
-    cancelRemoveSection (section) {
+    cancelRemoveSection(section) {
         this.$set(this.removeSections, section.id, false);
     }
 
-    async saveModule () {
+    async saveModule() {
         this.formstate._submit();
         if (this.formstate.$invalid) {
             return;
         }
 
         // primitive keys diff
-        let changes: TrainingEntityDelta = diffBasicPropsTrainingEntity(this.storedModule, this.module);
+        // let changes: TrainingEntityDelta = diffBasicPropsTrainingEntity(this.storedModule, this.module);
+        let changes: TrainingEntityDelta = null;
 
         let contentQuestions = (<EditTrainingSegmentsComponent> this.$refs.trainingSegment).getContentQuestionsDelta();
 
@@ -97,13 +97,13 @@ export class EditModuleComponent extends Vue {
             changes: {
                 ...changes,
                 orderedSectionIds: orderedSectionIdsDiff,
+                contentQuestions
             },
-            contentQuestions
         };
 
         try {
             this.saving = true;
-            await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.SAVE_MODULE, moduleEntityPayload);
+            await this.$store.dispatch(EDIT_TRAINING_ACTIONS.SAVE_EDITS, moduleEntityPayload);
             let message: TitleMessagesObj = {message: `Module: ${this.module.title} saved successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             this.$router.push({
@@ -120,11 +120,11 @@ export class EditModuleComponent extends Vue {
         }
     }
 
-    timeEstimateUpdated (time) {
+    timeEstimateUpdated(time) {
         this.module.timeEstimate = time;
     }
 
-    sectionTitleStyles (section: TrainingDescriptionView) {
+    sectionTitleStyles(section: TrainingDescriptionView) {
         return {
             "text-decoration": this.removeSections[section.id] ? "line-through" : "none"
         };

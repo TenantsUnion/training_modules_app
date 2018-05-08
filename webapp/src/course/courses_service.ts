@@ -1,12 +1,12 @@
 import axios, {AxiosResponse} from "axios";
-import {CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload, SaveModuleResponse} from "@shared/modules";
+import {CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload} from "@shared/modules";
 import {
-    CreateCourseEntityCommand, SaveCourseEntityPayload, SaveCourseResponse, CreateCourseResponse, ViewCourseData
+    CreateCourseEntityCommand, SaveCourseEntityPayload, CreateCourseResponse, ViewCourseData
 } from '@shared/courses';
 import {
     CreateSectionEntityPayload, CreateSectionResponse,
-    SaveSectionEntityPayload, SaveSectionResponse
-} from '@shared/sections';
+    SaveSectionEntityPayload} from '@shared/sections';
+import {SaveTrainingResponse} from '@shared/training';
 
 export const isAxiosResponse = (obj: any): obj is AxiosResponse => {
     let {data, status, statusText, headers, config} = <AxiosResponse> obj;
@@ -63,21 +63,21 @@ export class CoursesService {
         }
     }
 
-    async saveCourse(course: SaveCourseEntityPayload): Promise<SaveCourseResponse> {
+    async saveCourse(course: SaveCourseEntityPayload): Promise<SaveTrainingResponse> {
         let response = await axios.post(`course/save/${course.id}`, {
             payload: course
         });
         return response.data;
     }
 
-    async saveModule(module: SaveModuleEntityPayload): Promise<SaveModuleResponse> {
+    async saveModule(module: SaveModuleEntityPayload): Promise<SaveTrainingResponse> {
         let response = await axios.post(`course/${module.courseId}/module/${module.id}/save`, {
             payload: module
         });
         return response.data;
     }
 
-    async saveSection(section: SaveSectionEntityPayload): Promise<SaveSectionResponse> {
+    async saveSection(section: SaveSectionEntityPayload): Promise<SaveTrainingResponse> {
         let response = await axios.post(`course/${section.courseId}/module/${section.moduleId}/section/${section.id}/save`, {
             payload: section
         });

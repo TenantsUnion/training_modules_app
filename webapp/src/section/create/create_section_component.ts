@@ -4,7 +4,7 @@ import VueForm from '@webapp/types/vue-form';
 import {CreateSectionEntityPayload} from '@shared/sections';
 import {TRAINING_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
-import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
+import {EDIT_TRAINING_ACTIONS} from "@webapp/training/edit_training_store/edit_training_actions_store";
 
 @Component({
     data: () => {
@@ -53,7 +53,7 @@ export default class CreateSectionComponent extends Vue {
                     questionChanges: {}
                 },
             };
-            let sectionId = await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.CREATE_SECTION, createSectionPayload);
+            let sectionId = await this.$store.dispatch(EDIT_TRAINING_ACTIONS.CREATE_SECTION, createSectionPayload);
             let message: TitleMessagesObj = {message: `Section: ${this.title} created successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
 

@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import TrainingElementComponent from '@training/training_element/training_element_component.vue';
-import {EDIT_TRAINING_ACTIONS, EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state';
+import {EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state_store';
 import {mapState} from 'vuex';
 import {RootGetters} from '@store/store_types';
 import {CourseMode} from '@course/course_store';
+import {EDIT_TRAINING_ACTIONS} from '@training/edit_training_store/edit_training_actions_store';
 
 /**
  * Helper methods for subclasses to get and edit training fields based on passing in the field name

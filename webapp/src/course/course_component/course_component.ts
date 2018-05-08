@@ -8,7 +8,8 @@ import {RootGetters, RootState} from "@store/store_types";
 import TrainingPanelComponent from '@training/training_panel/training_panel_component.vue';
 import {FoundationOffCanvasMixin} from '@components/foundation/foundation_off_canvas_mixin';
 import {IconComponentMixin} from '@components/icons/icon_component_mixin';
-import {EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state';
+import {EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state_store';
+import {EDIT_TRAINING_ACTIONS} from '@training/edit_training_store/edit_training_actions_store';
 
 @Component({
     computed: {
@@ -46,7 +47,11 @@ export default class CourseComponent extends mixins(IconComponentMixin) {
         this.isHideTrainingPanel = true;
     }
 
-    resetAll(){
+    resetAll() {
         this.$store.commit(EDIT_TRAINING_MUTATIONS.RESET_ALL)
+    }
+
+    async saveAll() {
+        await this.$store.dispatch(EDIT_TRAINING_ACTIONS.SAVE_EDITS)
     }
 }

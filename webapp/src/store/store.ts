@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import {courseStoreConfig} from "@course/course_store";
-import {editCourseCommandStoreConfig} from "@course/edit_course_command_store";
 import {statusMessageStoreConfig} from "@global/status_messages/status_messages_store";
 import {trainingStoreConfig} from "@training/training_store";
 import {availableCoursesStoreConfig} from "@webapp/available_courses/available_courses_store";
@@ -11,7 +10,7 @@ import {userStoreConfig} from "@webapp/user/store/user_store";
 import {userProgressStoreConfig} from "@webapp/user_progress/user_progress_store";
 import {StoreOptions, Store} from "vuex";
 import {courseProgressSummaryConfig} from '@course/course_enrolled/course_enrolled_summary/course_enrolled_summary_store';
-import {editTrainingStoreConfig} from '@training/edit_training_store/edit_training_state';
+import {editTrainingStoreConfig} from '@training/edit_training_store/edit_training_module_store';
 
 
 export const storeConfig: StoreOptions<RootState> = {
@@ -26,7 +25,6 @@ export const storeConfig: StoreOptions<RootState> = {
         availableCourses: availableCoursesStoreConfig.module(),
         editTraining: editTrainingStoreConfig.module(),
         training: trainingStoreConfig.module(),
-        editCourseCommand: editCourseCommandStoreConfig.module(),
         courseProgressSummary: courseProgressSummaryConfig.module()
     }
 };

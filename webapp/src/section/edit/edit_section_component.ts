@@ -4,12 +4,11 @@ import VueForm from '@webapp/types/vue-form';
 import {SaveSectionEntityPayload, ViewSectionData} from '@shared/sections';
 import {mapGetters, mapState} from 'vuex';
 import {Watch} from 'vue-property-decorator';
-import {diffBasicPropsTrainingEntity} from '@shared/delta/diff_delta';
 import {TrainingEntityDelta} from '@shared/training';
 import EditTrainingSegmentsComponent from "@webapp/training/edit_training_segments/edit_training_segments_component";
 import {TRAINING_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
-import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
+import {EDIT_TRAINING_ACTIONS} from "@webapp/training/edit_training_store/edit_training_actions_store";
 import {RootState} from "@store/store_types";
 import {SectionTrainingComponent} from '@training/training_route_guards';
 
@@ -59,19 +58,18 @@ export default class EditSectionComponent extends Vue {
         }
 
         this.errorMessages = null;
-        let changes: TrainingEntityDelta = diffBasicPropsTrainingEntity(this.storedSection, this.section);
-        let contentQuestions = (<EditTrainingSegmentsComponent> this.$refs.trainingSegment).getContentQuestionsDelta();
+        let changes: TrainingEntityDelta = null;
 
         let saveSectionPayload: SaveSectionEntityPayload = {
             id: this.section.id,
             courseId: this.currentCourseId,
             moduleId: this.currentModuleId,
-            changes, contentQuestions
+            changes
         };
 
         try {
             this.saving = true;
-            await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.SAVE_SECTION, saveSectionPayload);
+            await this.$store.dispatch(EDIT_TRAINING_ACTIONS.SAVE_EDITS, saveSectionPayload);
             let message: TitleMessagesObj = {message: `Section: ${this.section.title} saved successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             this.$router.push({

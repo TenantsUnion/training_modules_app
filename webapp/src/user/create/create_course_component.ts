@@ -6,7 +6,7 @@ import {Segment} from '@shared/segment';
 import {Location} from "vue-router";
 import {ADMIN_COURSE_ROUTES, USER_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
-import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
+import {EDIT_TRAINING_ACTIONS} from "@webapp/training/edit_training_store/edit_training_actions_store";
 
 @Component({
     data: () => {
@@ -66,7 +66,7 @@ export default class CreateCourseComponent extends Vue {
         this.errorMessages = null;
         let createCoursePayload = this.getCoursePayload();
         try {
-            let courseId = await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.CREATE_COURSE, createCoursePayload);
+            let courseId = await this.$store.dispatch(EDIT_TRAINING_ACTIONS.CREATE_COURSE, createCoursePayload);
             let message: TitleMessagesObj = {message: `Course: ${this.course.title} created successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             onSuccess(courseId);

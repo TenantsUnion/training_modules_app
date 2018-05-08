@@ -7,7 +7,7 @@ import {CreateModuleEntityPayload} from "@shared/modules";
 import {TRAINING_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
 import {COURSE_MUTATIONS} from "@webapp/course/course_store";
-import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
+import {EDIT_TRAINING_ACTIONS} from "@webapp/training/edit_training_store/edit_training_actions_store";
 
 @Component({
     data: () => {
@@ -57,7 +57,7 @@ export default class CreateModuleComponent extends Vue {
                     orderedQuestionIds: []
                 }
             };
-            let moduleId = await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.CREATE_MODULE, createModulePayload);
+            let moduleId = await this.$store.dispatch(EDIT_TRAINING_ACTIONS.CREATE_MODULE, createModulePayload);
             let message: TitleMessagesObj = {message: `Module: ${this.title} created successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
             this.$store.commit(COURSE_MUTATIONS.SET_CURRENT_MODULE, moduleId);

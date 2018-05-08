@@ -30,11 +30,6 @@ export interface CreateModuleResponse {
     courseStructure: ViewCourseStructure;
 }
 
-export interface SaveModuleResponse {
-    module: ViewModuleData;
-    courseStructure: ViewCourseStructure;
-}
-
 export type CreateModuleEntityCommand = CreateTrainingEntityCommand<CommandType.module, CreateModuleEntityPayload>;
 export interface SaveModuleEntityPayload extends SaveTrainingEntityPayload<ModuleEntityDiffDelta> {
     courseId: string

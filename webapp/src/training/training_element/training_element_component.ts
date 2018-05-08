@@ -11,7 +11,7 @@ import PreviewIcon from '@components/icons/preview_icon_component.vue';
 import {Prop} from 'vue-property-decorator';
 import {IDropdownOptions} from 'foundation';
 import {TrainingEntityDelta} from '@shared/training';
-import {EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state';
+import {EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state_store';
 
 let editDropdownCount = 0;
 const editDropdownId = () => `edit-dropdown-${editDropdownCount++}`;
@@ -36,7 +36,7 @@ export class TrainingElementComponent extends Vue {
     @Prop({required: false})
     dropdownConfig!: IDropdownOptions;
     @Prop({required: true, type: String})
-    fieldName!: string;
+    fieldName!: keyof TrainingEntityDelta;
     @Prop({required: true, type: Function})
     cancelCallback!: () => any;
     @Prop({required: true, type: Boolean})

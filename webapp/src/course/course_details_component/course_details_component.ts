@@ -9,8 +9,8 @@ import {CourseTrainingComponent} from '@training/training_route_guards';
 import TrainingComponentVue from '@training/training_component.vue'
 import {TrainingCallbacksConfig, TrainingComponent} from '@training/training_component';
 import {TrainingEntityDelta} from '@shared/training';
-import {EDIT_COURSE_COMMAND_ACTIONS} from '@course/edit_course_command_store';
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from '@global/status_messages/status_messages_store';
+import {EDIT_TRAINING_ACTIONS} from '@training/edit_training_store/edit_training_actions_store';
 
 @Component({
     extends: CourseTrainingComponent,
@@ -48,18 +48,14 @@ export default class CourseDetailsComponent extends Vue {
     async save() {
         this.errorMessages = null;
 
-        // todo move this into training
-        let contentQuestions = (<TrainingComponent> this.$refs.training).getContentQuestionsDelta();
         let changes: TrainingEntityDelta = (<TrainingComponent> this.$refs.training).getTrainingDiffDelta();
-        // todo course specific changes?
-        // let changes = diffBasicPropsCourseProps(this.storedCourse, this.course);
 
         let saveCoursePayload: SaveCourseEntityPayload = {
-            id: this.course.id, changes, contentQuestions
+            id: this.course.id, changes
         };
 
         try {
-            await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.SAVE_COURSE, saveCoursePayload);
+            await this.$store.dispatch(EDIT_TRAINING_ACTIONS.SAVE_EDITS, saveCoursePayload);
             let message: TitleMessagesObj = {message: `Course: ${this.course.title} saved successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
         } catch (error) {

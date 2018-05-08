@@ -69,11 +69,6 @@ export interface SaveCourseResponse {
     courseStructure: ViewCourseStructure;
 }
 
-export const diffBasicPropsCourseProps = (before: ViewCourseData, after: ViewCourseData): CourseEntityDiffDelta => {
-    return <CourseEntityDiffDelta> diffPropsDeltaObj(['openEnrollment', 'submitIndividually',
-        ...TRAINING_ENTITY_BASIC_PROPS], before, after);
-};
-
 /**
  * Map of the placeholder ids to their database sequence id correspondents when a course is created.
  *

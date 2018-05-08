@@ -51,9 +51,9 @@ export class AdminCourseHandler {
     }
 
     async saveCourse(saveCourse: SaveCourseEntityPayload): Promise<void> {
-        let {id, changes} = saveCourse;
-        let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = saveCourse.contentQuestions;
-        let placeholderIdMap = await this.trainingEntityHandler.handleContentQuestionDelta(saveCourse.contentQuestions);
+        let {id, changes, changes: {contentQuestions}} = saveCourse;
+        let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = contentQuestions;
+        let placeholderIdMap = await this.trainingEntityHandler.handleContentQuestionDelta(contentQuestions);
 
         let course: CourseEntity = await this.courseRepository.loadCourseEntity(id);
         let updatedCourse = applyDeltaDiff(course, {

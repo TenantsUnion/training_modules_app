@@ -4,10 +4,7 @@ import {
     CreateCourseResponse, SaveCourseResponse
 } from "@shared/courses";
 import {AdminCourseHandler} from "@server/handlers/course/course_handler";
-import {
-    CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload,
-    SaveModuleResponse
-} from "@shared/modules";
+import {CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload} from "@shared/modules";
 import {
     CreateSectionEntityPayload, SaveSectionEntityPayload,
     SaveSectionResponse
@@ -21,6 +18,7 @@ import {UserAdminCoursesViewQuery} from "@server/views/user/user_admin_courses_v
 import {getLogger} from "@server/log";
 import {coursesHandler} from "@server/config/handler_config";
 import {validateCreateCourse, validateSaveCourse} from "@server/handlers/course/course_validation";
+import {SaveTrainingResponse} from '@shared/training';
 
 export class CourseCommandController extends AbstractCommandController {
     constructor (private coursesHandler: AdminCourseHandler,
@@ -63,7 +61,7 @@ export class CourseCommandController extends AbstractCommandController {
         return {moduleId, module, courseStructure};
     }
 
-    async saveModule (request: Request): Promise<SaveModuleResponse> {
+    async saveModule (request: Request): Promise<SaveTrainingResponse> {
         let saveModuleData: SaveModuleEntityPayload = request.body.payload;
         await this.coursesHandler.saveModule(saveModuleData);
         let {courseId, id: moduleId} = saveModuleData;
@@ -71,7 +69,7 @@ export class CourseCommandController extends AbstractCommandController {
             this.courseStructureViewQuery.searchView({id: courseId}),
             this.moduleViewQuery.loadModule(moduleId)
         ]);
-        return {courseStructure, module};
+        return {courseStructure, training: module};
     }
 
     async createSection (request: Request) {

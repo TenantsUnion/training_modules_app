@@ -2,7 +2,7 @@ import Component, {mixins} from "vue-class-component";
 import {IconComponentMixin} from '@components/icons/icon_component_mixin';
 import {mapState} from 'vuex';
 import {RootGetters} from '@store/store_types';
-import {EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state';
+import {EDIT_TRAINING_MUTATIONS} from '@training/edit_training_store/edit_training_state_store';
 
 @Component({
     data: function () {

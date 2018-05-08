@@ -6,11 +6,17 @@ import {DeltaObjDiff} from './delta/delta';
 import {DeltaArrOp} from './delta/diff_key_array';
 import {isDeltaStatic} from './delta/typeguards_delta';
 import {DeltaOperation, DeltaStatic} from "quill";
+import {ViewCourseStructure} from '@shared/courses';
 
 export enum TrainingType {
     COURSE = 'COURSE',
     MODULE = 'MODULE',
     SECTION = 'SECTION',
+}
+
+export interface SaveTrainingResponse {
+    training: TrainingView;
+    courseStructure: ViewCourseStructure;
 }
 
 export interface TrainingView {
@@ -100,12 +106,13 @@ export interface TrainingEntity extends ContentQuestionEntity {
     createdAt?: string;
 }
 
-export interface TrainingEntityDelta extends ContentQuestionsDelta {
+export interface TrainingEntityDelta extends DeltaObjDiff {
     title?: string;
     description?: string;
     timeEstimate?: number;
     active?: boolean;
     subTrainings?: DeltaArrOp<string>[]
+    contentQuestions: ContentQuestionsDelta;
 }
 
 /**
@@ -113,15 +120,15 @@ export interface TrainingEntityDelta extends ContentQuestionsDelta {
  * @param {TrainingEntityDelta} delta
  * @returns {boolean}
  */
-export const hasChanges = (delta: TrainingEntityDelta) => {
+export const hasChanges = (delta: DeltaObjDiff) => {
     return Object.keys(delta).some((key) => {
         let val = delta[key];
         if (Array.isArray(val)) {
             // indicates a non empty array of change operations
             return val.length > 0;
-        } else if (typeof val === 'object') {
+        } else if (typeof val === 'object' && !isDeltaStatic(val)) {
             // question/quill changes objects have keys corresponding to the changed quill data or question
-            return Object.keys(val).length > 0;
+            return Object.keys(val).length > 0 && hasChanges(val as DeltaObjDiff);
         } else {
             // primitive property changed to new value
             return true;
@@ -140,10 +147,9 @@ export interface CreateTrainingEntityPayload {
     contentQuestions: ContentQuestionsDelta;
 }
 
-export interface SaveTrainingEntityPayload<T extends TrainingEntityDelta> {
+export interface SaveTrainingEntityPayload<T extends TrainingEntityDelta = TrainingEntityDelta> {
     id: string;
     changes: T;
-    contentQuestions: ContentQuestionsDelta;
 }
 
 export type CreateTrainingEntityCommand<T extends CommandType, P extends CreateTrainingEntityPayload> = Command<T, P>;

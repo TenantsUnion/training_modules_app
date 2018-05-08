@@ -1,15 +1,15 @@
 import axios from "axios";
 import {
-    CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload,
-    SaveModuleResponse
+    CreateModuleEntityPayload, CreateModuleResponse, SaveModuleEntityPayload
 } from '@shared/modules';
+import {SaveTrainingResponse} from '@shared/training';
 
 export const moduleHttpService = {
     loadModule: async (moduleId) => {
         let response = await axios.get(`view/module/admin/${moduleId}`);
         return response.data;
     },
-    saveModule: async (module: SaveModuleEntityPayload): Promise<SaveModuleResponse> => {
+    saveModule: async (module: SaveModuleEntityPayload): Promise<SaveTrainingResponse> => {
         let response = await axios.post(`course/${module.courseId}/module/${module.id}/save`, {
             payload: module
         });

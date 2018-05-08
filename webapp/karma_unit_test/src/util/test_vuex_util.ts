@@ -9,7 +9,7 @@ import {trainingStoreConfig} from "@webapp/training/training_store";
 import {availableCoursesStoreConfig} from "@webapp/available_courses/available_courses_store";
 import {courseStoreConfig} from "@webapp/course/course_store";
 import {courseProgressSummaryConfig} from '@course/course_enrolled/course_enrolled_summary/course_enrolled_summary_store';
-import {editTrainingStoreConfig} from '@training/edit_training_store/edit_training_state';
+import {editTrainingStoreConfig} from '@training/edit_training_store/edit_training_module_store';
 
 /**
  * Represents an {@link ActionContext} whose dispatch and commit properties have been wrapped with {@link SinonSpy}s

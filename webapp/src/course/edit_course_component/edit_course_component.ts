@@ -1,13 +1,12 @@
 import Vue from "vue";
 import Component from "vue-class-component";
-import {mapGetters, mapState} from 'vuex';
+import {mapState} from 'vuex';
 import {RootGetters, RootState} from '@store/store_types';
 import {Watch} from 'vue-property-decorator';
-import {diffBasicPropsCourseProps, SaveCourseEntityPayload, ViewCourseData} from '@shared/courses';
-import EditTrainingSegmentsComponent from "@webapp/training/edit_training_segments/edit_training_segments_component";
+import {SaveCourseEntityPayload, ViewCourseData} from '@shared/courses';
 import {TRAINING_ROUTES} from "@webapp/global/routes";
 import {STATUS_MESSAGES_ACTIONS, TitleMessagesObj} from "@webapp/global/status_messages/status_messages_store";
-import {EDIT_COURSE_COMMAND_ACTIONS} from "@webapp/course/edit_course_command_store";
+import {EDIT_TRAINING_ACTIONS} from "@webapp/training/edit_training_store/edit_training_actions_store";
 import VueForm from "@webapp/types/vue-form";
 import {CourseTrainingComponent} from '@training/training_route_guards';
 
@@ -51,16 +50,15 @@ export class EditCourseComponent extends Vue {
 
         this.errorMessages = null;
 
-        let changes = diffBasicPropsCourseProps(this.storedCourse, this.course);
-        let contentQuestions = (<EditTrainingSegmentsComponent> this.$refs.trainingSegment).getContentQuestionsDelta();
+        let changes = null;
 
         let saveCoursePayload: SaveCourseEntityPayload = {
-            id: this.storedCourse.id, changes, contentQuestions
+            id: this.storedCourse.id, changes
         };
 
         try {
             this.saving = true;
-            await this.$store.dispatch(EDIT_COURSE_COMMAND_ACTIONS.SAVE_COURSE, saveCoursePayload);
+            await this.$store.dispatch(EDIT_TRAINING_ACTIONS.SAVE_EDITS, saveCoursePayload);
             let message: TitleMessagesObj = {message: `Course: ${this.course.title} saved successfully`};
             this.$store.dispatch(STATUS_MESSAGES_ACTIONS.SET_SUCCESS_MESSAGE, message);
         } catch (error) {

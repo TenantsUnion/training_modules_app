@@ -21,7 +21,7 @@
                 </button>
             </li>
             <li>
-                <button v-show="hasEdits" class="button primary" title="Save All" type="button">
+                <button v-show="hasEdits" v-on:click="saveAll" class="button primary" title="Save All" type="button">
                     <save-icon></save-icon>
                 </button>
             </li>
@@ -33,6 +33,7 @@
         </ul>
     </div>
 </template>
+<script lang="ts" src="./course_component.ts"></script>
 <style lang="scss" scoped>
     .off-canvas-content {
         padding-left: 4em;
@@ -52,4 +53,3 @@
         }
     }
 </style>
-<script lang="ts" src="./course_component.ts"></script>

@@ -3,13 +3,8 @@ import Delta from 'quill-delta';
 import {DeltaObj, DeltaObjDiff} from './delta';
 import {isDeltaObj, isDeltaStatic, isKeyArr} from './typeguards_delta';
 import {deltaArrayDiff} from './diff_key_array';
-import {TrainingEntityDelta, TrainingEntity, TrainingView} from '../training';
 
 export const TRAINING_ENTITY_BASIC_PROPS = ['title', 'description', 'timeEstimate', 'active', 'submitIndividually'];
-export const diffBasicPropsTrainingEntity = <T extends TrainingEntity | TrainingView>(before: T, after: T): TrainingEntityDelta => {
-    return <TrainingEntityDelta> diffPropsDeltaObj(TRAINING_ENTITY_BASIC_PROPS, before, after);
-};
-
 export const diffPropsDeltaObj = (props: string[], before: DeltaObj, after: DeltaObj): DeltaObjDiff => {
     return diffDeltaObj(_.pick(before, props), _.pick(after, props));
 };

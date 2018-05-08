@@ -27,8 +27,8 @@ export class AdminSectionHandler {
     }
 
     async saveSection (data: SaveSectionEntityPayload): Promise<void> {
-        let {id, changes, contentQuestions} = data;
-        let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = data.contentQuestions;
+        let {id, changes, changes: {contentQuestions}} = data;
+        let {orderedContentIds, orderedQuestionIds, orderedContentQuestionIds} = contentQuestions;
         let placeholderIdMap = await this.trainingEntityHandler.handleContentQuestionDelta(contentQuestions);
         let section = await this.sectionRepo.loadSection(id);
 
